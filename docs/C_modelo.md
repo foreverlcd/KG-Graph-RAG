@@ -83,10 +83,11 @@ Una afirmación es un `crm:E13_Attribute_Assignment`:
 | Decisiones del anotador | `P2_has_type anot:*` + `P3_has_note` obligatoria |
 | Cita | `oa:Annotation` → `oa:hasBody` E13 |
 
-**Diferencias con STAR** (Andrews 2023):
+**Diferencias con STAR** (Andrews 2023; Andrews 2025, *Digital Medievalist* 18, doi:10.16995/dm.16708):
 
-* STAR usa P17 para la fuente; aquí la fuente es la actuación (`P9i`) más el ancla `oa:`, y P17 queda para relaciones de discurso y premisas.
-* STAR no nombra P140, P141 ni P177; aquí se usan porque son la lectura canónica de E13 en CRM 7.1.3.
+* STAR usa P17 para la fuente; aquí la fuente es la actuación (`P9i`) más el ancla `oa:`, y P17 queda para relaciones de discurso (capa 3) y premisas (capa 4).
+* La formulación de 2025 de STAR ya usa P140, P177 y P141, igual que este modelo (la de 2023 no los nombraba).
+* STAR toma la autoridad (P14) como quien respalda la afirmación; aquí P14 es quien la hace en 1806, y la autoridad del investigador vive solo en la capa 4.
 
 #### 3.4 Fuerza institucional
 
@@ -201,7 +202,8 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 | D2 | PiCo 1.1.0 | `pico.ttl` declara `picot_roles: <…/roles/>`, pero los conceptos publicados usan `…/ThesaurusHistorischePersoonsgegevens/NNN`. Además, `prov:wasAssociatedWith` aparece como `owl:DatatypeProperty` | Las alineaciones podrían apuntar a IRIs que no resuelven | Se usa la IRI del concepto publicado (`ohac.ttl`) |
 | D3 | CRMinf 1.2.1 | `J2_concluded_that` es subpropiedad de P175, P175i y P185 | Una inferencia RDFS ingenua añadiría relaciones temporales | No se hace inferencia RDFS para SHACL (solo jerarquía de clases) |
 | D4 | CRMinf 1.2.1 | `I6_Belief_Value` no está declarada como clase y el rango de J5 es un literal; `J6_adopted` solo aparece en una fórmula (errata) | Los valores de creencia no pueden ser conceptos | Literal de J5 = `skos:notation` de `cre:*` + `sh:in` |
-| D5 | RiC-O 1.1 | No tiene folio, sección ni legajo; DocumentaryFormTypes no incluye tipos judiciales | — | Conceptos SKOS propios con propiedades de RiC-O |
+| D5 | RiC-O 1.1 | Expresa la *extensión* en folios (`rico:CarrierExtent` + `rico:quantity` + `rico:hasUnitOfMeasurement`), pero no el folio individual direccionable, ni recto y verso, ni los niveles *sección* y *legajo* de la tradición hispana; DocumentaryFormTypes no incluye tipos judiciales | — | Extensión con `rico:CarrierExtent` (19 folios según el catálogo, contrastado: K5); folio, sección y legajo como conceptos SKOS con propiedades de RiC-O |
+| D6 | CRMinf 1.2.1 | Declara `crm:E13_Attribute_Assignment ⊑ crminf:I1_Argumentation` («honest inferences or observations») y `J33_assigned_propositions`, cuya ruta completa lee toda E13 como una proposición que su autor cree **verdadera** | Cargado CRMinf, toda afirmación de la capa 3 hereda una **presunción de sinceridad** del testigo. En un pleito con retractación jurada y firmas «sin saber sus contenidos» (A-UT17-111…114) eso es un juicio histórico, no un dato. Las 12 negaciones (`pol:niega`) solo se leen bien si se atiende a `P2_has_type` | Se documenta como lectura del estándar, no se corrige: la E13 de la capa 3 se interpreta como **afirmación profesada en el registro**. `scripts/razonar.py` cuenta las E13 inferidas I1 (74) y las negaciones afectadas (12) en cada ejecución. Ver ADR-021 |
 
 ## 8. Límites conocidos y trabajo pendiente
 
@@ -214,7 +216,7 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 
 **Decisiones de modelado con coste explícito:**
 
-* **L5. Negación.** Va como `P2_has_type pol:niega` del E13. Un consumidor CRM que ignore P2 leería «asignó coronel». Mitigación: toda respuesta y toda consulta exige la polaridad (SHACL), y el compositor marca [NIEGA]. Alternativa evaluada y descartada por ahora: modelar el rechazo como creencia del testigo (CRMinf I2 con J5 «falso»), que exigiría CRMinf en la capa 3.
+* **L5. Negación.** Va como `P2_has_type pol:niega` del E13 (agravado por D6). Un consumidor CRM que ignore P2 leería «asignó coronel». Mitigación: toda respuesta y toda consulta exige la polaridad (SHACL), y el compositor marca [NIEGA]. Alternativa evaluada y descartada por ahora: modelar el rechazo como creencia del testigo (CRMinf I2 con J5 «falso»), que exigiría CRMinf en la capa 3.
 * **L6. Decisiones del anotador dentro de la capa 3.** Sujeto elíptico resuelto a una mención de otra pieza, afirmante tomado de otra pieza, afirmaciones colectivas distribuidas. Van marcadas (`anot:*`), con nota obligatoria y con la autoría del lote (PROV). No llevan creencia propia. Si el estándar de oro muestra desacuerdo frecuente en ellas, deberán pasar a la capa 4.
 * **L7. Hechos narrados por pieza** (E89). Exigen una reconstrucción de evento para comparar relatos entre piezas. Es deliberado, pero las disputas sobre hechos dependen de que exista esa reconstrucción.
 

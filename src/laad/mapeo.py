@@ -37,6 +37,10 @@ ACT, ROL, COND, CARGO, ENT, ATR, POL, FUN, FZA, DOC, ANOT = (
      "documento", "anotacion"))
 ID = Namespace("https://w3id.org/laad/id/")
 G = Namespace("https://w3id.org/laad/grafo/")
+# Places gazetteer of Spanish America 1701-1808 (HGIS de las Indias), Harvard Dataverse; CC BY-NC-SA 4.0:
+# solo se citan sus identificadores, nunca se copian geometrías ni atributos.
+HGIS_DATASET = "https://doi.org/10.7910/DVN/FUSJD3"
+CONTEXTO_CITA = 32  # caracteres de prefijo/sufijo en el TextQuoteSelector
 # El expediente NO es una constante: lo fija fuente.usando_expediente(...) (revisión C2).
 
 PREFIJOS = dict(rico=RICO, rst=RST, crm=CRM, crminf=CRMINF, oa=OA, picom=PICOM, roar=ROAR, prov=PROV,
@@ -137,6 +141,11 @@ def _ancla(g: Graph, cuerpo: URIRef, ident: str, tramo: str, cita: str, motivo: 
     g.add((tgt, OA.hasSelector, ps))
     g.add((qs, RDF.type, OA.TextQuoteSelector))
     g.add((qs, OA.exact, Literal(cita)))
+    # prefijo y sufijo (Web Annotation §4.2.4): desambiguan citas repetidas en el tramo sin depender de la posición
+    if ini > 0:
+        g.add((qs, OA.prefix, Literal(tr.texto[max(0, ini - CONTEXTO_CITA):ini])))
+    if fin < len(tr.texto):
+        g.add((qs, OA.suffix, Literal(tr.texto[fin:fin + CONTEXTO_CITA])))
     g.add((ps, RDF.type, OA.TextPositionSelector))
     g.add((ps, OA.start, Literal(ini, datatype=XSD.nonNegativeInteger)))
     g.add((ps, OA.end, Literal(fin, datatype=XSD.nonNegativeInteger)))
@@ -173,6 +182,17 @@ def capa_documento(ds: Dataset, piezas: dict[str, Pieza]) -> Graph:
     g.add((orig, RDF.type, RICO.Instantiation))
     g.add((orig, RICO.isOrWasInstantiationOf, exp))
     g.add((orig, RDFS.comment, Literal("Expediente físico en el ARC; imágenes no disponibles en el proyecto.", lang="es")))
+    if ext := fuente.manifiesto().get("extension"):
+        # RiC-O 1.1 sí expresa la extensión en folios (rico:CarrierExtent); lo que no tiene es el folio direccionable (D5)
+        ex, um = URIRef(f"{orig}/extension"), URIRef(f"{orig}/extension/unidad")
+        g.add((orig, RICO.hasExtent, ex))
+        g.add((ex, RDF.type, RICO.CarrierExtent))
+        g.add((ex, RICO.quantity, Literal(str(ext["cantidad"]), datatype=XSD.decimal)))
+        g.add((ex, RICO.hasUnitOfMeasurement, um))
+        g.add((um, RDF.type, RICO.UnitOfMeasurement))
+        g.add((um, RDFS.label, Literal(ext["unidad"], lang="es")))
+        g.add((ex, DCTERMS.source, Literal(ext["fuente"], lang="es")))
+        g.add((ex, RDFS.comment, Literal(ext["nota"], lang="es")))
     g.add((trans, RDF.type, RICO.Instantiation))
     g.add((trans, RICO.isOrWasInstantiationOf, exp))
     g.add((trans, RICO.isOrWasDerivedFromInstantiation, orig))
@@ -460,6 +480,14 @@ def capa_reconstruccion(ds: Dataset, recs: list[Reconstruccion], lote_reg: Lote)
             g.add((ide, CRM.P190_has_symbolic_content, Literal(r.identificador_externo or r.externo)))
             if r.externo:
                 g.add((nodo, RDFS.seeAlso, URIRef(r.externo)))
+            if (r.identificador_externo or "").startswith("HGIS:"):
+                g.add((ide, DCTERMS.source, URIRef(HGIS_DATASET)))
+        for k, otra in enumerate(r.ver_tambien, 1):
+            ide = URIRef(f"{nodo}/identificador-externo/{k}")
+            g.add((nodo, CRM.P1_is_identified_by, ide))
+            g.add((ide, RDF.type, CRM.E42_Identifier))
+            g.add((ide, CRM.P190_has_symbolic_content, Literal(otra)))
+            g.add((nodo, RDFS.seeAlso, URIRef(otra)))
 
 
 def _participa_cargo(g: Graph, actividad: URIRef, persona: URIRef, cargo: URIRef) -> None:

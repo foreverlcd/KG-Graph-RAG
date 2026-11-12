@@ -227,6 +227,7 @@ class Reconstruccion(_Base):
     autor: str
     fecha: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
     externo: Optional[str] = Field(None, description="IRI externa (p. ej. ficha WHG de HGIS de las Indias)")
+    ver_tambien: list[str] = Field(default_factory=list, description="Otras IRIs de autoridad (Wikidata, TGN); se añaden como identificadores y rdfs:seeAlso, nunca owl:sameAs")
 
     @model_validator(mode="after")
     def _cargo(self):

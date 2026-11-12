@@ -8,6 +8,21 @@
 > Los umbrales que dependen de la literatura citan su fuente. Los demás son propuestas del modelador, a discutir con
 > el equipo.
 
+## 0. Restricción de insumos (2026-11-12, ADR-022) y criterios redefinidos
+
+El equipo fijó que **no habrá imágenes de los folios** ni **más validación humana que la de un autor**. Los criterios
+afectados se redefinen así; la versión original se conserva abajo como registro de lo que se planificó.
+
+| # | Criterio original | Criterio redefinido |
+|---|---|---|
+| 1 | Folio y recto/vuelto cotejados con imágenes | Se descarta. La unidad citable es el tramo (100 %); el folio solo consta cuando el texto lo marca; recto/vuelto = «no consta» de forma permanente |
+| 3 | 20 PC con respuesta fijada por un historiador externo | Un autor fija las respuestas de referencia **antes** de ver las salidas del grafo (prerregistro en `B_respuestas_referencia.csv`, con fecha en git); se declara como validación experta de un solo validador |
+| 4 | Estándar de oro de dos anotadores con α de Krippendorff | Muestra anotada por un autor; se informa **estabilidad intra-anotador** (reanotación ciega de un subconjunto tras un intervalo; Abercrombie et al. 2023) y **no** acuerdo entre anotadores. Un LLM solo sirve como diagnóstico, no como segundo anotador (Calderon et al. 2025) |
+
+El artículo sobre la ontología (en preparación) se apoya en lo que no depende de anotadores: PC como pruebas, SHACL con
+mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) y el análisis de carencias. Ver
+`docs/anexos/H3_metodologia_y_publicacion.md` §2.
+
 ## Resumen
 
 | # | Criterio | Umbral | Estado | Medición |
@@ -67,7 +82,7 @@
   3. **Adjudicación** por una tercera persona; ese es el estándar de oro.
   4. **Evaluación de la extracción LLM.** Precisión y exhaustividad en coincidencia estricta: mismo afirmante, sujeto, atributo, valor y polaridad, con la cita solapada en al menos un 50 %. Se informa además la coincidencia laxa: atributo y sujeto.
 * **Umbrales propuestos.**
-  * Acuerdo entre anotadores: α ≥ 0,80, con 0,67 como mínimo para conclusiones provisionales, según la convención de Krippendorff (2004, *Content Analysis*, 2.ª ed.). Esta referencia no está en el anexo F y hay que verificarla y añadirla antes del artículo; el anexo §D cita a Hayes y Krippendorff (2007) y a Artstein y Poesio (2008) para la elección de α.
+  * Acuerdo entre anotadores: α ≥ 0,80, con 0,67 como mínimo para conclusiones provisionales, según la convención de Krippendorff (2018, *Content Analysis*, 4.ª ed.; antes 2004, 2.ª ed.). Esta referencia no está en el anexo F y hay que verificarla y añadirla antes del artículo; el anexo §D cita a Hayes y Krippendorff (2007) y a Artstein y Poesio (2008) para la elección de α.
   * Extracción: P ≥ 0,90 y R ≥ 0,80 en coincidencia estricta.
 
   La exhaustividad importa especialmente: las respuestas «el expediente no lo dice» (PC12, PC13) **solo son válidas si la exhaustividad es alta**. Por eso PC12 lo advierte en su propia respuesta.
