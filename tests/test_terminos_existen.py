@@ -108,3 +108,22 @@ def test_conceptos_del_tesauro_tienen_preflabel_e_inscheme():
     malos = [f"{c} sin {', '.join(f for f, p in (('prefLabel', SKOS.prefLabel), ('inScheme', SKOS.inScheme)) if tes.value(c, p) is None)}"
              for c in conceptos if tes.value(c, SKOS.prefLabel) is None or tes.value(c, SKOS.inScheme) is None]
     assert not malos, "\n".join(malos)
+
+
+def test_catalogo_resuelve_todas_las_importaciones():
+    """Cada owl:imports de ohac.ttl tiene entrada en catalog-v001.xml, el archivo existe y declara esa IRI."""
+    import xml.etree.ElementTree as ET
+    from pathlib import Path
+    from rdflib import Graph, OWL, RDF
+    raiz = Path(__file__).resolve().parents[1]
+    perfil = Graph().parse(raiz / "ontologia/ohac.ttl")
+    imports = {str(o) for o in perfil.objects(None, OWL.imports)}
+    ns = {"c": "urn:oasis:names:tc:entity:xmlns:xml:catalog"}
+    cat = {u.get("name"): u.get("uri") for u in ET.parse(raiz / "ontologia/catalog-v001.xml").getroot().findall("c:uri", ns)}
+    assert imports <= set(cat), imports - set(cat)
+    for iri in imports:
+        ruta = (raiz / "ontologia" / cat[iri]).resolve()
+        fmt = "xml" if ruta.suffix in (".rdf", ".rdfs") else "turtle"
+        g = Graph().parse(ruta, format=fmt)
+        declaradas = {str(s) for s in g.subjects(RDF.type, OWL.Ontology)} | {str(v) for v in g.objects(None, OWL.versionIRI)}
+        assert iri in declaradas, (iri, ruta)

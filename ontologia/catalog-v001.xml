@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Catálogo OASIS XML (formato de Protégé/OWL API): resuelve las owl:imports de ohac.ttl contra las copias
+     verificadas de vendor/ (sha256 en vendor/fuentes.sha256), sin depender de que las IRI sean resolubles en la red. -->
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="https://www.ica.org/standards/RiC/ontology/1.1" uri="../vendor/ric-o/RiC-O_1-1.rdf"/>
+    <uri name="http://www.cidoc-crm.org/cidoc-crm/7.1.3/" uri="../vendor/cidoc-crm/CIDOC_CRM_v7.1.3.rdfs"/>
+    <uri name="http://www.cidoc-crm.org/extensions/crminf/1.2.1/" uri="../vendor/crminf/CRMinf_v1.2.1.rdf"/>
+    <uri name="http://www.w3.org/ns/prov-o#" uri="../vendor/prov-o/prov-o-20130430.ttl"/>
+    <uri name="http://www.w3.org/2004/02/skos/core" uri="../vendor/skos/skos-core.rdf"/>
+    <uri name="http://www.w3.org/ns/oa#" uri="../vendor/oa/oa.ttl"/>
+    <uri name="https://personsincontext.org/model" uri="../vendor/pico/pico.ttl"/>
+    <uri name="https://w3id.org/roar" uri="../vendor/roar/roar.ttl"/>
+</catalog>
