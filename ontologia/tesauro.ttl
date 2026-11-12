@@ -288,6 +288,9 @@ atr:existe-persona a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel
 atr:cantidad-denunciada a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "cantidad (de tributarios, dinero, etc.)"@es .
 atr:ordena a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "ordena o manda"@es ;
     skos:definition "Sujeto: autoridad. Valor: acción mandada, tal como se escribe. La orden no implica su ejecución."@es .
+atr:se-conforma-con a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "se conforma con (adopta) un dictamen"@es ;
+    skos:definition "Sujeto: pieza dictaminadora (vista fiscal, informe). Valor: la autoridad que la adopta. Registra la cadena de dependencia de las resoluciones."@es ;
+    skos:editorialNote "ruta-crm: crminf:I5_Inference_Making -J1_used_as_premise-> creencia sobre el dictamen (solo capa 4); en capa 3 queda como E13"@es .
 atr:solicita a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "solicita"@es .
 atr:se-hallaba a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "estaba presente o ausente"@es .
 atr:edad a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "edad declarada"@es .

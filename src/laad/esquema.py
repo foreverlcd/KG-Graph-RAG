@@ -58,8 +58,8 @@ TipoEntidad = _enum("TipoEntidad", "entidades")
 ValorCreencia = _enum("ValorCreencia", "creencias")
 
 ID_PIEZA = r"^P\d{2}$"
-ID_MENCION = r"^M-[A-Z0-9.]+-\d{3}$"
-ID_AFIRMACION = r"^A-[A-Z0-9.]+-\d{3}$"
+ID_MENCION = r"^M-[A-Za-z0-9.]+-\d{3}$"
+ID_AFIRMACION = r"^A-[A-Za-z0-9.]+-\d{3}$"
 ID_HECHO = r"^H-[a-z0-9-]+$"
 
 
@@ -145,8 +145,10 @@ class Valor(_Base):
 class Sujeto(_Base):
     mencion: Optional[str] = Field(None, pattern=ID_MENCION)
     pieza: Optional[str] = Field(None, pattern=ID_PIEZA)
-    hecho: Optional[str] = Field(None, pattern=ID_HECHO, description="Hecho narrado, id local del expediente "
-                                 "(p. ej. H-alboroto-carcel). El hecho narrado no es todavía un evento reconstruido.")
+    hecho: Optional[str] = Field(None, pattern=ID_HECHO, description="Hecho narrado EN ESTA PIEZA (p. ej. "
+                                 "H-p01-alboroto). Que dos piezas narren el mismo hecho es una reconstrucción (capa 4).")
+    eliptico: bool = Field(False, description="True si el sujeto no está escrito en la cita y lo resolvió el anotador "
+                           "(p. ej. sujeto omitido que remite a una pieza anterior). Debe explicarse en 'nota'.")
 
     @model_validator(mode="after")
     def _uno(self):
@@ -180,6 +182,8 @@ class Afirmacion(_Base):
             raise ValueError(f"{self.id}: rol_afirmante debe ser rol:afirmante o un hijo suyo")
         if self.atributo == "participa-en-hecho" and not self.rol_en_hecho:
             raise ValueError(f"{self.id}: participa-en-hecho exige rol_en_hecho")
+        if self.sujeto.eliptico and not self.nota:
+            raise ValueError(f"{self.id}: un sujeto elíptico exige nota que explique la resolución")
         if self.rol_en_hecho and self.rol_en_hecho not in _descendientes("roles", "participante-en-hecho"):
             raise ValueError(f"{self.id}: rol_en_hecho fuera de la rama participante-en-hecho")
         return self
