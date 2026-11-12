@@ -8,10 +8,20 @@ Fuentes, en orden de autoridad (ver `docs/01_materiales.md`):
 2. `corpus/corpus_modernizado.txt` — ayuda de lectura; nunca se cita.
 3. `archivos/Catálogo Intendencia I CO y CC.pdf` — dato a contrastar.
 
-La documentación completa está en `docs/` (índice en `docs/00_indice.md`).
+La documentación completa está en `docs/` (índice y pasos de reproducción en `docs/00_indice.md`).
+
+## Estructura
+- `ontologia/` — perfil OHAC (sin términos propios), tesauro SKOS, formas SHACL
+- `src/laad/` — fuente y citas, esquema plano, mapeo determinista, consulta y respuestas
+- `consultas/` — consultas SPARQL con nombre
+- `datos/` — manifiesto del expediente, piezas (capa 1), registros anotados (capas 2–3), reconstrucciones (capa 4), grafo TriG
+- `vendor/` — especificaciones de los estándares (descarga reproducible con `scripts/fetch_vendor.sh`)
+- `tests/` — 205 pruebas (fuente, formas negativas, términos, capas, mapeo, preguntas de competencia, segundo expediente sintético)
 
 ## Entorno
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/pytest -q
 ```
+
+El estado de cada criterio de aceptación está en `docs/G_evaluacion.md`.

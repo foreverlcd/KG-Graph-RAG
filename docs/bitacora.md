@@ -54,3 +54,19 @@
 * **Afirmante sin nombre.** El informe del cura (P23) no lleva firma en la transcripción. El afirmante es la mención «parroco interino» del oficio P22, y la nota remite a P27, donde Mata lo nombra.
 * **Firma frente a negación de la firma.** La firma visible es capa 2 (mención con rol firmante); la negación de haber firmado es capa 3. La disputa entre ambas se calcula con `disputas_firma.rq`.
 * **Segundo expediente** sorteado antes de leer su ficha: CO Cusco Leg. 70 Exp. 15 (semilla 18061806).
+
+## Revisión 1 (tras la revisión independiente)
+
+| # | Hallazgo del revisor | Comprobación del modelador | Acción |
+|---|---|---|---|
+| 16 | C1: cargos con vigencia no implementados (`mapeo` lanzaba «aún no mapeado») | Confirmado | Registro `cargo` y `CargoForma`; PC18 respondida con 3 ejercicios de cargo |
+| 17 | C2: `FUERZA` en Python da KeyError con tipos abstractos (`de-parte`) | Confirmado por el revisor ejecutando el código | Fuerza en el tesauro (`skos:related`) + SHACL «tipo sin fuerza» + prueba negativa |
+| 18 | C2: prefijo `cc-14-18`, transcripción y jerarquía fijados en el código | Confirmado | Manifiesto por expediente + `fuente.usando_expediente`; prueba con un expediente civil sintético que no introduce clases ni propiedades nuevas |
+| 19 | I1: `afirmaciones.rq` devolvía 66 filas para 59 afirmaciones | Confirmado: la unión de las hipótesis rivales duplicaba filas | Columnas de entidad retiradas; ahora 74 filas para 74 afirmaciones |
+| 20 | I1: «dies» / «diez» y «rebelde» / «Rebelde» no se detectaban como disputa | Confirmado | Campo `responde_a` (P17 + `anot:responde-a`) y tipo de disputa «niega lo afirmado» |
+| 21 | I3: menciones tipadas E21 | Confirmado: hacía de «don Juan Quiñones» una persona existente | Menciones solo PiCo/ROAR; prueba `test_menciones_no_afirman_existencia` |
+| 22 | I4: la creencia dentro del grafo que evalúa | Confirmado | Grafo `g:argumentacion/R-x`; pruebas de capas actualizadas |
+| 23 | I7: A-UT19-004 con la dirección invertida; A-UT12b-001 con doble negación | Confirmado | Datos corregidos y definiciones del tesauro precisadas |
+| 24 | Ejecución tras la revisión: la prueba guardiana detectó que `CargoForma` no tenía caso negativo | — | 4 mutaciones nuevas (35 en total) |
+| 25 | Ejecución tras la revisión: la PC12 pasó a «hay afirmaciones resolutivas sobre la matrícula» | Causa: la heurística «tribut» en el texto del valor casaba con «recaudador de tributos» del fiscal | PC12 con regla estructural (atributo y fuerza), sin heurística sobre el texto |
+| 26 | Razonador sobre el modelo revisado | 0 inconsistencias; 59 tipificaciones espurias por D1 | Informado en G |
