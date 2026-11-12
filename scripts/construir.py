@@ -12,6 +12,10 @@ ds = construir()
 out = RAIZ / "datos/grafo/hilo_central.trig"
 out.parent.mkdir(exist_ok=True)
 ds.serialize(out, format="trig")
+# Forma canónica para git: N-Quads ordenado (el orden de TriG de rdflib no es estable entre ejecuciones;
+# los grafos son isomorfos, ver tests/test_mapeo.py).
+nq = sorted(l for l in ds.serialize(format="nquads").splitlines() if l.strip())
+(out.with_suffix(".nq")).write_text("\n".join(nq) + "\n", encoding="utf-8")
 print(f"escrito {out} ({sum(len(g) for g in ds.graphs())} tripletas en {len(list(ds.graphs()))} grafos)")
 conforma, _, texto = validacion.shacl(mapeo.union(ds), con_ontologias="--sin-ontologias" not in sys.argv)
 print("SHACL conforma:", conforma)
