@@ -1,0 +1,6 @@
+rdflib==7.6.0
+pyshacl==0.40.2
+owlrl
+pytest
+pydantic==2.14.3
+jsonschema

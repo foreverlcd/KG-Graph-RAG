@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.pytest_cache/
+vendor/*
+!vendor/README.md
+!vendor/fuentes.sha256
+*.pyc
