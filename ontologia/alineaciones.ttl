@@ -1,0 +1,126 @@
+# GENERADO por scripts/alineaciones.py desde datos/alineaciones_tesauro.csv. No editar a mano.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://w3id.org/laad/tesauro/actuacion/auto> skos:closeMatch <http://www.wikidata.org/entity/Q696617> .
+
+<https://w3id.org/laad/tesauro/actuacion/caratula> skos:relatedMatch <http://vocab.getty.edu/aat/300055033> .
+
+<https://w3id.org/laad/tesauro/actuacion/certificacion> skos:relatedMatch <http://www.wikidata.org/entity/Q196756> .
+
+<https://w3id.org/laad/tesauro/actuacion/declaracion-jurada> skos:closeMatch <http://vocab.getty.edu/aat/300027862> ;
+    skos:relatedMatch <http://www.wikidata.org/entity/Q454263> .
+
+<https://w3id.org/laad/tesauro/actuacion/decreto> skos:relatedMatch <http://vocab.getty.edu/aat/300026925> .
+
+<https://w3id.org/laad/tesauro/actuacion/notificacion> skos:closeMatch <http://www.wikidata.org/entity/Q3878786> .
+
+<https://w3id.org/laad/tesauro/actuacion/peticion> skos:closeMatch <http://vocab.getty.edu/aat/300027219> .
+
+<https://w3id.org/laad/tesauro/atributo/presta-juramento> skos:relatedMatch <http://vocab.getty.edu/aat/300027206> .
+
+<https://w3id.org/laad/tesauro/cargo/cacique> skos:altLabel "curaca"@quz ;
+    skos:historyNote "Forma quechua atestiguada: «Curaca. El señor del pueblo» (González Holguín, D. (1608). Vocabulario de la lengua general de todo el Perú llamada lengua qquichua. Lima.)"@es ;
+    skos:relatedMatch <http://vocab.getty.edu/aat/300379207>,
+        <http://www.wikidata.org/entity/Q2513785> .
+
+<https://w3id.org/laad/tesauro/cargo/capitan> skos:closeMatch <http://vocab.getty.edu/aat/300236171> .
+
+<https://w3id.org/laad/tesauro/cargo/cargo-rebelde-1780> skos:relatedMatch <http://www.wikidata.org/entity/Q1806552> .
+
+<https://w3id.org/laad/tesauro/cargo/corregidor> skos:closeMatch <http://vocab.getty.edu/aat/300311300>,
+        <http://www.wikidata.org/entity/Q2274587> .
+
+<https://w3id.org/laad/tesauro/cargo/cura-interino> skos:relatedMatch <http://vocab.getty.edu/aat/300264485> .
+
+<https://w3id.org/laad/tesauro/cargo/cura-propio> skos:closeMatch <http://www.wikidata.org/entity/Q955464> .
+
+<https://w3id.org/laad/tesauro/cargo/escribano> skos:closeMatch <http://www.wikidata.org/entity/Q1318187> ;
+    skos:relatedMatch <http://vocab.getty.edu/aat/300025454> .
+
+<https://w3id.org/laad/tesauro/cargo/fiscal-audiencia> skos:relatedMatch <http://vocab.getty.edu/aat/300136491> .
+
+<https://w3id.org/laad/tesauro/cargo/fiscal-protector-general> skos:relatedMatch <http://www.wikidata.org/entity/Q7251396> .
+
+<https://w3id.org/laad/tesauro/cargo/interprete-general> skos:relatedMatch <http://www.wikidata.org/entity/Q11085831> .
+
+<https://w3id.org/laad/tesauro/cargo/presidente-audiencia> skos:relatedMatch <http://www.wikidata.org/entity/Q2134673> .
+
+<https://w3id.org/laad/tesauro/cargo/protector-partidario> skos:relatedMatch <http://www.wikidata.org/entity/Q7251396> .
+
+<https://w3id.org/laad/tesauro/cargo/recaudador-de-tributos> skos:relatedMatch <http://vocab.getty.edu/aat/300136497> .
+
+<https://w3id.org/laad/tesauro/cargo/sargento> skos:relatedMatch <http://www.wikidata.org/entity/Q157696> .
+
+<https://w3id.org/laad/tesauro/cargo/soldado> skos:closeMatch <http://vocab.getty.edu/aat/300185678>,
+        <http://www.wikidata.org/entity/Q4991371> .
+
+<https://w3id.org/laad/tesauro/cargo/subdelegado> skos:closeMatch <http://www.wikidata.org/entity/Q3502501> .
+
+<https://w3id.org/laad/tesauro/condicion/hijo-espurio> skos:relatedMatch <http://www.wikidata.org/entity/Q170393> .
+
+<https://w3id.org/laad/tesauro/condicion/indio> skos:relatedMatch <http://vocab.getty.edu/aat/300379660> .
+
+<https://w3id.org/laad/tesauro/condicion/miliciano> skos:relatedMatch <http://www.wikidata.org/entity/Q153936> .
+
+<https://w3id.org/laad/tesauro/condicion/zambo> skos:closeMatch <http://www.wikidata.org/entity/Q145573> .
+
+<https://w3id.org/laad/tesauro/documento/folio> skos:closeMatch <http://vocab.getty.edu/aat/300189604>,
+        <http://www.wikidata.org/entity/Q1363377> .
+
+<https://w3id.org/laad/tesauro/documento/legajo> skos:relatedMatch <http://vocab.getty.edu/aat/300026942> .
+
+<https://w3id.org/laad/tesauro/documento/recto> skos:closeMatch <http://vocab.getty.edu/aat/300078817>,
+        <http://www.wikidata.org/entity/Q9305022> .
+
+<https://w3id.org/laad/tesauro/documento/transcripcion-paleografica> skos:relatedMatch <http://vocab.getty.edu/aat/300404333>,
+        <http://www.wikidata.org/entity/Q179957> .
+
+<https://w3id.org/laad/tesauro/documento/vuelto> skos:closeMatch <http://vocab.getty.edu/aat/300010292>,
+        <http://www.wikidata.org/entity/Q9368452> .
+
+<https://w3id.org/laad/tesauro/entidad/ayllu> skos:altLabel "ayllu"@quz ;
+    skos:closeMatch <http://www.wikidata.org/entity/Q793079> ;
+    skos:historyNote "Forma quechua atestiguada: «Ayllu. parcialidad, genealogía, linaje…» (González Holguín, D. (1608). Vocabulario de la lengua general de todo el Perú llamada lengua qquichua. Lima.)"@es .
+
+<https://w3id.org/laad/tesauro/entidad/carcel> skos:closeMatch <http://vocab.getty.edu/aat/300006457> ;
+    skos:relatedMatch <http://www.wikidata.org/entity/Q40357> .
+
+<https://w3id.org/laad/tesauro/entidad/compania-milicias> skos:relatedMatch <http://vocab.getty.edu/aat/300250737> .
+
+<https://w3id.org/laad/tesauro/entidad/doctrina> skos:relatedMatch <http://vocab.getty.edu/aat/300000773> .
+
+<https://w3id.org/laad/tesauro/entidad/intendencia> skos:closeMatch <http://www.wikidata.org/entity/Q17147958> ;
+    skos:relatedMatch <http://vocab.getty.edu/aat/300235094> .
+
+<https://w3id.org/laad/tesauro/entidad/matricula> skos:relatedMatch <http://vocab.getty.edu/aat/300026832> .
+
+<https://w3id.org/laad/tesauro/entidad/partido> skos:relatedMatch <http://www.wikidata.org/entity/Q6063891> .
+
+<https://w3id.org/laad/tesauro/entidad/plaza> skos:closeMatch <http://vocab.getty.edu/aat/300008304> ;
+    skos:relatedMatch <http://www.wikidata.org/entity/Q17418423> .
+
+<https://w3id.org/laad/tesauro/entidad/pueblo> skos:relatedMatch <http://vocab.getty.edu/aat/300008487>,
+        <http://www.wikidata.org/entity/Q350735> .
+
+<https://w3id.org/laad/tesauro/fundamento/oidas> skos:closeMatch <http://www.wikidata.org/entity/Q1211464> .
+
+<https://w3id.org/laad/tesauro/rol/declarante> skos:relatedMatch <http://www.wikidata.org/entity/Q196939> .
+
+<https://w3id.org/laad/tesauro/rol/denunciante> skos:relatedMatch <http://vocab.getty.edu/aat/300440758> .
+
+<https://w3id.org/laad/tesauro/rol/fedatario> skos:relatedMatch <http://vocab.getty.edu/aat/300025454> .
+
+<https://w3id.org/laad/tesauro/rol/firmante> skos:closeMatch <http://vocab.getty.edu/aat/300137375> .
+
+<https://w3id.org/laad/tesauro/rol/interprete> skos:closeMatch <http://vocab.getty.edu/aat/300025602> .
+
+<https://w3id.org/laad/tesauro/rol/preso> skos:closeMatch <http://vocab.getty.edu/aat/300025933> .
+
+<https://w3id.org/laad/tesauro/rol/protector> skos:relatedMatch <http://www.wikidata.org/entity/Q7251396> .
+
+<https://w3id.org/laad/tesauro/rol/redactor> skos:relatedMatch <http://vocab.getty.edu/aat/300025580> .
+
+<https://w3id.org/laad/tesauro/rol/testigo-de-asistencia> skos:relatedMatch <http://www.wikidata.org/entity/Q196939> .
+
+<https://w3id.org/laad/tesauro/rol/victima> skos:closeMatch <http://www.wikidata.org/entity/Q1851760> .
+
