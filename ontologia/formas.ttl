@@ -179,7 +179,22 @@ ohac:AfirmacionForma a sh:NodeShape ;
         sh:select """SELECT $this WHERE { $this crm:P14_carried_out_by ?a .
             FILTER NOT EXISTS { ?pc crm:P01_has_domain $this ; crm:P02_has_range ?a ;
                                     <http://www.cidoc-crm.org/cidoc-crm/P14.1_in_the_role_of> ?r .
-                                ?r skos:broader* <https://w3id.org/laad/tesauro/rol/afirmante> } }""" ] .
+                                ?r skos:broader* <https://w3id.org/laad/tesauro/rol/afirmante> } }""" ] ;
+    sh:sparql [
+        sh:message "P17 hacia otra afirmación exige anot:responde-a, y anot:responde-a exige P17 hacia una E13 (relación de discurso explícita)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E13_Attribute_Assignment .
+            BIND (EXISTS { $this crm:P17_was_motivated_by ?o . ?o a crm:E13_Attribute_Assignment } AS ?objeto)
+            BIND (EXISTS { $this crm:P2_has_type <https://w3id.org/laad/tesauro/anotacion/responde-a> } AS ?marca)
+            FILTER (?objeto != ?marca) }""" ] ;
+    sh:sparql [
+        sh:message "P17 hacia una mención exige anot:segun-otro, y anot:segun-otro exige P17 hacia una mención (discurso referido explícito)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E13_Attribute_Assignment .
+            BIND (EXISTS { $this crm:P17_was_motivated_by ?o .
+                           { ?o a <https://personsincontext.org/model#PersonObservation> } UNION { ?o a <https://w3id.org/roar#Observation> } } AS ?objeto)
+            BIND (EXISTS { $this crm:P2_has_type <https://w3id.org/laad/tesauro/anotacion/segun-otro> } AS ?marca)
+            FILTER (?objeto != ?marca) }""" ] .
 
 ohac:ValorLiteralForma a sh:NodeShape ;
     sh:targetClass crm:E33_Linguistic_Object ;

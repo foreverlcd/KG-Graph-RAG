@@ -114,5 +114,27 @@ def disputa(entidad: str, atributo: str, valor_label: str | None = None) -> tupl
     return res, filas
 
 
+def forma_de(filas: list[dict]) -> str:
+    """Forma de la respuesta CALCULADA a partir de las filas (no escrita a mano):
+    NC si no hay afirmaciones; DISPUTA si un mismo valor se afirma y se niega, o si hay valores distintos;
+    A si solo hay afirmaciones concordantes."""
+    if not filas:
+        return "NC"
+    por_valor: dict[str, set[str]] = defaultdict(set)
+    for f in filas:
+        por_valor[f["valorLabel"]].add(f["pol"])
+    if len(por_valor) > 1 or any(len(p) > 1 for p in por_valor.values()):
+        return "DISPUTA"
+    return "A"
+
+
+def pronunciamientos(filas: list[dict]) -> str:
+    """Frase calculada: qué actuaciones dictaminadoras o resolutivas se pronuncian sobre el punto."""
+    autoridad = [f for f in filas if f["fuerza"] in ("resolutiva", "dictaminadora")]
+    if not autoridad:
+        return "Ninguna actuación de fuerza dictaminadora o resolutiva se pronuncia sobre este punto (calculado)."
+    return "Se pronuncian con fuerza dictaminadora o resolutiva: " + "; ".join(_quien(f) for f in autoridad) + "."
+
+
 def reconstrucciones_de(entidad: str) -> list[dict]:
     return [r for r in consultar("reconstrucciones") if r["entidad"] == str(entidad)]

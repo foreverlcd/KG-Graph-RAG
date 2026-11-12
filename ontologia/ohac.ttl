@@ -29,7 +29,7 @@
                 <http://www.w3.org/ns/oa#> ,
                 <https://personsincontext.org/model> ,
                 <https://w3id.org/roar> ;
-    rdfs:comment "Las IRI de importación son nominales; los archivos exactos y sus sha256 están en vendor/README.md y vendor/fuentes.sha256."@es .
+    rdfs:comment "Las IRI de importación son las IRI de ontología o de versión que declaran los propios archivos de los estándares; ontologia/catalog-v001.xml las resuelve contra las copias verificadas de vendor/ (sha256 en vendor/fuentes.sha256). El suplemento PC de CIDOC CRM 7.1.3 no declara IRI de ontología y se carga aparte."@es .
 
 # Alineaciones con el tesauro de roles de PiCo (vendor/pico-roles). PiCo no tiene querellante, juez, escribano ni intérprete.
 rol:declarante        skos:closeMatch picot_roles:573 .   # witness / getuige

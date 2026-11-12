@@ -24,6 +24,7 @@ Forma → casos:
   LoteConProcedenciaForma    lote-reconstruccion-sin-autor, lote-actividad-sin-plan
   CargoForma                 cargo-sin-vigencia, cargo-sin-premisa            (revisión C1)
   AfirmacionForma (+)        afirmacion-eliptica-sin-nota                     (revisión I2)
+  AfirmacionForma (+)        afirmacion-responde-sin-marca, afirmacion-segun-sin-marca (revisión 2, n.º 6)
   PiezaForma (+)             pieza-tipo-abstracto-sin-fuerza                  (revisión C2)
 """
 from __future__ import annotations
@@ -317,6 +318,20 @@ def m_lote_actividad_sin_plan(g):
     return M.G["texto/anotacion-manual-hilo-central-v1"]
 
 
+def m_afirmacion_responde_sin_marca(g):
+    a = M.ID["cc-14-18/afirmacion/A-UT11-004"]
+    assert (a, M.CRM.P2_has_type, M.ANOT["responde-a"]) in g
+    g.remove((a, M.CRM.P2_has_type, M.ANOT["responde-a"]))
+    return a
+
+
+def m_afirmacion_segun_sin_marca(g):
+    a = M.ID["cc-14-18/afirmacion/A-UT11-005"]
+    assert (a, M.CRM.P2_has_type, M.ANOT["segun-otro"]) in g
+    g.remove((a, M.CRM.P2_has_type, M.ANOT["segun-otro"]))
+    return a
+
+
 MUTACIONES = [
     Mutacion("pieza-sin-titulo", OHAC.PiezaForma, m_pieza_sin_titulo),
     Mutacion("pieza-tipo-fuera-de-actuaciones", OHAC.PiezaForma, m_pieza_tipo_fuera, "tes:actuaciones"),
@@ -340,6 +355,8 @@ MUTACIONES = [
     Mutacion("afirmacion-atributo-fuera", OHAC.AfirmacionForma, m_afirmacion_atributo_fuera, "tes:atributos"),
     Mutacion("afirmacion-sin-fundamento", OHAC.AfirmacionForma, m_afirmacion_sin_fundamento, "fundamento"),
     Mutacion("afirmacion-rol-no-afirmante", OHAC.AfirmacionForma, m_afirmacion_rol_no_afirmante, "rol:afirmante"),
+    Mutacion("afirmacion-responde-sin-marca", OHAC.AfirmacionForma, m_afirmacion_responde_sin_marca, "anot:responde-a"),
+    Mutacion("afirmacion-segun-sin-marca", OHAC.AfirmacionForma, m_afirmacion_segun_sin_marca, "anot:segun-otro"),
     Mutacion("valor-literal-sin-contenido", OHAC.ValorLiteralForma, m_valor_literal_sin_contenido),
     Mutacion("concepto-como-clase", OHAC.ConceptoNoInstanciadoForma, m_concepto_como_clase),
     Mutacion("reconstruccion-sin-derivacion", OHAC.ReconstruccionForma, m_reconstruccion_sin_derivacion),

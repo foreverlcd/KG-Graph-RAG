@@ -6,7 +6,7 @@ Las PC que requieren anotación aún no hecha devuelven forma "PENDIENTE" con el
 from __future__ import annotations
 
 from .consulta import ID, TES, atributo, consultar, evento, persona
-from .responder import Respuesta, _quien, _unicas, disputa, reconstrucciones_de
+from .responder import Respuesta, _quien, _unicas, disputa, forma_de, pronunciamientos, reconstrucciones_de
 
 PIEZA = ID + "cc-14-18/pieza/"
 
@@ -60,8 +60,8 @@ def pc09() -> Respuesta:
     for f in _afirm(filtroEntidad=ent, atributo=atributo("ejerce-cargo")):
         if f["valorLabel"] != "coronel (de Túpac Amaru)":
             extra.append(f"  {f['aid']}: {_quien(f)} → {f['valorLabel']} ({f['pol']}) «{f['cita']}»")
-    extra.append("Ninguna actuación de fuerza dictaminadora o resolutiva se pronuncia sobre este punto.")
-    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", "DISPUTA", res, filas,
+    extra.append(pronunciamientos(filas))
+    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", forma_de(filas), res, filas,
                      reconstrucciones_de(ent), extra)
 
 
@@ -71,16 +71,21 @@ def pc10() -> Respuesta:
     extra = [f"Disputa texto/afirmación: la pieza {f['pieza']} muestra la firma «{f['firmaEscrita']}» "
              f"({f['mencionFirma']}), y {f['negacion']} («{f['afirmante']}») lo niega: «{f['cita']}»" for f in firmas]
     piezas = sorted({f["sujetoLabel"] for f in filas})
-    return Respuesta("¿Quién redactó las certificaciones de agosto?", "DISPUTA",
-                     f"Está en disputa en {len(piezas)} piezas ({', '.join(piezas)}): el subdelegado atribuye la "
-                     "redacción al propio denunciante; los declarantes, a Simón Arce o a un hijo del declarante.",
+    # disputa calculada: alguna pieza con dos redactores distintos atribuidos, o una firma negada
+    por_pieza: dict[str, set[str]] = {}
+    for f in filas:
+        por_pieza.setdefault(f["sujetoLabel"], set()).add(f["valorLabel"])
+    forma = "DISPUTA" if firmas or any(len(v) > 1 for v in por_pieza.values()) else forma_de(filas)
+    detalle = "; ".join(f"{p}: " + ", ".join(sorted(v)) for p, v in sorted(por_pieza.items()))
+    return Respuesta("¿Quién redactó las certificaciones de agosto?", forma,
+                     f"{len(piezas)} piezas con redactor atribuido ({detalle}); {len(firmas)} firmas negadas.",
                      filas, extra=extra)
 
 
 def pc11() -> Respuesta:
     ent = evento("prision")
     res, filas = disputa(ent, "duracion")
-    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", "DISPUTA", res, filas, reconstrucciones_de(ent))
+    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas), res, filas, reconstrucciones_de(ent))
 
 
 def _resolutivas() -> list[dict]:
@@ -111,17 +116,23 @@ def pc12() -> Respuesta:
 
 
 def pc13() -> Respuesta:
-    ordenes = [f for f in _afirm(atributo=atributo("ordena"))]
-    return Respuesta("¿Qué castigo concreto se ejecutó contra Huancachoque tras el auto del 26 de noviembre?", "NC",
-                     "El expediente no lo dice: consta la orden de «contener los excesos», no su ejecución. "
-                     "Una orden no implica su cumplimiento (tes:atributo/ordena).", ordenes)
+    """NC calculado: una orden no implica su cumplimiento (tes:atributo/ordena). Su ejecución constaría como una
+    afirmación que responde a la orden (P17 + anot:responde-a); si no hay ninguna, el expediente no lo dice."""
+    ordenes = [f for f in _afirm(atributo=atributo("ordena")) if f["fuerza"] == "resolutiva"]
+    ids = {f["aid"] for f in ordenes}
+    cumplimiento = [f for f in _afirm() if f.get("respondeA") in ids]
+    pregunta = "¿Qué castigo concreto se ejecutó contra Huancachoque tras el auto del 26 de noviembre?"
+    if cumplimiento:
+        return Respuesta(pregunta, "A", "Hay afirmaciones que responden a la orden resolutiva.", ordenes + cumplimiento)
+    return Respuesta(pregunta, "NC", f"El expediente no lo dice: constan {len(ordenes)} órdenes resolutivas "
+                     "y ninguna afirmación que responda a ellas (ejecución o cumplimiento).", ordenes)
 
 
 def pc14() -> Respuesta:
     ent = evento("alboroto-carcel")
     res, filas = disputa(ent, "fecha-del-hecho")
     _, num = disputa(ent, "numero-de-participantes")
-    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", "DISPUTA",
+    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas),
                      res, filas + num, reconstrucciones_de(ent))
 
 

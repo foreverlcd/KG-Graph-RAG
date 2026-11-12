@@ -1,0 +1,556 @@
+% Artículo sobre la ontología (perfil OHAC) del proyecto LAAD.
+% Compilar con:  latexmk -pdf main.tex   (BibTeX + splncs04)
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands,es-tabla,es-nodecimaldot]{babel}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,arrows.meta,backgrounds}
+\usepackage[hidelinks]{hyperref}
+\usepackage{csquotes}
+
+% Marcas de pendiente: se deben resolver antes del envío.
+\newcommand{\pendiente}[1]{\textcolor{red}{[PENDIENTE: #1]}}
+\newcommand{\ttt}[1]{\texttt{\small #1}}
+\setlength{\emergencystretch}{3em}
+\newcommand{\cita}[1]{«\textit{#1}»}
+
+\lstdefinelanguage{turtle}{
+  morekeywords={a,@prefix},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]",
+}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  xleftmargin=2pt,
+  xrightmargin=2pt,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 {→}{{$\rightarrow$}}1,
+}
+
+\begin{document}
+
+\title{Lo que se dijo, lo que consta y lo que se reconstruye:\\
+un perfil de aplicación en cuatro capas para expedientes judiciales coloniales}
+\titlerunning{Un perfil de aplicación en cuatro capas para expedientes coloniales}
+
+\author{Jhon Jesus Quispe Machaca \and Ian Logan Will Quispe Ventura}
+\authorrunning{J. J. Quispe Machaca e I. L. W. Quispe Ventura}
+\institute{Universidad Nacional de San Antonio Abad del Cusco, Cusco, Perú\\
+\email{215422@unsaac.edu.pe}, \email{211359@unsaac.edu.pe}}
+
+\maketitle
+
+\begin{abstract}
+Los expedientes judiciales coloniales no registran hechos: registran lo que alguien afirmó, ante quién, en qué
+actuación y con qué fuerza procesal. Los grafos de conocimiento que convierten esas afirmaciones en tripletas
+«verdaderas», o que dan por hecho lo que resolvió el tribunal, borran justamente lo que interesa al historiador.
+Presentamos OHAC, un perfil de aplicación para el Fondo Intendencia del Archivo Regional del Cusco que separa cuatro
+capas en grafos nombrados: el documento (RiC-O), las menciones sin fusionar (PiCo y ROAR), las afirmaciones
+atribuidas (CIDOC CRM E13 con el patrón STAR) y las reconstrucciones del investigador con autor, fecha y grado de
+creencia (CRMinf), más una capa de procedencia del dato (PROV-O). Lo andino y lo procesal se expresan como un tesauro
+SKOS y las reglas del perfil como formas SHACL. Un análisis de carencias muestra que el perfil no necesita declarar
+ninguna clase ni propiedad propia. El caso piloto es una causa criminal de 1806 contra un cacique recaudador de
+Tinta, con certificaciones de agosto desmentidas en declaraciones juradas de septiembre. Veinte preguntas de
+competencia, redactadas antes de modelar, funcionan como pruebas automáticas; el grafo resultante es conforme a
+SHACL, consistente bajo OWL~2~RL y responde 17 de las 20. La evaluación reveló además seis defectos de
+interoperabilidad en los estándares reutilizados, entre ellos una presunción de sinceridad que CRMinf~1.2.1 impone a
+toda afirmación de CIDOC CRM.
+
+\keywords{Ontologías \and Archivos coloniales \and CIDOC CRM \and RiC-O \and Afirmaciones en disputa \and
+Humanidades digitales \and Perú}
+\end{abstract}
+
+\noindent\textbf{Recurso.}
+Tipo: perfil de aplicación (tesauro SKOS, formas SHACL, consultas SPARQL y grafo de ejemplo).
+Licencia: \pendiente{licencia de datos y código}.
+Repositorio: \pendiente{URL pública}.
+DOI: \pendiente{DOI de Zenodo}.
+Espacio de nombres: \ttt{https://w3id.org/laad/} \pendiente{registro en w3id.org}.
+
+% =====================================================================
+\section{Introducción}\label{sec:intro}
+
+Un expediente judicial colonial es una cadena de actuaciones: peticiones, certificaciones, declaraciones juradas,
+informes, vistas fiscales y autos. Cada pieza registra lo que alguien afirmó, ante quién, quién la escribió y quién
+la firmó. Las afirmaciones se contradicen entre piezas, los testigos se retractan y el tribunal resuelve sin que su
+resolución vuelva verdadero lo resuelto. Para el historiador, el dato es precisamente esa trama de voces.
+
+Los grafos de conocimiento construidos sobre fuentes de este tipo suelen perder esa trama de tres maneras: convierten
+cada afirmación en una tripleta sobre el mundo; toman la sentencia como el valor de verdad que zanja la disputa; y
+fusionan en una sola persona todas las grafías de un nombre. Un prototipo anterior de nuestro equipo, construido
+como grafo de propiedades a partir de la extracción de un modelo de lenguaje, cometió los tres errores: la vista
+fiscal se convirtió en un estado «desmentido» de los hechos, la frase de un fiscal quedó atribuida a ocho
+declarantes por una colisión de identificadores, y las grafías del denunciante se fusionaron sin evidencia
+(sección~\ref{sec:requisitos}).
+
+Este artículo presenta OHAC, un perfil de aplicación para el Fondo Intendencia del Archivo Regional del Cusco (ARC)
+cuyo principio es separar lo que es el papel, lo que está escrito, lo que alguien afirmó y lo que un investigador
+propone. El caso piloto es la causa criminal del Legajo~14, Expediente~18 (1806): Manuel Huancachoque, indio
+originario del pueblo de Tinta, acusa al cacique recaudador Andrés Chuquitapa. En agosto, varios vecinos certifican
+que Chuquitapa fue \cita{complice y coronel} de Túpac Amaru en 1780; en septiembre, ante el juez comisionado, uno de
+ellos declara \cita{Comisionado por este y no coronel}, otro niega haber firmado y un tercero dice que no sabe
+escribir. El subdelegado informa que las certificaciones las redactó el propio denunciante, y la vista fiscal
+concluye que las quejas son \cita{menos conforme a la verdad}.
+
+Las contribuciones son:
+\begin{enumerate}
+\item Un modelo en cuatro capas, más una de procedencia, separadas en grafos nombrados, que representa afirmaciones
+  judiciales atribuidas sin valores de verdad y deja las identidades y los hechos para reconstrucciones con autor
+  (sección~\ref{sec:modelo}).
+\item Un análisis de carencias que muestra que ese modelo se expresa sin términos propios, reutilizando RiC-O~1.1,
+  CIDOC CRM~7.1.3, CRMinf~1.2.1, PiCo, ROAR, PROV-O, SKOS y Web Annotation; lo local (lo andino y lo procesal) vive
+  en un tesauro SKOS (sección~\ref{sec:carencias}).
+\item Seis defectos de interoperabilidad en esos estándares, encontrados al validar y razonar sobre datos reales, con
+  su tratamiento (sección~\ref{sec:defectos}).
+\item Una evaluación reproducible: veinte preguntas de competencia redactadas antes de modelar y ejecutadas como
+  pruebas, formas SHACL con pruebas de mutación, razonamiento OWL~2~RL y verificación literal de todas las citas
+  (sección~\ref{sec:evaluacion}).
+\end{enumerate}
+
+% =====================================================================
+\section{Trabajos relacionados}\label{sec:relacionados}
+
+\paragraph{Descripción archivística.}
+\emph{Records in Contexts} (RiC-CM~1.0 y su ontología RiC-O~1.1) es el modelo de referencia del Consejo
+Internacional de Archivos~\cite{riccm10,rico11,clavaud2021rico}. Describe agrupaciones documentales, documentos e
+instanciaciones, pero no la estructura argumentativa de lo escrito. EHRI construyó sobre RiC-O el mayor grafo de
+archivos del Holocausto~\cite{garciagonzalez2023ehri}. CourtDocs propone un modelo para actas judiciales
+históricas que combina RiC-O, PROV-O y CIDOC CRM~\cite{vafaie2023courtdocs}; a diferencia de nuestro perfil, usa
+PROV-O para representar el propio proceso judicial, mientras que aquí PROV-O se reserva a la procedencia del dato y
+el proceso se describe con actividades de CIDOC CRM. Las ontologías jurídicas generales, como LKIF
+Core~\cite{hoekstra2009lkif}, modelan normas y argumentos del derecho moderno y no se ajustan a las actuaciones de
+un pleito del Antiguo Régimen.
+
+\paragraph{Afirmaciones sobre afirmaciones.}
+El modelo de \emph{factoides} de la prosopografía~\cite{pasin2015factoid} registra cada dato junto con su fuente, pero
+funde la fuente con quien afirma y no distingue roles procesales. FactGrid, sobre Wikibase, admite afirmaciones
+contradictorias con calificadores como «según»~\cite{factgrid}; su exportación RDF, sin embargo, materializa como
+tripleta directa la afirmación de mejor rango, que es lo que nuestras capas~1--3 prohíben. STAR reifica cada
+afirmación como una asignación de atributo de CIDOC CRM (E13) con autoridad, fuente y evidencia~\cite{andrews2023star,andrews2025star}; es el patrón que adoptamos y extendemos.
+CRMinf modela las creencias y las inferencias de quien argumenta~\cite{doerr2011factual,crminf121}. En el plano
+genérico de RDF existen la reificación clásica, las relaciones n-arias~\cite{noy2006nary}, los grafos nombrados, las
+nanopublicaciones~\cite{groth2010nanopub,kuhn2016nanopub} y los \emph{triple terms} de RDF~1.2, que en noviembre de
+2026 siguen en fase de recomendación candidata~\cite{rdf12}. Massari et al.~\cite{massari2025} comparan esas
+técnicas para datos culturales y concluyen que no hay una solución única; Mariani~\cite{mariani2023} observa que E13
+se vuelve repetitivo para hipótesis compuestas y propone empaquetarlas como grafos, que es lo que hacemos en la capa
+del investigador. Los grafos conjeturales~\cite{daquino2022conjectural} y su formalización
+epistémica~\cite{vitali2026dec} resuelven un problema paralelo con predicados conjeturales propios.
+
+\paragraph{Personas, lugares y fuentes coloniales.}
+PiCo~\cite{pico} y ROAR~\cite{roar} separan la observación de una persona en una fuente de su reconstrucción. En
+fuentes andinas, el conjunto de datos de Aucará~\cite{melo2026aucara} publica menciones de registros parroquiales
+como insumo para el enlace probabilístico de registros, sin RDF. Candela et al.~\cite{candela2023colonial} proponen un
+enfoque ontológico para el archivo colonial. Para lugares, el nomenclátor de HGIS de las
+Indias~\cite{stangl2018hgis} cubre la América española de 1701 a 1808. No encontramos ningún grafo de conocimiento
+del ARC ni de expedientes judiciales andinos con testimonios atribuidos; es una búsqueda negativa, no una prueba de
+inexistencia.
+
+% =====================================================================
+\section{Requisitos y método}\label{sec:requisitos}
+
+\paragraph{Metodología.}
+Seguimos LOT~\cite{poveda2022lot} en sus fases de especificación, implementación, publicación y mantenimiento, con
+el escenario de reutilización de recursos ontológicos de NeOn~\cite{suarez2015neon}. Los requisitos se escribieron
+siguiendo la plantilla ORSD~\cite{suarez2009orsd} y se expresan como preguntas de competencia (PC)~\cite{gruninger1995,ren2014cq}.
+
+\paragraph{Materiales.}
+La fuente es una transcripción paleográfica del expediente, dividida en 21 tramos por los separadores del
+transcriptor. La transcripción contiene solo cuatro marcas de folio y no indica recto ni vuelto; no se dispone de
+las imágenes. Por eso la unidad citable es el \emph{tramo}, no el folio, y el folio consta solo cuando el texto lo
+marca. Se descartó como fuente una versión modernizada del texto que resolvía variantes en silencio (fechas,
+apellidos). La ficha del catálogo del ARC se \emph{contrasta} con la transcripción en lugar de asumirse: presenta al
+menos cinco discrepancias, como una extensión de 19 folios incompatible con la marca \cita{[Folio 34]}.
+
+\paragraph{Lecciones del prototipo previo.}
+El diagnóstico del prototipo anterior (sección~\ref{sec:intro}) fijó requisitos no funcionales: ningún valor de
+verdad en lo transcrito; ninguna fusión de personas sin una reconstrucción explícita; citas que sean subcadenas
+exactas de la fuente; identificadores deterministas; y uso real de los estándares (sus IRI deben existir en las
+versiones publicadas), no su mención en comentarios.
+
+\paragraph{Preguntas de competencia.}
+Se redactaron 20 PC \emph{antes} de modelar, como haría un historiador del Cusco colonial
+(tabla~\ref{tab:pc}). Cada una indica la capa que la responde y la forma de su respuesta: dato documental (D), lista
+de afirmaciones atribuidas (A), disputa («X lo afirma, Y lo niega»), \emph{no consta} (NC), reconstrucción con autor
+(R) o procedencia (P). Seis PC tienen por respuesta correcta una disputa o un \emph{no consta}; es decir, el modelo
+debe ser capaz de \emph{no} dar una respuesta factual. Las preguntas y unas respuestas de referencia provisionales,
+cada una con su tramo, quedaron registradas en el control de versiones antes del primer cambio del modelo, lo que
+funciona como un prerregistro.
+
+\begin{table}[t]
+\centering
+\caption{Selección de las 20 preguntas de competencia. Capa: 1 documento, 2 menciones, 3 afirmaciones,
+4 reconstrucción, P procedencia.}\label{tab:pc}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}lXcl@{}}
+\toprule
+PC & Pregunta & Capa & Forma \\
+\midrule
+01 & ¿Qué piezas forman el expediente, en qué orden, de qué tipo es cada actuación y qué fecha lleva? & 1+3 & D \\
+05 & ¿Con qué grafías aparece el denunciante, en qué tramos y en qué pieza? & 2 & D \\
+08 & Para cada testigo de agosto, ¿qué afirmó en su certificación y qué en su declaración de septiembre? & 3 & A \\
+09 & ¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión? & 3 & DISPUTA \\
+10 & ¿Quién redactó las certificaciones de agosto? & 3 & DISPUTA \\
+11 & ¿Cuánto tiempo estuvo preso Huancachoque? & 3 & DISPUTA \\
+12 & ¿Se sacó finalmente a Huancachoque de la matrícula de tributarios? & 3 & NC \\
+13 & ¿Qué castigo se ejecutó tras el auto del 26 de noviembre de 1806? & 3 & NC \\
+14 & ¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron? & 3 & DISPUTA \\
+16 & ¿Qué resolvió la autoridad y en qué afirmaciones previas se apoyó? & 3 & A \\
+18 & ¿Qué cargos ejercía Chuquitapa, sobre qué ayllus y con qué vigencia conocida? & 3+4 & R \\
+19 & ¿Son la misma persona el «Mariano Casorla» de septiembre y el «Martin Cazorla» de agosto? & 2+4 & R \\
+20 & ¿De qué versión de la transcripción procede este dato, qué proceso lo extrajo y quién lo validó? & P & D \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{El perfil OHAC}\label{sec:modelo}
+
+\subsection{Principios}
+
+\begin{enumerate}
+\item \textbf{Capas separadas.} Cada capa vive en grafos nombrados propios: \ttt{g:documento},
+  \ttt{g:texto/<lote>}, \ttt{g:afirmaciones/<lote>}, \ttt{g:reconstruccion/R-x} y \ttt{g:argumentacion/R-x}, más
+  \ttt{g:procedencia}.
+\item \textbf{Sin valores de verdad en las capas 1--3.} Una resolución es una afirmación con fuerza institucional
+  resolutiva; no hace verdadero lo resuelto. Solo la capa~4 tiene creencias, siempre con autor y fecha.
+\item \textbf{Sin fusión en la capa 2.} Cada aparición escrita de una persona, un grupo o un lugar es un nodo. Las
+  identidades son hipótesis de la capa~4 y pueden competir entre sí.
+\item \textbf{Lo local como datos.} Las condiciones andinas (originario, forastero, tributario), los cargos
+  (cacique, recaudador, segunda), los tipos de actuación y los roles procesales son conceptos SKOS, no clases.
+\item \textbf{Solo términos existentes} en las versiones publicadas de los estándares, comprobados contra sus
+  archivos.
+\item \textbf{PROV-O solo para la procedencia del dato}, nunca para \enquote{quién lo dijo en 1806}.
+\item \textbf{Determinismo.} Un mapeo puro lleva registros planos al grafo; todo identificador se deriva del
+  expediente, el tramo y un ordinal.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+{\renewcommand{\ttt}[1]{\texttt{#1}}%
+\begin{tikzpicture}[
+  font=\tiny,
+  nodo/.style={draw, rounded corners=2pt, fill=white, inner sep=2pt, align=center, minimum width=3.3cm},
+  capa/.style={draw=gray!60, fill=#1, rounded corners=3pt, inner sep=4pt},
+  flecha/.style={-{Stealth[length=4pt]}, thin},
+  etq/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+% capa 4
+\node[nodo] (rec) at (0,4.6) {\ttt{picom:PersonReconstruction}\\ Andrés Chuquitapa};
+\node[nodo] (inf) at (7,4.6) {\ttt{crminf:I5} (autor, fecha, argumento)\\ $\rightarrow$ \ttt{I2} creencia «probable»};
+% capa 3
+\node[nodo] (a1) at (0,3.0) {\ttt{E13} A-UT01-001 (agosto)\\ \emph{ejerce-cargo} $\rightarrow$ coronel rebelde\\ \ttt{pol:afirma}, \ttt{fza:testimonial}};
+\node[nodo] (a2) at (7,3.0) {\ttt{E13} A-UT11-004 (septiembre)\\ \emph{ejerce-cargo} $\rightarrow$ coronel rebelde\\ \ttt{pol:niega}, \ttt{fza:testimonial}};
+% capa 2
+\node[nodo] (m1) at (0,1.5) {\ttt{PersonObservation}\\ «Andres Chuquitapa»};
+\node[nodo] (m2) at (3.5,1.5) {\ttt{PersonObservation}\\ «Isidro Cano» (agosto)};
+\node[nodo] (m3) at (7,1.5) {\ttt{PersonObservation}\\ «Isidro Cano» (septiembre)};
+% capa 1
+\node[nodo] (p1) at (0,0) {Pieza P01: certificación\\ \ttt{rico:Record}, \ttt{E65}};
+\node[nodo] (p2) at (7,0) {Pieza P18: declaración jurada\\ \ttt{rico:Record}, \ttt{E65}};
+\begin{scope}[on background layer]
+\node[capa=violet!8, fit=(rec)(inf), label={[font=\scriptsize\bfseries]left:4}] {};
+\node[capa=orange!10, fit=(a1)(a2), label={[font=\scriptsize\bfseries]left:3}] {};
+\node[capa=green!8, fit=(m1)(m2)(m3), label={[font=\scriptsize\bfseries]left:2}] {};
+\node[capa=blue!7, fit=(p1)(p2), label={[font=\scriptsize\bfseries]left:1}] {};
+\end{scope}
+\draw[flecha] (a1) -- node[etq,right]{P140} (m1);
+\draw[flecha] (a1.south east) -- node[etq,pos=0.45]{P14} (m2);
+\draw[flecha] (a2) -- node[etq,right]{P14} (m3);
+\draw[flecha] (a2.west) -- node[etq,above]{P17 (responde a)} (a1.east);
+\draw[flecha] (a1.south west) to[bend right=30] node[etq,left]{P9i} (p1.west);
+\draw[flecha] (a2.south east) to[bend left=30] node[etq,right]{P9i} (p2.east);
+\draw[flecha] (rec) -- node[etq,right]{\ttt{prov:wasDerivedFrom}} (a1);
+\draw[flecha] (inf) -- node[etq,above]{\ttt{J4\_that} (grafo de la proposición)} (rec);
+\end{tikzpicture}}
+\caption{Las cuatro capas en el hilo central del caso. La afirmación de agosto y su negación de septiembre conviven
+como dos E13 atribuidas; la identidad de Chuquitapa es una reconstrucción con autor y creencia. Se omiten las anclas
+textuales (\ttt{oa:Annotation}) y la capa de procedencia.}\label{fig:capas}
+\end{figure}
+
+\subsection{Capa 1: el documento}
+La jerarquía sigue al catálogo: fondo, sección, serie, legajo y expediente son \ttt{rico:RecordSet}. RiC-O tipifica
+fondos, series y expedientes, pero no tiene \emph{sección} ni \emph{legajo}, que se expresan como conceptos del
+tesauro. Cada pieza del expediente es a la vez un \ttt{rico:Record} y un \ttt{crm:E31\_Document}, creado por una
+actuación (\ttt{crm:E65\_Creation}) con su tipo y su fuerza institucional. La capa~1 guarda solo la fecha \emph{tal
+como está escrita}; una forma SHACL prohíbe la fecha normalizada en esta capa, porque normalizar \cita{1809} a 1805,
+como hacía la versión modernizada, es ya una interpretación. La transcripción es una \ttt{rico:Instantiation}
+derivada del original, identificada por su suma SHA-256, y cada tramo es un componente de ella. La extensión física
+que declara el catálogo (19 folios) se registra con \ttt{rico:CarrierExtent}, con su fuente y la discrepancia anotada.
+
+\subsection{Capa 2: las menciones}
+Cada mención es una \ttt{picom:PersonObservation} (personas) o una \ttt{roar:Observation} (grupos, lugares y cosas)
+con su nombre literal (\ttt{crm:E41\_Appellation}). Las menciones no se tipifican como \ttt{crm:E21\_Person}: hacerlo
+afirmaría la existencia de la persona, y el propio expediente dice de uno de los certificantes, \cita{don Juan
+Quiñones}, que \cita{no hay tal hombre en el pueblo de Tinta}. Toda mención lleva un ancla de Web
+Annotation~\cite{webannotation} con un \ttt{TextQuoteSelector} (cita exacta, prefijo y sufijo) y un
+\ttt{TextPositionSelector} sobre el tramo. Si quien es mencionado actúa en la pieza (firmante, receptor, declarante,
+testigo de asistencia), el mapeo crea una participación n-aria \ttt{crm:PC14\_carried\_out\_by} con el rol
+(\ttt{P14.1\_in\_the\_role\_of}) en la actuación. De esas participaciones salen, para cualquier afirmación hecha en
+la pieza, las facetas \emph{ante quién}, \emph{quién firma} y \emph{quién escribe}.
+
+\subsection{Capa 3: las afirmaciones}
+Cada afirmación es una \ttt{crm:E13\_Attribute\_Assignment} según el patrón STAR~\cite{andrews2025star}
+(listado~\ref{lst:e13}): quién afirma (\ttt{P14}, una mención), en qué actuación (\ttt{P9i\_forms\_part\_of}), sobre
+qué (\ttt{P140}), qué atributo (\ttt{P177}, de una lista cerrada) y con qué valor (\ttt{P141}). La polaridad (afirma o
+niega), el fundamento invocado (visto, oído, por voz pública) y la fuerza institucional se expresan con
+\ttt{P2\_has\_type} hacia conceptos del tesauro. Las relaciones de discurso usan \ttt{P17\_was\_motivated\_by}: la
+afirmación a la que se responde y la persona \emph{según} la cual se dice algo. Nos apartamos de STAR en tres puntos:
+la fuente es la actuación más el ancla textual, no \ttt{P17}; \ttt{P14} es quien afirma en 1806 y no la autoridad
+del investigador; y las facetas procesales (ante quién, quién firma) se derivan de las participaciones de la
+actuación. Cuando el anotador resuelve un sujeto elíptico o distribuye una afirmación colectiva, la decisión se
+marca con un concepto \ttt{anot:*} y una nota obligatoria.
+
+\begin{lstlisting}[language=turtle, float=t, caption={La negación de Isidro Cano en septiembre (capa 3, abreviada).
+La afirmación de agosto que niega es \ttt{A-UT01-001}.}, label=lst:e13]
+id:afirmacion/A-UT11-004 a crm:E13_Attribute_Assignment ;
+    crm:P14_carried_out_by           id:mencion/M-UT11-001 ;      # «Isidro Cano», declarante
+    crm:P9i_forms_part_of            id:actuacion/P18 ;           # declaración jurada, septiembre
+    crm:P140_assigned_attribute_to   id:mencion/M-UT01-004 ;      # «Andres Chuquitapa» (sujeto elíptico)
+    crm:P177_assigned_property_of_type atr:ejerce-cargo ;
+    crm:P141_assigned                cargo:coronel-rebelde ;
+    crm:P2_has_type  pol:niega, fza:testimonial, fun:no-indica, anot:responde-a, anot:sujeto-eliptico ;
+    crm:P17_was_motivated_by         id:afirmacion/A-UT01-001 .
+id:anotacion/A-UT11-004 a oa:Annotation ; oa:hasBody id:afirmacion/A-UT11-004 ;
+    oa:hasTarget [ oa:hasSource id:transcripcion/.../UT11 ;
+                   oa:hasSelector [ a oa:TextQuoteSelector ; oa:exact "Comisionado por este y no coronel" ] ] .
+\end{lstlisting}
+
+\paragraph{Fuerza institucional.}
+El tipo de actuación determina la fuerza de lo afirmado en ella: testimonial (certificación, declaración jurada,
+ratificación), de parte (petición), informativa (informe, oficio), dictaminadora (vista fiscal), resolutiva (auto,
+decreto) y fedataria (notificación, desglose). La fuerza es un dato del tesauro (\ttt{act:x skos:related fza:y}) y
+no se escribe en el código. Distinguirla permite responder «¿qué resolvió la autoridad?» sin responder «¿qué
+ocurrió?»: el informe del subdelegado es informativo aunque lo emita una autoridad, y además lo emite una parte
+interesada.
+
+\subsection{Capa 4: las reconstrucciones}
+Cada reconstrucción es un par de grafos. El grafo de la proposición contiene la identidad
+(\ttt{picom:PersonReconstruction}, \ttt{roar:LocationReconstruction}), el evento o el ejercicio de un cargo
+(\ttt{crm:E7\_Activity} con el cargo como rol y su vigencia en un \ttt{E52}), derivados de menciones y afirmaciones
+con \ttt{prov:wasDerivedFrom}. El grafo de argumentación, aparte, contiene la inferencia
+(\ttt{crminf:I5\_Inference\_Making}, también \ttt{prov:Activity}) con autor, fecha, argumento y premisas, y la creencia
+(\ttt{I2\_Belief}) cuya proposición (\ttt{J4\_that}) es el grafo anterior. Separar ambos grafos evita que la creencia
+forme parte de la proposición que evalúa, que es también la solución de Mariani~\cite{mariani2023}. Las hipótesis
+rivales coexisten: el declarante de septiembre es \enquote{probablemente} Martín Cazorla y \enquote{posiblemente}
+Mariano Casorla, y ninguna se elige en silencio. Los lugares reconstruidos llevan el identificador de HGIS de las
+Indias como \ttt{crm:E42\_Identifier}, con el conjunto de datos como fuente, y los de Wikidata o TGN como
+identificadores adicionales y \ttt{rdfs:seeAlso}, nunca \ttt{owl:sameAs}; no se copian geometrías, cuya licencia
+(CC BY-NC-SA) se transmitiría al grafo.
+
+\subsection{Procedencia, tesauro y formas}
+Cada grafo es un \ttt{prov:Entity} generado por una actividad que usó la transcripción (con su suma), asociada a un
+agente (persona o programa) y a un plan (la guía o el \emph{prompt}). Las reconstrucciones llevan autor y fecha.
+
+El tesauro tiene 12 esquemas y 164 conceptos: tipos de actuación, roles procesales, condiciones, cargos, tipos de
+entidad, atributos, polaridad, fundamento, fuerza, creencia, niveles documentales y marcas del anotador. Conserva las
+rarezas del documento sin asimilarlas: \cita{India Ordinaria} no se iguala a \emph{originaria}, y el ayllu es un
+\emph{grupo}, no un lugar. Las alineaciones externas usan solo \ttt{skos:closeMatch} o \ttt{relatedMatch}, porque las
+etiquetas engañan: en Wikidata, la etiqueta quechua \emph{ayllu} está asignada a los ítems \emph{familia} y
+\emph{comunidad}, no al ítem del ayllu.
+
+Dieciséis formas SHACL~\cite{shacl} hacen cumplir el perfil. Entre otras: toda afirmación tiene exactamente un
+afirmante con un rol de la rama \emph{afirmante}, una actuación, un sujeto, un atributo de la lista cerrada, un valor,
+una polaridad, un fundamento, una fuerza y un ancla, y \emph{ninguna} creencia; ningún concepto del tesauro se usa
+como clase; toda reconstrucción tiene inferencia con autor, argumento, fecha y una creencia de la lista; y todo lote
+de las capas~1--3 tiene actividad, agente, plan y transcripción.
+
+% =====================================================================
+\section{Análisis de carencias}\label{sec:carencias}
+
+Para cada necesidad derivada de las PC se buscó primero un término en los estándares; solo lo inexistente se habría
+añadido al perfil (tabla~\ref{tab:carencias}). El resultado es que OHAC declara \emph{cero} clases y \emph{cero}
+propiedades: es un perfil compuesto por importaciones con versión fijada, el tesauro, las formas y alineaciones con
+el tesauro de roles de PiCo. Una prueba automática comprueba que cada IRI usada de un estándar existe en la versión
+descargada de ese estándar, y otra, que un pleito civil sintético entra en el modelo sin clases ni propiedades nuevas.
+Lo que podría presentarse como extensión (polaridad, fundamento, fuerza, roles) son conceptos usados con
+\ttt{P2\_has\_type} y \ttt{P14.1}, que es como CIDOC CRM prevé la especialización local mediante \ttt{E55\_Type}. El
+coste es que un consumidor genérico de CIDOC CRM que ignore \ttt{P2\_has\_type} leerá «asignó \emph{coronel}» en una
+negación; las formas SHACL obligan a declarar la polaridad y toda consulta la devuelve.
+
+\begin{table}[t]
+\centering
+\caption{Análisis de carencias (extracto). Ninguna necesidad exigió un término propio.}\label{tab:carencias}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}Xlc@{}}
+\toprule
+Necesidad & Solución con términos existentes & ¿Término propio? \\
+\midrule
+Sección y legajo & \ttt{rico:RecordSet} + concepto \ttt{doc:seccion}/\ttt{doc:legajo} & No \\
+Extensión en folios & \ttt{rico:CarrierExtent} + \ttt{rico:quantity} & No \\
+Folio individual, recto/vuelto & \ttt{rico:Instantiation} + concepto \ttt{doc:folio} & No \\
+Afirmación con actor, actuación y tiempo & \ttt{crm:E13} + \ttt{P9i} + \ttt{P14} & No \\
+Ante quién, quién firma, quién escribe & \ttt{crm:PC14} + \ttt{P14.1} + rol del tesauro & No \\
+Polaridad, fundamento, fuerza & \ttt{crm:P2\_has\_type} + concepto & No \\
+«Responde a», «según» & \ttt{crm:P17\_was\_motivated\_by} + marca \ttt{anot:} & No \\
+Mención tal como está escrita & \ttt{picom:PersonObservation}, \ttt{roar:Observation} & No \\
+Cita exacta & \ttt{oa:TextQuoteSelector} + \ttt{oa:TextPositionSelector} & No \\
+Creencia del investigador & \ttt{crminf:I5}, \ttt{I2}, \ttt{J4}, \ttt{J5} & No \\
+Ejercicio de cargo con vigencia & \ttt{crm:E7} + \ttt{PC14} (cargo como rol) + \ttt{E52} & No \\
+Procedencia del dato & PROV-O & No \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Defectos de interoperabilidad encontrados}\label{sec:defectos}
+
+Usar los estándares con datos reales, validarlos y razonar sobre ellos reveló seis defectos
+(tabla~\ref{tab:defectos}). No los corregimos en origen: los evitamos o los medimos, y se informan en cada ejecución
+del razonador.
+
+\begin{table}[t]
+\centering
+\caption{Defectos de interoperabilidad hallados en los estándares reutilizados.}\label{tab:defectos}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+\toprule
+Id & Estándar & Defecto y tratamiento \\
+\midrule
+D1 & ROAR 0.1 & Declara un dominio global (\ttt{roar:Reconstruction}) sobre \ttt{prov:wasDerivedFrom}. Como
+\ttt{prov:hadPrimarySource} es subpropiedad de esta, el patrón de PiCo aplicado a una observación de ROAR es
+inconsistente (el razonador lo detectó). Las observaciones de ROAR usan \ttt{roar:documentedIn}; quedan 59
+tipificaciones espurias de observaciones de PiCo, que se informan. \\
+D2 & PiCo 1.1.0 & El prefijo de roles declarado en la ontología no coincide con las IRI publicadas del tesauro de
+roles. Se usan las IRI publicadas. \\
+D3 & CRMinf 1.2.1 & \ttt{J2\_concluded\_that} es subpropiedad de relaciones temporales (P175, P185); una inferencia
+RDFS ingenua añadiría relaciones temporales falsas. \\
+D4 & CRMinf 1.2.1 & \ttt{I6\_Belief\_Value} no se declara como clase y el rango de \ttt{J5} es un literal; los valores
+de creencia no pueden ser conceptos. Se usa la notación del concepto como literal, restringida por SHACL. \\
+D5 & RiC-O 1.1 & Expresa la extensión en folios, pero no el folio individual direccionable, ni recto y verso, ni
+\emph{sección} y \emph{legajo}; sus tipos documentales no incluyen tipos judiciales. Se resuelve con conceptos SKOS. \\
+D6 & CRMinf 1.2.1 & Declara \ttt{E13} subclase de \ttt{I1\_Argumentation}, definida como argumentación
+\enquote{honesta}, y lee toda E13 como una proposición que su autor cree verdadera (\ttt{J33}). Con CRMinf cargado,
+cada testimonio hereda una presunción de sinceridad. Se documenta y se mide (74 afirmaciones; 12 negaciones). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El defecto D6 merece una discusión aparte. En el caso piloto, el subdelegado informa que el denunciante redactó las
+certificaciones y las hizo firmar \cita{sin saber lo mas de sus contenidos}; en septiembre, un certificante declara
+que no sabe escribir y que otro puso por escrito lo que él relataba, y otro, que no firmó la suya.
+Atribuirles una creencia sincera en lo que firmaron es exactamente el juicio histórico que el modelo quiere dejar a
+la capa~4. Interpretamos por eso cada E13 de la capa~3 como una \emph{afirmación profesada en el registro}, y no
+como la expresión de una creencia; el razonador cuenta en cada ejecución cuántas afirmaciones reciben la lectura de
+sinceridad y cuántas de ellas son negaciones. Este conflicto entre la semántica de CRMinf y el uso de E13 para
+testimonios es, hasta donde sabemos, inédito, y afecta a cualquier proyecto que combine STAR con CRMinf.
+
+% =====================================================================
+\section{Evaluación}\label{sec:evaluacion}
+
+La evaluación se apoya en comprobaciones que no dependen de anotadores externos. El grafo del hilo central, que
+cubre la disputa sobre el pasado rebelde del cacique y las certificaciones desmentidas, se construyó a partir de 33
+piezas, 66 menciones, 74 afirmaciones y 27 reconstrucciones (incluida la de las fechas normalizadas). Tiene 5\,746 tripletas en 59 grafos nombrados y usa 40
+clases y 67 propiedades, todas de los estándares. La tabla~\ref{tab:resultados} resume los resultados; todas las
+cifras se reproducen con las pruebas del repositorio (206 pruebas).
+
+\begin{table}[t]
+\centering
+\caption{Resultados de la evaluación del perfil sobre el hilo central del caso.}\label{tab:resultados}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}Xll@{}}
+\toprule
+Criterio & Umbral & Resultado \\
+\midrule
+Citas que son subcadena exacta del tramo (única normalización: espacios) & 100\,\% & 140/140 \\
+Conformidad SHACL del grafo & 0 violaciones & 0 \\
+Mutaciones del grafo que SHACL debe rechazar & todas & 35/35 \\
+Inconsistencias bajo OWL~2~RL (datos + estándares + perfil) & 0 & 0 \\
+Trampas críticas de OOPS!~\cite{poveda2014oops} & 0 & 0 (1 importante, artefacto) \\
+IRI de estándares inexistentes en su versión publicada & 0 & 0 \\
+Clases o propiedades nuevas para un pleito civil sintético & 0 & 0 \\
+PC respondidas por consultas con nombre & 20 & 17 (3 requieren más anotación) \\
+PC de disputa o \emph{no consta} respondidas como tales & 6/6 & 6/6 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Preguntas de competencia como pruebas.}
+Cada PC es una consulta SPARQL con nombre y una prueba que compara su resultado con la respuesta de referencia. Las
+tres PC pendientes (dos a escala de serie, que requieren extraer las fichas del catálogo, y la cadena completa de
+autoridades) no exigen cambios del modelo, sino más anotación. Las disputas no se almacenan: se calculan agrupando
+las afirmaciones por sujeto y atributo y comparando polaridades y valores. Para la PC09, el grafo devuelve que
+Cano, en su certificación de agosto, y Orue, en su certificación y en su declaración, afirman que Chuquitapa fue
+coronel; que Cano lo niega en su declaración jurada de septiembre; y que ninguna autoridad se pronuncia sobre el
+punto. Cada afirmación lleva la cita literal, el tramo, el folio (o \emph{no consta}), la fuerza institucional y
+quién recibió y firmó la pieza. Sobre el hilo central se calculan ocho disputas, más la de la firma de una de las
+certificaciones, que su supuesto firmante niega.
+
+\paragraph{Formas y mutaciones.}
+Una forma que nunca falla no prueba nada. Por eso cada forma tiene al menos una prueba negativa: se altera el grafo
+válido (se quita la polaridad de una afirmación, se añade una creencia en la capa~3, se usa un concepto como clase,
+se normaliza una fecha en la capa~1, etc.) y se exige que SHACL lo rechace. Esta práctica reveló una forma que
+aprobaba en vacío porque su objetivo no seleccionaba ningún nodo.
+
+\paragraph{Razonamiento.}
+El cierre OWL~2~RL de la unión de datos, perfil y estándares (unas 30\,600 tripletas, 104\,000 tras el cierre) no
+produce inconsistencias. Fue el razonador el que detectó el defecto D1, al inferir una instancia de dos clases
+disjuntas de ROAR.
+
+\paragraph{Revisión independiente.}
+Un revisor sin acceso a la documentación de diseño examinó el código, los datos y los estándares. Señaló tres
+problemas críticos (los cargos con vigencia no estaban implementados; el código suponía un único expediente; faltaban
+las facetas de quién escribe y el discurso referido) y ocho importantes, entre ellos que la capa de menciones
+afirmaba la existencia de las personas. Todos se resolvieron o se documentaron como límites antes de esta versión.
+
+% =====================================================================
+\section{Discusión y limitaciones}\label{sec:discusion}
+
+\paragraph{RDF frente a un grafo de propiedades.}
+Elegimos RDF con grafos nombrados porque los términos de los estándares son los propios datos, la separación de
+capas lleva procedencia por grafo y SHACL y OWL~RL permiten validar y razonar. El grafo de propiedades representa
+con más naturalidad los atributos de una arista, pero en nuestro prototipo previo los tipos de relación libres
+sustituyeron a los estándares. Un grafo de propiedades puede generarse como vista de lectura a partir del TriG, nunca
+como fuente.
+
+\paragraph{Negación.}
+La polaridad se expresa como un tipo de la E13. La alternativa sin términos propios sería que la negación fuese una
+E13 cuyo sujeto es la afirmación negada; solo es posible cuando la afirmación negada consta en el expediente (4 de
+las 12 negaciones), por lo que se mantuvo la forma uniforme.
+
+\paragraph{Limitaciones.}
+(i)~El caso es un solo expediente, del que se anotó el hilo central; un segundo expediente, sorteado a ciegas con
+semilla fija entre 3\,651, servirá para comprobar la generalización cuando se disponga de su transcripción.
+(ii)~Las anotaciones del caso no han sido validadas por un especialista independiente: un solo autor actúa como
+validador y fijó las respuestas de referencia, por lo que no se informa acuerdo entre anotadores.
+(iii)~Sin imágenes, el folio y el lado de cada tramo no constan, salvo por las cuatro marcas del texto.
+(iv)~Unos cien conceptos del tesauro carecen aún de definición.
+(v)~OWL~2~RL es incompleto y CIDOC CRM se distribuye en RDFS, de modo que la ausencia de inconsistencias es una
+condición necesaria, no suficiente.
+
+% =====================================================================
+\section{Conclusiones y trabajo futuro}\label{sec:conclusiones}
+
+OHAC muestra que un expediente judicial colonial puede representarse sin decidir en los datos quién decía la verdad:
+la trama de voces queda en afirmaciones atribuidas con fuerza institucional, y lo que el investigador propone queda
+en reconstrucciones con autor, fecha y creencia. Todo ello cabe en los estándares existentes, cuyo uso con datos
+reales reveló seis defectos que comunicaremos a sus mantenedores. El trabajo siguiente es llenar el modelo a escala:
+un modelo de lenguaje rellenará registros planos con cita literal obligatoria y un mapeo determinista los llevará al
+grafo, de modo que el modelo de lenguaje no decida identidades, verdades ni folios. Ese trabajo, y su evaluación
+frente a líneas base sin grafo, quedan fuera de este artículo.
+
+\paragraph{Disponibilidad del recurso.}
+El perfil (tesauro, formas, consultas), el mapeo, el grafo de ejemplo, las pruebas y la documentación de diseño
+(incluido el registro de decisiones) se publican en \pendiente{repositorio y DOI}, bajo \pendiente{licencias}.
+
+\paragraph{Uso de inteligencia artificial generativa.}
+\pendiente{Redactar con los autores.} El modelado, el código y las anotaciones del caso piloto se elaboraron con
+asistencia de un modelo de lenguaje bajo la dirección de los autores; las anotaciones no han sido validadas por un
+especialista independiente.
+
+\bibliographystyle{splncs04}
+\bibliography{referencias}
+
+\end{document}
