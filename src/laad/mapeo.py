@@ -37,6 +37,7 @@ ACT, ROL, COND, CARGO, ENT, ATR, POL, FUN, FZA, DOC, ANOT = (
      "documento", "anotacion"))
 ID = Namespace("https://w3id.org/laad/id/")
 G = Namespace("https://w3id.org/laad/grafo/")
+CONTEXTO_CITA = 32  # caracteres de prefijo/sufijo en el TextQuoteSelector
 # El expediente NO es una constante: lo fija fuente.usando_expediente(...) (revisión C2).
 
 PREFIJOS = dict(rico=RICO, rst=RST, crm=CRM, crminf=CRMINF, oa=OA, picom=PICOM, roar=ROAR, prov=PROV,
@@ -137,6 +138,11 @@ def _ancla(g: Graph, cuerpo: URIRef, ident: str, tramo: str, cita: str, motivo: 
     g.add((tgt, OA.hasSelector, ps))
     g.add((qs, RDF.type, OA.TextQuoteSelector))
     g.add((qs, OA.exact, Literal(cita)))
+    # prefijo y sufijo (Web Annotation §4.2.4): desambiguan citas repetidas en el tramo sin depender de la posición
+    if ini > 0:
+        g.add((qs, OA.prefix, Literal(tr.texto[max(0, ini - CONTEXTO_CITA):ini])))
+    if fin < len(tr.texto):
+        g.add((qs, OA.suffix, Literal(tr.texto[fin:fin + CONTEXTO_CITA])))
     g.add((ps, RDF.type, OA.TextPositionSelector))
     g.add((ps, OA.start, Literal(ini, datatype=XSD.nonNegativeInteger)))
     g.add((ps, OA.end, Literal(fin, datatype=XSD.nonNegativeInteger)))

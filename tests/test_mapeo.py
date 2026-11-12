@@ -92,3 +92,20 @@ def test_selector_de_posicion_reproduce_la_cita():
         if trozo != exacta:
             errores.append(f"{m}: [{ini}:{fin}] de {tramo} = {trozo!r} ≠ {exacta!r}")
     assert not errores, "\n".join(errores)
+
+
+def test_selector_prefijo_exacto_sufijo_reconstruye_el_tramo():
+    """prefix + exact + suffix es subcadena literal del tramo y coincide con la posición (Web Annotation §4.2.4)."""
+    g = union()
+    revisadas = 0
+    for tgt in g.subjects(RDF.type, M.OA.SpecificResource):
+        tramo_id = str(g.value(tgt, M.OA.hasSource)).rsplit("/", 1)[-1]
+        texto = fuente.tramo(tramo_id).texto
+        sels = list(g.objects(tgt, M.OA.hasSelector))
+        qs = next(s for s in sels if (s, RDF.type, M.OA.TextQuoteSelector) in g)
+        ps = next(s for s in sels if (s, RDF.type, M.OA.TextPositionSelector) in g)
+        ini, fin = int(g.value(ps, M.OA.start)), int(g.value(ps, M.OA.end))
+        pre, suf = str(g.value(qs, M.OA.prefix) or ""), str(g.value(qs, M.OA.suffix) or "")
+        assert texto[ini - len(pre):ini] == pre and texto[fin:fin + len(suf)] == suf, tgt
+        revisadas += 1
+    assert revisadas >= 140
