@@ -1,0 +1,23 @@
+Total de citas: 49
+  pal_raw       :  32  ( 65.3 %)
+  pal_ws        :  43  ( 87.8 %)
+  pal_suave     :  43  ( 87.8 %)
+  mod_raw       :   1  (  2.0 %)
+  mod_ws        :   1  (  2.0 %)
+  mod_suave     :   4  (  8.2 %)
+  ninguno_ws    :   6  ( 12.2 %)
+  ninguno_suave :   6  ( 12.2 %)
+
+Citas que no aparecen en ninguno de los dos textos (ni normalizando espacios, mayúsculas y tildes):
+  - línea 7 de extracciones.jsonl, afirmacion_01_encarcelamiento_agresion: coincide solo el prefijo de 25/187 car.
+      «al fin me encerraron allí... a las nueve de la noche se apareció una caterva de indios, a quienes había entregado Chuquitapa y manifestándome los palos que traían, me anunciaban la muerte»
+  - línea 12 de extracciones.jsonl, afirmacion_exp18_f10_03: coincide solo el prefijo de 168/246 car.
+      «todos los Yndios se alzaron a media noche armados con garrotes para acabar con este, y hacer matalo de los españoles poniendo guardias a las puertas de estos no le consta al que declara si no porque s»
+  - línea 13 de extracciones.jsonl, afirmacion_01: coincide solo el prefijo de 12/100 car.
+      «dijo que el No sabe escribir que es cierto que Manuel Guancachoque le suplico le diere Certificacion»
+  - línea 13 de extracciones.jsonl, afirmacion_02: coincide solo el prefijo de 59/111 car.
+      «los Yndios que lo llevaban preso ala cárcel o alguno parientes de Chuquitapa lo golpeaban con puñadas y patadas»
+  - línea 14 de extracciones.jsonl, afirmacion_01: coincide solo el prefijo de 21/149 car.
+      «que todos los indios alzaron a media noche armados con garrotes, guarcachoque hace una matanza a contra los españoles poniendo guardias a las puertas»
+  - línea 15 de extracciones.jsonl, afirmacion_orue_disputa_firma: coincide solo el prefijo de 130/192 car.
+      «siendole preguntado si la firma q dise fernando orue presenta en la certificacion de este expediente es echa con puño y letra dijo... no obstante que sabe firmar el declarante no quiso hacerlo»
