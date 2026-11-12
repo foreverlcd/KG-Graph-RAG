@@ -175,15 +175,20 @@ La respuesta completa está en `docs/anexos/respuestas_pc.md` §PC09.
 
 1. **El mismo testigo, dos actuaciones y la polaridad contraria quedan juntos** sin fusionar menciones. «Isidro Cano» (P01) e «Ysidro Cano» (P18) siguen siendo dos observaciones. Las une una reconstrucción con autor, creencia y premisa: reconoce su firma, A-UT11-001.
 2. **Una resolución no es un hecho.** La vista fiscal y el auto aparecen en PC16 como afirmaciones de fuerza dictaminadora o resolutiva. El grafo informa además de que ninguna se pronuncia sobre el cargo de Chuquitapa en 1780.
-3. **Las disputas se calculan:** `consultas/disputas.rq` encuentra seis en este hilo.
+3. **Las disputas se calculan.** `consultas/disputas.rq` encuentra ocho en la versión revisada:
 
-   | Disputa | Detalle |
+   | Disputa | Tipo |
    |---|---|
-   | Hora del alboroto | 6 afirmaciones |
+   | Hora del alboroto | 6 afirmaciones; «valores distintos (revisar)» |
+   | Orue niega la hora de su propia certificación | niega lo afirmado (responde_a) |
    | «coronel» | afirma/niega |
-   | Redacción de P04 y de P05 | valores incompatibles |
-   | Duración de la prisión | valores incompatibles |
-   | Firma de P04 | lo que el texto muestra frente a lo que el declarante niega |
+   | «coronel»: Cano niega lo afirmado en P01 | responde_a |
+   | Redacción de P04 | valores distintos |
+   | Redacción de P05 | valores distintos |
+   | Las frases de P05 negadas en P19 | responde_a; solo bajo la hipótesis «el declarante es Martín» |
+   | Duración de la prisión | valores distintos |
+
+   Además, `disputas_firma.rq` encuentra la firma de P04: lo que el texto muestra frente a lo que el declarante niega.
 
 4. **Las facetas «ante quién / quién firma»** salen de la actuación, y responden «no consta» cuando la fuente calla. Las certificaciones de agosto no tienen receptor: no se dieron ante juez.
 
@@ -192,4 +197,4 @@ La respuesta completa está en `docs/anexos/respuestas_pc.md` §PC09.
 * **El folio y el recto/vuelto de casi todas las citas.** Hacen falta las imágenes (`docs/01_materiales.md` §3).
 * **Que la *extracción* automática alcance esta calidad.** Esto está anotado a mano; la medición está en `docs/G_evaluacion.md`.
 * **La equivalencia entre valores literales** («a las dies de la noche» frente a «a las diez de la noche»). Se resuelve con una normalización de capa 4, todavía no implementada (`docs/C_modelo.md` §8).
-* **La cobertura completa del expediente.** Están anotadas 53 menciones y 59 afirmaciones del hilo, no todo el expediente. Por eso PC02, PC03, PC04, PC07, PC15, PC17 y PC18 constan como **PENDIENTES**.
+* **La cobertura completa del expediente.** Están anotadas 66 menciones y 74 afirmaciones (hilo central más las ampliaciones de la revisión 1), no todo el expediente. Por eso PC03, PC04 y PC15 constan como **PENDIENTES**.

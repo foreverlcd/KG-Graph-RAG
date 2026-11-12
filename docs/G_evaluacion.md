@@ -12,13 +12,13 @@
 
 | # | Criterio | Umbral | Estado | Medición |
 |---|---|---|---|---|
-| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | 112/112 citas de registros + 33 piezas; folio r/v necesita imágenes |
-| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | 16 formas, 31 mutaciones detectadas |
-| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0; 50 tipificaciones espurias por D1 (ROAR) |
+| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | 140/140 citas de registros + 33 piezas; folio r/v necesita imágenes |
+| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | 16 formas, 35 mutaciones detectadas |
+| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0; 59 tipificaciones espurias por D1 (ROAR) |
 | 2c | OOPS! | **0 trampas críticas** | CUMPLE | 0 críticas; 1 «Important» (P34, artefacto) |
-| 3 | 20 PC con respuesta fijada por historiador antes de construir | ≥ 18/20 correctas; **6/6** en las de DISPUTA/NC | PENDIENTE (falta historiador) | Respuestas provisionales: 13/20 respondidas, 7 PENDIENTES de anotación |
-| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; piloto de 59 afirmaciones |
-| 5 | Segundo expediente sin clases nuevas | **0** clases y propiedades nuevas en el núcleo; 0 cambios en las formas | PENDIENTE (falta su transcripción) | Elegido a ciegas: CO Cusco Leg. 70 Exp. 15 |
+| 3 | 20 PC con respuesta fijada por historiador antes de construir | ≥ 18/20 correctas; **6/6** en las de DISPUTA/NC | PENDIENTE (falta historiador) | Respuestas provisionales: 17/20 respondidas; 3 PENDIENTES de anotación (PC03, PC04, PC15) |
+| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; piloto de 74 afirmaciones y 66 menciones |
+| 5 | Segundo expediente sin clases nuevas | **0** clases y propiedades nuevas en el núcleo; 0 cambios en las formas | PENDIENTE (falta su transcripción); prueba estructural CUMPLE | Elegido a ciegas: CO Cusco Leg. 70 Exp. 15. Un expediente civil sintético entra sin clases ni propiedades nuevas (`tests/test_segundo_expediente_sintetico.py`) |
 | 6 | Contraste con fuentes independientes | Cada discrepancia registrada; ninguna resuelta en silencio | PARCIAL | Catálogo: 5 discrepancias; HGIS: Tinta; parroquiales y matrícula: localizadas o no localizadas, sin consultar |
 | 7 | Líneas base (LLM con contexto completo; RAG vectorial) | El grafo gana las PC de agregación con atribución | PENDIENTE (fase de conexión) | Hipótesis registrada antes de medir |
 
@@ -32,11 +32,11 @@
 ## 2. Validación formal (criterio 2)
 
 * **SHACL.** `ontologia/formas.ttl` se valida con pyshacl contra la unión de los grafos, el tesauro y la jerarquía de clases de los estándares (`src/laad/validacion.py`). Las reglas que dependen del grafo nombrado (separación de capas) se comprueban con `tests/test_capas.py`.
-  * **Pruebas negativas.** `tests/test_formas_negativas.py` introduce 31 mutaciones y exige que cada forma con nombre dispare al menos una vez. Así se descubrió que `ActuacionForma` aprobaba en vacío (`docs/bitacora.md`).
-* **Razonador.** `scripts/razonar.py` hace un cierre OWL 2 RL (owlrl) de los datos con RiC-O 1.1, CRM 7.1.3 + PC, CRMinf 1.2.1, PROV-O, SKOS, OA, PiCo y ROAR (29 093 tripletas → 99 337). Tarda unos 75 s.
+  * **Pruebas negativas.** `tests/test_formas_negativas.py` introduce 35 mutaciones y exige que cada forma con nombre dispare al menos una vez. Así se descubrió que `ActuacionForma` aprobaba en vacío (`docs/bitacora.md`).
+* **Razonador.** `scripts/razonar.py` hace un cierre OWL 2 RL (owlrl) de los datos con RiC-O 1.1, CRM 7.1.3 + PC, CRMinf 1.2.1, PROV-O, SKOS, OA, PiCo y ROAR (modelo revisado: 30 320 tripletas → 103 284). Tarda unos 79 s.
   * Primera ejecución: **1 inconsistencia real** (defecto D1 de ROAR, `docs/C_modelo.md` §7).
   * Tras la corrección: 0.
-  * Se informa además de 50 tipificaciones espurias que el axioma de ROAR sigue produciendo sobre observaciones PiCo.
+  * Se informa además de 59 tipificaciones espurias que el axioma de ROAR sigue produciendo sobre observaciones PiCo.
   * Límite: OWL RL no es completo para OWL 2 DL. Un razonador DL (HermiT) sobre CRM no es viable directamente, porque CRM es RDFS y no OWL DL.
 * **OOPS!** Servicio REST (oops.linkeddata.es) sobre `ohac.ttl` + `tesauro.ttl` en RDF/XML. Respuesta guardada en `datos/evaluacion/oops_respuesta.xml`.
   * Con `owl:imports` el servicio devuelve «unexpected error». Sin ellos: 0 críticas y 1 «Important» (P34 *Untyped class* sobre `skos:Concept`/`skos:ConceptScheme`), producida precisamente por haber quitado la importación de SKOS.
@@ -52,7 +52,7 @@
 * **Umbral.**
   * **6/6** en las preguntas cuya respuesta es «en disputa» o «no lo dice». Son la razón de ser del modelo.
   * **≥ 18/20** en total, contando como correcta una respuesta que contiene todas las afirmaciones pertinentes con su atribución correcta.
-* **Estado.** El grafo responde 13 PC. Las 7 restantes (PC02, PC03, PC04, PC07, PC15, PC17 y PC18) **no fallan por el modelo**: faltan anotaciones. Cada una indica en `preguntas.py` qué hay que anotar, y ninguna requiere términos nuevos.
+* **Estado.** El grafo responde 17 PC. Las 3 restantes (PC03, PC04 y PC15) **no fallan por el modelo**: faltan anotaciones (fichas del catálogo; cadena completa de autoridades). Cada una indica en `preguntas.py` qué hay que anotar, y ninguna requiere términos nuevos.
 
 ## 4. Estándar de oro y extracción (criterio 4)
 
@@ -83,7 +83,7 @@
   * **0** clases o propiedades nuevas en OHAC y **0** cambios en `formas.ttl`.
   * Se permite añadir **conceptos** al tesauro, que es un dato. Se cuentan y se informan, junto con la proporción de registros que necesitan un concepto nuevo.
   * Cambios de código permitidos: solo parametrizar el expediente.
-* **Lo que hay que parametrizar antes de la prueba.** Hoy `fuente.py` y `mapeo.py` asumen un solo expediente: ruta de la transcripción, prefijo `cc-14-18`, marcas de folio. Ver `docs/C_modelo.md` §8.
+* **Parametrización.** Hecha en la revisión 1: cada expediente tiene un manifiesto `datos/expedientes/<id>.json` con su transcripción, sus marcas de folio y su jerarquía, y el código no contiene constantes de CC L14E18. Queda pendiente la identidad entre expedientes (`docs/C_modelo.md` §8, L3).
 * **Estado.** PENDIENTE: no hay transcripción de ese expediente en el proyecto.
 
 ## 6. Contraste con fuentes independientes (criterio 6)

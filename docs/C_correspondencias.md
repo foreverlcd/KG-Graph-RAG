@@ -37,9 +37,9 @@
 
 | Necesidad | Término | Estándar | Verif. | Alternativa descartada y por qué |
 |---|---|---|---|---|
-| Persona tal como aparece en la pieza | `picom:PersonObservation` ∧ `crm:E21_Person` | PiCo + CRM | sí | `fpo:PersonReference`: no está alineada con CRM. La doble tipificación con E21 permite que la mención sea rango de P14/P140, y equivale a `PersonObservation ⊑ sdo:Person` en PiCo |
-| Lugar tal como aparece | `roar:LocationObservation` ∧ `crm:E53_Place` | ROAR + CRM | sí | PiCo no tiene observación de lugar |
-| Grupo (ayllu…) tal como aparece | `roar:Observation` ∧ `crm:E74_Group` | ROAR + CRM | sí | Una subclase `Ayllu`: «andino como clase», que el encargo prohíbe |
+| Persona tal como aparece en la pieza | `picom:PersonObservation` (**sin** `crm:E21_Person`; revisión I3) | PiCo | sí | Tipificarla además como E21: afirmaría que la persona existe, cuando el juez dice de «don Juan Quiñones» que «no hay tal hombre». `fpo:PersonReference`: no está alineada con CRM |
+| Lugar tal como aparece | `roar:LocationObservation` | ROAR | sí | PiCo no tiene observación de lugar |
+| Grupo (ayllu, común…) o cosa (tierras, chacras, dinero) tal como aparece | `roar:Observation` + `crm:P2_has_type ent:*` | ROAR + CRM | sí | Una subclase `Ayllu`: «andino como clase», que el encargo prohíbe |
 | Fuente de la mención | `prov:hadPrimarySource` (PiCo) / `roar:documentedIn` (ROAR) | PiCo / ROAR | sí | `prov:hadPrimarySource` en ROAR: inconsistente por el defecto D1 |
 | Grafía literal | `crm:P1_is_identified_by` → `crm:E41_Appellation` + `crm:P190_has_symbolic_content`; `rdfs:label` | CRM | sí | `skos:altLabel` sobre una persona ya fusionada: es el error del intento previo |
 | Rol en la pieza | `picom:hasRole` → `rol:*`, y en la actuación `crm:PC14_carried_out_by` + `crm:P01_has_domain` / `crm:P02_has_range` + `crm:P14.1_in_the_role_of` (+ atajo `crm:P14_carried_out_by`) | PiCo + CRM `_PC` | sí | Rol como clase de persona (fallo 1.1) |
@@ -50,7 +50,7 @@
 | Necesidad | Término | Estándar | Verif. | Alternativa descartada y por qué |
 |---|---|---|---|---|
 | La afirmación | `crm:E13_Attribute_Assignment` (en CRMinf 1.2.1, `E13 ⊑ crminf:I1_Argumentation`) | CRM / CRMinf | sí | Reificación RDF (`rdf:Statement`), RDF-star o nanopublicaciones: ninguna da actor, tiempo y actividad en CRM |
-| Quién la hace | `crm:P14_carried_out_by` + `crm:PC14_carried_out_by` con `crm:P14.1_in_the_role_of rol:declarante`… | CRM `_PC` | sí | `prov:wasAttributedTo`: es procedencia del dato (fallo 1.5) |
+| Quién la hace | `crm:P14_carried_out_by` + `crm:PC14_carried_out_by` con `crm:P14.1_in_the_role_of rol:declarante`…; afirmante persona o grupo (p. ej. «el común») | CRM `_PC` | sí | `prov:wasAttributedTo`: es procedencia del dato (fallo 1.5) |
 | En qué actuación (y de ahí: tipo, fecha, ante quién, quién escribe y quién firma) | `crm:P9i_forms_part_of` → `crm:E65_Creation` | CRM | sí | `crm:P17_was_motivated_by`, como en STAR: se reserva a las premisas de capa 4 |
 | Ante quién | En la actuación: `PC14` con rol en la rama `rol:receptor` | CRM `_PC` + tesauro | sí | Una propiedad «ante» de OHAC: innecesaria |
 | Quién escribe | En la actuación: `PC14` con `rol:redactor` cuando el documento lo dice; si está disputado, E13 con `atr:redacto` | CRM + tesauro | sí | — |
@@ -61,7 +61,10 @@
 | Polaridad (afirma o niega) | `crm:P2_has_type` → `pol:*` | CRM + tesauro | sí | Un valor de verdad |
 | Fundamento invocado («con mis ojos», «de oídas») | `crm:P2_has_type` → `fun:*` | CRM + tesauro | sí | — |
 | Sujeto elíptico resuelto | `crm:P2_has_type anot:sujeto-eliptico` + `crm:P3_has_note` | CRM + tesauro | sí | — |
-| Hecho narrado (por pieza) | `crm:E5_Event` + `prov:hadPrimarySource` (pieza) | CRM + PROV | sí | Un evento único compartido entre testigos: es una correferencia (capa 4) |
+| Hecho narrado (por pieza) | `crm:E89_Propositional_Object`, documentado por la pieza (`crm:P70_documents`) | CRM | sí | `crm:E5_Event`: afirmaría que el hecho ocurrió (revisión, menor). Un evento único compartido entre testigos: es una correferencia (capa 4) |
+| Corrige o niega una afirmación anterior | `crm:P17_was_motivated_by` → E13 anterior + `crm:P2_has_type anot:responde-a` | CRM + tesauro | sí | Comparar valores literales: falla con las variantes gráficas («dies»/«diez»; revisión I1) |
+| Discurso referido («porque se lo dijo X») | `crm:P17_was_motivated_by` → mención de X + `anot:segun-otro` + `fun:oidas` | CRM + tesauro | sí | Un E13 anidado («X dijo que…»): más fiel, pero sin texto propio de X en la fuente. Queda como alternativa (`docs/C_modelo.md` §8) |
+| Decisiones del anotador | `crm:P2_has_type anot:{sujeto-eliptico, afirmante-de-otra-pieza, afirmacion-distribuida}` + `crm:P3_has_note` obligatoria | CRM + tesauro + SHACL | sí | Dejarlas implícitas (revisión I2) |
 | Cita | `oa:Annotation` → `oa:hasBody` E13 | Web Annotation | sí | — |
 
 ## Capa 4 — reconstrucción (PiCo, ROAR, CRM, CRMinf)
@@ -71,11 +74,11 @@
 | Persona reconstruida | `picom:PersonReconstruction` ∧ `crm:E21_Person` + `prov:wasDerivedFrom` (menciones) | PiCo + CRM | sí | `owl:sameAs` entre menciones: destruye la capa 2 (prohibido por SHACL) |
 | Lugar reconstruido | `roar:LocationReconstruction` ∧ `crm:E53_Place` + `crm:P48_has_preferred_identifier` (HGIS) + `rdfs:seeAlso` (WHG) | ROAR + CRM | sí | `owl:sameAs` hacia WHG |
 | Evento reconstruido | `crm:E5_Event` + `prov:wasDerivedFrom` (hechos narrados) | CRM + PROV | sí | — |
-| Quién reconstruye y por qué | `crminf:I5_Inference_Making` + `crm:P14_carried_out_by` (agente) + `crm:P3_has_note` (argumento) + `crm:P17_was_motivated_by` (E13 premisas) + `crm:P4_has_time-span` | CRMinf + CRM | sí | `crminf:J1_used_as_premise`: su rango es `I2_Belief`, no E13 |
-| Creencia | `crminf:I2_Belief` + `crminf:J4_that` → `crminf:I4_Proposition_Set` (= el grafo nombrado de la reconstrucción) + `crminf:J5_holds_to_be` (literal) | CRMinf 1.2.1 | sí | `I6_Belief_Value` como clase: no existe en la 1.2.1 |
+| Quién reconstruye y por qué | `crminf:I5_Inference_Making` ∧ `prov:Activity` + `crm:P14_carried_out_by` (agente) + `crm:P3_has_note` (argumento) + `crm:P17_was_motivated_by` (E13 premisas) + `crm:P4_has_time-span`. Vive en un **grafo de argumentación propio** (`g:argumentacion/R-x`; revisión I4) | CRMinf + CRM + PROV | sí | `crminf:J1_used_as_premise`: su rango es `I2_Belief`, no E13 (en CRMinf 1.2.1, E13 ⊑ I1). Meter la creencia dentro de la propia proposición: la contaminaría |
+| Creencia | `crminf:I2_Belief` + `crminf:J4_that` → `crminf:I4_Proposition_Set` (= el grafo nombrado de la reconstrucción) + `crminf:J5_holds_to_be` (literal = `skos:notation` de `cre:*`) | CRMinf 1.2.1 + tesauro | sí | `I6_Belief_Value` como clase: no existe en la 1.2.1 |
 | Reconstrucciones en competencia | Dos grafos nombrados con creencias distintas (p. ej. R-declarante-p19-es-martin frente a -es-mariano) | — | — | Elegir una sola: el grafo no debe resolver en silencio |
 | Fecha normalizada | Segundo `crm:E52_Time-Span` con `crm:P82a_begin_of_the_begin` / `crm:P82b_end_of_the_end` (xsd:date), en el grafo R-fechas-normalizadas | CRM | sí | Sobrescribir la fecha escrita |
-| Cargo con vigencia | `crm:E7_Activity` + `P2_has_type cargo:*` + `PC14` + `P4_has_time-span` (ruta en `skos:editorialNote` de `atr:ejerce-cargo`) | CRM | sí (términos) | **No implementado en el mapeo** (ver `docs/C_modelo.md` §8) |
+| Cargo con vigencia | `crm:E7_Activity` (ejercicio del cargo) + `crm:P2_has_type cargo:*` + `PC14` (titular, con **el cargo como `P14.1_in_the_role_of`**) + `crm:P4_has_time-span` (P82a/P82b + nota de vigencia) + `crm:P7_took_place_at` (ámbito) + `prov:wasDerivedFrom` (E13 premisas) | CRM + PROV | sí | `rico:PositionHoldingRelation` (RiC-O 1.1): dejaría la capa 4 en RiC-O y la separaría de las premisas en CRM |
 
 ## Capa P — procedencia del dato (PROV-O)
 
@@ -90,20 +93,20 @@
 
 ## Tesauro SKOS (T)
 
-Contiene 12 esquemas y 157 conceptos (`ontologia/tesauro.ttl`):
+Contiene 12 esquemas y 164 conceptos (`ontologia/tesauro.ttl`, recuento por `skos:inScheme`):
 
-* actuaciones (17)
-* roles (26)
+* actuaciones (16)
+* roles (24)
 * condiciones (11)
-* cargos (34)
+* cargos (36)
 * entidades (12)
-* atributos (27)
+* atributos (30; todos son conceptos raíz y declaran con `dct:conformsTo` qué esquema admiten como valor)
 * polaridades (2)
 * fundamentos (8)
-* fuerzas (6)
-* creencias (6)
+* fuerzas (6; cada actuación hoja tiene la suya mediante `skos:related`)
+* creencias (6; `skos:notation` = literal de J5)
 * documentos (8)
-* anotación (1)
+* anotación (5)
 
 Las alineaciones con PiCo están en `ontologia/ohac.ttl` (`skos:closeMatch` / `skos:relatedMatch`).
 

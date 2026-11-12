@@ -62,9 +62,9 @@ Se define en `src/laad/esquema.py` (Pydantic v2, `extra="forbid"`).
 | Registro | Campos | Validaciones bloqueantes |
 |---|---|---|
 | `Pieza` (capa 1, la cura un humano) | id, orden, tramos, tipo_actuacion, titulo, fecha_escrita, lugar_escrito, cita_inicio, ajena_al_expediente | Los tramos existen; fecha, lugar y cita son literales en sus tramos |
-| `Mencion` (capa 2) | id, tramo, pieza, clase (persona, grupo o lugar), texto, rol_en_pieza, tipo_entidad, cita | `texto` está dentro de `cita`; `cita` es literal en `tramo`; `tramo` pertenece a `pieza` |
-| `Afirmacion` (capa 3) | id, tramo, pieza, afirmante, rol_afirmante, sujeto{mencion, pieza o hecho; eliptico}, atributo, valor{concepto, mencion, pieza, hecho o literal}, rol_en_hecho, polaridad, fundamento, cita, nota | Cita literal; listas cerradas tomadas del tesauro; rol_afirmante dentro de la rama `rol:afirmante`; `participa-en-hecho` exige rol; un sujeto elíptico exige nota; los hechos son locales a la pieza; las referencias existen |
-| `Reconstruccion` (capa 4, la escribe el investigador) | id, tipo (identidad, hecho o cargo), etiqueta, menciones, premisas, creencia, argumento, autor, fecha, externo | Argumento de al menos 20 caracteres; creencia de la lista cerrada; menciones de una sola clase |
+| `Mencion` (capa 2) | id, tramo, pieza, clase (persona, grupo, lugar o cosa), texto, rol_en_pieza, tipo_entidad, cita | `texto` está dentro de `cita`; `cita` es literal en `tramo`; `tramo` pertenece a `pieza` |
+| `Afirmacion` (capa 3) | id, tramo, pieza, afirmante, rol_afirmante, sujeto{mencion, pieza o hecho; eliptico}, atributo, valor{concepto, mencion, pieza, hecho o literal}, rol_en_hecho, polaridad, fundamento, cita, responde_a, segun, afirmante_de_otra_pieza, distribuida, nota | Cita literal; listas cerradas tomadas del tesauro; el concepto de valor debe estar en el esquema que admite el atributo (`dct:conformsTo`); rol_afirmante dentro de la rama `rol:afirmante`; el afirmante es persona o grupo y, si es de otra pieza, debe marcarse; las decisiones del anotador exigen nota; `segun` exige fundamento «oidas»; los hechos son locales a la pieza; las referencias existen |
+| `Reconstruccion` (capa 4, la escribe el investigador) | id, tipo (identidad, hecho o cargo), etiqueta, menciones, premisas, creencia, argumento, autor, fecha, externo, identificador_externo; para cargo: titular, cargo, ambito, ambito_literal, inicio, fin, vigencia_literal | Argumento de al menos 20 caracteres; creencia de la lista cerrada; menciones de una sola clase; un cargo exige titular, cargo del tesauro y premisas |
 
 Al LLM se le dará el JSON Schema que genera Pydantic, como salida estructurada. Siempre se re-valida en Python,
 porque la salida estructurada no garantiza que la cita sea literal.
@@ -109,8 +109,8 @@ Las respuestas completas a las 20 PC están en `docs/anexos/respuestas_pc.md`.
 
 | Operación | Tiempo |
 |---|---|
-| Construir el grafo (4315 tripletas, 23 grafos nombrados) + SHACL | ≈ 9 s |
+| Construir el grafo (5455 tripletas, 59 grafos nombrados) + SHACL | ≈ 10 s |
 | Consulta `afirmaciones` filtrada | ≈ 2 s |
-| `disputas` | 1,7 s. La primera versión tardaba 144 s y fallaba en los casos de piezas; ver la bitácora |
-| Cierre OWL RL con todos los estándares | ≈ 75 s |
-| Batería de pruebas completa | ≈ 55 s |
+| `disputas` | 2,5 s. La primera versión tardaba 144 s y fallaba en los casos de piezas; ver la bitácora |
+| Cierre OWL RL con todos los estándares | ≈ 79 s |
+| Batería de pruebas completa (205 pruebas) | ≈ 90 s |
