@@ -20,6 +20,7 @@
 @prefix fza:  <https://w3id.org/laad/tesauro/fuerza/> .
 @prefix cre:  <https://w3id.org/laad/tesauro/creencia/> .
 @prefix doc:  <https://w3id.org/laad/tesauro/documento/> .
+@prefix anot: <https://w3id.org/laad/tesauro/anotacion/> .
 
 #################################################################
 # Esquemas
@@ -355,3 +356,11 @@ doc:vuelto a skos:Concept ; skos:inScheme tes:documentos ; skos:broader doc:foli
 doc:transcripcion-paleografica a skos:Concept ; skos:inScheme tes:documentos ; skos:topConceptOf tes:documentos ; skos:prefLabel "transcripción paleográfica"@es .
 doc:tramo a skos:Concept ; skos:inScheme tes:documentos ; skos:topConceptOf tes:documentos ; skos:prefLabel "tramo de transcripción"@es ;
     skos:definition "Segmento de la transcripción entre separadores '#' y marcas de folio explícitas (docs/01_materiales.md §2)."@es .
+
+#################################################################
+# 12. Marcas de anotación (decisiones del anotador visibles en el grafo)
+#################################################################
+tes:anotacion a skos:ConceptScheme ; skos:prefLabel "Marcas de anotación"@es .
+anot:sujeto-eliptico a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
+    skos:prefLabel "sujeto elíptico resuelto por el anotador"@es ;
+    skos:definition "El sujeto de la afirmación no está escrito en la cita; el anotador lo resolvió y lo justifica en crm:P3_has_note."@es .

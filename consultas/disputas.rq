@@ -1,0 +1,49 @@
+# Disputas CALCULADAS (nunca almacenadas). Una disputa existe, para una entidad y un atributo, cuando:
+#  (a) "afirma/niega": el mismo valor es afirmado por unos y negado por otros;
+#  (b) "valores incompatibles": atributos de valor único (hora, duración, número, redactor, firmante) con valores
+#      distintos afirmados;
+#  (c) "texto/afirmación": la pieza muestra una firma (capa 2) y alguien niega en capa 3 haber firmado.
+# Entidad = reconstrucción de capa 4 de la que deriva el sujeto, o la propia pieza si el sujeto es una pieza.
+# Los valores se comparan por su reconstrucción si la tienen (dos grafías de la misma persona no son disputa).
+SELECT ?entidad ?entLabel ?atributo ?tipo (COUNT(DISTINCT ?x) AS ?n) (GROUP_CONCAT(DISTINCT ?xid; separator=" ") AS ?afirmaciones)
+WHERE {
+  #PARAMETROS
+  {
+    SELECT ?a ?entidad ?atributo ?vk ?pol WHERE {
+      ?a a crm:E13_Attribute_Assignment ; crm:P140_assigned_attribute_to ?s ;
+         crm:P177_assigned_property_of_type ?atributo ; crm:P141_assigned ?v ; crm:P2_has_type ?pol .
+      ?pol skos:inScheme tes:polaridades .
+      { ?entidad prov:wasDerivedFrom ?s . ?entidad a ?ce . FILTER (?ce IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
+      UNION { ?s a rico:Record . BIND (?s AS ?entidad) }
+      OPTIONAL { ?ev prov:wasDerivedFrom ?v . ?ev a ?cv . FILTER (?cv IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) }
+      OPTIONAL { ?v crm:P190_has_symbolic_content ?t1 }
+      OPTIONAL { ?v crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2 }
+      BIND (COALESCE(?ev, ?t1, ?t2, ?v) AS ?vk)
+    }
+  }
+  {
+    SELECT ?b ?entidad ?atributo ?vk2 ?pol2 WHERE {
+      ?b a crm:E13_Attribute_Assignment ; crm:P140_assigned_attribute_to ?s ;
+         crm:P177_assigned_property_of_type ?atributo ; crm:P141_assigned ?v ; crm:P2_has_type ?pol2 .
+      ?pol2 skos:inScheme tes:polaridades .
+      { ?entidad prov:wasDerivedFrom ?s . ?entidad a ?ce . FILTER (?ce IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
+      UNION { ?s a rico:Record . BIND (?s AS ?entidad) }
+      OPTIONAL { ?ev prov:wasDerivedFrom ?v . ?ev a ?cv . FILTER (?cv IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) }
+      OPTIONAL { ?v crm:P190_has_symbolic_content ?t1 }
+      OPTIONAL { ?v crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2 }
+      BIND (COALESCE(?ev, ?t1, ?t2, ?v) AS ?vk2)
+    }
+  }
+  FILTER (?a != ?b)
+  # (Un FILTER dentro de un grupo de UNION solo ve las variables de ese grupo: el tipo se calcula aquí fuera.)
+  BIND (IF(?vk = ?vk2 && ?pol = pol:afirma && ?pol2 = pol:niega, "afirma/niega",
+        IF(?atributo IN (atr:fecha-del-hecho, atr:duracion, atr:numero-de-participantes, atr:redacto, atr:firmo)
+           && ?pol = pol:afirma && ?pol2 = pol:afirma && ?vk != ?vk2, "valores incompatibles", ?nada)) AS ?tipo)
+  FILTER (BOUND(?tipo))
+  VALUES ?lado { 1 2 } BIND (IF(?lado = 1, ?a, ?b) AS ?x)
+  ?x rdfs:label ?xid .
+  OPTIONAL { ?entidad rdfs:label ?l1 } OPTIONAL { ?entidad rico:title ?l2 }
+  BIND (COALESCE(?l2, ?l1) AS ?entLabel)
+}
+GROUP BY ?entidad ?entLabel ?atributo ?tipo
+ORDER BY ?entLabel ?atributo ?tipo

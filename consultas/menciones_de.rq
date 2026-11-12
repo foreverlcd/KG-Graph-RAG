@@ -1,0 +1,10 @@
+# Menciones (capa 2) agrupadas por una reconstrucción (capa 4): grafía tal como está escrita, tramo y pieza.
+SELECT ?mid ?texto ?tramo ?pieza ?tipoAct ?cita WHERE {
+  #PARAMETROS
+  ?filtroEntidad prov:wasDerivedFrom ?m .
+  ?m rdfs:label ?texto ; (prov:hadPrimarySource|roar:documentedIn) ?pz . ?pz rdfs:label ?pieza .
+  ?act crm:P94_has_created ?pz ; crm:P2_has_type ?ta . ?ta skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct .
+  ?an oa:hasBody ?m ; oa:hasTarget ?tg . ?tg oa:hasSource/rdfs:label ?tramo ; oa:hasSelector/oa:exact ?cita .
+  BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
+}
+ORDER BY ?tramo ?mid

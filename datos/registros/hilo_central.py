@@ -159,6 +159,8 @@ a("A-UT13-001", "UT13", "P19", "M-UT12.a-005", "declarante", {"mencion": "M-UT12
 
 # ───────────── P21 · Declaración jurada de Fernando Orue (24 de septiembre) · UT14–UT15 ─────────────
 m("M-UT14-001", "UT14", "P21", "persona", "fernando ore", "el soldado fernando ore vecino español", rol="declarante")
+m("M-UT14-004", "UT14", "P21", "persona", "el grl. sub delegado", "comparecio ante mi el grl. sub delegado el soldado fernando ore", rol="juez-comisionado")
+m("M-UT13-001", "UT13", "P20", "persona", "santiago cacerola", "segundo en la compañia en este fue santiago cacerola", rol="declarante")
 m("M-UT14-002", "UT14", "P21", "persona", "andres chuquitaza", "con motibo de saber q de andres chuquitaza fue")
 m("M-UT14-003", "UT14", "P21", "persona", "guasscachoque", "como ha puesto guasscachoque en la citada certificacion")
 m("M-UT15-001", "UT15", "P21", "persona", "Chiquitas", "la mujer de Chiquitas habla contra el que declara")

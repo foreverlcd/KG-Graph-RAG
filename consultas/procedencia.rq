@@ -1,0 +1,13 @@
+# PC20: de qué versión de la transcripción, qué proceso y qué agente procede una afirmación o mención (?x).
+SELECT ?grafo ?capa ?actividad ?agente ?tipoAgente ?plan ?transcripcion ?sha ?fecha ?validador WHERE {
+  #PARAMETROS
+  GRAPH ?grafo { ?x ?p ?o }
+  ?grafo dct:type ?capa .
+  OPTIONAL { ?grafo prov:wasGeneratedBy ?actividad . ?actividad prov:used ?transcripcion ;
+             prov:qualifiedAssociation [ prov:agent ?ag ; prov:hadPlan ?pl ] ; prov:endedAtTime ?fecha .
+             ?transcripcion dct:identifier ?sha . ?pl rdfs:label ?plan }
+  OPTIONAL { ?grafo prov:wasAttributedTo ?ag2 }
+  BIND (COALESCE(?ag, ?ag2) AS ?agx) ?agx rdfs:label ?agente ; a ?tipoAgente .
+  FILTER (?tipoAgente IN (prov:SoftwareAgent, prov:Person))
+  OPTIONAL { ?val prov:used ?grafo ; prov:wasAssociatedWith/rdfs:label ?validador }
+}
