@@ -4613,6 +4613,13 @@
 <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-001> <http://www.w3.org/2000/01/rdf-schema#label> "Gonzalo del Rio" <https://w3id.org/laad/grafo/texto/anotacion-manual-hilo-central-v1> .
 <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-001> <http://www.w3.org/ns/prov#hadPrimarySource> <https://w3id.org/laad/id/cc-14-18/pieza/P29> <https://w3id.org/laad/grafo/texto/anotacion-manual-hilo-central-v1> .
 <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-001> <https://personsincontext.org/model#hasRole> <https://w3id.org/laad/tesauro/rol/firmante> <https://w3id.org/laad/grafo/texto/anotacion-manual-hilo-central-v1> .
+<https://w3id.org/laad/id/cc-14-18/original/extension/unidad> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.ica.org/standards/RiC/ontology#UnitOfMeasurement> <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension/unidad> <http://www.w3.org/2000/01/rdf-schema#label> "folio"@es <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension> <http://purl.org/dc/terms/source> "ficha del catálogo del ARC (Causas Criminales, pp. 434-435)"@es <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.ica.org/standards/RiC/ontology#CarrierExtent> <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension> <http://www.w3.org/2000/01/rdf-schema#comment> "Dato de la ficha del catálogo, contrastado y no asumido (discrepancia K5): la transcripción marca «[Folio 34 ]», incompatible con 19 folios correlativos."@es <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension> <https://www.ica.org/standards/RiC/ontology#hasUnitOfMeasurement> <https://w3id.org/laad/id/cc-14-18/original/extension/unidad> <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original/extension> <https://www.ica.org/standards/RiC/ontology#quantity> "19"^^<http://www.w3.org/2001/XMLSchema#decimal> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original/folio/20> <http://purl.org/dc/terms/type> <https://w3id.org/laad/tesauro/documento/folio> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original/folio/20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.ica.org/standards/RiC/ontology#Instantiation> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original/folio/20> <https://www.ica.org/standards/RiC/ontology#isOrWasComponentOf> <https://w3id.org/laad/id/cc-14-18/original> <https://w3id.org/laad/grafo/documento> .
@@ -4631,6 +4638,7 @@
 <https://w3id.org/laad/id/cc-14-18/original/folio/34> <https://www.ica.org/standards/RiC/ontology#title> "folio 34" <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.ica.org/standards/RiC/ontology#Instantiation> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original> <http://www.w3.org/2000/01/rdf-schema#comment> "Expediente físico en el ARC; imágenes no disponibles en el proyecto."@es <https://w3id.org/laad/grafo/documento> .
+<https://w3id.org/laad/id/cc-14-18/original> <https://www.ica.org/standards/RiC/ontology#hasExtent> <https://w3id.org/laad/id/cc-14-18/original/extension> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/original> <https://www.ica.org/standards/RiC/ontology#isOrWasInstantiationOf> <https://w3id.org/laad/id/arc/expediente/cc-14-18> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://www.ica.org/standards/RiC/ontology#Date> <https://w3id.org/laad/grafo/documento> .
 <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> <https://www.ica.org/standards/RiC/ontology#expressedDate> "Agosto 26 de 1806" <https://w3id.org/laad/grafo/documento> .
@@ -5580,6 +5588,7 @@
 <https://w3id.org/laad/id/inferencia/R-tupac-amaru> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.cidoc-crm.org/extensions/crminf/I5_Inference_Making> <https://w3id.org/laad/grafo/argumentacion/R-tupac-amaru> .
 <https://w3id.org/laad/id/inferencia/R-tupac-amaru> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> <https://w3id.org/laad/grafo/argumentacion/R-tupac-amaru> .
 <https://w3id.org/laad/id/inferencia/R-tupac-amaru> <http://www.w3.org/ns/prov#wasAssociatedWith> <https://w3id.org/laad/id/agente/claude-opus-5-5> <https://w3id.org/laad/grafo/argumentacion/R-tupac-amaru> .
+<https://w3id.org/laad/id/lugar/cusco/identificador-externo> <http://purl.org/dc/terms/source> <https://doi.org/10.7910/DVN/FUSJD3> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
 <https://w3id.org/laad/id/lugar/cusco/identificador-externo> <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> "HGIS:6000002" <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
 <https://w3id.org/laad/id/lugar/cusco/identificador-externo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.cidoc-crm.org/cidoc-crm/E42_Identifier> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
 <https://w3id.org/laad/id/lugar/cusco> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> <https://w3id.org/laad/id/lugar/cusco/identificador-externo> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
@@ -5589,6 +5598,7 @@
 <https://w3id.org/laad/id/lugar/cusco> <http://www.w3.org/2000/01/rdf-schema#seeAlso> <https://whgazetteer.org/places/176704/detail> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
 <https://w3id.org/laad/id/lugar/cusco> <http://www.w3.org/ns/prov#wasDerivedFrom> <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-005> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
 <https://w3id.org/laad/id/lugar/cusco> <http://www.w3.org/ns/prov#wasGeneratedBy> <https://w3id.org/laad/id/inferencia/R-cusco> <https://w3id.org/laad/grafo/reconstruccion/R-cusco> .
+<https://w3id.org/laad/id/lugar/san-pedro-cacha/identificador-externo> <http://purl.org/dc/terms/source> <https://doi.org/10.7910/DVN/FUSJD3> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
 <https://w3id.org/laad/id/lugar/san-pedro-cacha/identificador-externo> <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> "HGIS:6000358" <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
 <https://w3id.org/laad/id/lugar/san-pedro-cacha/identificador-externo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.cidoc-crm.org/cidoc-crm/E42_Identifier> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
 <https://w3id.org/laad/id/lugar/san-pedro-cacha> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> <https://w3id.org/laad/id/lugar/san-pedro-cacha/identificador-externo> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
@@ -5598,6 +5608,7 @@
 <https://w3id.org/laad/id/lugar/san-pedro-cacha> <http://www.w3.org/2000/01/rdf-schema#seeAlso> <https://whgazetteer.org/places/177061/detail> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
 <https://w3id.org/laad/id/lugar/san-pedro-cacha> <http://www.w3.org/ns/prov#wasDerivedFrom> <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-006> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
 <https://w3id.org/laad/id/lugar/san-pedro-cacha> <http://www.w3.org/ns/prov#wasGeneratedBy> <https://w3id.org/laad/id/inferencia/R-san-pedro-cacha> <https://w3id.org/laad/grafo/reconstruccion/R-san-pedro-cacha> .
+<https://w3id.org/laad/id/lugar/sicuani/identificador-externo> <http://purl.org/dc/terms/source> <https://doi.org/10.7910/DVN/FUSJD3> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
 <https://w3id.org/laad/id/lugar/sicuani/identificador-externo> <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> "HGIS:6000365" <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
 <https://w3id.org/laad/id/lugar/sicuani/identificador-externo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.cidoc-crm.org/cidoc-crm/E42_Identifier> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
 <https://w3id.org/laad/id/lugar/sicuani> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> <https://w3id.org/laad/id/lugar/sicuani/identificador-externo> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
@@ -5607,6 +5618,7 @@
 <https://w3id.org/laad/id/lugar/sicuani> <http://www.w3.org/2000/01/rdf-schema#seeAlso> <https://whgazetteer.org/places/177068/detail> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
 <https://w3id.org/laad/id/lugar/sicuani> <http://www.w3.org/ns/prov#wasDerivedFrom> <https://w3id.org/laad/id/cc-14-18/mencion/M-UT10-001> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
 <https://w3id.org/laad/id/lugar/sicuani> <http://www.w3.org/ns/prov#wasGeneratedBy> <https://w3id.org/laad/id/inferencia/R-sicuani> <https://w3id.org/laad/grafo/reconstruccion/R-sicuani> .
+<https://w3id.org/laad/id/lugar/tinta/identificador-externo> <http://purl.org/dc/terms/source> <https://doi.org/10.7910/DVN/FUSJD3> <https://w3id.org/laad/grafo/reconstruccion/R-tinta> .
 <https://w3id.org/laad/id/lugar/tinta/identificador-externo> <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> "HGIS:6000357" <https://w3id.org/laad/grafo/reconstruccion/R-tinta> .
 <https://w3id.org/laad/id/lugar/tinta/identificador-externo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.cidoc-crm.org/cidoc-crm/E42_Identifier> <https://w3id.org/laad/grafo/reconstruccion/R-tinta> .
 <https://w3id.org/laad/id/lugar/tinta> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> <https://w3id.org/laad/id/lugar/tinta/identificador-externo> <https://w3id.org/laad/grafo/reconstruccion/R-tinta> .

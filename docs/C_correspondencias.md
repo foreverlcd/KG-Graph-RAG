@@ -51,7 +51,7 @@
 |---|---|---|---|---|
 | La afirmación | `crm:E13_Attribute_Assignment` (en CRMinf 1.2.1, `E13 ⊑ crminf:I1_Argumentation`) | CRM / CRMinf | sí | Reificación RDF (`rdf:Statement`), RDF-star o nanopublicaciones: ninguna da actor, tiempo y actividad en CRM |
 | Quién la hace | `crm:P14_carried_out_by` + `crm:PC14_carried_out_by` con `crm:P14.1_in_the_role_of rol:declarante`…; afirmante persona o grupo (p. ej. «el común») | CRM `_PC` | sí | `prov:wasAttributedTo`: es procedencia del dato (fallo 1.5) |
-| En qué actuación (y de ahí: tipo, fecha, ante quién, quién escribe y quién firma) | `crm:P9i_forms_part_of` → `crm:E65_Creation` | CRM | sí | `crm:P17_was_motivated_by`, como en STAR: se reserva a las premisas de capa 4 |
+| En qué actuación (y de ahí: tipo, fecha, ante quién, quién escribe y quién firma) | `crm:P9i_forms_part_of` → `crm:E65_Creation` | CRM | sí | `crm:P17_was_motivated_by` para la fuente, como en STAR: aquí P17 queda para relaciones de discurso en la capa 3 (`anot:responde-a`, `anot:segun-otro`) y para las premisas en la capa 4 |
 | Ante quién | En la actuación: `PC14` con rol en la rama `rol:receptor` | CRM `_PC` + tesauro | sí | Una propiedad «ante» de OHAC: innecesaria |
 | Quién escribe | En la actuación: `PC14` con `rol:redactor` cuando el documento lo dice; si está disputado, E13 con `atr:redacto` | CRM + tesauro | sí | — |
 | Quién firma | Mención con `rol:firmante` (capa 2) → `PC14` en la actuación; si se niega, E13 con `atr:firmo` + `pol:niega` | CRM + tesauro | sí | — |

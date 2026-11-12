@@ -31,12 +31,20 @@ nothing = sorted(str(s) for s in g.subjects(rdflib.RDF.type, rdflib.OWL.Nothing)
 ROAR = rdflib.Namespace("https://w3id.org/roar#"); PICOM = rdflib.Namespace("https://personsincontext.org/model#")
 espurias = sorted(str(s) for s in g.subjects(rdflib.RDF.type, PICOM.PersonObservation)
                   if (s, rdflib.RDF.type, ROAR.Reconstruction) in g)
+# Defecto D6 (CRMinf 1.2.1): E13 ⊑ I1_Argumentation («honest inferences or observations») y J33 lee toda E13 como
+# proposición que su autor cree VERDADERA. En la capa 3 (testimonio judicial) eso presume sinceridad. Se cuenta.
+CRM = rdflib.Namespace("http://www.cidoc-crm.org/cidoc-crm/"); INF = rdflib.Namespace("http://www.cidoc-crm.org/extensions/crminf/")
+NIEGA = rdflib.URIRef("https://w3id.org/laad/tesauro/polaridad/niega")
+e13_i1 = [s for s in g.subjects(rdflib.RDF.type, CRM.E13_Attribute_Assignment) if (s, rdflib.RDF.type, INF.I1_Argumentation) in g]
+e13_niega = [s for s in e13_i1 if (s, CRM.P2_has_type, NIEGA) in g]
 informe = [f"datos: {n_datos} tripletas; con estándares y perfil: {n_total}; tras cierre OWL RL: {len(g)}",
            f"tiempo: {time.time() - t0:.0f} s",
            f"inconsistencias (agent-ont#error): {len(errores)}",
            *[f"  - {e}" for e in errores],
            f"individuos de owl:Nothing: {len(nothing)}", *[f"  - {x}" for x in nothing],
-           f"inferencias espurias por el defecto D1 de ROAR (PersonObservation inferida roar:Reconstruction): {len(espurias)}"]
+           f"inferencias espurias por el defecto D1 de ROAR (PersonObservation inferida roar:Reconstruction): {len(espurias)}",
+           f"lectura de sinceridad por el defecto D6 de CRMinf (E13 inferida I1_Argumentation): {len(e13_i1)}, "
+           f"de ellas negaciones (P2 pol:niega) que un lector de J33 que ignore P2 leería como creídas verdaderas: {len(e13_niega)}"]
 (RAIZ / "datos/grafo/razonador.txt").write_text("\n".join(informe) + "\n", encoding="utf-8")
 print("\n".join(informe[:40]))
 sys.exit(1 if errores or nothing else 0)

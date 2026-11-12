@@ -1,5 +1,6 @@
-datos: 5454 tripletas; con estándares y perfil: 30320; tras cierre OWL RL: 103284
-tiempo: 79 s
+datos: 5746 tripletas; con estándares y perfil: 30612; tras cierre OWL RL: 104029
+tiempo: 80 s
 inconsistencias (agent-ont#error): 0
 individuos de owl:Nothing: 0
 inferencias espurias por el defecto D1 de ROAR (PersonObservation inferida roar:Reconstruction): 59
+lectura de sinceridad por el defecto D6 de CRMinf (E13 inferida I1_Argumentation): 74, de ellas negaciones (P2 pol:niega) que un lector de J33 que ignore P2 leería como creídas verdaderas: 12
