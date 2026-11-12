@@ -1,0 +1,5 @@
+reconstruccion_id,wikidata,tgn,etiqueta,descripcion
+R-tinta,http://www.wikidata.org/entity/Q2435935,http://vocab.getty.edu/tgn/9227290,Tinta,"WD: villa en Cusco, Perú (P1667=9227290). TGN: Tinta, inhabited place, Cuzco, Peru"
+R-sicuani,http://www.wikidata.org/entity/Q4419079,http://vocab.getty.edu/tgn/1024771,Sicuani,"WD: ciudad peruana (P1667=1024771). TGN: Sicuani, inhabited place, Cuzco, Peru"
+R-cusco,http://www.wikidata.org/entity/Q5582862,http://vocab.getty.edu/tgn/7005819,Cusco,"WD: ciudad histórica del Perú, capital del Departamento del Cusco (P1667=7005819). TGN: Cuzco, inhabited place, Cuzco, Peru"
+R-san-pedro-cacha,http://www.wikidata.org/entity/Q13190677,http://vocab.getty.edu/tgn/8712075,San Pedro (de Cacha),"WD: pueblo en Cusco, Perú (P131=Q3313072 distrito de San Pedro, Canchis; -14.186,-71.343; sin P1667). TGN: San Pedro de Cacha, village near Inca ruins at Raqchi (-14.166,-71.333), pero la jerarquía TGN lo pone por error en Pasco"

@@ -1,4 +1,4 @@
-datos: 5746 tripletas; con estándares y perfil: 30612; tras cierre OWL RL: 104029
+datos: 5774 tripletas; con estándares y perfil: 30640; tras cierre OWL RL: 104155
 tiempo: 80 s
 inconsistencias (agent-ont#error): 0
 individuos de owl:Nothing: 0
