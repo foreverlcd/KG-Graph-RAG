@@ -45,3 +45,31 @@ CITAS_DOC_MATERIALES = [
 def test_cita_del_documento_de_materiales(cita, tramo):
     r = verificar_cita(cita, tramo)
     assert r.valida, r.motivo
+
+
+CITAS_DOC_PC = [
+    ("yndio originario del Pueblo de Tinta", "UT08"), ("recaudaderor", "UT05"),
+    ("Recaudador de Tributos", "UT07"), ("Recaudador de Reales Tributos de dicho Pueblo", "UT09"),
+    ("recaudador de tributos de los Ayllus Tinta y Ucho", "UT17"), ("su casique y alcalde mayor", "UT16.b"),
+    ("casique del Ayllo Tinta", "UT00"), ("quatro o seis Yndios", "UT12.b"), ("una caterva de indios", "UT06"),
+    ("un montón de indios", "UT02"), ("un montón de indios", "UT03"), ("menos conforme a la verdad", "UT19"),
+    ("por la malicia con que aparece", "UT19"), ("de conformidad", "UT19"), ("a fin de contener los excesos", "UT19"),
+    ("a falta de Escribano", "UT11"), ("San Pedro de Cacha", "UT02"), ("Ayllu nominado Uchu", "UT05"),
+    ("No sabe escribir", "UT12.b"), ("Simon Arce", "UT12.b"), ("no le consta nada de esto", "UT12.b"),
+    ("no le cons", "UT11"), ("Santiago Casorla", "UT11"), ("Desglocese de este Expediente", "UT10"),
+    ("Se agrego las dos fojas", "UT10"), ("informen el mismo Subdelegado", "UT08"),
+    ("quejas dadas por Manuel Guancoichoque", "UT19"), ("Noviembre 20 de 1806", "UT20"),
+    ("Siquani Noviembre 8 de 1806", "UT18"), ("Sicuani Noviembre 8 de 1806", "UT17"),
+    ("Sicuani Setiembre. 17 de 1806", "UT10"), ("Veinte y tres dias del mes de Septiembre", "UT11"),
+    ("en veinti quatro dias del mes de setiembre", "UT13"), ("setiembre 24 de 1806", "UT15"),
+    ("Cusco y Agosto 28 de 1806", "UT09"), ("Agosto 27 de 1806", "UT09"),
+    ("agosto cinco de mil ochocientos seis", "UT02"), ("En el pueblo de Tinta, en primero de agosto de 1806", "UT01"),
+    ("la mujer de Chiquitas", "UT15"), ("Juan Cazorla de quien aparece firmada la Certificación a folios 2", "UT17"),
+    ("en la remuneración que he conseguido", "UT06"), ("hasta aquí no había tributado", "UT06"),
+]
+
+
+@pytest.mark.parametrize("cita,tramo", CITAS_DOC_PC)
+def test_cita_de_respuestas_provisionales(cita, tramo):
+    r = verificar_cita(cita, tramo)
+    assert r.valida, r.motivo
