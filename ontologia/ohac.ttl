@@ -1,0 +1,40 @@
+# OHAC — Perfil de aplicación LAAD para fuentes judiciales coloniales.
+#
+# RESULTADO DEL ANÁLISIS DE CARENCIAS (docs/C_modelo.md §6): OHAC NO DECLARA NINGUNA CLASE NI PROPIEDAD.
+# Toda necesidad del modelo se cubre con términos verificados de RiC-O 1.1, CIDOC CRM 7.1.3 (+PC), CRMinf 1.2.1,
+# PROV-O, SKOS, Web Annotation, PiCo 1.1.0 y ROAR 0.1. OHAC consiste en:
+#   1. este encabezado (importaciones con versión fijada),
+#   2. el tesauro SKOS (ontologia/tesauro.ttl) — lo andino y lo procesal, como datos,
+#   3. las formas SHACL (ontologia/formas.ttl) — las reglas del perfil,
+#   4. las alineaciones de abajo (skos:closeMatch hacia el tesauro de roles de PiCo).
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ohac: <https://w3id.org/laad/ohac#> .
+@prefix rol:  <https://w3id.org/laad/tesauro/rol/> .
+@prefix picot_roles: <https://terms.personsincontext.org/ThesaurusHistorischePersoonsgegevens/> .
+# Nota: pico.ttl declara picot_roles: <https://terms.personsincontext.org/roles/> en sus ejemplos, pero los conceptos
+# descargados del tesauro usan .../ThesaurusHistorischePersoonsgegevens/NNN. Se usa la IRI del concepto publicado.
+
+<https://w3id.org/laad/ohac> a owl:Ontology ;
+    rdfs:label "OHAC — perfil de aplicación LAAD"@es ;
+    dct:description "Perfil de aplicación (no ontología de dominio) para el Fondo Intendencia del ARC. No declara términos propios."@es ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://www.ica.org/standards/RiC/ontology/1.1> ,
+                <http://www.cidoc-crm.org/cidoc-crm/7.1.3/> ,
+                <http://www.cidoc-crm.org/extensions/crminf/1.2.1/> ,
+                <http://www.w3.org/ns/prov-o#> ,
+                <http://www.w3.org/2004/02/skos/core> ,
+                <http://www.w3.org/ns/oa#> ,
+                <https://personsincontext.org/model> ,
+                <https://w3id.org/roar> ;
+    rdfs:comment "Las IRI de importación son nominales; los archivos exactos y sus sha256 están en vendor/README.md y vendor/fuentes.sha256."@es .
+
+# Alineaciones con el tesauro de roles de PiCo (vendor/pico-roles). PiCo no tiene querellante, juez, escribano ni intérprete.
+rol:declarante        skos:closeMatch picot_roles:573 .   # witness / getuige
+rol:certificante      skos:closeMatch picot_roles:573 .
+rol:denunciante       skos:closeMatch picot_roles:70 .    # applicant / aanvrager
+rol:preso             skos:closeMatch picot_roles:515 .   # detainee / arrestant
+rol:fedatario         skos:relatedMatch picot_roles:485 . # notary (el escribano colonial no es notario en sentido estricto)
+rol:informante        skos:relatedMatch picot_roles:489 . # informant (en PiCo: quien declara un nacimiento o defunción)

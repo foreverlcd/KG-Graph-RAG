@@ -1,0 +1,14 @@
+{
+  "id": "cc-14-18",
+  "descripcion": "ARC, Fondo Intendencia, Sección Causas Criminales, Serie Cusco, Legajo 14, Expediente 18 (1806)",
+  "transcripcion": "corpus/Transcripcion_CC_L14E18.txt",
+  "marcas_folio": [["UT12", "Folio 20", "20"], ["UT16", "folio 28", "28"], ["UT19", "Folio 33", "33"], ["UT20", "[Folio 34 ]", "34"]],
+  "jerarquia": [
+    {"id": "arc/fondo/intendencia", "tipo": "rst:Fonds", "titulo": "Intendencia", "padre": null},
+    {"id": "arc/seccion/causas-criminales", "tipo": "doc:seccion", "titulo": "Causas Criminales", "padre": "arc/fondo/intendencia"},
+    {"id": "arc/serie/cc-cusco", "tipo": "rst:Series", "titulo": "Cusco", "padre": "arc/seccion/causas-criminales"},
+    {"id": "arc/legajo/cc-14", "tipo": "doc:legajo", "titulo": "Legajo 14", "padre": "arc/serie/cc-cusco"},
+    {"id": "arc/expediente/cc-14-18", "tipo": "rst:File", "titulo": "Expediente 18", "padre": "arc/legajo/cc-14"}
+  ],
+  "piezas": "datos/piezas.jsonl"
+}

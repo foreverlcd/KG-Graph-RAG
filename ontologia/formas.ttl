@@ -1,0 +1,255 @@
+# Formas SHACL del perfil de aplicación LAAD (OHAC).
+# Se validan sobre la UNIÓN de los grafos nombrados + el tesauro (las reglas de separación de capas,
+# que dependen del grafo nombrado, se comprueban con SPARQL en tests/test_capas.py).
+# Cada forma remite a la decisión de docs/A_diagnostico.md §4 que hace cumplir.
+
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:    <http://purl.org/dc/terms/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix rico:   <https://www.ica.org/standards/RiC/ontology#> .
+@prefix crm:    <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crminf: <http://www.cidoc-crm.org/extensions/crminf/> .
+@prefix oa:     <http://www.w3.org/ns/oa#> .
+@prefix picom:  <https://personsincontext.org/model#> .
+@prefix roar:   <https://w3id.org/roar#> .
+@prefix ohac:   <https://w3id.org/laad/ohac#> .
+
+ohac: sh:declare
+    [ sh:prefix "rdf" ;    sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ] ,
+    [ sh:prefix "rdfs" ;   sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ] ,
+    [ sh:prefix "skos" ;   sh:namespace "http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI ] ,
+    [ sh:prefix "dct" ;    sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] ,
+    [ sh:prefix "prov" ;   sh:namespace "http://www.w3.org/ns/prov#"^^xsd:anyURI ] ,
+    [ sh:prefix "rico" ;   sh:namespace "https://www.ica.org/standards/RiC/ontology#"^^xsd:anyURI ] ,
+    [ sh:prefix "crm" ;    sh:namespace "http://www.cidoc-crm.org/cidoc-crm/"^^xsd:anyURI ] ,
+    [ sh:prefix "crminf" ; sh:namespace "http://www.cidoc-crm.org/extensions/crminf/"^^xsd:anyURI ] ,
+    [ sh:prefix "oa" ;     sh:namespace "http://www.w3.org/ns/oa#"^^xsd:anyURI ] ,
+    [ sh:prefix "tes" ;    sh:namespace "https://w3id.org/laad/tesauro/"^^xsd:anyURI ] ,
+    [ sh:prefix "id" ;     sh:namespace "https://w3id.org/laad/id/"^^xsd:anyURI ] .
+
+#################################################################
+# Capa 1 — documento
+#################################################################
+ohac:PiezaForma a sh:NodeShape ;
+    sh:targetClass rico:Record ;
+    rdfs:comment "Toda pieza tiene título, al menos un tramo de transcripción y exactamente un tipo de actuación del tesauro (fallo 2.4: el tipo no se decide por subcadenas)."@es ;
+    sh:property [ sh:path rico:title ; sh:minCount 1 ] ;
+    sh:property [ sh:path rico:hasOrHadInstantiation ; sh:minCount 1 ; sh:class rico:Instantiation ] ;
+    sh:property [ sh:path rico:hasDocumentaryFormType ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path rico:isOrWasIncludedIn ; sh:maxCount 1 ; sh:class rico:RecordSet ] ;
+    sh:sparql [
+        sh:message "El tipo documental de la pieza no está en el esquema tes:actuaciones." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this rico:hasDocumentaryFormType ?value .
+                     FILTER NOT EXISTS { ?value skos:inScheme <https://w3id.org/laad/tesauro/actuaciones> } }""" ] ;
+    sh:sparql [
+        sh:message "El tipo de actuación de la pieza no tiene fuerza institucional en el tesauro (¿concepto abstracto?)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this rico:hasDocumentaryFormType ?value .
+                     FILTER NOT EXISTS { ?value skos:related ?f . ?f skos:inScheme <https://w3id.org/laad/tesauro/fuerzas> } }""" ] .
+
+ohac:ActuacionForma a sh:NodeShape ;
+    sh:targetClass crm:E65_Creation ;
+    rdfs:comment "La actuación crea exactamente una pieza y tiene un tipo de actuación y una fuerza institucional."@es ;
+    sh:property [ sh:path crm:P94_has_created ; sh:minCount 1 ; sh:maxCount 1 ; sh:class rico:Record ] ;
+    sh:sparql [
+        sh:message "La actuación debe tener exactamente un(a) tipo de actuación (tes:actuaciones)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E65_Creation .
+            OPTIONAL { SELECT $this (COUNT(DISTINCT ?t) AS ?n) WHERE { $this crm:P2_has_type ?t .
+                       ?t skos:inScheme <https://w3id.org/laad/tesauro/actuaciones> } GROUP BY $this }
+            FILTER (!BOUND(?n) || ?n != 1) }""" ] ;
+    sh:sparql [
+        sh:message "La actuación debe tener exactamente un(a) fuerza institucional (tes:fuerzas)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E65_Creation .
+            OPTIONAL { SELECT $this (COUNT(DISTINCT ?t) AS ?n) WHERE { $this crm:P2_has_type ?t .
+                       ?t skos:inScheme <https://w3id.org/laad/tesauro/fuerzas> } GROUP BY $this }
+            FILTER (!BOUND(?n) || ?n != 1) }""" ] .
+
+ohac:FechaEscritaForma a sh:NodeShape ;
+    sh:targetClass rico:Date ;
+    rdfs:comment "La fecha de capa 1 es la expresión tal como está escrita; nunca un valor normalizado (fallo 2.6)."@es ;
+    sh:property [ sh:path rico:expressedDate ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+    sh:property [ sh:path rico:normalizedDateValue ; sh:maxCount 0 ] .
+
+#################################################################
+# Capa 2 — menciones (observaciones)
+#################################################################
+ohac:ObservacionForma a sh:NodeShape ;
+    sh:targetClass picom:PersonObservation, roar:LocationObservation, roar:Observation ;
+    rdfs:comment "Una mención tiene una fuente primaria (la pieza), su nombre tal como está escrito y un ancla textual. Nunca se deriva de otra ni se iguala con owl:sameAs (fallo 2.5: no fusionar en capa 2)."@es ;
+    sh:property [ sh:path [ sh:alternativePath ( prov:hadPrimarySource roar:documentedIn ) ] ;
+                  sh:minCount 1 ; sh:maxCount 1 ; sh:class rico:Record ] ;
+    sh:property [ sh:path crm:P1_is_identified_by ; sh:minCount 1 ; sh:class crm:E41_Appellation ] ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path [ sh:inversePath oa:hasBody ] ; sh:minCount 1 ; sh:class oa:Annotation ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:maxCount 0 ] ;
+    sh:property [ sh:path owl:sameAs ; sh:maxCount 0 ] .
+
+ohac:ApelacionForma a sh:NodeShape ;
+    sh:targetClass crm:E41_Appellation ;
+    sh:property [ sh:path crm:P190_has_symbolic_content ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+ohac:AnotacionForma a sh:NodeShape ;
+    sh:targetClass oa:Annotation ;
+    rdfs:comment "Toda anotación ancla exactamente un cuerpo a un tramo con selector de cita exacta y de posición (fallo 2.3)."@es ;
+    sh:property [ sh:path oa:hasBody ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path oa:hasTarget ; sh:minCount 1 ; sh:maxCount 1 ; sh:node ohac:ObjetivoForma ] .
+
+ohac:ObjetivoForma a sh:NodeShape ;
+    sh:property [ sh:path oa:hasSource ; sh:minCount 1 ; sh:maxCount 1 ; sh:class rico:Instantiation ] ;
+    sh:property [ sh:path oa:hasSelector ; sh:qualifiedValueShape [ sh:class oa:TextQuoteSelector ;
+                    sh:property [ sh:path oa:exact ; sh:minCount 1 ; sh:maxCount 1 ] ] ;
+                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ] ;
+    sh:property [ sh:path oa:hasSelector ; sh:qualifiedValueShape [ sh:class oa:TextPositionSelector ;
+                    sh:property [ sh:path oa:start ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:nonNegativeInteger ] ;
+                    sh:property [ sh:path oa:end ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:nonNegativeInteger ] ] ;
+                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ] .
+
+ohac:ParticipacionForma a sh:NodeShape ;
+    sh:targetClass crm:PC14_carried_out_by ;
+    rdfs:comment "El rol va en la participación, nunca en la persona (fallo 1.1)."@es ;
+    sh:property [ sh:path crm:P01_has_domain ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crm:E7_Activity ] ;
+    sh:property [ sh:path crm:P02_has_range ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path crm:P14.1_in_the_role_of ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:sparql [
+        sh:message "El rol no pertenece al esquema tes:roles ni (para el ejercicio de un cargo) a tes:cargos." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this <http://www.cidoc-crm.org/cidoc-crm/P14.1_in_the_role_of> ?value .
+                     FILTER NOT EXISTS { ?value skos:inScheme ?e . FILTER (?e IN (<https://w3id.org/laad/tesauro/roles>, <https://w3id.org/laad/tesauro/cargos>)) } }""" ] .
+
+#################################################################
+# Capa 3 — afirmaciones
+#################################################################
+ohac:AfirmacionForma a sh:NodeShape ;
+    sh:targetClass crm:E13_Attribute_Assignment ;
+    rdfs:comment "Cada afirmación: un afirmante, una actuación, un sujeto, un atributo de la lista cerrada, un valor, una polaridad, un fundamento, una fuerza y un ancla. Ningún valor de verdad (fallo 1.4)."@es ;
+    sh:property [ sh:path crm:P140_assigned_attribute_to ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path crm:P141_assigned ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path crm:P177_assigned_property_of_type ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path crm:P9i_forms_part_of ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crm:E65_Creation ] ;
+    sh:property [ sh:path crm:P14_carried_out_by ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:or ( [ sh:class picom:PersonObservation ] [ sh:class roar:Observation ] ) ] ;
+    sh:property [ sh:path [ sh:inversePath oa:hasBody ] ; sh:minCount 1 ; sh:maxCount 1 ; sh:class oa:Annotation ] ;
+    sh:property [ sh:path crminf:J5_holds_to_be ; sh:maxCount 0 ] ;
+    sh:property [ sh:path crminf:J2_concluded_that ; sh:maxCount 0 ] ;
+    sh:sparql [
+        sh:message "El atributo no está en la lista cerrada tes:atributos." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this crm:P177_assigned_property_of_type ?value .
+                     FILTER NOT EXISTS { ?value skos:inScheme <https://w3id.org/laad/tesauro/atributos> } }""" ] ;
+    sh:sparql [
+        sh:message "La afirmación debe tener exactamente un(a) polaridad (tes:polaridades)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E13_Attribute_Assignment .
+            OPTIONAL { SELECT $this (COUNT(DISTINCT ?t) AS ?n) WHERE { $this crm:P2_has_type ?t .
+                       ?t skos:inScheme <https://w3id.org/laad/tesauro/polaridades> } GROUP BY $this }
+            FILTER (!BOUND(?n) || ?n != 1) }""" ] ;
+    sh:sparql [
+        sh:message "La afirmación debe tener exactamente un(a) fundamento (tes:fundamentos)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E13_Attribute_Assignment .
+            OPTIONAL { SELECT $this (COUNT(DISTINCT ?t) AS ?n) WHERE { $this crm:P2_has_type ?t .
+                       ?t skos:inScheme <https://w3id.org/laad/tesauro/fundamentos> } GROUP BY $this }
+            FILTER (!BOUND(?n) || ?n != 1) }""" ] ;
+    sh:sparql [
+        sh:message "La afirmación debe tener exactamente un(a) fuerza (tes:fuerzas)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this a crm:E13_Attribute_Assignment .
+            OPTIONAL { SELECT $this (COUNT(DISTINCT ?t) AS ?n) WHERE { $this crm:P2_has_type ?t .
+                       ?t skos:inScheme <https://w3id.org/laad/tesauro/fuerzas> } GROUP BY $this }
+            FILTER (!BOUND(?n) || ?n != 1) }""" ] ;
+    sh:sparql [
+        sh:message "Una decisión del anotador (sujeto elíptico, afirmante de otra pieza, afirmación distribuida) exige nota (crm:P3_has_note)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this crm:P2_has_type ?value .
+            FILTER (?value IN (<https://w3id.org/laad/tesauro/anotacion/sujeto-eliptico>,
+                               <https://w3id.org/laad/tesauro/anotacion/afirmante-de-otra-pieza>,
+                               <https://w3id.org/laad/tesauro/anotacion/afirmacion-distribuida>))
+            FILTER NOT EXISTS { $this crm:P3_has_note ?n } }""" ] ;
+    sh:sparql [
+        sh:message "El afirmante debe participar con un rol de la rama rol:afirmante (PC14 + P14.1)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE { $this crm:P14_carried_out_by ?a .
+            FILTER NOT EXISTS { ?pc crm:P01_has_domain $this ; crm:P02_has_range ?a ;
+                                    <http://www.cidoc-crm.org/cidoc-crm/P14.1_in_the_role_of> ?r .
+                                ?r skos:broader* <https://w3id.org/laad/tesauro/rol/afirmante> } }""" ] .
+
+ohac:ValorLiteralForma a sh:NodeShape ;
+    sh:targetClass crm:E33_Linguistic_Object ;
+    sh:property [ sh:path crm:P190_has_symbolic_content ; sh:minCount 1 ; sh:maxCount 1 ] .
+
+#################################################################
+# Planos separados: conceptos ≠ clases ≠ individuos (fallo 1.3)
+#################################################################
+ohac:ConceptoNoInstanciadoForma a sh:NodeShape ;
+    sh:targetClass skos:Concept ;
+    rdfs:comment "Un concepto del tesauro nunca es clase de nada ni actúa como persona, sujeto de afirmación o participante."@es ;
+    sh:sparql [
+        sh:message "Concepto usado como clase (rdf:type) o como agente/sujeto." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?x WHERE {
+            FILTER(STRSTARTS(STR($this), "https://w3id.org/laad/tesauro/"))
+            { ?x rdf:type $this } UNION { ?x crm:P14_carried_out_by $this } UNION { ?x crm:P02_has_range $this }
+            UNION { ?x crm:P140_assigned_attribute_to $this } }""" ] .
+
+#################################################################
+# Capa 4 — reconstrucción del investigador
+#################################################################
+ohac:ReconstruccionForma a sh:NodeShape ;
+    sh:targetClass picom:PersonReconstruction, roar:LocationReconstruction, roar:Reconstruction ;
+    rdfs:comment "Toda reconstrucción deriva de menciones y la genera una inferencia con autor y argumento (fallo 2.5)."@es ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I5_Inference_Making ] ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ] .
+
+ohac:CargoForma a sh:NodeShape ;
+    rdfs:comment "Ejercicio de un cargo (capa 4, revisión C1): titular por PC14 con el cargo como rol, vigencia (E52) y derivación de afirmaciones de capa 3."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:prefixes ohac: ;
+                sh:select """SELECT ?this WHERE { ?this a crm:E7_Activity ; crm:P2_has_type ?c .
+                             ?c skos:inScheme <https://w3id.org/laad/tesauro/cargos> }""" ] ;
+    sh:property [ sh:path crm:P14_carried_out_by ; sh:minCount 1 ; sh:maxCount 1 ; sh:class picom:PersonReconstruction ] ;
+    sh:property [ sh:path crm:P4_has_time-span ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crm:E52_Time-Span ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:class crm:E13_Attribute_Assignment ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I5_Inference_Making ] .
+
+ohac:InferenciaForma a sh:NodeShape ;
+    sh:targetClass crminf:I5_Inference_Making ;
+    sh:property [ sh:path crm:P14_carried_out_by ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Agent ] ;
+    sh:property [ sh:path crminf:J2_concluded_that ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I2_Belief ] ;
+    sh:property [ sh:path crm:P3_has_note ; sh:minCount 1 ] ;
+    sh:property [ sh:path crm:P4_has_time-span ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path crm:P17_was_motivated_by ; sh:class crm:E13_Attribute_Assignment ] .
+
+ohac:CreenciaForma a sh:NodeShape ;
+    sh:targetClass crminf:I2_Belief ;
+    sh:property [ sh:path crminf:J4_that ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I4_Proposition_Set ] ;
+    sh:property [ sh:path crminf:J5_holds_to_be ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( "verdadero" "probable" "posible" "improbable" "falso" "indeterminado" ) ] .
+
+#################################################################
+# Capa P — procedencia del dato (fallo 1.5)
+#################################################################
+ohac:LoteConProcedenciaForma a sh:NodeShape ;
+    sh:targetSubjectsOf dct:type ;
+    rdfs:comment "Todo grafo de capa 1–3 lo genera una actividad que usó la transcripción, con agente y plan; todo grafo de capa 4 está atribuido a un autor con fecha."@es ;
+    sh:sparql [
+        sh:message "Grafo de capa 1–3 sin actividad, agente, plan o transcripción usada." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE {
+            $this dct:type ?c . FILTER (?c IN (<https://w3id.org/laad/id/capa/documento>, <https://w3id.org/laad/id/capa/texto>, <https://w3id.org/laad/id/capa/afirmaciones>))
+            FILTER NOT EXISTS { $this prov:wasGeneratedBy ?act . ?act a prov:Activity ; prov:used ?t ;
+                                prov:wasAssociatedWith ?ag ; prov:qualifiedAssociation/prov:hadPlan ?plan .
+                                ?t dct:identifier ?sha } }""" ] ;
+    sh:sparql [
+        sh:message "Grafo de reconstrucción o de argumentación sin autor o sin fecha." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this WHERE {
+            $this dct:type ?c . FILTER (?c IN (<https://w3id.org/laad/id/capa/reconstruccion>, <https://w3id.org/laad/id/capa/argumentacion>))
+            FILTER NOT EXISTS { $this prov:wasAttributedTo ?a ; prov:generatedAtTime ?f } }""" ] .

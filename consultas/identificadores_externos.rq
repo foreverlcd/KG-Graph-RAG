@@ -1,0 +1,7 @@
+# Lugares y grupos reconstruidos con identificador externo (HGIS de las Indias / WHG).
+SELECT ?entidad ?label ?identificador ?url WHERE {
+  #PARAMETROS
+  ?entidad crm:P48_has_preferred_identifier/crm:P190_has_symbolic_content ?identificador ; rdfs:label ?label .
+  OPTIONAL { ?entidad rdfs:seeAlso ?url }
+}
+ORDER BY ?label

@@ -1,0 +1,13 @@
+# Disputa (c) "texto/afirmación": la pieza muestra la firma de X (capa 2, rol firmante en la actuación) y en capa 3
+# alguien niega que X firmara esa pieza (atr:firmo, pol:niega). Se compara por reconstrucción si existe.
+SELECT ?pieza ?firmaEscrita ?mencionFirma ?negacion ?afirmante ?cita WHERE {
+  #PARAMETROS
+  ?act crm:P94_has_created ?pz . ?pz rdfs:label ?pieza .
+  ?pf crm:P01_has_domain ?act ; crm:P02_has_range ?mf ; crm:P14.1_in_the_role_of rol:firmante .
+  ?mf rdfs:label ?firmaEscrita . BIND (STRAFTER(STR(?mf), "/mencion/") AS ?mencionFirma)
+  ?b a crm:E13_Attribute_Assignment ; rdfs:label ?negacion ; crm:P140_assigned_attribute_to ?pz ;
+     crm:P177_assigned_property_of_type atr:firmo ; crm:P141_assigned ?v ; crm:P2_has_type pol:niega ;
+     crm:P14_carried_out_by/rdfs:label ?afirmante .
+  ?an oa:hasBody ?b ; oa:hasTarget/oa:hasSelector/oa:exact ?cita .
+  FILTER (?v = ?mf || EXISTS { ?r prov:wasDerivedFrom ?v , ?mf })
+}

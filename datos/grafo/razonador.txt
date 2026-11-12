@@ -1,0 +1,5 @@
+datos: 5454 tripletas; con estándares y perfil: 30320; tras cierre OWL RL: 103284
+tiempo: 79 s
+inconsistencias (agent-ont#error): 0
+individuos de owl:Nothing: 0
+inferencias espurias por el defecto D1 de ROAR (PersonObservation inferida roar:Reconstruction): 59

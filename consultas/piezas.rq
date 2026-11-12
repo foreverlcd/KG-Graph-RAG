@@ -1,0 +1,9 @@
+# PC01: piezas en orden físico (rico:directlyPrecedesInSequence), tipo de actuación y fecha escrita (capa 1).
+SELECT ?pieza ?tipo ?titulo ?fecha ?ajena WHERE {
+  #PARAMETROS
+  ?pz a rico:Record ; rdfs:label ?pieza ; rico:title ?titulo ; rico:hasDocumentaryFormType ?t .
+  ?t skos:prefLabel ?tipo .
+  OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
+  BIND (NOT EXISTS { ?pz rico:isOrWasIncludedIn ?e } AS ?ajena)
+}
+ORDER BY ?pieza

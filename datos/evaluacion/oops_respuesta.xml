@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oops:OOPSResponse xmlns:oops="http://www.oeg-upm.net/oops">
+<oops:Pitfall>
+<oops:Code>P34</oops:Code><oops:Name>Untyped class</oops:Name>
+<oops:Description>An ontology element is used as a class without having been explicitly declared as such using the primitives owl:Class or rdfs:Class. This pitfall is related with the common problems listed in [8].	</oops:Description>
+<oops:Importance>Important</oops:Importance>
+<oops:NumberAffectedElements>2</oops:NumberAffectedElements>
+<oops:Affects>
+<oops:AffectedElement>http://www.w3.org/2004/02/skos/core#Concept</oops:AffectedElement>
+<oops:AffectedElement>http://www.w3.org/2004/02/skos/core#ConceptScheme</oops:AffectedElement>
+<oops:AffectedElement>http://www.w3.org/2004/02/skos/core#Concept</oops:AffectedElement>
+<oops:AffectedElement>http://www.w3.org/2004/02/skos/core#ConceptScheme</oops:AffectedElement>
+</oops:Affects>
+</oops:Pitfall>
+</oops:OOPSResponse>

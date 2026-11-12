@@ -1,0 +1,17 @@
+# Control: piezas cuyo orden físico contradice el orden de sus fechas normalizadas (capa 4, R-fechas-normalizadas),
+# o con año fuera del intervalo 1806–1807. Señala, no corrige (docs/01_materiales.md F1–F6).
+SELECT ?p1 ?f1 ?p2 ?f2 ?motivo WHERE {
+  #PARAMETROS
+  {
+    ?x rico:directlyPrecedesInSequence+ ?y .
+    ?ax crm:P94_has_created ?x ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 .
+    ?ay crm:P94_has_created ?y ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f2 .
+    ?x rdfs:label ?p1 . ?y rdfs:label ?p2 .
+    FILTER NOT EXISTS { ?x rico:hasDocumentaryFormType act:caratula }   # la carátula se forma después
+    FILTER (?f1 > ?f2) BIND ("orden físico contra fecha" AS ?motivo)
+  } UNION {
+    ?ax crm:P94_has_created ?x ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 . ?x rdfs:label ?p1 .
+    FILTER (YEAR(?f1) > 1807 || YEAR(?f1) < 1805) BIND ("año fuera del expediente" AS ?motivo)
+  }
+}
+ORDER BY ?p1 ?p2

@@ -1,0 +1,16 @@
+# Capa 4: ejercicios de cargo con vigencia (E7 tipado con un cargo; titular por PC14 con el cargo como rol).
+# Parámetro opcional: ?titular (reconstrucción de persona).
+SELECT ?ejercicio ?cargo ?titularLabel ?inicio ?fin ?vigenciaNota ?creencia ?autor
+       (GROUP_CONCAT(DISTINCT ?pid; separator=" ") AS ?premisas)
+WHERE {
+  #PARAMETROS
+  ?ejercicio a crm:E7_Activity ; crm:P2_has_type ?c ; crm:P14_carried_out_by ?titular ;
+             crm:P4_has_time-span ?ts ; prov:wasGeneratedBy ?inf .
+  ?c skos:inScheme tes:cargos ; skos:prefLabel ?cargo . ?titular rdfs:label ?titularLabel .
+  OPTIONAL { ?ts crm:P82a_begin_of_the_begin ?inicio } OPTIONAL { ?ts crm:P82b_end_of_the_end ?fin }
+  OPTIONAL { ?ts crm:P3_has_note ?vigenciaNota }
+  ?inf crminf:J2_concluded_that/crminf:J5_holds_to_be ?creencia ; crm:P14_carried_out_by/rdfs:label ?autor .
+  OPTIONAL { ?ejercicio prov:wasDerivedFrom ?pr . ?pr rdfs:label ?pid }
+}
+GROUP BY ?ejercicio ?cargo ?titularLabel ?inicio ?fin ?vigenciaNota ?creencia ?autor
+ORDER BY ?cargo

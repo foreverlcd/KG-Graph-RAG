@@ -16,25 +16,54 @@ Reglas (ver docs/01_materiales.md y docs/decisiones/ADR-002-citas.md):
 """
 from __future__ import annotations
 
+import contextvars
 import hashlib
+import json
 import re
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
-TRANSCRIPCION = RAIZ / "corpus" / "Transcripcion_CC_L14E18.txt"
+MANIFIESTOS = RAIZ / "datos" / "expedientes"
+EXPEDIENTE_POR_DEFECTO = "cc-14-18"
+_EXPEDIENTE = contextvars.ContextVar("expediente", default=EXPEDIENTE_POR_DEFECTO)
 
-# Marca de folio escrita por el transcriptor. Se exige la palabra "folio" seguida de
-# número; se excluyen referencias internas del propio documento ("a folios 2",
-# "de folio 4", "En folio 10") mediante la lista explícita de abajo, verificada a mano.
-MARCAS_FOLIO = [
-    # (UT, texto exacto de la marca, folio)
-    ("UT12", "Folio 20", "20"),
-    ("UT16", "folio 28", "28"),
-    ("UT19", "Folio 33", "33"),
-    ("UT20", "[Folio 34 ]", "34"),
-]
+
+@lru_cache(maxsize=None)
+def manifiesto(exp: str | None = None) -> dict:
+    """Manifiesto del expediente: transcripción, marcas de folio verificadas a mano y jerarquía archivística.
+    Todo lo que es propio de un expediente vive aquí, no en el código (revisión C2)."""
+    exp = exp or _EXPEDIENTE.get()
+    return json.loads((MANIFIESTOS / f"{exp}.json").read_text(encoding="utf-8"))
+
+
+def expediente_actual() -> str:
+    return _EXPEDIENTE.get()
+
+
+@contextmanager
+def usando_expediente(exp: str):
+    tok = _EXPEDIENTE.set(exp)
+    try:
+        yield
+    finally:
+        _EXPEDIENTE.reset(tok)
+
+
+def ruta_transcripcion(exp: str | None = None) -> Path:
+    return RAIZ / manifiesto(exp)["transcripcion"]
+
+
+def marcas_folio(exp: str | None = None) -> list[tuple[str, str, str]]:
+    """(UT, texto exacto de la marca, folio). Las referencias internas del documento («a folios 2»,
+    «De folio 4», «En folio 10») NO son marcas del transcriptor y no figuran aquí."""
+    return [tuple(x) for x in manifiesto(exp)["marcas_folio"]]
+
+
+TRANSCRIPCION = ruta_transcripcion(EXPEDIENTE_POR_DEFECTO)
+MARCAS_FOLIO = marcas_folio(EXPEDIENTE_POR_DEFECTO)
 
 _WS = re.compile(r"\s+")
 
@@ -56,11 +85,13 @@ class Tramo:
     texto: str = field(repr=False)
 
 
-def texto_canonico(ruta: Path = TRANSCRIPCION) -> str:
+def texto_canonico(ruta: Path | None = None) -> str:
+    ruta = ruta or ruta_transcripcion()
     return ruta.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
 
 
-def sha256(ruta: Path = TRANSCRIPCION) -> str:
+def sha256(ruta: Path | None = None) -> str:
+    ruta = ruta or ruta_transcripcion()
     return hashlib.sha256(ruta.read_bytes()).hexdigest()
 
 
@@ -68,9 +99,13 @@ def _linea(texto: str, pos: int) -> int:
     return texto.count("\n", 0, pos) + 1
 
 
-@lru_cache(maxsize=4)
-def tramos(ruta: Path = TRANSCRIPCION) -> tuple[Tramo, ...]:
-    t = texto_canonico(ruta)
+def tramos(exp: str | None = None) -> tuple[Tramo, ...]:
+    return _tramos(exp or _EXPEDIENTE.get())
+
+
+@lru_cache(maxsize=16)
+def _tramos(exp: str) -> tuple[Tramo, ...]:
+    t = texto_canonico(ruta_transcripcion(exp))
     # 1) unidades de transcripción
     uts: list[tuple[str, int, int]] = []
     pos, n = 0, 0
@@ -82,7 +117,7 @@ def tramos(ruta: Path = TRANSCRIPCION) -> tuple[Tramo, ...]:
     res: list[Tramo] = []
     for ut, a, b in uts:
         cortes = []
-        for ut_m, marca, folio in MARCAS_FOLIO:
+        for ut_m, marca, folio in marcas_folio(exp):
             if ut_m == ut:
                 k = t.find(marca, a, b)
                 if k < 0:
