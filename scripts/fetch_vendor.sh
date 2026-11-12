@@ -49,6 +49,16 @@ if [[ "${1:-}" != "--check" ]]; then
   fetch "$PICO/PiCo%20Specificatie.md"  pico/PiCo_Specificatie.md
   fetch "$PICO/shacl/pico_shacl.ttl"    pico/pico_shacl.ttl
 
+  # 8b. Tesauro de roles de PiCo (https://terms.personsincontext.org/roles/ -> esquema 44).
+  #     El esquema solo lista conceptos; cada concepto se descarga aparte (lista obtenida el 2026-11-12
+  #     recorriendo skos:hasTopConcept y skos:narrower).
+  THP="https://terms.personsincontext.org/ThesaurusHistorischePersoonsgegevens"
+  fetch "$THP/44.rdf" pico-roles/roles_scheme_44.rdf
+  for id in 479 482 484 485 486 487 489 490 492 493 494 496 497 503 507 508 509 510 513 514 515 516 517 518 573 574 575 65 67 68 70 71; do
+    fetch "$THP/$id.rdf" "pico-roles/concept_$id.rdf"
+    sleep 0.3
+  done
+
   # 9. ROAR (Golden Agents) — https://w3id.org/roar resuelve a leonvanwissen.nl
   fetch "https://leonvanwissen.nl/vocab/roar/roar.ttl" roar/roar.ttl
 
