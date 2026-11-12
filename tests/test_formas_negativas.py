@@ -22,6 +22,9 @@ Forma → casos:
   InferenciaForma            inferencia-sin-nota
   CreenciaForma              creencia-sin-j5, creencia-fuera-de-lista
   LoteConProcedenciaForma    lote-reconstruccion-sin-autor, lote-actividad-sin-plan
+  CargoForma                 cargo-sin-vigencia, cargo-sin-premisa            (revisión C1)
+  AfirmacionForma (+)        afirmacion-eliptica-sin-nota                     (revisión I2)
+  PiezaForma (+)             pieza-tipo-abstracto-sin-fuerza                  (revisión C2)
 """
 from __future__ import annotations
 
@@ -346,6 +349,40 @@ MUTACIONES = [
     Mutacion("lote-reconstruccion-sin-autor", OHAC.LoteConProcedenciaForma, m_lote_reconstruccion_sin_autor,
              "reconstrucción"),
     Mutacion("lote-actividad-sin-plan", OHAC.LoteConProcedenciaForma, m_lote_actividad_sin_plan, "capa 1–3"),
+]
+
+
+def m_cargo_sin_vigencia(g):
+    c = _n(g, M.CRM.E7_Activity, 0)
+    _quitar(g, c, M.CRM["P4_has_time-span"])
+    return c
+
+
+def m_cargo_sin_premisa(g):
+    c = _n(g, M.CRM.E7_Activity, 1)
+    _quitar(g, c, PROV.wasDerivedFrom)
+    return c
+
+
+def m_afirmacion_eliptica_sin_nota(g):
+    a = M.ID["cc-14-18/afirmacion/A-UT01-002"]
+    assert (a, M.CRM.P2_has_type, M.ANOT["sujeto-eliptico"]) in g
+    _quitar(g, a, M.CRM.P3_has_note)
+    return a
+
+
+def m_pieza_tipo_abstracto(g):
+    p = M.ID["cc-14-18/pieza/P13"]
+    _quitar(g, p, M.RICO.hasDocumentaryFormType)
+    g.add((p, M.RICO.hasDocumentaryFormType, M.ACT["de-autoridad"]))
+    return p
+
+
+MUTACIONES += [
+    Mutacion("cargo-sin-vigencia", OHAC.CargoForma, m_cargo_sin_vigencia),
+    Mutacion("cargo-sin-premisa", OHAC.CargoForma, m_cargo_sin_premisa),
+    Mutacion("afirmacion-eliptica-sin-nota", OHAC.AfirmacionForma, m_afirmacion_eliptica_sin_nota, "exige nota"),
+    Mutacion("pieza-tipo-abstracto-sin-fuerza", OHAC.PiezaForma, m_pieza_tipo_abstracto, "fuerza institucional"),
 ]
 
 

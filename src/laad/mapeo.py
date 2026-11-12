@@ -37,24 +37,44 @@ ACT, ROL, COND, CARGO, ENT, ATR, POL, FUN, FZA, DOC, ANOT = (
      "documento", "anotacion"))
 ID = Namespace("https://w3id.org/laad/id/")
 G = Namespace("https://w3id.org/laad/grafo/")
-EXP = "cc-14-18"
+# El expediente NO es una constante: lo fija fuente.usando_expediente(...) (revisión C2).
 
 PREFIJOS = dict(rico=RICO, rst=RST, crm=CRM, crminf=CRMINF, oa=OA, picom=PICOM, roar=ROAR, prov=PROV,
                 skos=SKOS, dct=DCTERMS, owl=OWL, act=ACT, rol=ROL, cond=COND, cargo=CARGO, ent=ENT, atr=ATR,
                 pol=POL, fun=FUN, fza=FZA, doc=DOC, anot=ANOT, id=ID, g=G)
 
-# Fuerza institucional = f(tipo de actuación). Tabla documentada en docs/C_modelo.md §3.4.
-FUERZA = {
-    "certificacion": "testimonial", "declaracion-jurada": "testimonial", "reconocimiento-y-ratificacion": "testimonial",
-    "peticion": "de-parte", "informe": "informativa", "oficio": "informativa", "caratula": "informativa",
-    "vista-fiscal": "dictaminadora", "auto": "resolutiva", "auto-cabeza-de-proceso": "resolutiva",
-    "decreto": "resolutiva", "notificacion": "fedataria", "desglose": "fedataria",
-}
 ATRIBUTOS_TIEMPO = {"fecha-del-hecho", "duracion"}
 
 
+def fuerza_de(tipo_actuacion: str) -> str:
+    """Fuerza institucional de un tipo de actuación: dato del tesauro (act:x skos:related fza:y), no código."""
+    from .esquema import _tesauro
+    g = _tesauro()
+    fz = [str(o).rsplit("/", 1)[1] for o in g.objects(ACT[tipo_actuacion], SKOS.related)
+          if str(o).startswith(str(FZA))]
+    if len(fz) != 1:
+        raise ValueError(f"el tipo de actuación {tipo_actuacion!r} no tiene exactamente una fuerza en el tesauro "
+                         f"(¿es un concepto abstracto, no hoja?)")
+    return fz[0]
+
+
+def concepto_iri(local: str, atributo: str) -> URIRef:
+    """IRI de un concepto admitido por el atributo (dct:conformsTo en el tesauro)."""
+    from .esquema import _tesauro
+    g = _tesauro()
+    for esq in g.objects(ATR[atributo], DCTERMS.conformsTo):
+        for c in g.subjects(SKOS.inScheme, esq):
+            if str(c).rsplit("/", 1)[1] == local:
+                return URIRef(c)
+    raise ValueError(f"concepto {local!r} no admitido por {atributo!r}")
+
+
+def exp_id() -> str:
+    return fuente.expediente_actual()
+
+
 def iri(*partes: str) -> URIRef:
-    return ID["/".join([EXP, *partes])]
+    return ID["/".join([exp_id(), *partes])]
 
 
 def pieza_iri(p: str) -> URIRef: return iri("pieza", p)
@@ -135,13 +155,12 @@ def _participa(g: Graph, actividad: URIRef, actor: URIRef, rol: str, ident: str)
 # ───────────────────────── capa 1 ─────────────────────────
 def capa_documento(ds: Dataset, piezas: dict[str, Pieza]) -> Graph:
     g = ds.graph(G.documento)
-    arc = ID["arc"]
-    fondo, secc, serie, leg, exp = (URIRef(f"{arc}/{x}") for x in
-                                    ("fondo/intendencia", "seccion/causas-criminales", "serie/cc-cusco",
-                                     "legajo/cc-14", "expediente/cc-14-18"))
-    jer = [(fondo, RST.Fonds, "Intendencia", None), (secc, DOC.seccion, "Causas Criminales", fondo),
-           (serie, RST.Series, "Cusco", secc), (leg, DOC.legajo, "Legajo 14", serie),
-           (exp, RST.File, "Expediente 18", leg)]
+    pref = {"rst": RST, "doc": DOC}
+    jer = []
+    for n in fuente.manifiesto()["jerarquia"]:
+        ns, local = n["tipo"].split(":")
+        jer.append((ID[n["id"]], pref[ns][local], n["titulo"], ID[n["padre"]] if n["padre"] else None))
+    exp = jer[-1][0]          # el último nivel del manifiesto es el expediente
     for nodo, tipo, titulo, padre in jer:
         g.add((nodo, RDF.type, RICO.RecordSet))
         g.add((nodo, RICO.hasRecordSetType, tipo))
@@ -199,7 +218,7 @@ def capa_documento(ds: Dataset, piezas: dict[str, Pieza]) -> Graph:
         g.add((ai, RDF.type, CRM.E65_Creation))
         g.add((ai, CRM.P94_has_created, pi))
         g.add((ai, CRM.P2_has_type, ACT[p.tipo_actuacion]))
-        g.add((ai, CRM.P2_has_type, FZA[FUERZA[p.tipo_actuacion]]))
+        g.add((ai, CRM.P2_has_type, FZA[fuerza_de(p.tipo_actuacion)]))
         if p.fecha_escrita:
             fecha = URIRef(f"{pi}/fecha")
             g.add((pi, RICO.hasCreationDate, fecha))
@@ -215,10 +234,14 @@ def capa_documento(ds: Dataset, piezas: dict[str, Pieza]) -> Graph:
 
 
 # ───────────────────────── capa 2 ─────────────────────────
+# Revisión I3: la mención NO se tipa como crm:E21_Person/E53/E74 (eso afirmaría que la persona existe; cf.
+# «no hay tal hombre en el pueblo de Tinta»). Solo es observación PiCo/ROAR; su tipo de entidad va en P2_has_type.
+# (Por rango de P14/P140, un razonador RDFS la inferirá E39_Actor/E1: «actor tal como lo presenta la fuente».)
 CLASES_MENCION = {
-    "persona": (PICOM.PersonObservation, CRM.E21_Person),
-    "lugar": (ROAR.LocationObservation, CRM.E53_Place),
-    "grupo": (ROAR.Observation, CRM.E74_Group),
+    "persona": (PICOM.PersonObservation,),
+    "lugar": (ROAR.LocationObservation,),
+    "grupo": (ROAR.Observation,),
+    "cosa": (ROAR.Observation,),
 }
 
 
@@ -270,18 +293,27 @@ def capa_afirmaciones(ds: Dataset, lote_reg: Lote, lote: str) -> Graph:
         g.add((ai, CRM.P2_has_type, POL[a.polaridad]))
         g.add((ai, CRM.P2_has_type, FUN[a.fundamento]))
         tipo_act = lote_reg.piezas[a.pieza].tipo_actuacion
-        g.add((ai, CRM.P2_has_type, FZA[FUERZA[tipo_act]]))
+        g.add((ai, CRM.P2_has_type, FZA[fuerza_de(tipo_act)]))
         if a.rol_en_hecho:
             g.add((ai, CRM.P2_has_type, ROL[a.rol_en_hecho]))
         if a.sujeto.eliptico:
             g.add((ai, CRM.P2_has_type, ANOT["sujeto-eliptico"]))
+        if a.afirmante_de_otra_pieza:
+            g.add((ai, CRM.P2_has_type, ANOT["afirmante-de-otra-pieza"]))
+        if a.distribuida:
+            g.add((ai, CRM.P2_has_type, ANOT["afirmacion-distribuida"]))
+        if a.responde_a:            # corrige/niega/matiza otra afirmación (revisión I1)
+            g.add((ai, CRM.P17_was_motivated_by, afirmacion_iri(a.responde_a)))
+            g.add((ai, CRM.P2_has_type, ANOT["responde-a"]))
+        if a.segun:                 # discurso referido (revisión C3)
+            g.add((ai, CRM.P17_was_motivated_by, mencion_iri(a.segun)))
+            g.add((ai, CRM.P2_has_type, ANOT["segun-otro"]))
         if a.nota:
             g.add((ai, CRM.P3_has_note, Literal(a.nota, lang="es")))
         # valor
         v = a.valor
         if v.concepto:
-            esquema = CARGO if v.concepto in _locales(CARGO) else COND
-            g.add((ai, CRM.P141_assigned, esquema[v.concepto]))
+            g.add((ai, CRM.P141_assigned, concepto_iri(v.concepto, a.atributo)))
         elif _ref(v) is not None:
             g.add((ai, CRM.P141_assigned, _ref(v)))
         if v.literal and _ref(v) is None and not v.concepto:
@@ -295,87 +327,149 @@ def capa_afirmaciones(ds: Dataset, lote_reg: Lote, lote: str) -> Graph:
             g.add((ai, CRM.P141_assigned, vi))
         elif v.literal:
             g.add((ai, CRM.P3_has_note, Literal(f"valor literal: {v.literal}")))
-        # hechos narrados: existen solo como objeto de discurso de su pieza
+        # Hecho narrado: contenido proposicional de su pieza, NO un evento que ocurrió (revisión, menor):
+        # crm:E89_Propositional_Object documentado por la pieza (P70). El evento ocurrido es capa 4 (E5).
         for h in filter(None, [a.sujeto.hecho, v.hecho]):
             hi = hecho_iri(h)
-            g.add((hi, RDF.type, CRM.E5_Event))
+            g.add((hi, RDF.type, CRM.E89_Propositional_Object))
             g.add((hi, RDFS.label, Literal(h)))
-            g.add((hi, PROV.hadPrimarySource, pieza_iri(a.pieza)))
+            g.add((pieza_iri(a.pieza), CRM.P70_documents, hi))
         _ancla(g, ai, a.id, a.tramo, a.cita, OA.describing)
     return g
 
 
-_LOCALES_CACHE: dict[str, set[str]] = {}
-
-
-def _locales(ns: Namespace) -> set[str]:
-    from .esquema import conceptos
-    clave = str(ns)
-    if clave not in _LOCALES_CACHE:
-        nombre = clave.rstrip("/").rsplit("/", 1)[1]
-        esquema = {"cargo": "cargos", "condicion": "condiciones"}[nombre]
-        _LOCALES_CACHE[clave] = set(conceptos(esquema))
-    return _LOCALES_CACHE[clave]
-
-
 # ───────────────────────── capa 4 ─────────────────────────
+CLASES_RECONSTRUCCION = {
+    "persona": (PICOM.PersonReconstruction, CRM.E21_Person),
+    "lugar": (ROAR.LocationReconstruction, CRM.E53_Place),
+    "grupo": (ROAR.Reconstruction, CRM.E74_Group),
+    "cosa": (ROAR.Reconstruction, CRM.E70_Thing),
+}
+
+
+def nodo_reconstruccion(r: Reconstruccion, lote_reg: Lote) -> URIRef:
+    slug = r.id[2:]
+    if r.tipo == "identidad":
+        clase = lote_reg.menciones[r.menciones[0]].clase
+        return ID[f"{clase}/{slug}"]
+    if r.tipo == "hecho":
+        return ID[f"evento/{slug}"]
+    return ID[f"ejercicio-cargo/{slug}"]
+
+
+def _argumentacion(ds: Dataset, rid: str, autor: str, fecha: str, argumento: str, creencia: str,
+                   premisas: list[str], gi: URIRef) -> URIRef:
+    """CRMinf en un grafo PROPIO (revisión I4): la creencia del investigador sobre el grafo gi (I4) no forma
+    parte de la proposición que evalúa. Devuelve la IRI de la inferencia (también prov:Activity, como en PiCo)."""
+    ga = ds.graph(G[f"argumentacion/{rid}"])
+    inf, cre = ID[f"inferencia/{rid}"], ID[f"creencia/{rid}"]
+    ga.add((inf, RDF.type, CRMINF.I5_Inference_Making))
+    ga.add((inf, RDF.type, PROV.Activity))
+    ga.add((inf, CRM.P14_carried_out_by, ID[f"agente/{autor}"]))
+    ga.add((inf, PROV.wasAssociatedWith, ID[f"agente/{autor}"]))
+    ga.add((inf, CRM.P3_has_note, Literal(argumento, lang="es")))
+    for p in premisas:   # premisas: afirmaciones de capa 3 (E13 ⊑ crminf:I1_Argumentation en CRMinf 1.2.1)
+        ga.add((inf, CRM.P17_was_motivated_by, afirmacion_iri(p)))
+    ga.add((inf, CRMINF.J2_concluded_that, cre))
+    ga.add((cre, RDF.type, CRMINF.I2_Belief))
+    ga.add((cre, CRMINF.J4_that, gi))
+    ga.add((gi, RDF.type, CRMINF.I4_Proposition_Set))
+    ga.add((cre, CRMINF.J5_holds_to_be, Literal(creencia)))
+    ts = URIRef(f"{inf}/tiempo")
+    ga.add((inf, CRM["P4_has_time-span"], ts))
+    ga.add((ts, RDF.type, CRM["E52_Time-Span"]))
+    ga.add((ts, CRM.P82a_begin_of_the_begin, Literal(fecha, datatype=XSD.date)))
+    ga.add((ts, CRM.P82b_end_of_the_end, Literal(fecha, datatype=XSD.date)))
+    pg = ds.graph(G.procedencia)
+    for gx, capa in ((gi, "reconstruccion"), (ga.identifier, "argumentacion")):
+        pg.add((gx, RDF.type, PROV.Entity))
+        pg.add((gx, PROV.wasAttributedTo, ID[f"agente/{autor}"]))
+        pg.add((gx, PROV.generatedAtTime, Literal(fecha, datatype=XSD.date)))
+        pg.add((gx, DCTERMS.type, ID[f"capa/{capa}"]))
+    _agente(pg, autor)
+    return inf
+
+
+def _fecha_iso(x: str) -> tuple[Literal, Literal]:
+    """'1806' / '1806-08' / '1806-08-21' -> (inicio, fin) xsd:date del intervalo."""
+    import calendar
+    partes = [int(v) for v in x.split("-")]
+    a, m, d = (partes + [None, None])[:3]
+    ini = f"{a:04d}-{(m or 1):02d}-{(d or 1):02d}"
+    if d:
+        fin = ini
+    elif m:
+        fin = f"{a:04d}-{m:02d}-{calendar.monthrange(a, m)[1]:02d}"
+    else:
+        fin = f"{a:04d}-12-31"
+    return Literal(ini, datatype=XSD.date), Literal(fin, datatype=XSD.date)
+
+
 def capa_reconstruccion(ds: Dataset, recs: list[Reconstruccion], lote_reg: Lote) -> None:
+    por_id = {r.id: r for r in recs}
     for r in recs:
         gi = G[f"reconstruccion/{r.id}"]
         g = ds.graph(gi)
-        slug = r.id[2:]
-        autor = ID[f"agente/{r.autor}"]
+        nodo = nodo_reconstruccion(r, lote_reg)
+        inf = _argumentacion(ds, r.id, r.autor, r.fecha, r.argumento, r.creencia, r.premisas, gi)
+        g.add((nodo, RDFS.label, Literal(r.etiqueta, lang="es")))
         if r.tipo == "identidad":
             clases = {lote_reg.menciones[m].clase for m in r.menciones}
             if len(clases) != 1:
                 raise ValueError(f"{r.id}: menciones de clases distintas {clases}")
-            clase = clases.pop()
-            nodo = ID[f"{clase}/{slug}"]
-            tipos = {"persona": (PICOM.PersonReconstruction, CRM.E21_Person),
-                     "lugar": (ROAR.LocationReconstruction, CRM.E53_Place),
-                     "grupo": (ROAR.Reconstruction, CRM.E74_Group)}[clase]
-            for t in tipos:
+            for t in CLASES_RECONSTRUCCION[clases.pop()]:
                 g.add((nodo, RDF.type, t))
             for m in r.menciones:
                 g.add((nodo, PROV.wasDerivedFrom, mencion_iri(m)))
+            g.add((nodo, PROV.wasGeneratedBy, inf))       # patrón PiCo: la reconstrucción la genera una actividad
         elif r.tipo == "hecho":
-            nodo = ID[f"evento/{slug}"]
             g.add((nodo, RDF.type, CRM.E5_Event))
-            for h in r.menciones:  # aquí 'menciones' lleva ids de hechos narrados
+            for h in r.menciones:  # aquí 'menciones' lleva ids de hechos narrados (E89)
                 g.add((nodo, PROV.wasDerivedFrom, hecho_iri(h)))
-        else:
-            raise ValueError(f"{r.id}: tipo {r.tipo} aún no mapeado")
-        g.add((nodo, RDFS.label, Literal(r.etiqueta, lang="es")))
-        g.add((nodo, PROV.wasGeneratedBy, ID[f"inferencia/{r.id}"]))
-        if r.externo:
+            g.add((nodo, PROV.wasGeneratedBy, inf))
+        else:  # cargo: ejercicio de un cargo con vigencia (revisión C1)
+            tit = por_id.get(r.titular)
+            if tit is None or tit.tipo != "identidad":
+                raise ValueError(f"{r.id}: titular {r.titular} no es una reconstrucción de identidad")
+            persona = nodo_reconstruccion(tit, lote_reg)
+            cargo = CARGO[r.cargo]
+            g.add((nodo, RDF.type, CRM.E7_Activity))
+            g.add((nodo, CRM.P2_has_type, cargo))
+            _participa_cargo(g, nodo, persona, cargo)
+            for p in r.premisas:
+                g.add((nodo, PROV.wasDerivedFrom, afirmacion_iri(p)))
+            g.add((nodo, PROV.wasGeneratedBy, inf))
+            if r.ambito:
+                amb = nodo_reconstruccion(por_id[r.ambito], lote_reg)
+                g.add((nodo, CRM.P7_took_place_at, amb))
+            if r.ambito_literal:
+                g.add((nodo, CRM.P3_has_note, Literal(f"Ámbito (literal): {r.ambito_literal}", lang="es")))
+            ts = URIRef(f"{nodo}/vigencia")
+            g.add((nodo, CRM["P4_has_time-span"], ts))
+            g.add((ts, RDF.type, CRM["E52_Time-Span"]))
+            if r.inicio:
+                g.add((ts, CRM.P82a_begin_of_the_begin, _fecha_iso(r.inicio)[0]))
+            if r.fin:
+                g.add((ts, CRM.P82b_end_of_the_end, _fecha_iso(r.fin)[1]))
+            if r.vigencia_literal:
+                g.add((ts, CRM.P3_has_note, Literal(r.vigencia_literal, lang="es")))
+        if r.externo or r.identificador_externo:
             ide = URIRef(f"{nodo}/identificador-externo")
             g.add((nodo, CRM.P48_has_preferred_identifier, ide))
             g.add((ide, RDF.type, CRM.E42_Identifier))
-            g.add((ide, CRM.P190_has_symbolic_content, Literal(r.externo)))
-            g.add((nodo, RDFS.seeAlso, URIRef(r.externo)))
-        # argumentación CRMinf: la inferencia concluye una creencia sobre ESTE grafo nombrado
-        inf, cre = ID[f"inferencia/{r.id}"], ID[f"creencia/{r.id}"]
-        g.add((inf, RDF.type, CRMINF.I5_Inference_Making))
-        g.add((inf, CRM.P14_carried_out_by, autor))
-        g.add((inf, CRM.P3_has_note, Literal(r.argumento, lang="es")))
-        for p in r.premisas:
-            g.add((inf, CRM.P17_was_motivated_by, afirmacion_iri(p)))
-        g.add((inf, CRMINF.J2_concluded_that, cre))
-        g.add((cre, RDF.type, CRMINF.I2_Belief))
-        g.add((cre, CRMINF.J4_that, gi))
-        g.add((gi, RDF.type, CRMINF.I4_Proposition_Set))
-        g.add((cre, CRMINF.J5_holds_to_be, Literal(r.creencia)))
-        ts = URIRef(f"{inf}/tiempo")
-        g.add((inf, CRM["P4_has_time-span"], ts))
-        g.add((ts, RDF.type, CRM["E52_Time-Span"]))
-        g.add((ts, CRM.P82a_begin_of_the_begin, Literal(r.fecha, datatype=XSD.date)))
-        g.add((ts, CRM.P82b_end_of_the_end, Literal(r.fecha, datatype=XSD.date)))
-        pg = ds.graph(G.procedencia)
-        pg.add((gi, RDF.type, PROV.Entity))
-        pg.add((gi, PROV.wasAttributedTo, autor))
-        pg.add((gi, PROV.generatedAtTime, Literal(r.fecha, datatype=XSD.date)))
-        pg.add((gi, DCTERMS.type, ID["capa/reconstruccion"]))
-        _agente(pg, r.autor)
+            g.add((ide, CRM.P190_has_symbolic_content, Literal(r.identificador_externo or r.externo)))
+            if r.externo:
+                g.add((nodo, RDFS.seeAlso, URIRef(r.externo)))
+
+
+def _participa_cargo(g: Graph, actividad: URIRef, persona: URIRef, cargo: URIRef) -> None:
+    """El cargo es el rol (P14.1, rango E55) con que la persona lleva a cabo la actividad de ejercerlo."""
+    pc = URIRef(f"{actividad}/titular")
+    g.add((pc, RDF.type, CRM.PC14_carried_out_by))
+    g.add((pc, CRM.P01_has_domain, actividad))
+    g.add((pc, CRM.P02_has_range, persona))
+    g.add((pc, CRM["P14.1_in_the_role_of"], cargo))
+    g.add((actividad, CRM.P14_carried_out_by, persona))
 
 
 def capa_fechas(ds: Dataset, ruta: Path, autor: str, fecha: str) -> None:
@@ -394,27 +488,9 @@ def capa_fechas(ds: Dataset, ruta: Path, autor: str, fecha: str) -> None:
         g.add((ts, CRM.P82b_end_of_the_end, Literal(fila["fecha"], datatype=XSD.date)))
         if fila["nota"]:
             g.add((ts, CRM.P3_has_note, Literal(fila["nota"], lang="es")))
-    inf, cre = ID[f"inferencia/{rid}"], ID[f"creencia/{rid}"]
-    g.add((inf, RDF.type, CRMINF.I5_Inference_Making))
-    g.add((inf, CRM.P14_carried_out_by, ID[f"agente/{autor}"]))
-    g.add((inf, CRM.P3_has_note, Literal("Lectura literal de cada fecha escrita al calendario gregoriano, sin corregir "
-                                          "las fechas de secuencia imposible (F1–F6); el control de secuencia las señala.", lang="es")))
-    g.add((inf, CRMINF.J2_concluded_that, cre))
-    g.add((cre, RDF.type, CRMINF.I2_Belief))
-    g.add((cre, CRMINF.J4_that, gi))
-    g.add((gi, RDF.type, CRMINF.I4_Proposition_Set))
-    g.add((cre, CRMINF.J5_holds_to_be, Literal("probable")))
-    ts = URIRef(f"{inf}/tiempo")
-    g.add((inf, CRM["P4_has_time-span"], ts))
-    g.add((ts, RDF.type, CRM["E52_Time-Span"]))
-    g.add((ts, CRM.P82a_begin_of_the_begin, Literal(fecha, datatype=XSD.date)))
-    g.add((ts, CRM.P82b_end_of_the_end, Literal(fecha, datatype=XSD.date)))
-    pg = ds.graph(G.procedencia)
-    pg.add((gi, RDF.type, PROV.Entity))
-    pg.add((gi, PROV.wasAttributedTo, ID[f"agente/{autor}"]))
-    pg.add((gi, PROV.generatedAtTime, Literal(fecha, datatype=XSD.date)))
-    pg.add((gi, DCTERMS.type, ID["capa/reconstruccion"]))
-    _agente(pg, autor)
+    _argumentacion(ds, rid, autor, fecha,
+                   "Lectura literal de cada fecha escrita al calendario gregoriano, sin corregir las fechas de "
+                   "secuencia imposible (F1–F6); el control de secuencia las señala.", "probable", [], gi)
 
 
 def _agente(pg: Graph, nombre: str, tipo: str | None = None) -> URIRef:

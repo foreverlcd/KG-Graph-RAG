@@ -4,7 +4,8 @@
 # ?filtroEntidad (reconstrucción de capa 4: afirmaciones cuyo sujeto deriva en ella), ?filtroAfirmante
 # (reconstrucción de capa 4: afirmaciones hechas por cualquiera de sus menciones).
 SELECT ?a ?aid ?afirmante ?afirmanteR ?rolAf ?pieza ?tipoAct ?fecha ?ante ?firmantes ?sujetoLabel ?atributo ?atrLabel
-       ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico ?entidad ?valorEntidad
+       ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
+       ?redactorDoc ?redaccionDisputada ?respondeA ?segun
 WHERE {
   #PARAMETROS
   ?a a crm:E13_Attribute_Assignment ; rdfs:label ?aid ;
@@ -38,7 +39,11 @@ WHERE {
   OPTIONAL { ?tr rico:isOrWasDerivedFromInstantiation ?fo . ?fo rico:title ?folio }
   OPTIONAL { ?a crm:P3_has_note ?nota }
   BIND (EXISTS { ?a crm:P2_has_type <https://w3id.org/laad/tesauro/anotacion/sujeto-eliptico> } AS ?eliptico)
-  OPTIONAL { ?entidad prov:wasDerivedFrom ?sujeto . FILTER NOT EXISTS { ?entidad a crminf:I4_Proposition_Set } }
-  OPTIONAL { ?valorEntidad prov:wasDerivedFrom ?valor }
+  # Quién escribe: lo que dice el propio documento (PC14 rol:redactor) y si hay afirmaciones que lo disputan.
+  OPTIONAL { SELECT ?act (GROUP_CONCAT(DISTINCT ?rdL; separator=" / ") AS ?redactorDoc) WHERE {
+      ?prd crm:P01_has_domain ?act ; crm:P02_has_range ?rd ; crm:P14.1_in_the_role_of rol:redactor . ?rd rdfs:label ?rdL } GROUP BY ?act }
+  BIND (EXISTS { ?x crm:P140_assigned_attribute_to ?pz ; crm:P177_assigned_property_of_type atr:redacto } AS ?redaccionDisputada)
+  OPTIONAL { ?a crm:P17_was_motivated_by ?ra . ?ra a crm:E13_Attribute_Assignment ; rdfs:label ?respondeA }
+  OPTIONAL { ?a crm:P17_was_motivated_by ?sm . ?sm a picom:PersonObservation ; rdfs:label ?segun }
 }
 ORDER BY ?pieza ?aid

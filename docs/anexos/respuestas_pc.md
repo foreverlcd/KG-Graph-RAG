@@ -59,8 +59,18 @@ Control de secuencia (fechas normalizadas en capa 4 frente al orden físico):
 ## PC02
 
 ```text
-PREGUNTA: PC02
-RESPUESTA (PENDIENTE): Requiere anotar las autorreferencias de foliación del documento («De folio 4») como afirmaciones; el modelo lo admite (atr: pieza→folio) pero no está anotado.
+PREGUNTA: ¿Qué pieza es la «certificación De folio 4» y dónde está?
+RESPUESTA (D): El expediente se refiere a sus propias fojas; esa foliación es una afirmación del documento, no una marca del transcriptor. P05 → «De folio 4»; P03 → «a folios 2». En la transcripción esas piezas no tienen marca de folio (folio no consta).
+
+— Lo que se afirma en el expediente (capa 3) —
+AFIRMACIÓN A-UT12a-003: la pieza está en tal folio (autorreferencia del expediente) → De folio 4
+    «De folio 4 su firma Martin casorla»
+    Afirmante: «ante mi» (fedatario) [= Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; declaración jurada P19, fecha escrita «Ynmediatamente»; ante: ante mi; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT12.a, folio no consta en la transcripción
+AFIRMACIÓN A-UT17-004: la pieza está en tal folio (autorreferencia del expediente) → a folios 2
+    «la Certificación a folios 2 extendida a nombre del teniente Alguacil»
+    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; redacta: no consta; firma la pieza: María Rubrica
+    Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT17, folio no consta en la transcripción
 ```
 
 ## PC03
@@ -103,12 +113,18 @@ RECONSTRUCCIÓN «Manuel Huancachoque (Guancachoque), denunciante» — creencia
 
 ```text
 PREGUNTA: ¿Qué menciones no se pueden identificar con seguridad y por qué?
-RESPUESTA (R): 4 reconstrucciones de identidad con creencia posible o indeterminada.
+RESPUESTA (R): 6 reconstrucciones de identidad con creencia posible o indeterminada.
 
 — Reconstrucción del investigador (capa 4) —
+RECONSTRUCCIÓN «Andrés Chuquitapa, alcalde mayor» — creencia: posible; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: afirmacion/A-UT16b-002
+    Argumento: Solo lo afirma el informe del cura, hostil al denunciante y favorable al cacique.
 RECONSTRUCCIÓN «El declarante de P19 es un Mariano Casorla distinto de Martín (hipótesis B)» — creencia: posible; autor: claude-opus-5-5; fecha: 2026-11-12
     Deriva de: mencion/M-UT12.a-005
     Argumento: La transcripción lo llama «el Gobernador Señor Don Mariano Casorla». Si fuera otra persona, el expediente no recogería la declaración de Martín Cazorla, pero el declarante habla de la certificación como propia. Se mantiene como alternativa hasta cotejar la imagen.
+RECONSTRUCCIÓN «San Pedro de Cacha (pueblo)» — creencia: posible; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT02-006
+    Argumento: HGIS registra «San Pedro» (src_id 6000358, WHG 177061) en la jurisdicción de Tinta, entre Tinta y Sicuani; la equivalencia con San Pedro de Cacha se apoya en nombre, jurisdicción y coordenadas, sin confirmación documental.
 RECONSTRUCCIÓN ««Chiquitas», marido de la mujer que habla contra Orue (¿Chuquitapa?)» — creencia: posible; autor: claude-opus-5-5; fecha: 2026-11-12
     Deriva de: mencion/M-UT15-001
     Argumento: En la misma declaración Orue dice que Chuquitapa «no es tan malo ni de boca tan mordaz como la spa su mujer», lo que sugiere que «Chiquitas» es Chuquitapa; se deja como reconstrucción separada hasta que un historiador lo confirme.
@@ -123,56 +139,85 @@ RECONSTRUCCIÓN ««[María Rubrica]» es la rúbrica del subdelegado Mata» —
 ## PC07
 
 ```text
-PREGUNTA: PC07
-RESPUESTA (PENDIENTE): Solo Tinta está reconstruido contra HGIS (6000357); faltan las menciones de Sicuani, Cusco, San Pedro de Cacha y los ayllus.
+PREGUNTA: ¿Qué lugares y ayllus se mencionan y con qué identificador de HGIS?
+RESPUESTA (R): 6 lugares o grupos reconstruidos; 4 con identificador HGIS. Sin entrada en HGIS: Ayllu Tinta, Ayllu Uchu / Ucho.
+
+— Reconstrucción del investigador (capa 4) —
+RECONSTRUCCIÓN «Ayllu Tinta» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT05-003
+    Argumento: Ayllu del pueblo de Tinta donde se denunciaron 44 tributarios ocultos. Sin entrada en HGIS (que no registra ayllus).
+RECONSTRUCCIÓN «Ayllu Uchu / Ucho» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT05-004 mencion/M-UT17-007
+    Argumento: «Ayllu nominado Uchu» (escrito del denunciante) y «Ayllus Tinta y Ucho» (informe del subdelegado) designan el mismo ayllu del pueblo de Tinta; variante gráfica u/o.
+RECONSTRUCCIÓN «Cusco (ciudad), sede de la Real Audiencia y la Intendencia» — creencia: verdadero; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT05-005
+    Argumento: «CUSCO» en la data del escrito presentado ante el Fiscal Protector General. HGIS src_id 6000002 (WHG 176704).
+RECONSTRUCCIÓN «San Pedro de Cacha (pueblo)» — creencia: posible; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT02-006
+    Argumento: HGIS registra «San Pedro» (src_id 6000358, WHG 177061) en la jurisdicción de Tinta, entre Tinta y Sicuani; la equivalencia con San Pedro de Cacha se apoya en nombre, jurisdicción y coordenadas, sin confirmación documental.
+RECONSTRUCCIÓN «Sicuani (pueblo), residencia del subdelegado» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT10-001
+    Argumento: Pueblo del partido de Tinta donde el subdelegado data sus providencias e informe. HGIS src_id 6000365 (WHG 177068).
+RECONSTRUCCIÓN «Tinta (pueblo)» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT01-007
+    Argumento: Pueblo de Tinta, cabecera del partido homónimo. HGIS de las Indias src_id 6000357 (World Historical Gazetteer place 177060; -71.406, -14.145). Se descartan los homónimos Tinta de Cajatambo (6000993) y Tintay.
+
+  Cusco (ciudad), sede de la Real Audiencia y la Intendencia: HGIS:6000002 https://whgazetteer.org/places/176704/detail
+  San Pedro de Cacha (pueblo): HGIS:6000358 https://whgazetteer.org/places/177061/detail
+  Sicuani (pueblo), residencia del subdelegado: HGIS:6000365 https://whgazetteer.org/places/177068/detail
+  Tinta (pueblo): HGIS:6000357 https://whgazetteer.org/places/177060/detail
 ```
 
 ## PC08
 
 ```text
 PREGUNTA: ¿Qué afirmó cano en su certificación de agosto y qué en su declaración de septiembre?
-RESPUESTA (A): 10 afirmaciones en certificación, declaración jurada.
+RESPUESTA (A): 11 afirmaciones en certificación, declaración jurada.
 
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT01-001: ejerce o ejerció un cargo → coronel (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «lo mismo en el tiempo del rebelde. Tupa Amaro fue complice y coronel»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT01-002: ejerce o ejerció un cargo → cómplice (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «lo mismo en el tiempo del rebelde. Tupa Amaro fue complice y coronel»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT01-003: fecha u hora del hecho → a media noche
     «esa noche todos los indios se alzaron a media noche todos con garrotes»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT01-004: participa en un hecho → H-p01-alboroto
     «llevamos hasta hoy dia suspecha de la traicion de la orden del dicho Chuquiitapa»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: sospecha; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-001: la firma es suya → Ysidro Cano
     «dijo que la firma Que dice Isidro Cano es suya propia»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-002: se ratifica en el contenido → Ysidro Cano
     «preso ser cierto todo lo que en ella dice que le consta solo»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-003: ejerce o ejerció un cargo → comisionado (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «en tiempo del rebelde Tupa amaro fue Comisionado por este»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA; responde a A-UT01-001
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-004 [NIEGA]: ejerce o ejerció un cargo → coronel (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «Comisionado por este y no coronel como expone en su certificación»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA; responde a A-UT01-001
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-005: fecha u hora del hecho → a media noche
     «se alzaron a media noche armados con garrotes para acabar con este, y hacer matalo de los españoles poniendo guardias a las puertas de estos no le cons ta al que declara si no porque se lo dijo su segundo sargento Santiago Casorla»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA; responde a A-UT01-003; según lo que le dijo «Santiago Casorla» (discurso referido)
     Fundamento invocado: de oídas; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT12a-001: motivo o causa del hecho → este fue a su casa suplicandole
     «dijo que la dado porque este fue a su casa supli candole»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT12.a, folio no consta en la transcripción
+AFIRMACIÓN A-UT12a-002 [NIEGA]: le comprenden (o no) las generales de la ley → le comprenden los Generales de la Ley
+    «que no le comprenden. los Generales de la Ley»
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT12.a, folio no consta en la transcripción
 
 — Reconstrucción del investigador (capa 4) —
@@ -190,31 +235,36 @@ RESPUESTA (DISPUTA): Está en disputa («coronel (de Túpac Amaru)»). Lo afirma
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT01-001: ejerce o ejerció un cargo → coronel (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «lo mismo en el tiempo del rebelde. Tupa Amaro fue complice y coronel»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT03-001: ejerce o ejerció un cargo → coronel (de Túpac Amaru)
     «en tiempo de su pariente Tupaamaro fue coronel, comecionado»
-    Afirmante: «Fernando Orue» (certificante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; certificación P04, sin fecha escrita; ante: no consta; firma la pieza: Fernando Orue
+    Afirmante: «Fernando Orue» (certificante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; certificación P04, sin fecha escrita; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Fernando Orue
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT03, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-004 [NIEGA]: ejerce o ejerció un cargo → coronel (de Túpac Amaru) (sujeto elíptico resuelto por el anotador)
     «Comisionado por este y no coronel como expone en su certificación»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA; responde a A-UT01-001
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT14-006: ejerce o ejerció un cargo → coronel (de Túpac Amaru)
     «con motibo de saber q de andres chuquitaza fue en tiempo del rebelde tupa-amaru coronel y comisionado»
-    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; firma la pieza: no consta
+    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; redacta: no consta; firma la pieza: no consta; responde a A-UT03-001
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT14, folio no consta en la transcripción
 
 — Reconstrucción del investigador (capa 4) —
 RECONSTRUCCIÓN «Andrés Chuquitapa, cacique y recaudador de tributos de Tinta» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
-    Deriva de: mencion/M-UT01-003 mencion/M-UT01-004 mencion/M-UT03-002 mencion/M-UT06-001 mencion/M-UT14-002 mencion/M-UT15-002
+    Deriva de: mencion/M-UT01-003 mencion/M-UT01-004 mencion/M-UT03-002 mencion/M-UT05-002 mencion/M-UT06-001 mencion/M-UT07-001 mencion/M-UT14-002 mencion/M-UT15-002 mencion/M-UT16b-001 mencion/M-UT17-006
     Argumento: Todas las menciones designan al cacique o recaudador de Tinta contra quien se dirige la queja; las grafías (Chuquiitapa, Chuquitapa, chuquitaza, chuquitapa) difieren en una o dos letras y aparecen en el mismo contexto procesal. No se incluye «Chiquitas» (ver R-chiquitas).
 
 Afirmaciones relacionadas (no forman la disputa):
   A-UT01-002: «Isidro Cano» [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción] (certificación P01, UT01) → cómplice (de Túpac Amaru) (afirma) «lo mismo en el tiempo del rebelde. Tupa Amaro fue complice y coronel»
   A-UT03-002: «Fernando Orue» [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción] (certificación P04, UT03) → comisionado (de Túpac Amaru) (afirma) «en tiempo de su pariente Tupaamaro fue coronel, comecionado»
+  A-UT05-001: «Manuel Huancachoque» [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción] (petición P06, UT05) → recaudador de tributos (afirma) «tenia ocultos el recaudaderor Don Andres Choquitapa»
+  A-UT07-001: «Gómez del Rio» [= Luis (o Lucio) Gómez / Gonzalo del Río, fiscal de la Real Audiencia del Cusco, según reconstrucción] (vista fiscal P07, UT07) → recaudador de tributos (afirma) «contra el Recaudador de Tributos Son Andres Chuquitapa»
   A-UT11-003: «Ysidro Cano» [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción] (declaración jurada P18, UT11) → comisionado (de Túpac Amaru) (afirma) «en tiempo del rebelde Tupa amaro fue Comisionado por este»
   A-UT14-007: «fernando ore» [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción] (declaración jurada P21, UT14) → comisionado (de Túpac Amaru) (afirma) «con motibo de saber q de andres chuquitaza fue en tiempo del rebelde tupa-amaru coronel y comisionado»
+  A-UT16b-001: «parroco interino» [= Agustín Valdés, cura interino de Tinta, según reconstrucción] (informe P23, UT16.b) → cacique (afirma) «su casique y alcalde mayor Don Andres Chuquitapa»
+  A-UT16b-002: «parroco interino» [= Agustín Valdés, cura interino de Tinta, según reconstrucción] (informe P23, UT16.b) → alcalde mayor (de indios) (afirma) «su casique y alcalde mayor Don Andres Chuquitapa»
+  A-UT17-003: «Pedro de la Mata» [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción] (informe P27, UT17) → recaudador de tributos (afirma) «recaudador de tributos de los Ayllus Tinta y Ucho Don Andres Chuquitapa»
 Ninguna actuación de fuerza dictaminadora o resolutiva se pronuncia sobre este punto.
 ```
 
@@ -227,31 +277,31 @@ RESPUESTA (DISPUTA): Está en disputa en 4 piezas (P01, P03, P04, P05): el subde
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT12b-002: redactó la pieza → Simon Arce
     «mando el que declara a Simon Arce que pusiere en un papelito lo mis mo que relata en la citada certificación»
-    Afirmante: «Mariano Casorla» (declarante) [= El declarante de P19 es un Mariano Casorla distinto de Martín (hipótesis B) | El declarante de P19 es Martín Cazorla (hipótesis A), según reconstrucción]; declaración jurada P19, fecha escrita «Ynmediatamente»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Mariano Casorla» (declarante) [= El declarante de P19 es un Mariano Casorla distinto de Martín (hipótesis B) | El declarante de P19 es Martín Cazorla (hipótesis A), según reconstrucción]; declaración jurada P19, fecha escrita «Ynmediatamente»; ante: ante mi; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT12.b, folio 20
 AFIRMACIÓN A-UT14-002: redactó la pieza → un hijo suyo
     «bajo a un hijo suyo q la pusieron»
-    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; firma la pieza: no consta
+    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT14, folio no consta en la transcripción
 AFIRMACIÓN A-UT14-003: redactó la pieza → guasscachoque
     «como ha puesto guasscachoque en la citada certificacion»
-    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; firma la pieza: no consta
+    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT14, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-101: redactó la pieza → Guancachoque
     «fueron hechos por el mismo Guancachoque haciéndolos firmar a los sujetos que los subscriben sin saber lo mas de sus contenidos»
-    Afirmante: «Pedro de la Mata» (informante) [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: resulta de lo actuado; fuerza institucional: informativa; UT17, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-102: redactó la pieza → Guancachoque
     «fueron hechos por el mismo Guancachoque haciéndolos firmar a los sujetos que los subscriben sin saber lo mas de sus contenidos»
-    Afirmante: «Pedro de la Mata» (informante) [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: resulta de lo actuado; fuerza institucional: informativa; UT17, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-103: redactó la pieza → Guancachoque
     «fueron hechos por el mismo Guancachoque haciéndolos firmar a los sujetos que los subscriben sin saber lo mas de sus contenidos»
-    Afirmante: «Pedro de la Mata» (informante) [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: resulta de lo actuado; fuerza institucional: informativa; UT17, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-104: redactó la pieza → Guancachoque
     «fueron hechos por el mismo Guancachoque haciéndolos firmar a los sujetos que los subscriben sin saber lo mas de sus contenidos»
-    Afirmante: «Pedro de la Mata» (informante) [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: resulta de lo actuado; fuerza institucional: informativa; UT17, folio no consta en la transcripción
 
 Disputa texto/afirmación: la pieza P04 muestra la firma «Fernando Orue» (M-UT03-004), y A-UT14-001 («fernando ore») lo niega: «no obstante que sabe firmar el declarante no quiso hacerlo»
@@ -261,16 +311,16 @@ Disputa texto/afirmación: la pieza P04 muestra la firma «Fernando Orue» (M-UT
 
 ```text
 PREGUNTA: ¿Cuánto tiempo estuvo preso Huancachoque?
-RESPUESTA (DISPUTA): Está en disputa por valores incompatibles. «dos días»: lo afirman «Manuel Huancachoque» [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción] (petición P06, UT06) || «esa misma noche ... al otro dia por la tarde»: lo afirman «Pedro de la Mata» [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción] (informe P27, UT18)
+RESPUESTA (DISPUTA): Está en disputa por valores incompatibles. «dos días»: lo afirman «Manuel Huancachoque» [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción] (petición P06, UT06) || «esa misma noche ... al otro dia por la tarde»: lo afirman «Pedro de la Mata» [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción] (informe P27, UT18)
 
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT06-001: duración del hecho → dos días
     «yo me mantuve dos días preso»
-    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
     Fundamento invocado: lo padeció o hizo él mismo; fuerza institucional: alegación de parte; UT06, folio no consta en la transcripción
 AFIRMACIÓN A-UT18-001: duración del hecho → esa misma noche ... al otro dia por la tarde
     «que lo guardasen en ella esa misma noche, al que puse en libertad al otro dia por la tarde»
-    Afirmante: «Pedro de la Mata» (informante) [= «[María Rubrica]» es la rúbrica del subdelegado Mata | Pedro de la Mata, subdelegado del partido de Tinta, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: lo padeció o hizo él mismo; fuerza institucional: informativa; UT18, folio no consta en la transcripción
 
 — Reconstrucción del investigador (capa 4) —
@@ -283,7 +333,7 @@ RECONSTRUCCIÓN «Prisión de Huancachoque en la cárcel de Tinta tras la denunc
 
 ```text
 PREGUNTA: ¿Se sacó finalmente a Huancachoque de la matrícula de tributarios?
-RESPUESTA (NC): El expediente no lo dice: ninguna afirmación dictaminadora o resolutiva se pronuncia sobre la matrícula; la petición se desglosó al expediente de la primera denuncia.
+RESPUESTA (NC): El expediente no lo dice: ninguna afirmación dictaminadora o resolutiva se pronuncia sobre su condición tributaria ni sobre la matrícula; la petición se desglosó al expediente de la primera denuncia (P14–P15).
 
 Pieza P15: Nota de desglose de las dos fojas de denuncia — fecha escrita «Tinta 23. de Septiembre de 1806»
 Advertencia: «no lo dice» vale en la medida en que la extracción de afirmaciones resolutivas sea exhaustiva (exhaustividad medida contra el estándar de oro, docs/G_evaluacion.md).
@@ -298,7 +348,7 @@ RESPUESTA (NC): El expediente no lo dice: consta la orden de «contener los exce
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT19-003: ordena o manda → contener los excesos y enemistad del yndio Guancachoque
     «a fin de contener los excesos y enemistad del yndio Guancachoque»
-    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; firma la pieza: Muñoz
+    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Muñoz
     Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT19, folio 33
 ```
 
@@ -311,35 +361,35 @@ RESPUESTA (DISPUTA): Está en disputa por valores incompatibles. «a las dies de
 — Lo que se afirma en el expediente (capa 3) —
 AFIRMACIÓN A-UT01-003: fecha u hora del hecho → a media noche
     «esa noche todos los indios se alzaron a media noche todos con garrotes»
-    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; firma la pieza: Isidro Cano
+    Afirmante: «Isidro Cano» (certificante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; certificación P01, fecha escrita «en primero de agosto de 1806»; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Isidro Cano
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT01, folio no consta en la transcripción
 AFIRMACIÓN A-UT02-001: fecha u hora del hecho → a las dies o a las once
     «Esa misma noche a las dies o a las once se alzaron los indios en la plaza»
-    Afirmante: «don Juan Quiñones» (certificante) [= «Don Juan Quiñones», teniente alguacil (existencia en disputa), según reconstrucción]; certificación P03, sin fecha escrita; ante: no consta; firma la pieza: Juan Cazorla
+    Afirmante: «don Juan Quiñones» (certificante) [= «Don Juan Quiñones», teniente alguacil (existencia en disputa), según reconstrucción]; certificación P03, sin fecha escrita; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Juan Cazorla
     Fundamento invocado: lo vio; fuerza institucional: testimonial; UT02, folio no consta en la transcripción
 AFIRMACIÓN A-UT03-004: fecha u hora del hecho → a las diez de la noche
     «a las diez de la noche, peor alboroto»
-    Afirmante: «Fernando Orue» (certificante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; certificación P04, sin fecha escrita; ante: no consta; firma la pieza: Fernando Orue
+    Afirmante: «Fernando Orue» (certificante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; certificación P04, sin fecha escrita; ante: no consta; redacta: no consta (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»); firma la pieza: Fernando Orue
     Fundamento invocado: lo vio; fuerza institucional: testimonial; UT03, folio no consta en la transcripción
 AFIRMACIÓN A-UT06-002: fecha u hora del hecho → a las nueve de la noche
     «pero a las nueve de la noche se apareció una caterva de indios»
-    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
     Fundamento invocado: lo padeció o hizo él mismo; fuerza institucional: alegación de parte; UT06, folio no consta en la transcripción
 AFIRMACIÓN A-UT11-005: fecha u hora del hecho → a media noche
     «se alzaron a media noche armados con garrotes para acabar con este, y hacer matalo de los españoles poniendo guardias a las puertas de estos no le cons ta al que declara si no porque se lo dijo su segundo sargento Santiago Casorla»
-    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA
+    Afirmante: «Ysidro Cano» (declarante) [= Isidro Cano, sargento de milicias, vecino español de Tinta, según reconstrucción]; declaración jurada P18, fecha escrita «Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años»; ante: Pedro de la Mata; redacta: no consta; firma la pieza: YSIDRO CANO / PEDRO DE LA MATA; responde a A-UT01-003; según lo que le dijo «Santiago Casorla» (discurso referido)
     Fundamento invocado: de oídas; fuerza institucional: testimonial; UT11, folio no consta en la transcripción
 AFIRMACIÓN A-UT14-004: fecha u hora del hecho → el primer puesto del gallo
     «no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion, sino el primer puesto del gallo»
-    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; firma la pieza: no consta
+    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; redacta: no consta; firma la pieza: no consta; responde a A-UT03-004
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT14, folio no consta en la transcripción
 AFIRMACIÓN A-UT14-005 [NIEGA]: fecha u hora del hecho → a las dies de la noche
     «no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion»
-    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; firma la pieza: no consta
+    Afirmante: «fernando ore» (declarante) [= Fernando Orue, cabo o soldado de milicias, vecino de Tinta, según reconstrucción]; declaración jurada P21, fecha escrita «Seguidamente»; ante: el grl. sub delegado; redacta: no consta; firma la pieza: no consta; responde a A-UT03-004
     Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT14, folio no consta en la transcripción
 AFIRMACIÓN A-UT12b-006: número de participantes → quatro o seis Yndios
     «vio a quatro o seis Yndios en la puerta de la carcel con garrotes»
-    Afirmante: «Mariano Casorla» (declarante) [= El declarante de P19 es un Mariano Casorla distinto de Martín (hipótesis B) | El declarante de P19 es Martín Cazorla (hipótesis A), según reconstrucción]; declaración jurada P19, fecha escrita «Ynmediatamente»; ante: no consta; firma la pieza: no consta
+    Afirmante: «Mariano Casorla» (declarante) [= El declarante de P19 es un Mariano Casorla distinto de Martín (hipótesis B) | El declarante de P19 es Martín Cazorla (hipótesis A), según reconstrucción]; declaración jurada P19, fecha escrita «Ynmediatamente»; ante: ante mi; redacta: no consta; firma la pieza: no consta
     Fundamento invocado: lo vio; fuerza institucional: testimonial; UT12.b, folio 20
 
 — Reconstrucción del investigador (capa 4) —
@@ -362,44 +412,109 @@ PREGUNTA: ¿Qué resolvió la autoridad sobre la queja y en qué se apoyó?
 RESPUESTA (A): Son afirmaciones con fuerza dictaminadora o resolutiva, no hechos: el fiscal califica las quejas de «menos conforme a la verdad» y el auto se conforma con la vista fiscal; ambas se apoyan en el informe del subdelegado (parte en la prisión del denunciante).
 
 — Lo que se afirma en el expediente (capa 3) —
+AFIRMACIÓN A-UT07-001: ejerce o ejerció un cargo → recaudador de tributos
+    «contra el Recaudador de Tributos Son Andres Chuquitapa»
+    Afirmante: «Gómez del Rio» (dictaminador) [= Luis (o Lucio) Gómez / Gonzalo del Río, fiscal de la Real Audiencia del Cusco, según reconstrucción]; vista fiscal P07, fecha escrita «Cusco y Agosto 21 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Gómez del Rio
+    Fundamento invocado: no lo indica; fuerza institucional: dictaminadora; UT07, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-001: firmó la pieza → Juan Cazorla
     «Juan Cazorla de quien aparece firmada la Certificación a folios 2»
-    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; firma la pieza: María Rubrica
+    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; redacta: no consta; firma la pieza: María Rubrica
     Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT17, folio no consta en la transcripción
 AFIRMACIÓN A-UT17-002 [NIEGA]: existe tal persona en el lugar → en el pueblo de Tinta
     «que no hay tal hombre en el pueblo de Tinta»
-    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; firma la pieza: María Rubrica
+    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; redacta: no consta; firma la pieza: María Rubrica
+    Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT17, folio no consta en la transcripción
+AFIRMACIÓN A-UT17-004: la pieza está en tal folio (autorreferencia del expediente) → a folios 2
+    «la Certificación a folios 2 extendida a nombre del teniente Alguacil»
+    Afirmante: «María Rubrica» (autoridad que resuelve) [= «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; decreto P24, sin fecha escrita; ante: no consta; redacta: no consta; firma la pieza: María Rubrica
     Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT17, folio no consta en la transcripción
 AFIRMACIÓN A-UT19-003: ordena o manda → contener los excesos y enemistad del yndio Guancachoque
     «a fin de contener los excesos y enemistad del yndio Guancachoque»
-    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; firma la pieza: Muñoz
+    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Muñoz
     Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT19, folio 33
-AFIRMACIÓN A-UT19-004: se conforma con (adopta) un dictamen → Muñoz
+AFIRMACIÓN A-UT19-004: se conforma con (adopta) un dictamen → P29
     «Visto de conformidad con lo supuesto por el señor Fiscal»
-    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; firma la pieza: Muñoz
+    Afirmante: «Muñoz» (autoridad que resuelve); auto P28, fecha escrita «Cusco y noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Muñoz
     Fundamento invocado: no lo indica; fuerza institucional: resolutiva; UT19, folio 33
 AFIRMACIÓN A-UT19-001: veracidad de un escrito o queja → menos conforme a la verdad
     «resultando de este ser menos conforme a la verdad las quejas dadas por Manuel Guancoichoque»
-    Afirmante: «Gonzalo del Rio» (dictaminador); vista fiscal P29, fecha escrita «Noviembre 20 de 1806»; ante: no consta; firma la pieza: Gonzalo del Rio
+    Afirmante: «Gonzalo del Rio» (dictaminador) [= Luis (o Lucio) Gómez / Gonzalo del Río, fiscal de la Real Audiencia del Cusco, según reconstrucción]; vista fiscal P29, fecha escrita «Noviembre 20 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Gonzalo del Rio
     Fundamento invocado: resulta de lo actuado; fuerza institucional: dictaminadora; UT19, folio 33
 AFIRMACIÓN A-UT19-002: calificación de conducta o carácter → mala conducta y genio discolo y arreva
     «por la mala conducta y genio discolo y arreva que se nota»
-    Afirmante: «Gonzalo del Rio» (dictaminador); vista fiscal P29, fecha escrita «Noviembre 20 de 1806»; ante: no consta; firma la pieza: Gonzalo del Rio
+    Afirmante: «Gonzalo del Rio» (dictaminador) [= Luis (o Lucio) Gómez / Gonzalo del Río, fiscal de la Real Audiencia del Cusco, según reconstrucción]; vista fiscal P29, fecha escrita «Noviembre 20 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Gonzalo del Rio
     Fundamento invocado: resulta de lo actuado; fuerza institucional: dictaminadora; UT19, folio 33
 ```
 
 ## PC17
 
 ```text
-PREGUNTA: PC17
-RESPUESTA (PENDIENTE): Requiere anotar las atribuciones de condición de UT05, UT06, UT08 y UT00.
+PREGUNTA: ¿Qué condición fiscal y social se atribuye a Huancachoque y quién la atribuye?
+RESPUESTA (A): 6 atribuciones, cada una de quien la hace (ninguna es un hecho).
+
+— Lo que se afirma en el expediente (capa 3) —
+AFIRMACIÓN A-UT05-003: tiene una condición → originario
+    «Manuel Huancachoque Indio originario y vecino del pueblo de Tinta»
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Fundamento invocado: no lo indica; fuerza institucional: alegación de parte; UT05, folio no consta en la transcripción
+AFIRMACIÓN A-UT06-004: tiene una condición → miliciano
+    «por haber estado empleado en las milicias de aquella provincia, hasta aquí no había tributado»
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Fundamento invocado: no lo indica; fuerza institucional: alegación de parte; UT06, folio no consta en la transcripción
+AFIRMACIÓN A-UT06-005: tiene una condición → tributario
+    «conseguido también el que se me matricule»
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Fundamento invocado: no lo indica; fuerza institucional: alegación de parte; UT06, folio no consta en la transcripción
+AFIRMACIÓN A-UT02-002: ejerce o ejerció un cargo → soldado
+    «Manuel Guamanchoque ha estado soldado en mi compañía más de cinco años»
+    Afirmante: «yo sargento primero» (certificante); certificación P02, fecha escrita «agosto cinco de mil ochocientos seis años»; ante: no consta; redacta: no consta; firma la pieza: Santiago Cazorla
+    Fundamento invocado: no lo indica; fuerza institucional: testimonial; UT02, folio no consta en la transcripción
+AFIRMACIÓN A-UT16a-001: es hijo/a de → Antolin Ortiz
+    «Es notorio que Manuel Guancachoque es hijo Espurio de Antolin Ortiz»
+    Afirmante: «parroco interino» (informante) [= Agustín Valdés, cura interino de Tinta, según reconstrucción]; informe P23, fecha escrita «Noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: notoriedad; fuerza institucional: informativa; UT16.a, folio no consta en la transcripción
+AFIRMACIÓN A-UT16a-004: es hijo/a de → Agustina Falcon
+    «su Madre Agustina Falcon India Ordinaria y pleveya»
+    Afirmante: «parroco interino» (informante) [= Agustín Valdés, cura interino de Tinta, según reconstrucción]; informe P23, fecha escrita «Noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: notoriedad; fuerza institucional: informativa; UT16.a, folio no consta en la transcripción
+
+— Reconstrucción del investigador (capa 4) —
+RECONSTRUCCIÓN «Manuel Huancachoque (Guancachoque), denunciante» — creencia: probable; autor: claude-opus-5-5; fecha: 2026-11-12
+    Deriva de: mencion/M-UT01-002 mencion/M-UT02-003 mencion/M-UT05-001 mencion/M-UT06-002 mencion/M-UT14-003 mencion/M-UT16a-001 mencion/M-UT17-004 mencion/M-UT17-005 mencion/M-UT19-001
+    Argumento: Menciones del denunciante en las certificaciones, su escrito, su firma, la declaración de Orue, los informes y la vista fiscal. «Manuel Guamanchoque» (P02) se incluye por el nombre de pila y porque la certificación de su servicio militar coincide con lo que alega en su escrito (no había tributado por servir en las milicias).
 ```
 
 ## PC18
 
 ```text
-PREGUNTA: PC18
-RESPUESTA (PENDIENTE): Requiere anotar los cargos de Chuquitapa en UT00, UT05, UT07, UT09, UT16.b y UT17.
+PREGUNTA: ¿Qué cargos ejercía Andrés Chuquitapa, con qué vigencia y según quién?
+RESPUESTA (R): 5 afirmaciones de cargo (capa 3) y 3 ejercicios de cargo reconstruidos (capa 4). Los cargos en la rebelión de 1780 están en PC09.
+
+— Lo que se afirma en el expediente (capa 3) —
+AFIRMACIÓN A-UT05-001: ejerce o ejerció un cargo → recaudador de tributos
+    «tenia ocultos el recaudaderor Don Andres Choquitapa»
+    Afirmante: «Manuel Huancachoque» (denunciante) [= Manuel Huancachoque (Guancachoque), denunciante, según reconstrucción]; petición P06, fecha escrita «CUSCO AGOSTO 22 DE 1806»; ante: no consta; redacta: no consta; firma la pieza: MANUEL HUANCACHOQQUE
+    Fundamento invocado: no lo indica; fuerza institucional: alegación de parte; UT05, folio no consta en la transcripción
+AFIRMACIÓN A-UT07-001: ejerce o ejerció un cargo → recaudador de tributos
+    «contra el Recaudador de Tributos Son Andres Chuquitapa»
+    Afirmante: «Gómez del Rio» (dictaminador) [= Luis (o Lucio) Gómez / Gonzalo del Río, fiscal de la Real Audiencia del Cusco, según reconstrucción]; vista fiscal P07, fecha escrita «Cusco y Agosto 21 de 1806»; ante: no consta; redacta: no consta; firma la pieza: Gómez del Rio
+    Fundamento invocado: no lo indica; fuerza institucional: dictaminadora; UT07, folio no consta en la transcripción
+AFIRMACIÓN A-UT16b-001: ejerce o ejerció un cargo → cacique
+    «su casique y alcalde mayor Don Andres Chuquitapa»
+    Afirmante: «parroco interino» (informante) [= Agustín Valdés, cura interino de Tinta, según reconstrucción]; informe P23, fecha escrita «Noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: no lo indica; fuerza institucional: informativa; UT16.b, folio 28
+AFIRMACIÓN A-UT16b-002: ejerce o ejerció un cargo → alcalde mayor (de indios)
+    «su casique y alcalde mayor Don Andres Chuquitapa»
+    Afirmante: «parroco interino» (informante) [= Agustín Valdés, cura interino de Tinta, según reconstrucción]; informe P23, fecha escrita «Noviembre 26 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: no lo indica; fuerza institucional: informativa; UT16.b, folio 28
+AFIRMACIÓN A-UT17-003: ejerce o ejerció un cargo → recaudador de tributos
+    «recaudador de tributos de los Ayllus Tinta y Ucho Don Andres Chuquitapa»
+    Afirmante: «Pedro de la Mata» (informante) [= Pedro de la Mata, subdelegado del partido de Tinta | «[María Rubrica]» es la rúbrica del subdelegado Mata, según reconstrucción]; informe P27, fecha escrita «Siquani Noviembre 8 de 1806»; ante: no consta; redacta: no consta; firma la pieza: no consta
+    Fundamento invocado: no lo indica; fuerza institucional: informativa; UT17, folio no consta en la transcripción
+
+  EJERCICIO DE CARGO (capa 4): alcalde mayor (de indios) — vigencia: 1806-01-01 a 1806-12-31 (Consta en 1806 por una sola fuente.); creencia: posible; premisas: A-UT16b-002
+  EJERCICIO DE CARGO (capa 4): cacique — vigencia: 1806-01-01 a 1806-12-31 (Consta en 1806 (informe del cura; carátula, no anotada). Las certificaciones lo sitúan ya como cacique en tiempos del corregidor Reparaz (afirmación de testigos, no anotada).); creencia: probable; premisas: A-UT16b-001
+  EJERCICIO DE CARGO (capa 4): recaudador de tributos — vigencia: 1806-08-01 a 1806-11-30 (Consta en ejercicio de agosto a noviembre de 1806; el inicio no consta en el expediente.); creencia: verdadero; premisas: A-UT05-001 A-UT07-001 A-UT17-003
 ```
 
 ## PC19
@@ -425,6 +540,8 @@ Mención afectada: https://w3id.org/laad/id/cc-14-18/mencion/M-UT12.a-005
 PREGUNTA: ¿De dónde procede el dato A-UT11-004?
 RESPUESTA (P): Procedencia del dato (PROV-O), no del testimonio de 1806.
 
+  grafo https://w3id.org/laad/grafo/afirmaciones/anotacion-manual-hilo-central-v1 (afirmaciones): actividad https://w3id.org/laad/id/actividad/anotacion-manual-hilo-central-v1, agente claude-opus-5-5 (SoftwareAgent), plan «anotacion-manual», transcripción sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe, fecha 2026-11-12T00:00:00, validación humana: NO REGISTRADA
+  grafo https://w3id.org/laad/grafo/afirmaciones/anotacion-manual-hilo-central-v1 (afirmaciones): actividad https://w3id.org/laad/id/actividad/anotacion-manual-hilo-central-v1, agente claude-opus-5-5 (SoftwareAgent), plan «anotacion-manual», transcripción sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe, fecha 2026-11-12T00:00:00, validación humana: NO REGISTRADA
   grafo https://w3id.org/laad/grafo/afirmaciones/anotacion-manual-hilo-central-v1 (afirmaciones): actividad https://w3id.org/laad/id/actividad/anotacion-manual-hilo-central-v1, agente claude-opus-5-5 (SoftwareAgent), plan «anotacion-manual», transcripción sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe, fecha 2026-11-12T00:00:00, validación humana: NO REGISTRADA
   grafo https://w3id.org/laad/grafo/afirmaciones/anotacion-manual-hilo-central-v1 (afirmaciones): actividad https://w3id.org/laad/id/actividad/anotacion-manual-hilo-central-v1, agente claude-opus-5-5 (SoftwareAgent), plan «anotacion-manual», transcripción sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe, fecha 2026-11-12T00:00:00, validación humana: NO REGISTRADA
   grafo https://w3id.org/laad/grafo/afirmaciones/anotacion-manual-hilo-central-v1 (afirmaciones): actividad https://w3id.org/laad/id/actividad/anotacion-manual-hilo-central-v1, agente claude-opus-5-5 (SoftwareAgent), plan «anotacion-manual», transcripción sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe, fecha 2026-11-12T00:00:00, validación humana: NO REGISTRADA

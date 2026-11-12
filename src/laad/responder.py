@@ -25,13 +25,21 @@ def linea_afirmacion(r: dict) -> str:
     fecha = f", fecha escrita «{r['fecha']}»" if r.get("fecha") else ", sin fecha escrita"
     ante = r.get("ante") or NO_CONSTA
     firma = r.get("firmantes") or NO_CONSTA
+    redacta = r.get("redactorDoc") or NO_CONSTA
+    if r.get("redaccionDisputada") == "true":
+        redacta += " (la redacción de esta pieza está DISPUTADA: ver atributo «redactó la pieza»)"
     pol = "" if r["pol"] == "afirma" else " [NIEGA]"
     eliptico = " (sujeto elíptico resuelto por el anotador)" if r.get("eliptico") == "true" else ""
+    rel = ""
+    if r.get("respondeA"):
+        rel += f"; responde a {r['respondeA']}"
+    if r.get("segun"):
+        rel += f"; según lo que le dijo «{r['segun']}» (discurso referido)"
+    afr = f" [= {r['afirmanteR']}, según reconstrucción]" if r.get("afirmanteR") else ""
     return (f"AFIRMACIÓN {r['aid']}{pol}: {r['atrLabel']} → {r['valorLabel']}{eliptico}\n"
             f"    «{r['cita']}»\n"
-            f"    Afirmante: «{r['afirmante']}» ({r['rolAf']})"
-            f"{' [= ' + r['afirmanteR'] + ', según reconstrucción]' if r.get('afirmanteR') else ''}; {r['tipoAct']} {r['pieza']}{fecha}; "
-            f"ante: {ante}; firma la pieza: {firma}\n"
+            f"    Afirmante: «{r['afirmante']}» ({r['rolAf']}){afr}; {r['tipoAct']} {r['pieza']}{fecha}; "
+            f"ante: {ante}; redacta: {redacta}; firma la pieza: {firma}{rel}\n"
             f"    Fundamento invocado: {r['fundamento']}; fuerza institucional: {r['fuerza']}; "
             f"{r['tramo']}, {_folio(r)}")
 

@@ -7,6 +7,7 @@
 
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dct:  <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix tes:  <https://w3id.org/laad/tesauro/> .
 @prefix act:  <https://w3id.org/laad/tesauro/actuacion/> .
@@ -213,7 +214,7 @@ cargo:cabo-primero a skos:Concept ; skos:inScheme tes:cargos ; skos:broader carg
 cargo:soldado a skos:Concept ; skos:inScheme tes:cargos ; skos:broader cargo:grado-miliciano ; skos:prefLabel "soldado"@es ; skos:altLabel "soldado granadero"@es .
 
 cargo:cargo-rebelde-1780 a skos:Concept ; skos:inScheme tes:cargos ; skos:topConceptOf tes:cargos ;
-    skos:prefLabel "cargo en las fuerzas de Túpac Amaru (1780–1781)"@es .
+    skos:prefLabel "cargo o participación en las fuerzas de Túpac Amaru (1780–1781)"@es .
 cargo:coronel-rebelde a skos:Concept ; skos:inScheme tes:cargos ; skos:broader cargo:cargo-rebelde-1780 ; skos:prefLabel "coronel (de Túpac Amaru)"@es .
 cargo:comisionado-rebelde a skos:Concept ; skos:inScheme tes:cargos ; skos:broader cargo:cargo-rebelde-1780 ; skos:prefLabel "comisionado (de Túpac Amaru)"@es .
 cargo:caudillo-rebelde a skos:Concept ; skos:inScheme tes:cargos ; skos:broader cargo:cargo-rebelde-1780 ; skos:prefLabel "caudillo (de Túpac Amaru)"@es .
@@ -243,10 +244,10 @@ ent:matricula a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf t
 # 6. Atributos afirmables — LISTA CERRADA del registro de afirmación
 #    Para cada uno: qué es el sujeto, qué es el valor y la ruta CIDOC CRM de la capa 4 (skos:editorialNote "ruta-crm").
 #################################################################
-atr:ejerce-cargo a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "ejerce o ejerció un cargo"@es ;
+atr:ejerce-cargo a skos:Concept ; skos:inScheme tes:atributos ; dct:conformsTo tes:cargos ; skos:prefLabel "ejerce o ejerció un cargo"@es ;
     skos:definition "Sujeto: persona. Valor: concepto de tes:cargos. Ámbito opcional: grupo o lugar. Tiempo opcional."@es ;
     skos:editorialNote "ruta-crm: E7_Activity(P2 cargo) -P14_carried_out_by-> E21; -P4-> E52; -P17_was_motivated_by/P7 ámbito"@es .
-atr:tiene-condicion a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "tiene una condición"@es ;
+atr:tiene-condicion a skos:Concept ; skos:inScheme tes:atributos ; dct:conformsTo tes:condiciones ; skos:prefLabel "tiene una condición"@es ;
     skos:definition "Sujeto: persona. Valor: concepto de tes:condiciones."@es ;
     skos:editorialNote "ruta-crm: E21 -P2_has_type-> condición (solo en el grafo nombrado de la reconstrucción que la adopte)"@es .
 atr:participa-en-hecho a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "participa en un hecho"@es ;
@@ -288,10 +289,18 @@ atr:existe-persona a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel
     skos:definition "Sujeto: mención de persona. Valor: lugar. Sirve para «no hay tal hombre en el pueblo de Tinta»."@es .
 atr:cantidad-denunciada a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "cantidad (de tributarios, dinero, etc.)"@es .
 atr:ordena a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "ordena o manda"@es ;
-    skos:definition "Sujeto: autoridad. Valor: acción mandada, tal como se escribe. La orden no implica su ejecución."@es .
+    skos:definition "Sujeto: destinatario de la orden (mención) o, si no lo hay, la persona afectada. Valor: acción mandada, tal como se escribe. El afirmante es quien ordena. La orden no implica su ejecución."@es .
 atr:se-conforma-con a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "se conforma con (adopta) un dictamen"@es ;
-    skos:definition "Sujeto: pieza dictaminadora (vista fiscal, informe). Valor: la autoridad que la adopta. Registra la cadena de dependencia de las resoluciones."@es ;
+    skos:definition "Sujeto: la autoridad que resuelve (mención). Valor: la pieza dictaminadora que adopta (vista fiscal, informe). Registra la cadena de dependencia de las resoluciones."@es ;
     skos:editorialNote "ruta-crm: crminf:I5_Inference_Making -J1_used_as_premise-> creencia sobre el dictamen (solo capa 4); en capa 3 queda como E13"@es .
+atr:presta-juramento a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "presta juramento"@es ;
+    skos:definition "Sujeto: declarante (mención). Valor: fórmula literal («a Dios nuestro Señor y a una señal de cruz»). El afirmante es el fedatario."@es .
+atr:generales-de-la-ley a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "le comprenden (o no) las generales de la ley"@es ;
+    skos:definition "Sujeto: declarante. Valor: literal. Con polaridad niega: «no le comprenden». Relevante para la tacha de testigos (parentesco, amistad, enemistad, interés)."@es .
+atr:firma-a-ruego a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "firma a ruego de otro"@es ;
+    skos:definition "Sujeto: pieza. Valor: quien firma por el que no sabe (mención) o literal."@es .
+atr:folio-de-pieza a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "la pieza está en tal folio (autorreferencia del expediente)"@es ;
+    skos:definition "Sujeto: pieza referida. Valor: literal del folio tal como lo cita el documento («De folio 4», «a folios 2»). Base para reconstruir la foliación en capa 4."@es .
 atr:solicita a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "solicita"@es .
 atr:se-hallaba a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "estaba presente o ausente"@es .
 atr:edad a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "edad declarada"@es .
@@ -364,3 +373,69 @@ tes:anotacion a skos:ConceptScheme ; skos:prefLabel "Marcas de anotación"@es .
 anot:sujeto-eliptico a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
     skos:prefLabel "sujeto elíptico resuelto por el anotador"@es ;
     skos:definition "El sujeto de la afirmación no está escrito en la cita; el anotador lo resolvió y lo justifica en crm:P3_has_note."@es .
+
+#################################################################
+# 13. Fuerza institucional de cada tipo de actuación hoja (dato, no código): act:x skos:related fza:y
+#     Leída por el mapeo (mapeo.fuerza_de); un tipo sin fuerza no puede usarse en una pieza (SHACL).
+#################################################################
+act:certificacion skos:related fza:testimonial .
+act:declaracion-jurada skos:related fza:testimonial .
+act:reconocimiento-y-ratificacion skos:related fza:testimonial .
+act:peticion skos:related fza:de-parte .
+act:informe skos:related fza:informativa .
+act:oficio skos:related fza:informativa .
+act:caratula skos:related fza:informativa .
+act:vista-fiscal skos:related fza:dictaminadora .
+act:auto skos:related fza:resolutiva .
+act:auto-cabeza-de-proceso skos:related fza:resolutiva .
+act:decreto skos:related fza:resolutiva .
+act:notificacion skos:related fza:fedataria .
+act:desglose skos:related fza:fedataria .
+atr:autenticidad-firma skos:topConceptOf tes:atributos .
+atr:calificacion-de-conducta skos:topConceptOf tes:atributos .
+atr:cantidad-denunciada skos:topConceptOf tes:atributos .
+atr:conoce-contenido skos:topConceptOf tes:atributos .
+atr:dijo skos:topConceptOf tes:atributos .
+atr:duracion skos:topConceptOf tes:atributos .
+atr:edad skos:topConceptOf tes:atributos .
+atr:ejerce-cargo skos:topConceptOf tes:atributos .
+atr:existe-persona skos:topConceptOf tes:atributos .
+atr:fecha-del-hecho skos:topConceptOf tes:atributos .
+atr:filiacion skos:topConceptOf tes:atributos .
+atr:firma-a-ruego skos:topConceptOf tes:atributos .
+atr:firmo skos:topConceptOf tes:atributos .
+atr:folio-de-pieza skos:topConceptOf tes:atributos .
+atr:generales-de-la-ley skos:topConceptOf tes:atributos .
+atr:lugar-del-hecho skos:topConceptOf tes:atributos .
+atr:motivo skos:topConceptOf tes:atributos .
+atr:numero-de-participantes skos:topConceptOf tes:atributos .
+atr:ordena skos:topConceptOf tes:atributos .
+atr:parentesco skos:topConceptOf tes:atributos .
+atr:participa-en-hecho skos:topConceptOf tes:atributos .
+atr:presta-juramento skos:topConceptOf tes:atributos .
+atr:ratifica-contenido skos:topConceptOf tes:atributos .
+atr:redacto skos:topConceptOf tes:atributos .
+atr:sabe-firmar skos:topConceptOf tes:atributos .
+atr:se-conforma-con skos:topConceptOf tes:atributos .
+atr:se-hallaba skos:topConceptOf tes:atributos .
+atr:solicita skos:topConceptOf tes:atributos .
+atr:tiene-condicion skos:topConceptOf tes:atributos .
+atr:veracidad skos:topConceptOf tes:atributos .
+cre:verdadero skos:notation "verdadero" .
+cre:probable skos:notation "probable" .
+cre:posible skos:notation "posible" .
+cre:improbable skos:notation "improbable" .
+cre:falso skos:notation "falso" .
+cre:indeterminado skos:notation "indeterminado" .
+anot:afirmante-de-otra-pieza a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
+    skos:prefLabel "afirmante identificado por otra pieza"@es ;
+    skos:definition "La pieza no nombra a quien afirma; el anotador usa una mención de otra pieza (justificado en nota)."@es .
+anot:afirmacion-distribuida a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
+    skos:prefLabel "afirmación colectiva distribuida"@es ;
+    skos:definition "Un enunciado sobre varios objetos («los Documentos que presentó») se registra una vez por objeto; el reparto lo decide el anotador (justificado en nota)."@es .
+anot:responde-a a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
+    skos:prefLabel "responde a una afirmación anterior"@es ;
+    skos:definition "La afirmación corrige, niega o matiza otra anterior identificada por el anotador (crm:P17_was_motivated_by hacia esa E13)."@es .
+anot:segun-otro a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf tes:anotacion ;
+    skos:prefLabel "discurso referido: según lo que otro dijo"@es ;
+    skos:definition "El afirmante atribuye el contenido a lo que le dijo otra persona (crm:P17_was_motivated_by hacia la mención de esa persona)."@es .

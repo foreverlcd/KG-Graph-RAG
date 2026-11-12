@@ -96,3 +96,32 @@ def test_todas_las_respuestas_con_afirmaciones_llevan_cita_y_tramo():
     for pc, f in P.PREGUNTAS.items():
         for fila in f().afirmaciones:
             assert fila["cita"] and fila["tramo"], (pc, fila["aid"])
+
+
+def test_pc02_autorreferencias_de_foliacion():
+    r = P.pc02()
+    assert {(f["sujetoLabel"], f["valorLabel"]) for f in r.afirmaciones} >= {("P05", "De folio 4"), ("P03", "a folios 2")}
+
+
+def test_pc07_lugares_con_hgis():
+    r = P.pc07()
+    assert any("HGIS:6000357" in l for l in r.extra)          # Tinta
+    assert any("HGIS:6000365" in l for l in r.extra)          # Sicuani
+
+
+def test_pc17_condiciones_atribuidas_por_quien():
+    r = P.pc17()
+    vals = {(f["valorLabel"], f["afirmante"]) for f in r.afirmaciones}
+    assert ("originario", "Manuel Huancachoque") in vals and ("miliciano", "Manuel Huancachoque") in vals
+
+
+def test_pc18_cargos_con_vigencia():
+    r = P.pc18()
+    assert any("recaudador de tributos" in l and "1806-08-01" in l for l in r.extra)
+    assert {f["afirmante"] for f in r.afirmaciones} >= {"Manuel Huancachoque", "Gómez del Rio", "Pedro de la Mata"}
+
+
+def test_disputas_detecta_negaciones_explicitas():
+    tipos = {(d["atributo"].rsplit("/", 1)[1], d["tipo"]) for d in consultar("disputas")}
+    assert ("fecha-del-hecho", "niega lo afirmado (responde_a)") in tipos   # Orue niega su propia hora
+    assert ("dijo", "niega lo afirmado (responde_a)") in tipos              # P19 niega las frases de P05

@@ -88,17 +88,26 @@ def _resolutivas() -> list[dict]:
 
 
 def pc12() -> Respuesta:
-    res = _resolutivas()
-    sobre_matricula = [f for f in res if "matr" in (f["valorLabel"] or "").lower() or "tribut" in (f["valorLabel"] or "").lower()]
+    """NC estructural: ¿hay alguna afirmación dictaminadora o resolutiva que atribuya o retire una condición
+    fiscal al denunciante, o que ordene algo sobre la matrícula? (Sin heurísticas sobre el texto del valor.)"""
+    ent = persona("huancachoque")
+    condicion = [f for f in _afirm(filtroEntidad=ent, atributo=atributo("tiene-condicion"))
+                 if f["fuerza"] in ("resolutiva", "dictaminadora")]
+    ordenes = [f for f in _afirm(atributo=atributo("ordena"))
+               if f["fuerza"] in ("resolutiva", "dictaminadora") and "matr" in f["valorLabel"].lower()]
+    pertinentes = condicion + ordenes
     desglose = [p for p in consultar("piezas") if p["tipo"] == "desglose y agregación"]
     extra = [f"Pieza {p['pieza']}: {p['titulo']} — fecha escrita «{p['fecha']}»" for p in desglose]
     extra.append("Advertencia: «no lo dice» vale en la medida en que la extracción de afirmaciones resolutivas sea "
                  "exhaustiva (exhaustividad medida contra el estándar de oro, docs/G_evaluacion.md).")
-    forma = "NC" if not sobre_matricula else "A"
-    return Respuesta("¿Se sacó finalmente a Huancachoque de la matrícula de tributarios?", forma,
-                     "El expediente no lo dice: ninguna afirmación dictaminadora o resolutiva se pronuncia sobre la "
-                     "matrícula; la petición se desglosó al expediente de la primera denuncia." if forma == "NC"
-                     else "Hay afirmaciones resolutivas sobre la matrícula.", sobre_matricula, extra=extra)
+    if pertinentes:
+        return Respuesta("¿Se sacó finalmente a Huancachoque de la matrícula de tributarios?", "A",
+                         "Hay afirmaciones dictaminadoras o resolutivas sobre su condición o la matrícula.", pertinentes,
+                         extra=extra)
+    return Respuesta("¿Se sacó finalmente a Huancachoque de la matrícula de tributarios?", "NC",
+                     "El expediente no lo dice: ninguna afirmación dictaminadora o resolutiva se pronuncia sobre su "
+                     "condición tributaria ni sobre la matrícula; la petición se desglosó al expediente de la primera "
+                     "denuncia (P14–P15).", extra=extra)
 
 
 def pc13() -> Respuesta:
@@ -143,6 +152,45 @@ def pc20(aid: str = "A-UT11-004") -> Respuesta:
                      "Procedencia del dato (PROV-O), no del testimonio de 1806.", extra=lineas)
 
 
+def pc02() -> Respuesta:
+    filas = _afirm(atributo=atributo("folio-de-pieza"))
+    return Respuesta("¿Qué pieza es la «certificación De folio 4» y dónde está?", "D",
+                     "El expediente se refiere a sus propias fojas; esa foliación es una afirmación del documento, no "
+                     "una marca del transcriptor. " + "; ".join(f"{f['sujetoLabel']} → «{f['valorLabel']}»" for f in filas)
+                     + ". En la transcripción esas piezas no tienen marca de folio (folio no consta).", filas)
+
+
+def pc07() -> Respuesta:
+    recs = [r for r in consultar("reconstrucciones")
+            if "/lugar/" in r["entidad"] or "/grupo/" in r["entidad"]]
+    ext = consultar("identificadores_externos")
+    lineas = [f"  {e['label']}: {e['identificador']} {e['url'] or ''}" for e in ext]
+    sin = [r["label"] for r in recs if r["entidad"] not in {e["entidad"] for e in ext}]
+    return Respuesta("¿Qué lugares y ayllus se mencionan y con qué identificador de HGIS?", "R",
+                     f"{len(recs)} lugares o grupos reconstruidos; {len(ext)} con identificador HGIS. Sin entrada en "
+                     f"HGIS: {', '.join(sin) or 'ninguno'}.", reconstrucciones=recs, extra=lineas)
+
+
+def pc17() -> Respuesta:
+    filas = _afirm(filtroEntidad=persona("huancachoque"), atributo=atributo("tiene-condicion"))
+    filas += _afirm(filtroEntidad=persona("huancachoque"), atributo=atributo("ejerce-cargo"))
+    filas += _afirm(filtroEntidad=persona("huancachoque"), atributo=atributo("filiacion"))
+    return Respuesta("¿Qué condición fiscal y social se atribuye a Huancachoque y quién la atribuye?", "A",
+                     f"{len(filas)} atribuciones, cada una de quien la hace (ninguna es un hecho).", filas,
+                     reconstrucciones_de(persona("huancachoque")))
+
+
+def pc18() -> Respuesta:
+    filas = [f for f in _afirm(filtroEntidad=persona("chuquitapa"), atributo=atributo("ejerce-cargo"))
+             if "Túpac Amaru" not in f["valorLabel"]]
+    cargos = consultar("cargos", titular=persona("chuquitapa"))
+    lineas = [f"  EJERCICIO DE CARGO (capa 4): {c['cargo']} — vigencia: {c['inicio'] or '¿?'} a {c['fin'] or '¿?'} "
+              f"({c['vigenciaNota'] or 'sin nota'}); creencia: {c['creencia']}; premisas: {c['premisas']}" for c in cargos]
+    return Respuesta("¿Qué cargos ejercía Andrés Chuquitapa, con qué vigencia y según quién?", "R",
+                     f"{len(filas)} afirmaciones de cargo (capa 3) y {len(cargos)} ejercicios de cargo reconstruidos "
+                     "(capa 4). Los cargos en la rebelión de 1780 están en PC09.", filas, extra=lineas)
+
+
 def pendiente(pc: str, motivo: str) -> Respuesta:
     return Respuesta(pc, "PENDIENTE", motivo)
 
@@ -150,13 +198,8 @@ def pendiente(pc: str, motivo: str) -> Respuesta:
 PREGUNTAS = {
     "PC01": pc01, "PC05": pc05, "PC06": pc06, "PC08": pc08, "PC09": pc09, "PC10": pc10, "PC11": pc11,
     "PC12": pc12, "PC13": pc13, "PC14": pc14, "PC16": pc16, "PC19": pc19, "PC20": pc20,
-    "PC02": lambda: pendiente("PC02", "Requiere anotar las autorreferencias de foliación del documento («De folio 4») "
-                                      "como afirmaciones; el modelo lo admite (atr: pieza→folio) pero no está anotado."),
+    "PC02": pc02, "PC07": pc07, "PC17": pc17, "PC18": pc18,
     "PC03": lambda: pendiente("PC03", "Requiere extraer las fichas del catálogo como capa 3 (afirmante: catalogadores)."),
     "PC04": lambda: pendiente("PC04", "Ídem PC03, a escala de serie."),
-    "PC07": lambda: pendiente("PC07", "Solo Tinta está reconstruido contra HGIS (6000357); faltan las menciones de "
-                                      "Sicuani, Cusco, San Pedro de Cacha y los ayllus."),
     "PC15": lambda: pendiente("PC15", "Requiere anotar receptor, escribano y firmantes de todas las actuaciones."),
-    "PC17": lambda: pendiente("PC17", "Requiere anotar las atribuciones de condición de UT05, UT06, UT08 y UT00."),
-    "PC18": lambda: pendiente("PC18", "Requiere anotar los cargos de Chuquitapa en UT00, UT05, UT07, UT09, UT16.b y UT17."),
 }

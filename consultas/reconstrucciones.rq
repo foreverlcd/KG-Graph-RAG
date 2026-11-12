@@ -3,7 +3,7 @@ SELECT ?entidad ?label ?creencia ?autor ?fecha ?argumento (GROUP_CONCAT(DISTINCT
 WHERE {
   #PARAMETROS
   ?entidad prov:wasDerivedFrom ?m ; rdfs:label ?label ; prov:wasGeneratedBy ?inf .
-  ?entidad prov:wasDerivedFrom ?otra . BIND (STRAFTER(STR(?otra), "/cc-14-18/") AS ?mid)
+  ?entidad prov:wasDerivedFrom ?otra . BIND (REPLACE(STR(?otra), "^.*/([^/]+/[^/]+)$", "$1") AS ?mid)
   ?inf crm:P14_carried_out_by ?ag ; crm:P3_has_note ?argumento ; crminf:J2_concluded_that ?cre ;
        crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?fecha .
   ?cre crminf:J5_holds_to_be ?creencia . ?ag rdfs:label ?autor .

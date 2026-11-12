@@ -70,15 +70,19 @@ def _integridad(lote: Lote) -> None:
             E.append(f"{a.id}: pieza inexistente {a.pieza}")
         elif a.tramo not in p.tramos:
             E.append(f"{a.id}: tramo {a.tramo} no pertenece a {p.id} {p.tramos}")
-        refs = [a.afirmante, a.sujeto.mencion, a.valor.mencion]
+        refs = [a.afirmante, a.sujeto.mencion, a.valor.mencion, a.segun]
+        if a.responde_a and a.responde_a not in lote.afirmaciones:
+            E.append(f"{a.id}: responde_a inexistente {a.responde_a}")
         for r in filter(None, refs):
             if r not in lote.menciones:
                 E.append(f"{a.id}: mención inexistente {r}")
         for r in filter(None, [a.sujeto.pieza, a.valor.pieza]):
             if r not in lote.piezas:
                 E.append(f"{a.id}: pieza inexistente {r}")
-        if lote.menciones.get(a.afirmante) and lote.menciones[a.afirmante].clase != "persona":
-            E.append(f"{a.id}: el afirmante debe ser una mención de persona")
+        if lote.menciones.get(a.afirmante) and lote.menciones[a.afirmante].clase not in ("persona", "grupo"):
+            E.append(f"{a.id}: el afirmante debe ser una mención de persona o grupo (p. ej. el común de un ayllu)")
+        if lote.menciones.get(a.afirmante) and lote.menciones[a.afirmante].pieza != a.pieza and not a.afirmante_de_otra_pieza:
+            E.append(f"{a.id}: el afirmante es de otra pieza; marque afirmante_de_otra_pieza y justifíquelo en nota")
         for h in filter(None, [a.sujeto.hecho, a.valor.hecho]):
             if not h.startswith(f"H-{a.pieza.lower()}-"):
                 E.append(f"{a.id}: el hecho {h} debe ser local a la pieza {a.pieza} (H-{a.pieza.lower()}-…)")

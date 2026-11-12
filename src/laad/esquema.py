@@ -105,7 +105,8 @@ class Mencion(_Base):
     id: str = Field(pattern=ID_MENCION)
     tramo: str
     pieza: str = Field(pattern=ID_PIEZA)
-    clase: Literal["persona", "grupo", "lugar"]
+    clase: Literal["persona", "grupo", "lugar", "cosa"] = Field(description="cosa: bien, tierra, dinero, documento "
+                                                                "mencionado como objeto (pleitos civiles, inventarios)")
     texto: str = Field(min_length=2, description="Nombre exactamente como está escrito")
     rol_en_pieza: Optional[Rol] = Field(None, description="Rol de la persona en la actuación, si lo tiene "
                                         "(firmante, afirmante, receptor...). None si solo se la nombra.")
@@ -137,8 +138,6 @@ class Valor(_Base):
             raise ValueError("un valor referencia como máximo una entidad")
         if not refs and not self.literal:
             raise ValueError("valor vacío")
-        if self.concepto and self.concepto not in set(conceptos("cargos")) | set(conceptos("condiciones")):
-            raise ValueError(f"concepto fuera del tesauro: {self.concepto}")
         return self
 
 
@@ -171,6 +170,13 @@ class Afirmacion(_Base):
     polaridad: Polaridad = "afirma"
     fundamento: Fundamento = "no-indica"
     cita: str = Field(min_length=8, description="Cita literal obligatoria que contiene la afirmación")
+    responde_a: Optional[str] = Field(None, pattern=ID_AFIRMACION, description="Afirmación anterior que esta niega, "
+                                      "corrige o matiza (p. ej. la declaración que rectifica la certificación)")
+    segun: Optional[str] = Field(None, pattern=ID_MENCION, description="Discurso referido: mención de la persona a "
+                                 "quien el afirmante atribuye el contenido («porque se lo dijo X»)")
+    afirmante_de_otra_pieza: bool = Field(False, description="La pieza no nombra al afirmante; se usa una mención de "
+                                          "otra pieza (exige nota)")
+    distribuida: bool = Field(False, description="Enunciado colectivo repartido en un registro por objeto (exige nota)")
     nota: Optional[str] = None
 
     @model_validator(mode="after")
@@ -182,26 +188,56 @@ class Afirmacion(_Base):
             raise ValueError(f"{self.id}: rol_afirmante debe ser rol:afirmante o un hijo suyo")
         if self.atributo == "participa-en-hecho" and not self.rol_en_hecho:
             raise ValueError(f"{self.id}: participa-en-hecho exige rol_en_hecho")
-        if self.sujeto.eliptico and not self.nota:
-            raise ValueError(f"{self.id}: un sujeto elíptico exige nota que explique la resolución")
+        if (self.sujeto.eliptico or self.afirmante_de_otra_pieza or self.distribuida) and not self.nota:
+            raise ValueError(f"{self.id}: una decisión del anotador (elíptico, afirmante de otra pieza, "
+                             "afirmación distribuida) exige nota que la justifique")
+        if self.valor.concepto:
+            admitidos = conceptos_admitidos(self.atributo)
+            if not admitidos:
+                raise ValueError(f"{self.id}: el atributo {self.atributo} no admite valor de concepto (dct:conformsTo)")
+            if self.valor.concepto not in admitidos:
+                raise ValueError(f"{self.id}: {self.valor.concepto} no está en los esquemas admitidos por {self.atributo}")
+        if self.segun and self.fundamento != "oidas":
+            raise ValueError(f"{self.id}: 'segun' exige fundamento 'oidas'")
         if self.rol_en_hecho and self.rol_en_hecho not in _descendientes("roles", "participante-en-hecho"):
             raise ValueError(f"{self.id}: rol_en_hecho fuera de la rama participante-en-hecho")
         return self
 
 
 class Reconstruccion(_Base):
-    """Capa 4. Identificación de menciones con una persona/grupo/lugar, o adopción de una afirmación,
-    hecha por un investigador con fecha y argumento. No la produce el LLM."""
+    """Capa 4. Identidad (menciones → persona/grupo/lugar/cosa), hecho (hechos narrados → evento) o cargo
+    (ejercicio de un cargo con vigencia), propuesta por un investigador con fecha, argumento y creencia.
+    No la produce el LLM."""
     id: str = Field(pattern=r"^R-[a-z0-9-]+$")
     tipo: Literal["identidad", "hecho", "cargo"]
     etiqueta: str
-    menciones: list[str] = Field(default_factory=list)
+    menciones: list[str] = Field(default_factory=list, description="identidad: ids de mención; hecho: ids de hecho narrado")
+    # — solo para tipo "cargo" —
+    titular: Optional[str] = Field(None, pattern=r"^R-[a-z0-9-]+$", description="Reconstrucción de identidad del titular")
+    cargo: Optional[str] = Field(None, description="Concepto de tes:cargos")
+    ambito: Optional[str] = Field(None, pattern=r"^R-[a-z0-9-]+$", description="Reconstrucción del grupo o lugar")
+    ambito_literal: Optional[str] = None
+    inicio: Optional[str] = Field(None, pattern=r"^\d{4}(-\d{2}(-\d{2})?)?$")
+    fin: Optional[str] = Field(None, pattern=r"^\d{4}(-\d{2}(-\d{2})?)?$")
+    vigencia_literal: Optional[str] = Field(None, description="Cómo se sabe la vigencia («consta en 1806», «no consta inicio»)")
+    identificador_externo: Optional[str] = Field(None, description="p. ej. HGIS:6000357")
     premisas: list[str] = Field(default_factory=list, description="IDs de afirmaciones usadas como premisa")
     creencia: ValorCreencia
     argumento: str = Field(min_length=20)
     autor: str
     fecha: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
-    externo: Optional[str] = Field(None, description="IRI externa (p. ej. HGIS de las Indias) si se identifica")
+    externo: Optional[str] = Field(None, description="IRI externa (p. ej. ficha WHG de HGIS de las Indias)")
+
+    @model_validator(mode="after")
+    def _cargo(self):
+        if self.tipo == "cargo":
+            if not (self.titular and self.cargo and self.premisas):
+                raise ValueError(f"{self.id}: un cargo exige titular, cargo y al menos una premisa")
+            if self.cargo not in set(conceptos("cargos")):
+                raise ValueError(f"{self.id}: cargo fuera de tes:cargos: {self.cargo}")
+        elif not self.menciones:
+            raise ValueError(f"{self.id}: identidad y hecho exigen menciones")
+        return self
 
 
 @lru_cache(maxsize=None)
@@ -221,3 +257,14 @@ def _descendientes_cache(esquema: str, raiz: str) -> frozenset[str]:
 
 def _descendientes(esquema: str, raiz: str) -> frozenset[str]:
     return _descendientes_cache(esquema, raiz)
+
+
+@lru_cache(maxsize=None)
+def conceptos_admitidos(atributo: str) -> frozenset[str]:
+    """Conceptos que un atributo admite como valor, según dct:conformsTo en el tesauro."""
+    from rdflib.namespace import DCTERMS
+    g = _tesauro()
+    out: set[str] = set()
+    for esq in g.objects(rdflib.URIRef(BASE_TES + "atributo/" + atributo), DCTERMS.conformsTo):
+        out |= set(conceptos(str(esq).rsplit("/", 1)[1]))
+    return frozenset(out)

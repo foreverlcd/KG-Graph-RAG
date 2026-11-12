@@ -20,10 +20,13 @@ def m(id, tramo, pieza, clase, texto, cita, rol=None, tipo=None):
 
 
 def a(id, tramo, pieza, afirmante, rol_afirmante, sujeto, atributo, valor, cita, polaridad="afirma",
-      fundamento="no-indica", rol_en_hecho=None, nota=None):
+      fundamento="no-indica", rol_en_hecho=None, nota=None, responde_a=None, segun=None, otra=False,
+      distribuida=False):
     A.append(dict(tipo_registro="afirmacion", id=id, tramo=tramo, pieza=pieza, afirmante=afirmante,
                   rol_afirmante=rol_afirmante, sujeto=sujeto, atributo=atributo, valor=valor,
-                  rol_en_hecho=rol_en_hecho, polaridad=polaridad, fundamento=fundamento, cita=cita, nota=nota))
+                  rol_en_hecho=rol_en_hecho, polaridad=polaridad, fundamento=fundamento, cita=cita,
+                  responde_a=responde_a, segun=segun, afirmante_de_otra_pieza=otra, distribuida=distribuida,
+                  nota=nota))
 
 
 # ───────────── P01 · Certificación de Isidro Cano (1 de agosto) · UT01 ─────────────
@@ -118,15 +121,15 @@ a("A-UT11-002", "UT11", "P18", "M-UT11-001", "declarante", {"pieza": "P01"},
   "ratifica-contenido", {"mencion": "M-UT11-001"}, "preso ser cierto todo lo que en ella dice que le consta solo",
   nota="Ratificación con salvedades: la continúan A-UT11-003, A-UT11-004 y A-UT11-005.")
 a("A-UT11-003", "UT11", "P18", "M-UT11-001", "declarante", {"mencion": "M-UT01-004", "eliptico": True},
-  "ejerce-cargo", {"concepto": "comisionado-rebelde"}, "en tiempo del rebelde Tupa amaro fue Comisionado por este",
+  "ejerce-cargo", {"concepto": "comisionado-rebelde"}, "en tiempo del rebelde Tupa amaro fue Comisionado por este", responde_a="A-UT01-001",
   nota="Sujeto elíptico: la declaración versa sobre la certificación P01 («como expone en su certificación»); se remite a la mención de Chuquitapa en P01.")
 a("A-UT11-004", "UT11", "P18", "M-UT11-001", "declarante", {"mencion": "M-UT01-004", "eliptico": True},
   "ejerce-cargo", {"concepto": "coronel-rebelde"}, "Comisionado por este y no coronel como expone en su certificación",
-  polaridad="niega", nota="Sujeto elíptico (ver A-UT11-003). Niega expresamente lo afirmado en A-UT01-001.")
+  polaridad="niega", responde_a="A-UT01-001", nota="Sujeto elíptico (ver A-UT11-003). Niega expresamente lo afirmado en A-UT01-001.")
 a("A-UT11-005", "UT11", "P18", "M-UT11-001", "declarante", {"hecho": "H-p18-alboroto"},
   "fecha-del-hecho", {"literal": "a media noche"},
   "se alzaron a media noche armados con garrotes para acabar con este, y hacer matalo de los españoles poniendo guardias a las puertas de estos no le cons ta al que declara si no porque se lo dijo su segundo sargento Santiago Casorla",
-  fundamento="oidas")
+  fundamento="oidas", segun="M-UT11-003", responde_a="A-UT01-003")
 a("A-UT12a-001", "UT12.a", "P18", "M-UT11-001", "declarante", {"pieza": "P01"},
   "motivo", {"literal": "este fue a su casa suplicandole"}, "dijo que la dado porque este fue a su casa supli candole")
 
@@ -136,7 +139,7 @@ m("M-UT12.a-006", "UT12.a", "P19", "persona", "Martin casorla", "De folio 4 su f
 m("M-UT12.b-001", "UT12.b", "P19", "persona", "Simon Arce", "mando el que declara a Simon Arce")
 
 a("A-UT12b-001", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"mencion": "M-UT12.a-005"},
-  "sabe-firmar", {"literal": "No sabe escribir"}, "No sabe escribir que es cierto", polaridad="niega")
+  "sabe-firmar", {"literal": "sabe escribir"}, "No sabe escribir que es cierto", polaridad="niega")
 a("A-UT12b-002", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"pieza": "P05"},
   "redacto", {"mencion": "M-UT12.b-001"},
   "mando el que declara a Simon Arce que pusiere en un papelito lo mis mo que relata en la citada certificación")
@@ -146,11 +149,11 @@ a("A-UT12b-003", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"pieza": "P05"}
 a("A-UT12b-004", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"mencion": "M-UT12.a-005"},
   "dijo", {"literal": "se alzaron los Yndios todos con barrotes armados a dar muerte"},
   "Que las expresiones de que esa misma noche se alzaron los Yndios todos con barrotes armados a dar muerte a los que cuando favor de la Real Hacienda ,no los puso el en el papelito",
-  polaridad="niega")
+  polaridad="niega", responde_a="A-UT04-002")
 a("A-UT12b-005", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"mencion": "M-UT12.a-005"},
   "dijo", {"literal": "porque es desde el Rebelde"},
   "porque es desde el Rebelde ……tampoco las dijo el que declara porque en aquel entonces era muchacho",
-  polaridad="niega")
+  polaridad="niega", responde_a="A-UT04-001")
 a("A-UT12b-006", "UT12.b", "P19", "M-UT12.a-005", "declarante", {"hecho": "H-p19-alboroto"},
   "numero-de-participantes", {"literal": "quatro o seis Yndios"}, "vio a quatro o seis Yndios en la puerta de la carcel con garrotes",
   fundamento="vista")
@@ -175,13 +178,16 @@ a("A-UT14-003", "UT14", "P21", "M-UT14-001", "declarante", {"pieza": "P04"},
   nota="Afirmación implícita en la fórmula «como ha puesto guasscachoque»; contradice A-UT14-002 en la misma declaración.")
 a("A-UT14-004", "UT14", "P21", "M-UT14-001", "declarante", {"hecho": "H-p21-alboroto"},
   "fecha-del-hecho", {"literal": "el primer puesto del gallo"},
-  "no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion, sino el primer puesto del gallo")
+  "no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion, sino el primer puesto del gallo",
+  responde_a="A-UT03-004")
 a("A-UT14-005", "UT14", "P21", "M-UT14-001", "declarante", {"hecho": "H-p21-alboroto"},
   "fecha-del-hecho", {"literal": "a las dies de la noche"},
-  "no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion", polaridad="niega")
+  "no fue a las dies de la noche como ha puesto guasscachoque en la citada certificacion", polaridad="niega",
+  responde_a="A-UT03-004", nota="Niega la hora de su propia certificación (P04: «a las diez de la noche»); «dies»/«diez» es variante gráfica.")
 a("A-UT14-006", "UT14", "P21", "M-UT14-001", "declarante", {"mencion": "M-UT14-002"},
   "ejerce-cargo", {"concepto": "coronel-rebelde"},
-  "con motibo de saber q de andres chuquitaza fue en tiempo del rebelde tupa-amaru coronel y comisionado")
+  "con motibo de saber q de andres chuquitaza fue en tiempo del rebelde tupa-amaru coronel y comisionado",
+  responde_a="A-UT03-001")
 a("A-UT14-007", "UT14", "P21", "M-UT14-001", "declarante", {"mencion": "M-UT14-002"},
   "ejerce-cargo", {"concepto": "comisionado-rebelde"},
   "con motibo de saber q de andres chuquitaza fue en tiempo del rebelde tupa-amaru coronel y comisionado")
@@ -204,15 +210,15 @@ NOTA_CURA = ("El informe no lleva nombre en la transcripción; el afirmante es l
              "(«parroco interino»). El informe de Mata (P27) lo atribuye a «Doctor Don Agustin Valdes».")
 a("A-UT16a-001", "UT16.a", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16a-001"},
   "filiacion", {"mencion": "M-UT16a-002"}, "Es notorio que Manuel Guancachoque es hijo Espurio de Antolin Ortiz",
-  fundamento="notoriedad", nota=NOTA_CURA)
+  fundamento="notoriedad", nota=NOTA_CURA, otra=True)
 a("A-UT16a-002", "UT16.a", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16a-002"},
   "ejerce-cargo", {"concepto": "caudillo-rebelde"},
   "unos de los mas sangriento caudillo que tuvo el interprete Joseph Condorcanqui alias Tupac Amaro",
-  fundamento="notoriedad", nota=NOTA_CURA)
+  fundamento="notoriedad", nota=NOTA_CURA, otra=True)
 a("A-UT16a-003", "UT16.a", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16a-002"},
-  "tiene-condicion", {"concepto": "zambo"}, "hijo Espurio de Antolin Ortiz , Sanbo cerros", fundamento="notoriedad", nota=NOTA_CURA)
+  "tiene-condicion", {"concepto": "zambo"}, "hijo Espurio de Antolin Ortiz , Sanbo cerros", fundamento="notoriedad", nota=NOTA_CURA, otra=True)
 a("A-UT16a-004", "UT16.a", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16a-001"},
-  "filiacion", {"mencion": "M-UT16a-004"}, "su Madre Agustina Falcon India Ordinaria y pleveya", fundamento="notoriedad", nota=NOTA_CURA)
+  "filiacion", {"mencion": "M-UT16a-004"}, "su Madre Agustina Falcon India Ordinaria y pleveya", fundamento="notoriedad", nota=NOTA_CURA, otra=True)
 
 # ───────────── P24 · Decreto: «no hay tal hombre» · UT17 ─────────────
 m("M-UT17-001", "UT17", "P24", "persona", "Juan Cazorla", "Juan Cazorla de quien aparece firmada la Certificación")
@@ -236,9 +242,11 @@ CITA_MATA = ("fueron hechos por el mismo Guancachoque haciéndolos firmar a los 
 for i, p in enumerate(["P01", "P03", "P04", "P05"], 1):
     a(f"A-UT17-{100 + i:03d}", "UT17", "P27", "M-UT18-001", "informante", {"pieza": p},
       "redacto", {"mencion": "M-UT17-005"}, CITA_MATA, fundamento="actuado",
+      distribuida=True,
       nota="«Los Documentos que presento» se distribuye a cada certificación. P02 (Santiago Cazorla) se excluye: solo certifica el servicio militar.")
     a(f"A-UT17-{110 + i:03d}", "UT17", "P27", "M-UT18-001", "informante", {"pieza": p},
-      "conoce-contenido", {"literal": "sin saber lo mas de sus contenidos"}, CITA_MATA, polaridad="niega", fundamento="actuado")
+      "conoce-contenido", {"literal": "sin saber lo mas de sus contenidos"}, CITA_MATA, polaridad="niega", fundamento="actuado",
+      distribuida=True, nota="Mismo reparto que A-UT17-10x.")
 a("A-UT18-001", "UT18", "P27", "M-UT18-001", "informante", {"hecho": "H-p27-prision"},
   "duracion", {"literal": "esa misma noche ... al otro dia por la tarde"},
   "que lo guardasen en ella esa misma noche, al que puse en libertad al otro dia por la tarde", fundamento="experiencia-propia")
@@ -260,11 +268,72 @@ a("A-UT19-001", "UT19", "P29", "M-UT20-001", "dictaminador", {"pieza": "P06"},
 a("A-UT19-002", "UT19", "P29", "M-UT20-001", "dictaminador", {"mencion": "M-UT19-001"},
   "calificacion-de-conducta", {"literal": "mala conducta y genio discolo y arreva"},
   "por la mala conducta y genio discolo y arreva que se nota", fundamento="actuado")
-a("A-UT19-003", "UT19", "P28", "M-UT19-002", "resolutor", {"mencion": "M-UT19-002"},
+m("M-UT19-003", "UT19", "P28", "persona", "subdelegado del partido de tinta", "librese la correspondiente orden al subdelegado del partido de tinta", rol="destinatario")
+a("A-UT19-003", "UT19", "P28", "M-UT19-002", "resolutor", {"mencion": "M-UT19-003"},
   "ordena", {"literal": "contener los excesos y enemistad del yndio Guancachoque"},
   "a fin de contener los excesos y enemistad del yndio Guancachoque")
-a("A-UT19-004", "UT19", "P28", "M-UT19-002", "resolutor", {"pieza": "P29"},
-  "se-conforma-con", {"mencion": "M-UT19-002"}, "Visto de conformidad con lo supuesto por el señor Fiscal")
+a("A-UT19-004", "UT19", "P28", "M-UT19-002", "resolutor", {"mencion": "M-UT19-002"},
+  "se-conforma-con", {"pieza": "P29"}, "Visto de conformidad con lo supuesto por el señor Fiscal")
+
+
+# ───────────── Revisión 1 · cargos de Chuquitapa según cuatro afirmantes (PC18) ─────────────
+m("M-UT05-002", "UT05", "P06", "persona", "Don Andres Choquitapa", "tenia ocultos el recaudaderor Don Andres Choquitapa")
+a("A-UT05-001", "UT05", "P06", "M-UT05-001", "denunciante", {"mencion": "M-UT05-002"},
+  "ejerce-cargo", {"concepto": "recaudador-de-tributos"}, "tenia ocultos el recaudaderor Don Andres Choquitapa")
+m("M-UT07-001", "UT07", "P07", "persona", "Son Andres Chuquitapa", "contra el Recaudador de Tributos Son Andres Chuquitapa")
+m("M-UT08-001", "UT08", "P07", "persona", "Gómez del Rio", "Firma de Gómez del Rio", rol="firmante")
+a("A-UT07-001", "UT07", "P07", "M-UT08-001", "dictaminador", {"mencion": "M-UT07-001"},
+  "ejerce-cargo", {"concepto": "recaudador-de-tributos"}, "contra el Recaudador de Tributos Son Andres Chuquitapa")
+m("M-UT17-006", "UT17", "P27", "persona", "Don Andres Chuquitapa", "recaudador de tributos de los Ayllus Tinta y Ucho Don Andres Chuquitapa")
+a("A-UT17-003", "UT17", "P27", "M-UT18-001", "informante", {"mencion": "M-UT17-006"},
+  "ejerce-cargo", {"concepto": "recaudador-de-tributos"}, "recaudador de tributos de los Ayllus Tinta y Ucho Don Andres Chuquitapa")
+m("M-UT16b-001", "UT16.b", "P23", "persona", "Don Andres Chuquitapa", "su casique y alcalde mayor Don Andres Chuquitapa")
+a("A-UT16b-001", "UT16.b", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16b-001"},
+  "ejerce-cargo", {"concepto": "cacique"}, "su casique y alcalde mayor Don Andres Chuquitapa", nota=NOTA_CURA, otra=True)
+a("A-UT16b-002", "UT16.b", "P23", "M-UT15-003", "informante", {"mencion": "M-UT16b-001"},
+  "ejerce-cargo", {"concepto": "alcalde-mayor"}, "su casique y alcalde mayor Don Andres Chuquitapa", nota=NOTA_CURA, otra=True)
+
+# ───────────── Revisión 1 · lugares y ayllus (PC07) ─────────────
+m("M-UT05-003", "UT05", "P06", "grupo", "Ayllu Tinta", "cuarenta y cuatro tributarios en el Ayllu Tinta", tipo="ayllu")
+m("M-UT05-004", "UT05", "P06", "grupo", "Ayllu nominado Uchu", "siete en el Ayllu nominado Uchu", tipo="ayllu")
+m("M-UT05-005", "UT05", "P06", "lugar", "CUSCO", "CUSCO AGOSTO 22 DE 1806", tipo="ciudad")
+m("M-UT17-007", "UT17", "P27", "grupo", "Ucho", "de los Ayllus Tinta y Ucho", tipo="ayllu")
+m("M-UT02-006", "UT02", "P03", "lugar", "San Pedro de Cacha", "soldado del pueblo de San Pedro de Cacha", tipo="pueblo")
+m("M-UT10-001", "UT10", "P14", "lugar", "Sicuani", "Sicuani Setiembre. 17 de 1806", tipo="pueblo")
+a("A-UT05-002", "UT05", "P06", "M-UT05-001", "denunciante", {"mencion": "M-UT05-002"},
+  "cantidad-denunciada", {"literal": "cuarenta y cuatro tributarios en el Ayllu Tinta y siete en el Ayllu nominado Uchu"},
+  "el descubrimiento de cuarenta y cuatro tributarios en el Ayllu Tinta y siete en el Ayllu nominado Uchu")
+
+# ───────────── Revisión 1 · condición atribuida al denunciante (PC17) ─────────────
+a("A-UT05-003", "UT05", "P06", "M-UT05-001", "denunciante", {"mencion": "M-UT05-001"},
+  "tiene-condicion", {"concepto": "originario"}, "Manuel Huancachoque Indio originario y vecino del pueblo de Tinta")
+a("A-UT06-004", "UT06", "P06", "M-UT05-001", "denunciante", {"mencion": "M-UT05-001"},
+  "tiene-condicion", {"concepto": "miliciano"},
+  "por haber estado empleado en las milicias de aquella provincia, hasta aquí no había tributado")
+a("A-UT06-005", "UT06", "P06", "M-UT05-001", "denunciante", {"mencion": "M-UT05-001"},
+  "tiene-condicion", {"concepto": "tributario"}, "conseguido también el que se me matricule",
+  nota="Afirma que se le ha matriculado (como tributario) y pide salir de la matrícula; no que sea tributario por derecho.")
+
+# ───────────── Revisión 1 · fórmulas procesales (juramento, generales, firma a ruego) ─────────────
+a("A-UT11-006", "UT11", "P18", "M-UT11-002", "fedatario", {"mencion": "M-UT11-001"},
+  "presta-juramento", {"literal": "a Dios nuestro Señor y ….. Señal"}, "Le recibe juramento que lo hizo a Dios nuestro Señor")
+a("A-UT12a-002", "UT12.a", "P18", "M-UT11-001", "declarante", {"mencion": "M-UT11-001"},
+  "generales-de-la-ley", {"literal": "le comprenden los Generales de la Ley"}, "que no le comprenden. los Generales de la Ley",
+  polaridad="niega")
+m("M-UT12.a-007", "UT12.a", "P19", "persona", "ante mi", "Parecio ante mi el Gobernador Señor Don Mariano Casorla", rol="juez-comisionado")
+a("A-UT13-002", "UT13", "P19", "M-UT12.a-005", "declarante", {"mencion": "M-UT12.a-005"},
+  "generales-de-la-ley", {"literal": "la comprenden los grales"}, "q la comprenden los grales",
+  nota="A diferencia de Cano (P18) y Orue (P21), este declarante dice que SÍ le comprenden las generales de la ley (posible tacha); la transcripción es defectuosa en este pasaje.")
+a("A-UT13-003", "UT13", "P19", "M-UT12.a-007", "fedatario", {"pieza": "P19"},
+  "firma-a-ruego", {"literal": "firma p no vaber, ruego"}, "y yo firma p no vaber, ruego",
+  nota="Pasaje defectuoso en la transcripción; indica firma a ruego del juez por no saber firmar el declarante.")
+
+# ───────────── Revisión 1 · autorreferencias de foliación (PC02) ─────────────
+a("A-UT12a-003", "UT12.a", "P19", "M-UT12.a-007", "fedatario", {"pieza": "P05"},
+  "folio-de-pieza", {"literal": "De folio 4"}, "De folio 4 su firma Martin casorla")
+a("A-UT17-004", "UT17", "P24", "M-UT17-003", "resolutor", {"pieza": "P03"},
+  "folio-de-pieza", {"literal": "a folios 2"}, "la Certificación a folios 2 extendida a nombre del teniente Alguacil")
+
 
 if __name__ == "__main__":
     out = Path(__file__).with_suffix(".jsonl")

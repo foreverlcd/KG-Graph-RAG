@@ -1,7 +1,9 @@
 # Disputas CALCULADAS (nunca almacenadas). Una disputa existe, para una entidad y un atributo, cuando:
 #  (a) "afirma/niega": el mismo valor es afirmado por unos y negado por otros;
-#  (b) "valores incompatibles": atributos de valor único (hora, duración, número, redactor, firmante) con valores
-#      distintos afirmados;
+#  (b) "valores distintos (revisar)": atributos normalmente de valor único (hora, duración, número, redactor,
+#      firmante) con valores literales distintos. Pueden ser compatibles («a media noche» / «primer canto del gallo»):
+#      la consulta SEÑALA, el historiador juzga;
+#  (d) "niega lo afirmado (responde_a)": negación explícita enlazada por el anotador;
 #  (c) "texto/afirmación": la pieza muestra una firma (capa 2) y alguien niega en capa 3 haber firmado.
 # Entidad = reconstrucción de capa 4 de la que deriva el sujeto, o la propia pieza si el sujeto es una pieza.
 # Los valores se comparan por su reconstrucción si la tienen (dos grafías de la misma persona no son disputa).
@@ -36,9 +38,11 @@ WHERE {
   }
   FILTER (?a != ?b)
   # (Un FILTER dentro de un grupo de UNION solo ve las variables de ese grupo: el tipo se calcula aquí fuera.)
-  BIND (IF(?vk = ?vk2 && ?pol = pol:afirma && ?pol2 = pol:niega, "afirma/niega",
+  # (d) "niega lo afirmado": el anotador enlazó ?b con ?a (responde_a) y ?b niega; no depende de la grafía del valor.
+  BIND (IF(?pol2 = pol:niega && EXISTS { ?b crm:P17_was_motivated_by ?a }, "niega lo afirmado (responde_a)",
+        IF(?vk = ?vk2 && ?pol = pol:afirma && ?pol2 = pol:niega, "afirma/niega",
         IF(?atributo IN (atr:fecha-del-hecho, atr:duracion, atr:numero-de-participantes, atr:redacto, atr:firmo)
-           && ?pol = pol:afirma && ?pol2 = pol:afirma && ?vk != ?vk2, "valores incompatibles", ?nada)) AS ?tipo)
+           && ?pol = pol:afirma && ?pol2 = pol:afirma && ?vk != ?vk2, "valores distintos (revisar)", ?nada))) AS ?tipo)
   FILTER (BOUND(?tipo))
   VALUES ?lado { 1 2 } BIND (IF(?lado = 1, ?a, ?b) AS ?x)
   ?x rdfs:label ?xid .
