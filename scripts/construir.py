@@ -1,4 +1,4 @@
-"""Construye el grafo del hilo central, lo serializa en TriG y lo valida (SHACL).
+"""Construye el grafo del expediente CC 14-18, lo serializa en TriG y lo valida (SHACL).
 
 Uso: python scripts/construir.py [--sin-ontologias]
 """
@@ -9,7 +9,7 @@ from laad import mapeo, validacion
 
 from laad.hilo import construir
 ds = construir()
-out = RAIZ / "datos/grafo/hilo_central.trig"
+out = RAIZ / "datos/grafo/cc-14-18.trig"
 out.parent.mkdir(exist_ok=True)
 ds.serialize(out, format="trig")
 # Forma canónica para git: N-Quads ordenado (el orden de TriG de rdflib no es estable entre ejecuciones;

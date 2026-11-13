@@ -8,10 +8,11 @@ import sys, pathlib
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "src"))
 from laad import mapeo, validacion
-from laad.hilo import FECHAS, PROCEDENCIA, RECONSTRUCCIONES, REGISTROS
+from laad.hilo import FECHAS, LOTES, PROCEDENCIA, RECONSTRUCCIONES
 from laad.registros import cargar
 
-rutas = [REGISTROS] + [pathlib.Path(p).resolve() for p in sys.argv[1:] if pathlib.Path(p).resolve() != REGISTROS]
+extra = [pathlib.Path(p).resolve() for p in sys.argv[1:]]
+rutas = [r for r in LOTES if r.exists() and r not in extra] + extra
 lote = cargar(rutas)
 if lote.errores:
     print("ERRORES DE REGISTRO:\n" + "\n".join(lote.errores[:80]))
