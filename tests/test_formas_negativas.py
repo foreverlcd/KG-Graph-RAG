@@ -57,6 +57,11 @@ def _n(g: rdflib.Graph, clase: URIRef, i: int) -> URIRef:
     return _de_tipo(g, clase)[i]
 
 
+def _pieza(g: rdflib.Graph, i: int) -> URIRef:
+    """Pieza = registro creado por una actuación (destino de PiezaForma); excluye las fichas del catálogo."""
+    return sorted(set(g.objects(None, M.CRM.P94_has_created)))[i]
+
+
 def _quitar(g: rdflib.Graph, s, p, filtro: Callable[[rdflib.term.Node], bool] = lambda o: True) -> None:
     objs = [o for o in g.objects(s, p) if filtro(o)]
     assert objs, f"nada que quitar en {s} {p}"
@@ -139,13 +144,13 @@ class Mutacion:
 
 
 def m_pieza_sin_titulo(g):
-    p = _n(g, M.RICO.Record, 0)
+    p = _pieza(g, 0)
     _quitar(g, p, M.RICO.title)
     return p
 
 
 def m_pieza_tipo_fuera(g):
-    p = _n(g, M.RICO.Record, 1)
+    p = _pieza(g, 1)
     _quitar(g, p, M.RICO.hasDocumentaryFormType)
     g.add((p, M.RICO.hasDocumentaryFormType, M.FZA.testimonial))
     return p
@@ -313,9 +318,9 @@ def m_lote_reconstruccion_sin_autor(g):
 
 
 def m_lote_actividad_sin_plan(g):
-    asoc = URIRef(f"{M.ID['actividad/anotacion-manual-hilo-central-v1']}/asociacion")
+    asoc = URIRef(f"{M.ID['actividad/anotacion-manual-expediente-v1']}/asociacion")
     _quitar(g, asoc, PROV.hadPlan)
-    return M.G["texto/anotacion-manual-hilo-central-v1"]
+    return M.G["texto/anotacion-manual-expediente-v1"]
 
 
 def m_afirmacion_responde_sin_marca(g):

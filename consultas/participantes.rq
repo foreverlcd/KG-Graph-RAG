@@ -1,0 +1,20 @@
+# PC15: quién participa en cada actuación y con qué papel procesal (firmante, redactor, escribano, receptor,
+# testigo de asistencia…), según las menciones con rol en la pieza (capa 2, PC14 + P14.1). Si una reconstrucción
+# de identidad (capa 4) agrupa la mención, se devuelve su etiqueta en ?persona; si no, queda vacía.
+SELECT ?pieza ?tipoAct ?fecha ?lugar ?mid ?texto ?rol ?persona ?tramo ?cita WHERE {
+  #PARAMETROS
+  ?act crm:P94_has_created ?pz ; crm:P2_has_type ?ta . ?pz rdfs:label ?pieza .
+  ?ta skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct .
+  ?pc a crm:PC14_carried_out_by ; crm:P01_has_domain ?act ; crm:P02_has_range ?m ;
+      crm:P14.1_in_the_role_of ?r .
+  ?r skos:inScheme tes:roles ; skos:prefLabel ?rol .
+  ?m rdfs:label ?texto .
+  ?an oa:hasBody ?m ; oa:hasTarget ?tg . ?tg oa:hasSource/rdfs:label ?tramo ; oa:hasSelector/oa:exact ?cita .
+  OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
+  OPTIONAL { ?act crm:P3_has_note ?nota . FILTER (STRSTARTS(STR(?nota), "Data (literal): "))
+             BIND (STRAFTER(STR(?nota), "Data (literal): ") AS ?lugar) }
+  OPTIONAL { ?rec prov:wasDerivedFrom ?m ; rdfs:label ?persona .
+             FILTER EXISTS { ?rec a picom:PersonReconstruction } }
+  BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
+}
+ORDER BY ?pieza ?rol ?mid

@@ -9,12 +9,13 @@ CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 CRMINF = Namespace("http://www.cidoc-crm.org/extensions/crminf/")
 PICOM = Namespace("https://personsincontext.org/model#")
 ROAR = Namespace("https://w3id.org/roar#")
+RICO = Namespace("https://www.ica.org/standards/RiC/ontology#")
 G = "https://w3id.org/laad/grafo/"
 
 
 def capa(gid: URIRef) -> str:
     s = str(gid)
-    for c in ("documento", "texto", "afirmaciones", "reconstruccion", "argumentacion", "procedencia"):
+    for c in ("documento", "texto", "afirmaciones", "reconstruccion", "argumentacion", "procedencia", "catalogo"):
         if s.startswith(G + c):
             return c
     return "otro"
@@ -42,6 +43,7 @@ def donde(pred, obj=None):
     (RDF.type, CRM.E65_Creation, {"documento"}),
     (RDF.type, CRM.E89_Propositional_Object, {"afirmaciones"}),  # hechos narrados: proposición, no evento
     (RDF.type, CRM.E5_Event, {"reconstruccion"}),                # el evento ocurrido solo lo afirma el investigador
+    (RICO.scopeAndContent, None, {"catalogo"}),                   # lo que dice la ficha del catálogo, aparte (ADR-033)
 ])
 def test_termino_solo_en_su_capa(pred, obj, capas):
     assert donde(pred, obj) == capas

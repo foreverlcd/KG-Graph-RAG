@@ -36,8 +36,8 @@ ohac: sh:declare
 # Capa 1 — documento
 #################################################################
 ohac:PiezaForma a sh:NodeShape ;
-    sh:targetClass rico:Record ;
-    rdfs:comment "Toda pieza tiene título, al menos un tramo de transcripción y exactamente un tipo de actuación del tesauro (fallo 2.4: el tipo no se decide por subcadenas)."@es ;
+    sh:targetObjectsOf crm:P94_has_created ;
+    rdfs:comment "Pieza = registro creado por una actuación (crm:P94_has_created); las descripciones de terceros (fichas del catálogo) no son piezas. Toda pieza tiene título, al menos un tramo de transcripción y exactamente un tipo de actuación del tesauro (fallo 2.4: el tipo no se decide por subcadenas)."@es ;
     sh:property [ sh:path rico:title ; sh:minCount 1 ] ;
     sh:property [ sh:path rico:hasOrHadInstantiation ; sh:minCount 1 ; sh:class rico:Instantiation ] ;
     sh:property [ sh:path rico:hasDocumentaryFormType ; sh:minCount 1 ; sh:maxCount 1 ] ;

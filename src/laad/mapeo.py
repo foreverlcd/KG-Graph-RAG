@@ -567,9 +567,91 @@ def procedencia(ds: Dataset, pr: Procedencia, grafos: list[tuple[URIRef, str]]) 
             pg.add((val, PROV.used, gi))
 
 
+# ───────────────────────── capa C (catálogo) ─────────────────────────
+CATALOGO_SHA256 = "752e0d2d3d9ed35f9296e5c9999a988d5c53a1aa31e175693651f4c5beacd955"  # sha256 del PDF del catálogo (archivos/)
+
+
+def _sig(signatura: str) -> str:
+    """«CCc 14 (18)» → «ccc-14-18» (tramo de IRI)."""
+    return re.sub(r"[^a-z0-9]+", "-", signatura.lower()).strip("-")
+
+
+def capa_catalogo(ds: Dataset, ruta: Path, agente: str, fecha: str) -> Graph:
+    """Fichas e índices del catálogo del ARC (Tomo I) como descripciones archivísticas de terceros.
+
+    Cada ficha o entrada de índice es un rico:RecordPart del catálogo (la descripción, no el expediente) con su texto literal en rico:scopeAndContent y
+    rico:describesOrDescribed hacia el expediente descrito; lo que la ficha dice es afirmación de los catalogadores,
+    nunca un hecho del modelo. La pertinencia para PC03/PC04 es una nota del extractor (prov:Entity que referencia la ficha), con
+    su motivo y sus dudas; no se infiere nada más del texto de la ficha.
+    """
+    g = ds.graph(G.catalogo)
+    cat = ID["arc/catalogo/intendencia-tomo-1"]
+    g.add((cat, RDF.type, RICO.Record))
+    g.add((cat, RICO.title, Literal("Catálogo del Fondo Intendencia, Tomo I: Causas Ordinarias y Causas Criminales "
+                                    "(Archivo Regional del Cusco)", lang="es")))
+    act = ID["actividad/extraccion-catalogo-v1"]
+    notas = []
+    for n, linea in enumerate(ruta.read_text(encoding="utf-8").splitlines(), 1):
+        if not linea.strip():
+            continue
+        r = json.loads(linea)
+        if r["tipo"] == "ficha":
+            sig = r["signatura_indice"]
+            nodo = ID[f"arc/catalogo/ficha/{_sig(sig)}"]
+            g.add((nodo, RDFS.label, Literal(f"Ficha del catálogo {sig}")))
+            base = r.get("es_expediente_base")
+            exp = ID["arc/expediente/cc-14-18"] if base else ID[f"arc/catalogo/expediente/{_sig(sig)}"]
+            g.add((nodo, RICO.describesOrDescribed, exp))
+            if not base:
+                g.add((exp, RDF.type, RICO.RecordSet))
+                g.add((exp, RDFS.label, Literal(f"{r['seccion']}, serie {r['serie']}, legajo {r['legajo']}, "
+                                                f"expediente {r['expediente']} ({sig})")))
+                g.add((exp, RICO.identifier, Literal(sig)))
+        else:
+            nodo = ID[f"arc/catalogo/indice/{n}"]
+            g.add((nodo, RDFS.label, Literal(f"{r['indice']}: entrada")))
+        g.add((nodo, RDF.type, RICO.RecordPart))
+        g.add((nodo, RICO.isOrWasConstituentOf, cat))
+        g.add((nodo, RICO.scopeAndContent, Literal(r["texto_literal"])))
+        impresas = ", ".join(map(str, r.get("paginas_impresas") or []))
+        pdf = ", ".join(map(str, r.get("paginas_pdf") or [r["pagina_pdf"]]))
+        g.add((nodo, RDFS.comment, Literal(f"pp. impresas {impresas}; pp. del PDF {pdf}")))
+        an = URIRef(f"{nodo}/pertinencia")
+        g.add((an, RDF.type, PROV.Entity))
+        g.add((an, DCTERMS.references, nodo))
+        for pc in r["pc"]:
+            g.add((an, DCTERMS.subject, Literal(pc)))
+        if r.get("motivo"):
+            g.add((an, DCTERMS.description, Literal(r["motivo"])))
+        if r.get("tinta_pueblo_explicito"):
+            g.add((an, RDFS.comment, Literal("Tinta: la ficha nombra el pueblo")))
+        if r.get("pc04_certeza"):
+            g.add((an, RDFS.comment, Literal(f"certeza PC04: {r['pc04_certeza']}")))
+        if r.get("dudas"):
+            g.add((an, SKOS.editorialNote, Literal(r["dudas"])))
+        notas.append(an)
+    pg = ds.graph(G.procedencia)
+    fuente_cat = ID["fuente/catalogo-intendencia-tomo-1-pdf"]
+    pg.add((fuente_cat, RDF.type, PROV.Entity))
+    pg.add((fuente_cat, DCTERMS.identifier, Literal("sha256:" + CATALOGO_SHA256)))
+    ag = _agente(pg, agente)
+    pg.add((act, RDF.type, PROV.Activity))
+    pg.add((act, PROV.used, fuente_cat))
+    pg.add((act, PROV.wasAssociatedWith, ag))
+    pg.add((act, PROV.endedAtTime, Literal(fecha, datatype=XSD.dateTime)))
+    pg.add((g.identifier, RDF.type, PROV.Entity))
+    pg.add((g.identifier, PROV.wasGeneratedBy, act))
+    pg.add((g.identifier, PROV.wasAttributedTo, ag))
+    pg.add((g.identifier, PROV.wasDerivedFrom, fuente_cat))
+    pg.add((g.identifier, DCTERMS.type, ID["capa/catalogo"]))
+    for an in notas:                       # PROV solo en el grafo de procedencia (tests/test_capas.py)
+        pg.add((an, PROV.wasGeneratedBy, act))
+    return g
+
+
 # ───────────────────────── orquestación ─────────────────────────
 def construir(lote_reg: Lote, pr: Procedencia, reconstrucciones: list[Reconstruccion] = (),
-              fechas: Path | None = None) -> Dataset:
+              fechas: Path | None = None, catalogo: Path | None = None) -> Dataset:
     if lote_reg.errores:
         raise ValueError("lote con errores; no se mapea:\n" + "\n".join(lote_reg.errores))
     ds = Dataset()
@@ -584,6 +666,8 @@ def construir(lote_reg: Lote, pr: Procedencia, reconstrucciones: list[Reconstruc
     capa_reconstruccion(ds, list(reconstrucciones), lote_reg)
     if fechas is not None:
         capa_fechas(ds, fechas, pr.agente, pr.fecha[:10])
+    if catalogo is not None:
+        capa_catalogo(ds, catalogo, pr.agente, pr.fecha)
     return ds
 
 

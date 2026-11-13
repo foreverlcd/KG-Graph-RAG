@@ -83,7 +83,8 @@ def test_pc16_resolucion_es_afirmacion_no_hecho():
 
 def test_pc19_reconstrucciones_en_competencia():
     r = P.pc19()
-    assert {x["creencia"] for x in r.reconstrucciones} == {"probable", "posible"}
+    # tras la auditoría I: A probable, B improbable y la hipótesis paleográfica «Gobernador» = «granadero» posible
+    assert {x["creencia"] for x in r.reconstrucciones} == {"probable", "improbable", "posible"}
 
 
 def test_pc20_procedencia_declara_falta_de_validacion_humana():
@@ -125,3 +126,34 @@ def test_disputas_detecta_negaciones_explicitas():
     tipos = {(d["atributo"].rsplit("/", 1)[1], d["tipo"]) for d in consultar("disputas")}
     assert ("fecha-del-hecho", "niega lo afirmado (responde_a)") in tipos   # Orue niega su propia hora
     assert ("dijo", "niega lo afirmado (responde_a)") in tipos              # P19 niega las frases de P05
+
+
+def test_pc03_segun_el_catalogo_solo_el_expediente_base_nombra_a_las_partes():
+    r = P.pc03()
+    assert r.forma == "A" and "según el catálogo" in r.extra[0].lower()
+    assert "(0 otras fichas los nombran)" in r.resumen
+    assert "3 otras fichas nombran el «pueblo de Tinta»" in r.resumen
+    assert any("Chuquitapa Andrés: CCc 14 (18)" in e for e in r.extra)
+
+
+def test_pc04_separa_seguros_de_dudosos():
+    r = P.pc04()
+    assert "2 seguros (CCc 14 (18), CCc 14 (21))" in r.resumen and "3 dudosos" in r.resumen
+
+
+def test_pc15_cadena_de_autoridades_por_pieza():
+    r = P.pc15()
+    assert r.forma == "D"
+    porp = {}
+    for f in r.afirmaciones:
+        porp.setdefault(f["pieza"], set()).add(f["rol"])
+    assert "fedatario" in porp["P11"] and "notificado" in porp["P11"]
+    assert "testigo de asistencia" in porp["P16"]
+    assert any(l.startswith("Piezas sin firmante anotado:") and "P15" in l for l in r.extra)
+
+
+def test_pc12_indio_a_secas_no_decide_la_matricula():
+    """La vista fiscal llama «Yndio» al denunciante y resume su queja de estar matriculado como tributario
+    (fundamento: lo actuado); ninguna de las dos cosas es pronunciarse sobre su condición tributaria."""
+    r = P.pc12()
+    assert r.forma == "NC"
