@@ -206,8 +206,9 @@ class Afirmacion(_Base):
 
 class Reconstruccion(_Base):
     """Capa 4. Identidad (menciones → persona/grupo/lugar/cosa), hecho (hechos narrados → evento) o cargo
-    (ejercicio de un cargo con vigencia), propuesta por un investigador con fecha, argumento y creencia.
-    No la produce el LLM."""
+    (ejercicio de un cargo con vigencia), propuesta con autor, fecha, argumento y creencia. En el piloto las
+    propone el modelo de lenguaje (autor «claude-opus-5-5») y las revisó una auditoría de un segundo modelo
+    (docs/anexos/I_auditoria_reconstrucciones.md); ningún especialista humano las ha validado."""
     id: str = Field(pattern=r"^R-[a-z0-9-]+$")
     tipo: Literal["identidad", "hecho", "cargo"]
     etiqueta: str
