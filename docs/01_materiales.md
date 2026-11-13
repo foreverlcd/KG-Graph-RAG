@@ -1,7 +1,7 @@
 # 01 · Materiales, capa de fuente y contradicciones de los materiales
 
 > Estado: verificado contra `corpus/Transcripcion_CC_L14E18.txt` (sha256 `bd945513…afaafe`) y contra el
-> catálogo (`archivos/Catálogo Intendencia I CO y CC.pdf`, pp. 434–435 del PDF impreso). Toda afirmación de este
+> catálogo (`archivos/Catálogo Intendencia I CO y CC.pdf`, pp. 435–436 impresas, 438–439 del PDF). Toda afirmación de este
 > documento sobre el expediente lleva el **tramo** (`UTnn[.x]`) donde se comprueba. Lo inferido se marca **[inferencia]**.
 
 ## 1. Inventario y orden de autoridad
@@ -89,7 +89,7 @@ Cada contradicción es candidata a modelarse como afirmaciones en conflicto (cap
 
 **Repetición**: UT13 y UT14 contienen dos veces, con ligeras variantes, la declaración de Santiago Cazorla («a las dos o tres de la madrugada» / «a los dos o tres dias»). No se sabe si el original la repite o si es un error de transcripción: hay que cotejarlo con la imagen.
 
-### 4.2 Transcripción frente a ficha del catálogo (CC, Serie Cusco, Legajo 14, Expediente 18, pp. 434–435)
+### 4.2 Transcripción frente a ficha del catálogo (CC, Serie Cusco, Legajo 14, Expediente 18, pp. 435–436)
 
 | ID | Catálogo | Transcripción |
 |---|---|---|

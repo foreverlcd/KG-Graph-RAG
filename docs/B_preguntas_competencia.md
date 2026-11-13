@@ -52,9 +52,9 @@ Cada respuesta indica el tramo. Lo que es inferencia del modelador va marcado **
 
 **PC02.** La declaración de UT12.a muestra al declarante «la certificación De folio 4 su firma Martin casorla». En la transcripción, la certificación firmada «Martin Cazorla» está en UT04. La correspondencia con el folio 4 la afirma el documento; la transcripción no la marca.
 
-**PC03.** El índice onomástico del catálogo trae «Chuquitapa Andrés: CCc 14 (18)» y «Guancachoque, Manuel: CCc 14 (18)», es decir, solo este expediente. Tinta aparece en otras fichas (pendiente de extracción a nivel de ficha). La respuesta es **según el catálogo**, que es una afirmación de los catalogadores.
+**PC03.** El índice onomástico del catálogo trae «Chuquitapa Andrés: CCc 14 (18)» y «Guancachoque, Manuel: CCc 14 (18)», es decir, solo este expediente. Ninguna otra ficha nombra a Chuquitapa ni a Guancachoque; tres fichas de otros expedientes nombran el pueblo de Tinta (COc 1 (13), COc 3 (1), CCc 19 (24)) y 55 más nombran Tinta como partido, provincia, doctrina o regimiento. La respuesta es **según el catálogo**, que es una afirmación de los catalogadores (capa C, `consultas/catalogo.rq`; extracción en `datos/catalogo/`).
 
-**PC04.** Pendiente de extracción a nivel de ficha. Solo se responde con afirmaciones del catálogo.
+**PC04.** Según las fichas: dos seguros, CCc 14 (18) (cacique Chuquitapa) y CCc 14 (21) (recaudador Agustín Brabo), y tres dudosos, en los que la ficha no dice si el alcalde es de indios: CCc 14 (14), CCc 14 (22) y CCc 15 (5). Solo se responde con afirmaciones del catálogo.
 
 **PC05.** Ver `docs/01_materiales.md`, N1. Hay al menos once grafías distintas; dentro del texto de la autoridad (UT07, UT09–UT20) domina «Guancachoque».
 
@@ -91,7 +91,7 @@ Cada respuesta indica el tramo. Lo que es inferencia del modelador va marcado **
 
 **PC14.** **DISPUTA.** Ver H1: nueve, diez, diez u once, media noche, «primer puesto del gallo». El número de indios va de «quatro o seis Yndios» (UT12.b) a «una caterva» (UT06) y «un montón» (UT02, UT03).
 
-**PC15.** Ver PC01 y la tabla de actuaciones de `docs/E_prueba_hilo_central.md`. Intervienen el Fiscal protector y fiscal (del Río), el Presidente (Ruiz de Castilla en agosto; Muñoz en noviembre), el teniente asesor Galeano, el escribano Chacón, el subdelegado Mata/Mara, que actúa con testigos «a falta de Escribano», el cura interino y el protector partidario Valencia.
+**PC15.** Respondida por `consultas/participantes.rq` con los papeles procesales anotados en cada pieza (31 de 33; la carátula P00 y la nota de desglose P15 no tienen participantes). Ver también PC01 y la tabla de actuaciones de `docs/E_prueba_hilo_central.md`. Intervienen el Fiscal protector y fiscal (del Río), el Presidente (Ruiz de Castilla en agosto; Muñoz en noviembre), el teniente asesor Galeano, el escribano Chacón, el subdelegado Mata/Mara, que actúa con testigos «a falta de Escribano», el cura interino y el protector partidario Valencia.
 
 **PC16.** Es una afirmación con autoridad, no un hecho. La vista fiscal (UT19–20, fechada el 20 de noviembre) sostiene que las quejas resultan «menos conforme a la verdad» y que fueron formadas con «malicia». Se apoya en el informe del subdelegado (UT17–18), que a su vez remite al informe del cura (UT16) y a las declaraciones (UT11–15). El auto del 26 de noviembre (UT19) resuelve «de conformidad» con el fiscal.
 

@@ -1,7 +1,7 @@
 # E · Prueba en profundidad: certificaciones de agosto frente a declaraciones de septiembre
 
 > Un solo hilo de punta a punta: cita → registro plano → tripletas → consulta → respuesta. Todo lo de este
-> documento sale de archivos versionados: `datos/registros/hilo_central.py`, `datos/grafo/hilo_central.trig`,
+> documento sale de archivos versionados: `datos/registros/hilo_central.py`, `datos/grafo/cc-14-18.trig`,
 > `consultas/afirmaciones.rq` y `docs/anexos/respuestas_pc.md`. Ese último lo genera `scripts/responder_pc.py`,
 > no está escrito a mano.
 >
@@ -78,19 +78,19 @@ Validaciones que pasa antes de mapearse (`src/laad/esquema.py`, `src/laad/regist
 
 ### 2.3 Tripletas: lo que produce el mapeo determinista
 
-Extracto literal de `datos/grafo/hilo_central.trig`. Hay un grafo nombrado por capa:
+Extracto literal de `datos/grafo/cc-14-18.trig`. Hay un grafo nombrado por capa:
 
 ```turtle
 g:documento {                                              # capa 1 (curada a mano)
   id:cc-14-18/actuacion/P18  crm:P2_has_type act:declaracion-jurada, fza:testimonial ;
                              crm:P94_has_created id:cc-14-18/pieza/P18 . }
 
-<…/grafo/texto/anotacion-manual-hilo-central-v1> {        # capa 2: la mención tal como está escrita
+<…/grafo/texto/anotacion-manual-expediente-v1> {        # capa 2: la mención tal como está escrita
   id:…/mencion/M-UT11-001 a picom:PersonObservation, crm:E21_Person ;
       rdfs:label "Ysidro Cano" ; prov:hadPrimarySource id:…/pieza/P18 ; picom:hasRole rol:declarante ;
       crm:P1_is_identified_by [ a crm:E41_Appellation ; crm:P190_has_symbolic_content "Ysidro Cano" ] . }
 
-<…/grafo/afirmaciones/anotacion-manual-hilo-central-v1> {  # capa 3: la afirmación (patrón STAR sobre E13)
+<…/grafo/afirmaciones/anotacion-manual-expediente-v1> {  # capa 3: la afirmación (patrón STAR sobre E13)
   id:…/afirmacion/A-UT11-004 a crm:E13_Attribute_Assignment ;
       crm:P9i_forms_part_of id:…/actuacion/P18 ;                     # en qué actuación (→ tipo, fecha, ante quién, firmas)
       crm:P14_carried_out_by id:…/mencion/M-UT11-001 ;               # quién lo afirma
@@ -117,7 +117,7 @@ g:documento {                                              # capa 1 (curada a ma
 ```
 
 La procedencia del dato (grafo `g:procedencia`) dice que el grafo de afirmaciones `prov:wasGeneratedBy` la actividad
-`actividad/anotacion-manual-hilo-central-v1`. Esa actividad `prov:used` la transcripción `sha256:bd945513…`, con el
+`actividad/anotacion-manual-expediente-v1`. Esa actividad `prov:used` la transcripción `sha256:bd945513…`, con el
 plan «anotacion-manual» y el agente `claude-opus-5-5` (`prov:SoftwareAgent`). No hay validación humana registrada.
 
 ### 2.4 La consulta
@@ -197,4 +197,4 @@ La respuesta completa está en `docs/anexos/respuestas_pc.md` §PC09.
 * **El folio y el recto/vuelto de casi todas las citas.** Hacen falta las imágenes (`docs/01_materiales.md` §3).
 * **Que la *extracción* automática alcance esta calidad.** Esto está anotado a mano; la medición está en `docs/G_evaluacion.md`.
 * **La equivalencia entre valores literales** («a las dies de la noche» frente a «a las diez de la noche»). Se resuelve con una normalización de capa 4, todavía no implementada (`docs/C_modelo.md` §8).
-* **La cobertura completa del expediente.** Están anotadas 66 menciones y 74 afirmaciones (hilo central más las ampliaciones de la revisión 1), no todo el expediente. Por eso PC03, PC04 y PC15 constan como **PENDIENTES**.
+* **La cobertura completa del expediente.** Resuelto el 2026-11-13 (ADR-030): 544 menciones y 500 afirmaciones en cuatro lotes. Antes estaban anotadas 66 menciones y 74 afirmaciones (hilo central más las ampliaciones de la revisión 1), no todo el expediente. Por eso PC03, PC04 y PC15 constan como **PENDIENTES**.
