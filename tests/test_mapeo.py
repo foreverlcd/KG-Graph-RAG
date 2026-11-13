@@ -13,7 +13,7 @@ from laad import fuente
 from laad import mapeo as M
 from laad.registros import cargar
 
-from ._fixtures import PROCEDENCIA, RAIZ, REGISTROS, construir, dataset, union
+from ._fixtures import LOTES, PROCEDENCIA, RAIZ, REGISTROS, construir, dataset, union
 
 
 def _grafos(ds):
@@ -47,7 +47,7 @@ def test_id_duplicado_es_error(tmp_path):
 
 
 def test_verificar_citas_100():
-    r = subprocess.run([sys.executable, str(RAIZ / "scripts/verificar_citas.py"), str(REGISTROS)],
+    r = subprocess.run([sys.executable, str(RAIZ / "scripts/verificar_citas.py"), *map(str, LOTES)],
                        cwd=RAIZ, capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stdout + r.stderr
     assert "100.0 %" in r.stdout, r.stdout

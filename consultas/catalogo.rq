@@ -1,0 +1,15 @@
+# PC03/PC04: fichas e índices del catálogo del ARC marcados como pertinentes por la extracción (capa C).
+# Todo lo que devuelve es «según el catálogo»: texto literal de la ficha, páginas, motivo y dudas del extractor.
+SELECT ?pc ?registro ?etiqueta ?expediente ?texto ?paginas ?motivo ?certeza ?pueblo ?dudas WHERE {
+  #PARAMETROS
+  ?nota dct:references ?r ; dct:subject ?pc .
+  ?r rico:isOrWasConstituentOf ?cat ; rdfs:label ?etiqueta ; rico:scopeAndContent ?texto ; rdfs:comment ?paginas .
+  OPTIONAL { ?r rico:describesOrDescribed ?expediente }
+  OPTIONAL { ?nota dct:description ?motivo }
+  OPTIONAL { ?nota rdfs:comment ?c . FILTER (STRSTARTS(STR(?c), "certeza PC04: "))
+             BIND (STRAFTER(STR(?c), "certeza PC04: ") AS ?certeza) }
+  OPTIONAL { ?nota skos:editorialNote ?dudas }
+  BIND (EXISTS { ?nota rdfs:comment "Tinta: la ficha nombra el pueblo" } AS ?pueblo)
+  BIND (STR(?r) AS ?registro)
+}
+ORDER BY ?pc ?registro

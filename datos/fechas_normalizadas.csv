@@ -3,23 +3,25 @@ P00,1806-08-26,carátula
 P01,1806-08-01,
 P02,1806-08-05,
 P06,1806-08-22,
-P07,1806-08-21,F1: anterior al escrito que dictamina
+P07,1806-08-21,"F1: anterior al escrito que dictamina. Intervalo inferido (auditoría I): 1806-08-23/1806-08-27, entre la diligencia del 23 (P08) y el auto del 27 (P10)"
 P08,1806-08-23,
-P09,1806-08-13,F2: anterior al decreto que cumple
+P09,1806-08-13,F2: anterior al decreto que cumple. Intervalo inferido (auditoría I): 1806-08-23/1806-08-27
 P10,1806-08-27,
 P11,1806-08-27,
-P12,1806-08-27,"«En dicho día mes y año» tras P11"
-P13,1806-08-28,
+P12,1806-08-27,«En dicho día mes y año» tras P11
+P13,1806-08-28,Choca con «mi Auto de esté día»: el auto (P10) es del 27; se mantiene la fecha escrita
 P14,1806-09-17,
 P15,1806-09-23,
 P18,1806-09-23,
+P19,1806-09-23,«Ynmediatamente» tras P18
 P20,1806-09-24,
+P21,1806-09-24,«Seguidamente» tras P20
 P22,1806-09-24,
-P23,1806-11-26,F5: citado por P27 del 8 de noviembre
-P25,1806-11-08,lugar y fecha de data posiblemente de P24
+P23,1806-11-26,F5: citado por P27 del 8 de noviembre. Fecha inferida (auditoría I; hipótesis paleográfica «7bre» leído «9bre»): 1806-09-26; intervalo seguro 1806-09-24/1806-11-08
+P25,1806-11-08,"La data encabeza P25 (los decretos llevan la data delante, cf. P14); P24 queda sin fecha, entre 1806-09-24 y 1806-11-08"
 P26,1806-11-18,
 P27,1806-11-08,
 P28,1806-11-26,decreto marginal escrito junto a la vista P29
 P29,1806-11-20,
 P30,1806-11-26,
-P31,1810-12-23,F6: año escrito «mil ochocientos 10»
+P31,1810-12-23,F6 (dudosa): año escrito «mil ochocientos 10»; fecha alternativa (auditoría I): 1806-12-23

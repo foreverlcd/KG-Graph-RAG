@@ -94,10 +94,14 @@ def _resolutivas() -> list[dict]:
 
 def pc12() -> Respuesta:
     """NC estructural: ¿hay alguna afirmación dictaminadora o resolutiva que atribuya o retire una condición
-    fiscal al denunciante, o que ordene algo sobre la matrícula? (Sin heurísticas sobre el texto del valor.)"""
+    fiscal (originario, forastero, tributario, reservado) al denunciante, o que ordene algo sobre la matrícula? (Sin heurísticas sobre el texto del valor.)"""
     ent = persona("huancachoque")
+    # Solo las condiciones que deciden la matrícula (originario, forastero, tributario, reservado); «indio» a secas
+    # no se pronuncia sobre ella.
+    fiscales = {f"https://w3id.org/laad/tesauro/condicion/{c}" for c in ("originario", "forastero", "tributario", "reservado")}
     condicion = [f for f in _afirm(filtroEntidad=ent, atributo=atributo("tiene-condicion"))
-                 if f["fuerza"] in ("resolutiva", "dictaminadora")]
+                 if f["fuerza"] in ("resolutiva", "dictaminadora") and f["valor"] in fiscales
+                 and f["fundamento"] != "resulta de lo actuado"]  # resumir lo actuado (la queja) no es pronunciarse
     ordenes = [f for f in _afirm(atributo=atributo("ordena"))
                if f["fuerza"] in ("resolutiva", "dictaminadora") and "matr" in f["valorLabel"].lower()]
     pertinentes = condicion + ordenes
@@ -202,6 +206,91 @@ def pc18() -> Respuesta:
                      "(capa 4). Los cargos en la rebelión de 1780 están en PC09.", filas, extra=lineas)
 
 
+def pc15() -> Respuesta:
+    """Cadena de autoridades: por pieza, tipo de actuación, fecha y data escritas, y quién actuó con qué papel
+    procesal (capa 2, PC14 + P14.1), con la identidad reconstruida cuando la hay (capa 4). La circulación se lee de
+    la data escrita de cada pieza, sin inferir traslados que el texto no dice."""
+    filas = consultar("participantes")
+    piezas = {f["pieza"]: f for f in consultar("piezas")}
+    por_pieza: dict[str, dict] = {}
+    for f in filas:
+        d = por_pieza.setdefault(f["pieza"], {"tipo": f["tipoAct"], "fecha": f["fecha"], "lugar": None, "roles": {}})
+        d["lugar"] = d["lugar"] or f["lugar"]
+        quien = f"«{f['texto']}»" + (f" [{f['persona']}]" if f["persona"] else "")
+        d["roles"].setdefault(f["rol"], [])
+        if quien not in d["roles"][f["rol"]]:
+            d["roles"][f["rol"]].append(quien)
+    lineas, circulacion = [], []
+    for pz in sorted(piezas):
+        d = por_pieza.get(pz)
+        if not d:
+            lineas.append(f"  {pz} [{piezas[pz]['tipo']}]: no consta ningún participante con papel en la pieza.")
+            continue
+        cab = f"  {pz} [{d['tipo']}] fecha escrita «{d['fecha'] or 'no consta'}»; data «{d['lugar'] or 'no consta'}»"
+        lineas.append(cab)
+        for rol in sorted(d["roles"]):
+            lineas.append(f"      {rol}: " + "; ".join(d["roles"][rol]))
+        if d["lugar"]:
+            circulacion.append(f"{pz}: {d['lugar']}")
+    sin_firma = [pz for pz in sorted(piezas) if not any(r.startswith("firmante") for r in por_pieza.get(pz, {}).get("roles", {}))]
+    lineas += ["", "Circulación según la data escrita de las piezas (solo donde consta):", "  " + " → ".join(circulacion),
+               "", "Piezas sin firmante anotado: " + (", ".join(sin_firma) or "ninguna")]
+    return Respuesta("¿Qué autoridades actuaron, en qué actuación, en qué fecha, quién escribió y quién firmó cada una, "
+                     "y en qué orden circuló el expediente?", "D",
+                     f"{len(por_pieza)} de {len(piezas)} piezas con participantes anotados ({len(filas)} participaciones); "
+                     f"{len(sin_firma)} piezas sin firmante anotado.", filas, extra=lineas)
+
+
+AVISO_CATALOGO = ("Respuesta según el catálogo del ARC (afirmaciones de los catalogadores, no hechos del modelo), "
+                  "extraída de la capa de texto del PDF sin cotejo de imágenes; la pertinencia la marcó el extractor "
+                  "(nota con motivo y dudas).")
+
+
+def _catalogo(pc: str) -> list[dict]:
+    return [f for f in consultar("catalogo") if f["pc"] == pc]
+
+
+def _linea_ficha(f: dict) -> str:
+    texto = " ".join(f["texto"].split())
+    return f"  {f['etiqueta']} ({f['paginas']}): «{texto}» — {f['motivo'] or 'entrada de índice'}"
+
+
+def pc03() -> Respuesta:
+    """Según el catálogo: otros expedientes que mencionan a Chuquitapa, a Guancachoque o el pueblo de Tinta."""
+    filas = _catalogo("PC03")
+    base = ID + "arc/expediente/cc-14-18"
+    fichas = [f for f in filas if f["etiqueta"].startswith("Ficha") and f["expediente"] != base]
+    personas = [f for f in fichas if any(n in f["texto"] for n in ("Chuquitapa", "Guancachoque"))]
+    pueblo = [f for f in fichas if f["pueblo"] in (True, "true")]
+    otras_tinta = [f for f in fichas if f not in pueblo and f not in personas]
+    indices = [f for f in filas if not f["etiqueta"].startswith("Ficha")]
+    extra = [AVISO_CATALOGO, "", "Índices del catálogo:"] + [_linea_ficha(f) for f in indices]
+    extra += ["", "Fichas que nombran «pueblo de Tinta» (otros expedientes):"] + [_linea_ficha(f) for f in pueblo]
+    extra += ["", f"Otras {len(otras_tinta)} fichas nombran Tinta como partido, provincia, doctrina o regimiento "
+              "(no consta que se refieran al pueblo):"] + [f"  {f['etiqueta']}" for f in otras_tinta]
+    return Respuesta("¿Qué otros expedientes del Tomo I mencionan a Andrés Chuquitapa, a Manuel Guancachoque o al "
+                     "pueblo de Tinta, según el catálogo?", "A",
+                     f"Según el catálogo, Chuquitapa y Guancachoque solo constan en CCc 14 (18) ({len(personas)} otras "
+                     f"fichas los nombran); {len(pueblo)} otras fichas nombran el «pueblo de Tinta» y {len(otras_tinta)} "
+                     "más nombran Tinta en otro sentido.", extra=extra)
+
+
+def pc04() -> Respuesta:
+    """Según la ficha: expedientes CC de 1805–1807 con un cacique, recaudador o alcalde de indios como demandado."""
+    filas = [f for f in _catalogo("PC04") if f["etiqueta"].startswith("Ficha")]
+    seguros = [f for f in filas if f["certeza"] == "seguro"]
+    dudosos = [f for f in filas if f["certeza"] != "seguro"]
+    extra = [AVISO_CATALOGO, "", "Seguros (la ficha nombra el cargo del demandado):"]
+    extra += [_linea_ficha(f) for f in seguros]
+    extra += ["", "Dudosos (la ficha no dice si el alcalde es de indios):"]
+    extra += [_linea_ficha(f) + (f" [duda: {f['dudas']}]" if f["dudas"] else "") for f in dudosos]
+    return Respuesta("En Causas Criminales, ¿qué expedientes de 1805–1807 tienen como demandado a un cacique, "
+                     "recaudador o alcalde de indios, según la ficha?", "A",
+                     f"Según el catálogo: {len(seguros)} seguros ("
+                     + ", ".join(f["etiqueta"].replace("Ficha del catálogo ", "") for f in seguros)
+                     + f") y {len(dudosos)} dudosos.", extra=extra)
+
+
 def pendiente(pc: str, motivo: str) -> Respuesta:
     return Respuesta(pc, "PENDIENTE", motivo)
 
@@ -210,7 +299,7 @@ PREGUNTAS = {
     "PC01": pc01, "PC05": pc05, "PC06": pc06, "PC08": pc08, "PC09": pc09, "PC10": pc10, "PC11": pc11,
     "PC12": pc12, "PC13": pc13, "PC14": pc14, "PC16": pc16, "PC19": pc19, "PC20": pc20,
     "PC02": pc02, "PC07": pc07, "PC17": pc17, "PC18": pc18,
-    "PC03": lambda: pendiente("PC03", "Requiere extraer las fichas del catálogo como capa 3 (afirmante: catalogadores)."),
-    "PC04": lambda: pendiente("PC04", "Ídem PC03, a escala de serie."),
-    "PC15": lambda: pendiente("PC15", "Requiere anotar receptor, escribano y firmantes de todas las actuaciones."),
+    "PC03": pc03,
+    "PC04": pc04,
+    "PC15": pc15,
 }

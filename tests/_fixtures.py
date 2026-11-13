@@ -9,7 +9,7 @@ import rdflib
 from laad import mapeo
 from laad.registros import cargar
 
-from laad.hilo import PROCEDENCIA, RECONSTRUCCIONES, REGISTROS, RAIZ  # noqa: F401
+from laad.hilo import LOTES, PROCEDENCIA, RECONSTRUCCIONES, REGISTROS, RAIZ  # noqa: F401
 from laad.hilo import construir as _construir_canonico
 
 

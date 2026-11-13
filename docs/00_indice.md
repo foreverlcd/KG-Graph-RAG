@@ -24,6 +24,7 @@
 | `anexos/H1_alternativas_afirmaciones.md` | C | Alternativas 2026 para afirmaciones en disputa y reconstrucción (RDF 1.2, nanopublicaciones, Factoid, FactGrid, STAR, CRMinf 1.2.1); origen del defecto D6 |
 | `anexos/H2_alternativas_documento_lugar.md` | C | Alternativas para documento, menciones, lugares, tiempo y SKOS; D5 matizado, identificadores de lugar |
 | `anexos/H3_metodologia_y_publicacion.md` | G | Metodología citable (LOT, NeOn, ORSD), evaluación con un solo validador y sedes de publicación |
+| `anexos/I_auditoria_reconstrucciones.md` | C, G | Auditoría de las reconstrucciones de la capa 4 por una segunda instancia del modelo (no es validación humana) |
 | `../articulo/` | — | Artículo sobre la ontología (castellano, LLNCS); pendientes en `articulo/README.md` |
 | `anexos/respuestas_pc.md` | B, E | Respuestas generadas por el grafo a las 20 PC (no editar a mano) |
 

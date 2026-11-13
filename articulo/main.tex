@@ -64,7 +64,7 @@ del dato (PROV-O). Lo andino y lo procesal se expresan como un tesauro SKOS y la
 un análisis de carencias muestra que el perfil no necesita declarar ninguna clase ni propiedad propia. El caso piloto
 es una causa criminal de 1806 contra un cacique recaudador de Tinta, con certificaciones de agosto desmentidas en
 declaraciones juradas de septiembre. Veinte preguntas de competencia, escritas antes de modelar, funcionan como pruebas
-automáticas; el grafo del hilo central es conforme a SHACL, consistente bajo OWL~2~RL y responde 17 de ellas. La
+automáticas; el grafo del expediente completo es conforme a SHACL, consistente bajo OWL~2~RL y responde las veinte. La
 evaluación reveló siete defectos y carencias en los estándares reutilizados, entre ellos una presunción de
 sinceridad que CRMinf~1.2.1 extiende a toda asignación de atributo de CIDOC CRM. El piloto cubre un solo expediente y
 sus anotaciones, propuestas con ayuda de un modelo de lenguaje, no han sido validadas por un especialista
@@ -379,8 +379,10 @@ Los lugares reconstruidos llevan el identificador de HGIS de las Indias como \tt
 conjunto de datos como fuente, y los de Wikidata o TGN como identificadores adicionales y \ttt{rdfs:seeAlso}, nunca
 \ttt{owl:sameAs}; no se copian geometrías, cuya licencia (CC BY-NC-SA) se transmitiría al grafo.
 
-En el piloto, las 27 inferencias de la capa~4 tienen como autor al agente de software que las propuso (un modelo de
-lenguaje), registrado como tal en la procedencia. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
+En el piloto, las 36 inferencias de la capa~4 tienen como autor al agente de software que las propuso (un modelo de
+lenguaje), registrado como tal en la procedencia. Una auditoría hecha por una segunda instancia del modelo, que cotejó
+cada reconstrucción con la transcripción, recalibró quince valores de creencia y añadió nueve hipótesis rivales; no
+equivale a una validación experta. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
 cada dato indica su agente y si consta una validación humana, que hoy no consta en ninguno. Confirmar o reasignar cada
 reconstrucción es tarea de un investigador (sección~\ref{sec:discusion}).
 
@@ -389,7 +391,9 @@ Cada grafo es un \ttt{prov:Entity} generado por una actividad que usó la transc
 agente (persona o programa) y a un plan (la guía o el \emph{prompt}).
 
 El tesauro tiene 12 esquemas y 164 conceptos: tipos de actuación, roles procesales, condiciones, cargos, tipos de
-entidad, atributos, polaridad, fundamento, fuerza, creencia, niveles documentales y marcas del anotador. Conserva las
+entidad, atributos, polaridad, fundamento, fuerza, creencia, niveles documentales y marcas del anotador. Todos tienen
+definición; cada una nombra su fuente (la Recopilación de Indias, la Ordenanza de Intendentes de 1782, el diccionario
+de Escriche, o el propio modelo para los conceptos técnicos) o se marca como definición de trabajo (22). Conserva las
 rarezas del documento sin asimilarlas: \cita{India Ordinaria} no se iguala a \emph{originaria}, y el ayllu es un
 \emph{grupo}, no un lugar. Las 66 alineaciones externas (Wikidata y Getty AAT) usan solo \ttt{skos:closeMatch} o
 \ttt{relatedMatch}, porque las etiquetas engañan: en Wikidata, la etiqueta quechua \emph{ayllu} está asignada a los
@@ -458,7 +462,7 @@ Id & Estándar & Problema y tratamiento \\
 \midrule
 D1 & ROAR 0.1 & Declara un dominio global (\ttt{roar:Reconstruction}) sobre \ttt{prov:wasDerivedFrom}. Como
 \ttt{prov:hadPrimarySource} es subpropiedad de esta, el patrón de PiCo aplicado a una observación de ROAR es
-inconsistente (lo detectó el razonador). Las observaciones de ROAR usan \ttt{roar:documentedIn}; quedan 59
+inconsistente (lo detectó el razonador). Las observaciones de ROAR usan \ttt{roar:documentedIn}; quedan 285
 tipificaciones espurias de observaciones de PiCo, que se informan. \\
 D2 & PiCo 1.1.0 & El prefijo de roles de la ontología no coincide con las IRI publicadas del tesauro de roles. Se usan
 las IRI publicadas. \\
@@ -470,7 +474,7 @@ D5 & RiC-O 1.1 & Expresa la extensión en folios, pero no el folio individual di
 \emph{sección} y \emph{legajo}; sus tipos documentales no incluyen tipos judiciales. Se resuelve con conceptos SKOS. \\
 D6 & CRMinf 1.2.1 & Declara \ttt{E13} subclase de \ttt{I1\_Argumentation}, cuya nota de alcance la define como
 inferencia u observación \enquote{honesta}. Con CRMinf cargado, cada testimonio hereda una presunción de sinceridad.
-Se documenta y se mide (74 afirmaciones; 12 negaciones). \\
+Se documenta y se mide (500 afirmaciones; 20 negaciones). \\
 D7 & CRM + PiCo & El rango de \ttt{P14\_carried\_out\_by} es \ttt{E39\_Actor} y
 \ttt{picom:PersonObservation} es subclase de \ttt{picom:Person}: toda mención que afirma se infiere actor. Se
 interpreta como actor \emph{tal como consta en la fuente}; la existencia solo se propone en la capa~4. \\
@@ -491,29 +495,29 @@ hemos encontrado descrito en la literatura.
 % =====================================================================
 \section{Evaluación}\label{sec:evaluacion}
 
-La evaluación se apoya en comprobaciones que no dependen de anotadores externos. El grafo del hilo central, que
-cubre la disputa sobre el pasado rebelde del cacique y las certificaciones desmentidas, se construyó a partir de 33
-piezas, 66 menciones, 74 afirmaciones y 27 reconstrucciones (incluida la de las fechas normalizadas). Tiene 5\,774
-tripletas distintas en 58 grafos nombrados y usa 40 clases y 67 propiedades, todas de los estándares. El grafo se
+La evaluación se apoya en comprobaciones que no dependen de anotadores externos. El grafo cubre el expediente
+completo: 33 piezas, 544 menciones, 500 afirmaciones y 36 reconstrucciones (incluida la de las fechas normalizadas),
+más 66 fichas e índices del catálogo. Tiene 30\,884 tripletas distintas en 77 grafos nombrados y usa 41 clases y 75
+propiedades, todas de los estándares. El grafo se
 construyó con rdflib~\cite{rdflib}, se valida con pySHACL~\cite{pyshacl} y se razona con OWL-RL~\cite{owlrl}. La
 tabla~\ref{tab:resultados} resume los resultados; todas las cifras se reproducen con las 218 pruebas del repositorio.
 
 \begin{table}[t]
 \centering
-\caption{Resultados de la evaluación del perfil sobre el hilo central del caso.}\label{tab:resultados}
+\caption{Resultados de la evaluación del perfil sobre el expediente piloto.}\label{tab:resultados}
 \scriptsize
 \begin{tabularx}{\linewidth}{@{}Xll@{}}
 \toprule
 Criterio & Umbral & Resultado \\
 \midrule
-Citas que son subcadena exacta del tramo (única normalización: espacios) & 100\,\% & 140/140 \\
+Citas que son subcadena exacta del tramo (única normalización: espacios) & 100\,\% & 1\,044/1\,044 \\
 Conformidad SHACL del grafo & 0 violaciones & 0 \\
 Mutaciones del grafo que SHACL debe rechazar & todas & 34/34 \\
 Inconsistencias bajo OWL~2~RL (datos + estándares + perfil) & 0 & 0 \\
 IRI de estándares inexistentes en su versión publicada & 0 & 0 \\
 Importaciones resueltas por el catálogo contra copias verificadas & todas & 8/8 \\
 Clases o propiedades nuevas para un pleito civil sintético & 0 & 0 \\
-PC respondidas por consultas con nombre & 20 & 17 \\
+PC respondidas por consultas con nombre & 20 & 20 \\
 PC de disputa o \emph{no consta} cuya forma calculada es la esperada & 6/6 & 6/6 \\
 \bottomrule
 \end{tabularx}
@@ -530,9 +534,12 @@ una orden resolutiva y ninguna afirmación que responda a ella: una orden no imp
 grafo devuelve que Cano, en su certificación de agosto, y Orue, en su certificación y en su declaración, afirman que
 Chuquitapa fue coronel; que Cano lo niega en su declaración jurada de septiembre; y que ninguna actuación dictaminadora
 o resolutiva se pronuncia sobre el punto. Cada afirmación lleva la cita literal, el tramo, el folio o \emph{no
-consta}, la fuerza institucional y quién recibió y firmó la pieza. Las tres PC pendientes (dos a escala de serie, que
-requieren extraer las fichas del catálogo, y la cadena completa de autoridades) exigen más anotación, no cambios del
-modelo.
+consta}, la fuerza institucional y quién recibió y firmó la pieza. Las dos PC a escala de serie (PC03 y PC04) se
+responden \emph{según el catálogo}: sus fichas e índices entran como descripciones de terceros
+(\ttt{rico:RecordPart} con su texto literal en \ttt{rico:scopeAndContent} y \ttt{rico:describesOrDescribed}), y la
+pertinencia de cada ficha es una nota del extractor con su motivo y sus dudas, nunca un hecho. La PC15, la cadena de
+autoridades, se compone de los papeles procesales anotados en cada pieza; dos piezas (la carátula y una nota de
+desglose sin firma) no tienen participantes. Ninguna de las tres exigió cambiar el modelo.
 
 \paragraph{Formas y mutaciones.}
 Una forma que nunca falla no prueba nada. Cada forma tiene al menos una prueba negativa: se altera el grafo válido (se
@@ -541,7 +548,7 @@ una fecha en la capa~1, se quita la marca de una relación de discurso) y se exi
 forma esperada. Esta práctica reveló una forma que aprobaba en vacío porque su consulta no seleccionaba ningún nodo.
 
 \paragraph{Razonamiento y revisiones.}
-El cierre OWL~2~RL de la unión de datos, perfil y estándares (30\,640 tripletas; 104\,155 tras el cierre) no produce
+El cierre OWL~2~RL de la unión de datos, perfil y estándares (55\,940 tripletas; 188\,412 tras el cierre) no produce
 inconsistencias; fue el razonador el que detectó el defecto D1, al inferir una instancia de dos clases disjuntas de
 ROAR. Dos revisores independientes, sin acceso a la documentación de diseño, examinaron el código, los datos y los
 estándares, uno antes y otro después de redactar este artículo. Señalaron, entre otros, que los cargos con vigencia
@@ -560,18 +567,19 @@ los estándares. Puede generarse como vista de lectura a partir del TriG, nunca 
 
 \paragraph{Negación.}
 La polaridad se expresa como un tipo de la E13. La alternativa sin términos propios sería que la negación fuese una
-E13 cuyo sujeto es la afirmación negada; solo es posible cuando esta consta en el expediente (4 de las 12
+E13 cuyo sujeto es la afirmación negada; solo es posible cuando esta consta en el expediente (4 de las 20
 negaciones), por lo que se mantuvo la forma uniforme.
 
 \paragraph{Limitaciones.}
-(i)~La evaluación es de un solo expediente ($n=1$), del que se anotó el hilo central. La generalización solo se ha
+(i)~La evaluación es de un solo expediente ($n=1$), anotado en sus 33 piezas. La generalización solo se ha
 comprobado con un pleito civil sintético; un segundo expediente real, sorteado a ciegas con semilla fija entre 3\,651,
 se incorporará cuando se disponga de su transcripción.
 (ii)~Las anotaciones y las reconstrucciones del piloto se propusieron con ayuda de un modelo de lenguaje y no las ha
 validado un especialista independiente; uno de los autores actúa como único validador, por lo que no se informa
 acuerdo entre anotadores.
 (iii)~Sin imágenes, el folio y el lado de cada tramo no constan, salvo por las cuatro marcas del texto.
-(iv)~95 de los 164 conceptos del tesauro carecen aún de definición.
+(iv)~22 definiciones del tesauro son de trabajo, sin fuente verificada, y las respuestas de PC03 y PC04 dependen
+de la capa de texto del PDF del catálogo, sin cotejo de imágenes.
 (v)~OWL~2~RL es incompleto y CIDOC CRM se distribuye en RDFS, de modo que la ausencia de inconsistencias es una
 condición necesaria, no suficiente.
 (vi)~Fuera del equipo, el perfil aún no tiene usuarios.

@@ -5,7 +5,7 @@
 > * Tesauro: `ontologia/tesauro.ttl`.
 > * Formas: `ontologia/formas.ttl`.
 > * Mapeo: `src/laad/mapeo.py`.
-> * Grafo de ejemplo: `datos/grafo/hilo_central.trig`.
+> * Grafo de ejemplo: `datos/grafo/cc-14-18.trig`.
 >
 > La tabla completa de correspondencias está en `docs/C_correspondencias.md`; la trazabilidad pregunta → término →
 > consulta → prueba, en `docs/C_trazabilidad.md`. Las notas de alcance literales de cada término, en
@@ -223,8 +223,8 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 
 **Cobertura pendiente:**
 
-* **L8. Anotación.** Están anotadas 66 menciones y 74 afirmaciones del hilo central, no todo el expediente. PC03, PC04 (catálogo) y PC15 (cadena completa de autoridades) siguen PENDIENTES.
-* **L9. Tesauro.** Unos 100 conceptos sin definición; las definiciones de trabajo deben validarlas historiadores.
+* **L8. Anotación.** Expediente completo anotado (544 menciones, 500 afirmaciones; ADR-030), por el modelo y sin validación humana; las lecturas dudosas constan en la `nota` de cada registro. PC03 y PC04 se responden según el catálogo (capa C, ADR-033).
+* **L9. Tesauro.** Los 164 conceptos tienen definición (ADR-032); 22 son definiciones de trabajo sin fuente verificada y todas deben validarlas historiadores.
 * **L10. Rendimiento.** RDF genera unas 25 tripletas por afirmación. El razonador tarda unos 79 s y lleva el grafo de 5,5 k a unas 103 k tripletas (30 k con los estándares). Asumible a escala de expediente; para la serie completa habrá que medirlo.
 
 ## 9. Decisión: RDF nativo frente a grafo de propiedades
@@ -271,4 +271,4 @@ Un revisor sin acceso a `docs/` leyó el código, los datos y los estándares. S
 | I8 Lugares | Importante | Sicuani, Cusco, San Pedro (posible) y ayllus Tinta y Uchu; HGIS como E42 | Resuelto |
 | Menor: hechos como E5 | Menor | E89 + P70 | Resuelto |
 | Menor: atributos sin raíz, creencias sin uso | Menor | `topConceptOf` y `skos:notation` | Resuelto |
-| Menor: definiciones faltantes | Menor | — | Pendiente (L9) |
+| Menor: definiciones faltantes | Menor | — | Resuelto: 164/164 (ADR-032; 22 de trabajo) |

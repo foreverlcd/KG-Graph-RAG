@@ -88,7 +88,7 @@ def _vocabulario(g: rdflib.Graph) -> tuple[set, set]:
 def test_expediente_sintetico_conforma_sin_tocar_el_nucleo(expediente_sintetico):
     from pathlib import Path
     ref = rdflib.Dataset()
-    ref.parse(Path(__file__).resolve().parents[1] / "datos/grafo/hilo_central.trig", format="trig")
+    ref.parse(Path(__file__).resolve().parents[1] / "datos/grafo/cc-14-18.trig", format="trig")
     u = mapeo.union(expediente_sintetico)
     conforma, _, texto = validacion.shacl(u, con_ontologias=True)
     assert conforma, texto[:3000]

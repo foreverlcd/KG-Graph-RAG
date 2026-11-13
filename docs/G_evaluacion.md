@@ -27,14 +27,14 @@ mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) 
 
 | # | Criterio | Umbral | Estado | Medición |
 |---|---|---|---|---|
-| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | 140/140 citas de registros + 33 piezas; folio r/v necesita imágenes |
-| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | 16 formas, 35 mutaciones detectadas |
-| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0; 59 tipificaciones espurias por D1 (ROAR) |
+| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | 1 044/1 044 citas de registros (expediente completo) + 33 piezas; folio r/v necesita imágenes |
+| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | 16 formas, 34 mutaciones detectadas (la forma de pieza apunta desde el 2026-11-13 a los objetos de `crm:P94_has_created`) |
+| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0; 285 tipificaciones espurias por D1 (ROAR) con el expediente completo |
 | 2c | OOPS! | **0 trampas críticas** | CUMPLE | 0 críticas; 1 «Important» (P34, artefacto) |
-| 3 | 20 PC con respuesta fijada por historiador antes de construir | ≥ 18/20 correctas; **6/6** en las de DISPUTA/NC | PENDIENTE (falta historiador) | Respuestas provisionales: 17/20 respondidas; 3 PENDIENTES de anotación (PC03, PC04, PC15) |
-| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; piloto de 74 afirmaciones y 66 menciones |
+| 3 | 20 PC con respuesta fijada por historiador antes de construir | ≥ 18/20 correctas; **6/6** en las de DISPUTA/NC | PENDIENTE (falta historiador) | Respuestas provisionales: 20/20 respondidas (PC03 y PC04 según el catálogo, capa C; PC15 por los papeles procesales de cada pieza) |
+| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; expediente anotado por el modelo: 500 afirmaciones y 544 menciones |
 | 5 | Segundo expediente sin clases nuevas | **0** clases y propiedades nuevas en el núcleo; 0 cambios en las formas | PENDIENTE (falta su transcripción); prueba estructural CUMPLE | Elegido a ciegas: CO Cusco Leg. 70 Exp. 15. Un expediente civil sintético entra sin clases ni propiedades nuevas (`tests/test_segundo_expediente_sintetico.py`) |
-| 6 | Contraste con fuentes independientes | Cada discrepancia registrada; ninguna resuelta en silencio | PARCIAL | Catálogo: 5 discrepancias; HGIS: Tinta; parroquiales y matrícula: localizadas o no localizadas, sin consultar |
+| 6 | Contraste con fuentes independientes | Cada discrepancia registrada; ninguna resuelta en silencio | PARCIAL | Catálogo: 5 discrepancias y 66 fichas e índices extraídos (PC03/PC04); auditoría de la capa 4 por un segundo modelo (anexo I, no es validación humana); HGIS: Tinta; parroquiales y matrícula: localizadas o no localizadas, sin consultar |
 | 7 | Líneas base (LLM con contexto completo; RAG vectorial) | El grafo gana las PC de agregación con atribución | PENDIENTE (fase de conexión) | Hipótesis registrada antes de medir |
 
 ## 1. Citas (criterio 1)

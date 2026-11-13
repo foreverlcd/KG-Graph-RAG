@@ -70,3 +70,16 @@
 | 24 | Ejecución tras la revisión: la prueba guardiana detectó que `CargoForma` no tenía caso negativo | — | 4 mutaciones nuevas (35 en total) |
 | 25 | Ejecución tras la revisión: la PC12 pasó a «hay afirmaciones resolutivas sobre la matrícula» | Causa: la heurística «tribut» en el texto del valor casaba con «recaudador de tributos» del fiscal | PC12 con regla estructural (atributo y fuerza), sin heurística sobre el texto |
 | 26 | Razonador sobre el modelo revisado | 0 inconsistencias; 59 tipificaciones espurias por D1 | Informado en G |
+
+## 2026-11-13 — Expediente completo, tesauro definido, capa 4 auditada, catálogo
+
+| # | Tarea | Resultado | Acción |
+|---|---|---|---|
+| 27 | Anotar el resto del expediente (tres agentes por tramos) | 182 + 164 + 132 menciones y 194 + 124 + 108 afirmaciones; validadas con `scripts/validar_lote.py` | ADR-030; dudas de lectura anotadas en la `nota` de cada registro |
+| 28 | Convención de `solicita` opuesta entre lotes | Lote B: sujeto = quien pide; lotes A y C: sujeto = a quien se pide | ADR-031; lote B reescrito como discurso referido, lote C con el destinatario como sujeto |
+| 29 | Definiciones del tesauro (agente) | 95 definiciones; 37 con fuente histórica consultada, 36 técnicas, 22 de trabajo; el RAE y el Diccionario de Autoridades no fueron accesibles | ADR-032 |
+| 30 | Auditoría de las reconstrucciones (agente distinto del que las propuso) | 8 sostenidas, 17 con correcciones, 1 débil, 0 incorrectas | Anexo I; correcciones aplicadas por otro agente (ADR-034) |
+| 31 | Extracción del catálogo (agente) | PC03: 62 fichas y 3 índices; PC04: 2 seguras y 3 dudosas. La ficha de CC 14-18 está en pp. impresas 435–436 (no 434–435) | Corregido en `01_materiales.md` y en el manifiesto; capa C (ADR-033) |
+| 32 | PC12 pasó a «A» con el expediente completo | Falso positivo: la vista fiscal resume la queja y llama «Yndio» al denunciante | ADR-035 |
+| 33 | Razonador sobre el expediente completo | 0 inconsistencias; D1: 285 tipificaciones espurias; D6: 500 E13 leídas como I1, 20 negaciones | Cifras del artículo actualizadas |
+| 34 | Segundo expediente real (CO Cusco L70 E15) | No hay transcripción disponible | Sigue pendiente; no se puede completar con los insumos actuales |

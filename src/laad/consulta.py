@@ -15,7 +15,7 @@ from rdflib import URIRef
 
 RAIZ = Path(__file__).resolve().parents[2]
 CONSULTAS = RAIZ / "consultas"
-TRIG = RAIZ / "datos" / "grafo" / "hilo_central.trig"
+TRIG = RAIZ / "datos" / "grafo" / "cc-14-18.trig"
 
 
 @lru_cache(maxsize=2)
