@@ -43,7 +43,7 @@ m("M-UT15-805", "UT15", "P21", "persona", "su mujer", "ni de boca tan mordaz com
 m("M-UT15-806", "UT15", "P21", "persona", "conmigo", "y lo firmo juntamente conmigo y testigos de mi asistencia", rol="firmante")
 m("M-UT15-807", "UT15", "P21", "grupo", "testigos de mi asistencia", "juntamente conmigo y testigos de mi asistencia a falta de escribano",
   rol="testigo-de-asistencia")
-m("M-UT15-808", "UT15", "P21", "cosa", "la certificaz", "q pusiera en la certificaz lo q quisiese")
+m("M-UT15-808", "UT15", "P21", "cosa", "la certificaz", "q pusiera en la certificaz lo q quisiese", tipo="documento")
 
 a("A-UT15-801", "UT15", "P21", "M-UT14-001", "declarante", {"pieza": "P21"},
   "ratifica-contenido", {"mencion": "M-UT14-001"}, "y ratifica dijo ser verdad",
@@ -130,7 +130,7 @@ m("M-UT16b-804", "UT16.b", "P23", "persona", "su casique", "en la ruina de bien 
 m("M-UT16b-805", "UT16.b", "P23", "lugar", "el partido", "vuestro vien conoce el partido nos hallamos", tipo="partido")
 m("M-UT16b-806", "UT16.b", "P23", "persona", "un insurgente", "el trabajo de un insurgente")
 m("M-UT16b-807", "UT16.b", "P23", "persona", "vuestro Condorcanqui", "de la chispa de vuestro Condorcanqui")
-m("M-UT16b-808", "UT16.b", "P23", "lugar", "la America meridional", "a trasar casi toda la America meridional")
+m("M-UT16b-808", "UT16.b", "P23", "lugar", "la America meridional", "a trasar casi toda la America meridional", tipo="region")
 m("M-UT16b-809", "UT16.b", "P23", "persona", "Maldonado Ortiz", "la aminocidad y altenencia de Maldonado Ortiz a las Guamcachoque")
 m("M-UT16b-810", "UT16.b", "P23", "persona", "Guamcachoque", "altenencia de Maldonado Ortiz a las Guamcachoque Es quanto")
 m("M-UT16b-811", "UT16.b", "P23", "persona", "Guancachoque", "en las operaciones de Guancachoque y que le pueda exponer")
@@ -228,7 +228,7 @@ a("A-UT16b-812", "UT16.b", "P23", "M-UT15-003", "informante", {"mencion": "M-UT1
 # ───────────── P24 · Decreto: se espera a Juan Cazorla · UT17 ─────────────
 # Ya anotadas: M-UT17-001 (Juan Cazorla), M-UT17-002 (Don Juan Quiñones), M-UT17-003 ([María Rubrica], firmante).
 m("M-UT17-801", "UT17", "P24", "lugar", "este pueblo", "Respecto a hallarse ausente de este pueblo Juan Cazorla", tipo="pueblo")
-m("M-UT17-802", "UT17", "P24", "cosa", "la Certificación", "de quien aparece firmada la Certificación a folios 2")
+m("M-UT17-802", "UT17", "P24", "cosa", "la Certificación", "de quien aparece firmada la Certificación a folios 2", tipo="documento")
 m("M-UT17-803", "UT17", "P24", "lugar", "el pueblo de Tinta", "que no hay tal hombre en el pueblo de Tinta esperece", tipo="pueblo")
 
 a("A-UT17-801", "UT17", "P24", "M-UT17-003", "resolutor", {"mencion": "M-UT17-001"},
@@ -245,8 +245,8 @@ a("A-UT17-803", "UT17", "P24", "M-UT17-003", "resolutor", {"mencion": "M-UT17-00
 m("M-UT17-804", "UT17", "P25", "lugar", "Sicuani", "Sicuani Noviembre 8 de 1806 No habiendo", tipo="pueblo")
 m("M-UT17-805", "UT17", "P25", "lugar", "pueblo de Tinta", "hasta esa fecha al pueblo de Tinta Juan Cazorla", tipo="pueblo")
 m("M-UT17-806", "UT17", "P25", "persona", "Juan Cazorla", "al pueblo de Tinta Juan Cazorla que suscribió el documento")
-m("M-UT17-807", "UT17", "P25", "cosa", "el documento de 2 fojas", "que suscribió el documento de 2 fojas de este expediente")
-m("M-UT17-808", "UT17", "P25", "cosa", "el correspondiente Informe", "diríjase con lo actuado y el correspondiente Informe")
+m("M-UT17-807", "UT17", "P25", "cosa", "el documento de 2 fojas", "que suscribió el documento de 2 fojas de este expediente", tipo="documento")
+m("M-UT17-808", "UT17", "P25", "cosa", "el correspondiente Informe", "diríjase con lo actuado y el correspondiente Informe", tipo="documento")
 m("M-UT17-809", "UT17", "P25", "persona", "Muy Ilustrísima Señor Padre", "al Muy Ilustrísima Señor Padre para su determinación",
   rol="destinatario")
 m("M-UT17-810", "UT17", "P25", "persona", "María Rubrica", "para su determinación [María Rubrica]", rol="firmante")
@@ -275,7 +275,7 @@ m("M-UT17-813", "UT17", "P27", "persona", "Señor Capitan General", "vista al se
   rol="destinatario")
 m("M-UT17-814", "UT17", "P27", "lugar", "el pueblo de Tinta", "Habiendo evacuarlo en el pueblo de Tinta las diligencias", tipo="pueblo")
 m("M-UT17-815", "UT17", "P27", "persona", "Vuestro señorío Muy Ilustre", "el oficio y Decreto de Vuestro señorío Muy Ilustre de 27 de Agosto")
-m("M-UT17-816", "UT17", "P27", "cosa", "los Documentos", "Resulta de ellas que los Documentos que presento Manuel Guancachoque")
+m("M-UT17-816", "UT17", "P27", "cosa", "los Documentos", "Resulta de ellas que los Documentos que presento Manuel Guancachoque", tipo="documento")
 m("M-UT17-817", "UT17", "P27", "grupo", "Parcialidad", "sobre el bullicio, y asonada de Parcialidad", tipo="parcialidad")
 m("M-UT17-818", "UT17", "P27", "lugar", "Derechos Pueblo", "a ver sucedido en Derechos Pueblo de Resultar", tipo="pueblo")
 m("M-UT17-819", "UT17", "P27", "grupo", "Tinta", "de los Ayllus Tinta y Ucho Don Andres", tipo="ayllu")
@@ -298,7 +298,7 @@ m("M-UT18-804", "UT18", "P27", "persona", "indio", "si yo no salgo al indio lo h
 m("M-UT18-805", "UT18", "P27", "lugar", "mi misma casa", "insulto, y atropellamiento, en mi misma casa, lo mande llevar", tipo="edificio")
 m("M-UT18-806", "UT18", "P27", "lugar", "la cárcel", "lo mande llevar a la cárcel , y que lo guardasen", tipo="carcel")
 m("M-UT18-807", "UT18", "P27", "persona", "Chuquitapa", "de agravios inferidos por Chuquitapa a nombre del común")
-m("M-UT18-808", "UT18", "P27", "grupo", "común y Principales", "a nombre del común y Principales de los citados Ayllos Tinta y Ucho")
+m("M-UT18-808", "UT18", "P27", "grupo", "común y Principales", "a nombre del común y Principales de los citados Ayllos Tinta y Ucho", tipo="comun")
 m("M-UT18-809", "UT18", "P27", "grupo", "Ayllos Tinta", "de los citados Ayllos Tinta y Ucho en la que", tipo="ayllu")
 m("M-UT18-810", "UT18", "P27", "grupo", "Ucho", "citados Ayllos Tinta y Ucho en la que lo convencieron", tipo="ayllu")
 m("M-UT18-811", "UT18", "P27", "grupo", "todos los Indios", "conmover y sublevar a todos los Indios contra su recaudador")
@@ -417,7 +417,7 @@ m("M-UT19-803", "UT19", "P28", "lugar", "partido de tinta", "al subdelegado del 
 m("M-UT19-804", "UT19", "P28", "persona", "yndio Guancachoque", "los excesos y enemistad del yndio Guancachoque paso")
 m("M-UT19-805", "UT19", "P28", "persona", "Don Andres Chuquitapa", "con el recaudador de tributos Don Andres Chuquitapa hasiendole")
 m("M-UT19-806", "UT19", "P28", "grupo", "los superiores", "que debe observar en lo sucesivo con los superiores bajo")
-m("M-UT19-807", "UT19", "P28", "grupo", "el gobierno", "Tomará el gobierno las más serias providencias")
+m("M-UT19-807", "UT19", "P28", "grupo", "el gobierno", "Tomará el gobierno las más serias providencias", tipo="superior-gobierno")
 
 a("A-UT19-801", "UT19", "P28", "M-UT19-002", "resolutor", {"mencion": "M-UT19-003"},
   "ordena", {"literal": "tome las providencias que estaba oportunas"},
@@ -443,20 +443,20 @@ a("A-UT19-807", "UT19", "P28", "M-UT19-002", "resolutor", {"mencion": "M-UT19-00
 m("M-UT19-808", "UT19", "P29", "persona", "El fiscal", "Muñoz [firma] El fiscal del Señor Muy en vista", rol="dictaminador")
 m("M-UT19-809", "UT19", "P29", "persona", "subdelegado del partido de Tinta", "antecedente oficio del subdelegado del partido de Tinta , y del")
 m("M-UT19-810", "UT19", "P29", "lugar", "partido de Tinta", "oficio del subdelegado del partido de Tinta , y del Expediente", tipo="partido")
-m("M-UT19-811", "UT19", "P29", "cosa", "Expediente", "y del Expediente que le acompaña Dice")
+m("M-UT19-811", "UT19", "P29", "cosa", "Expediente", "y del Expediente que le acompaña Dice", tipo="expediente")
 m("M-UT19-812", "UT19", "P29", "lugar", "Pueblo de Tinta", "Guancoichoque Yndio del Pueblo de Tinta contra", tipo="pueblo")
 m("M-UT19-813", "UT19", "P29", "persona", "Andres chuquitapa", "contra el recaudador de tributos Andres chuquitapa y demás")
 m("M-UT19-814", "UT19", "P29", "grupo", "Yndios tributarios", "en odio de los denuncios de Yndios tributarios que hizo")
 m("M-UT19-815", "UT19", "P29", "persona", "dicho recaudador", "que hizo contra dicho recaudador por la malicia")
-m("M-UT19-816", "UT19", "P29", "cosa", "dicha queja", "aver formado dicha queja y los documentos que presento")
-m("M-UT19-817", "UT19", "P29", "cosa", "los documentos", "dicha queja y los documentos que presento en su calificación")
+m("M-UT19-816", "UT19", "P29", "cosa", "dicha queja", "aver formado dicha queja y los documentos que presento", tipo="documento")
+m("M-UT19-817", "UT19", "P29", "cosa", "los documentos", "dicha queja y los documentos que presento en su calificación", tipo="documento")
 m("M-UT19-818", "UT19", "P29", "persona", "mencionado recaudador", "profesarle al mencionado recaudador, y por la mala")
 m("M-UT19-819", "UT19", "P29", "persona", "el subdelegado territorial", "mui conveniente que el subdelegado territorial tome las providencias")
 m("M-UT19-820", "UT19", "P29", "persona", "yndio Guancachoque", "a efecto de corregir y contener del yndio Guancachoque y evitar")
 m("M-UT19-821", "UT19", "P29", "persona", "dicho Guancachoque", "la conducta y operaciones de dicho Guancachoque En cuio")
 m("M-UT19-822", "UT19", "P29", "persona", "vuestro", "En cuio a tener podrá vuestro si es servido", rol="destinatario")
 m("M-UT19-823", "UT19", "P29", "persona", "mencionado .Subdelegado", "la conducente orden al mencionado .Subdelegado a este efecto")
-m("M-UT19-824", "UT19", "P29", "grupo", "este gobierno", "la prudente y celosa rectitud de este gobierno")
+m("M-UT19-824", "UT19", "P29", "grupo", "este gobierno", "la prudente y celosa rectitud de este gobierno", tipo="superior-gobierno")
 m("M-UT20-801", "UT20", "P29", "lugar", "Cuzco", "circuntancia de este asunto Cuzco y Noviembre 20 de 1806", tipo="ciudad")
 
 a("A-UT19-808", "UT19", "P29", "M-UT20-001", "dictaminador", {"mencion": "M-UT19-001"},
@@ -504,7 +504,7 @@ a("A-UT20-801", "UT20", "P29", "M-UT20-001", "dictaminador", {"pieza": "P29"},
 m("M-UT20-802", "UT20", "P30", "persona", "Don Agustin Chacon y Becerra", "[Firma Gonzalo del Rio] Don Agustin Chacon y Becerra En la Ciudad")
 m("M-UT20-803", "UT20", "P30", "lugar", "Ciudad del Cuzco", "En la Ciudad del Cuzco en veinte y seis de noviembre", tipo="ciudad")
 m("M-UT20-804", "UT20", "P30", "persona", "Yo el escribano", "seis . Yo el escribano hacia presente el entendido", rol="fedatario")
-m("M-UT20-805", "UT20", "P30", "cosa", "Auto marginal", "el entendido del Auto marginal presedente al señor")
+m("M-UT20-805", "UT20", "P30", "cosa", "Auto marginal", "el entendido del Auto marginal presedente al señor", tipo="documento")
 m("M-UT20-806", "UT20", "P30", "persona", "don Lucio Gonzalo del Rio y Vial", "al señor don Lucio Gonzalo del Rio y Vial del Concejo",
   rol="notificado")
 m("M-UT20-807", "UT20", "P30", "lugar", "las casas de mi morada", "estando en las casas de mi morada doy fe", tipo="edificio")
@@ -526,8 +526,8 @@ a("A-UT20-805", "UT20", "P30", "M-UT20-804", "fedatario", {"pieza": "P30"},
 m("M-UT20-809", "UT20", "P31", "lugar", "Cusco", "En el Cusco en veinte y tres de Diciembre", tipo="ciudad")
 m("M-UT20-810", "UT20", "P31", "persona", "Yo el escribano", "10 años . Yo el escribano habiendo llegado", rol="fedatario")
 m("M-UT20-811", "UT20", "P31", "lugar", "la ciudad", "habiendo llegado a la ciudad a preguntar", tipo="ciudad")
-m("M-UT20-812", "UT20", "P31", "cosa", "el proveido antecedente", "a preguntar por el proveido antecedente hace saber")
-m("M-UT20-813", "UT20", "P31", "cosa", "Auto de arriba", "el contento del Auto de arriba , en su persona")
+m("M-UT20-812", "UT20", "P31", "cosa", "el proveido antecedente", "a preguntar por el proveido antecedente hace saber", tipo="documento")
+m("M-UT20-813", "UT20", "P31", "cosa", "Auto de arriba", "el contento del Auto de arriba , en su persona", tipo="documento")
 m("M-UT20-814", "UT20", "P31", "persona", "su persona", "Auto de arriba , en su persona , doy fé", rol="notificado")
 m("M-UT20-815", "UT20", "P31", "persona", "Chacon", "en su persona , doy fé [ Firma Chacon]", rol="firmante")
 

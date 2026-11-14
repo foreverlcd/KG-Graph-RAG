@@ -34,6 +34,8 @@
 | `anexos/H3_metodologia_y_publicacion.md` | G | Metodología citable (LOT, NeOn, ORSD), evaluación con un solo validador y sedes de publicación |
 | `anexos/I_auditoria_reconstrucciones.md` | C, G | Auditoría de las reconstrucciones de la capa 4 por una segunda instancia del modelo (no es validación humana) |
 | `anexos/J_skills.md` | Reproducibilidad | Búsqueda de «skills» para Claude Code útiles al proyecto (2026-11-14): candidatas y por qué no se instaló ninguna |
+| `anexos/K_conectividad.md` | Capa 4 | Enlaces propuestos para conectar el grafo (2026-11-14): qué se enlazó, hipótesis rivales, lo que queda sin enlazar y sin auditar |
+| `../presentacion/main.tex` | Difusión | Presentación en Beamer del perfil; usa las mismas cifras generadas que el artículo (`presentacion/README.md`) |
 | `../articulo/` | — | Artículo sobre la ontología (castellano, LLNCS); pendientes en `articulo/README.md` |
 | `anexos/respuestas_pc.md` | B, E | Respuestas generadas por el grafo a las 20 PC (no editar a mano) |
 

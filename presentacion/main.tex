@@ -208,13 +208,15 @@ Lo que en otro modelo sería una propiedad nueva aquí es un \alert{concepto} de
 \begin{frame}{Conectividad del grafo}
 La capa 2 no fusiona nada; lo que conecta el grafo son las reconstrucciones de la capa 4.
 \begin{itemize}
-\item \cifra{\cifraMencionesEnlazadas} de \cifra{\cifraMenciones} menciones pertenecen a alguna reconstrucción.
+\item \cifra{\cifraMencionesEnlazadas} de \cifra{\cifraMenciones} menciones pertenecen a alguna de las
+      \cifra{\cifraReconstrucciones} reconstrucciones (\cifra{\cifraPersonasEnlazadas} de \cifra{\cifraPersonas} de persona).
 \item \cifra{\cifraHechosEnlazados} de \cifra{\cifraHechosNarrados} hechos narrados están reconstruidos.
 \item \cifra{\cifraEntidadesSinTipo} de \cifra{\cifraEntidadesNoPersona} menciones que no son de persona carecen de tipo de entidad.
 \end{itemize}
 \medskip
-Cada enlace es una \alert{hipótesis} con autor (un modelo de lenguaje), argumento y grado de creencia; una segunda
-instancia del modelo las auditó. Ninguna tiene validación humana todavía, y el grafo lo dice.
+Cada enlace es una \alert{hipótesis} con autor (un modelo de lenguaje), argumento y grado de creencia; las lecturas
+incompatibles coexisten como rivales. \cifra{\cifraReconstruccionesSinAuditar} no han pasado la auditoría del segundo
+modelo y ninguna tiene validación humana: el grafo lo dice.
 \end{frame}
 
 \begin{frame}{Consulta y escala}

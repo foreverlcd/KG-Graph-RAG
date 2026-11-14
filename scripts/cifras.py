@@ -83,6 +83,13 @@ def calcular() -> dict[str, int]:
     enlazadas = {m for r in recs for m in r.get("menciones", []) if ":M-" in m}
     hechos_rec = {m for r in recs for m in r.get("menciones", []) if ":H-" in m}
     c["menciones_enlazadas"] = len(enlazadas)
+    with open(RAIZ / "datos/auditoria_reconstrucciones.csv", encoding="utf-8") as f:
+        auditadas = {next(iter(r.values())) for r in csv.DictReader(f)}
+    # auditadas y no modificadas después de la auditoría del 2026-11-13
+    c["reconstrucciones_auditadas"] = len(auditadas & {r["id"] for r in recs if r["fecha"] <= "2026-11-13"})
+    c["reconstrucciones_sin_auditar"] = len(recs) - c["reconstrucciones_auditadas"]
+    c["personas"] = sum(1 for m in menciones if m["clase"] == "persona")
+    c["personas_enlazadas"] = sum(1 for m in menciones if m["clase"] == "persona" and f"{m['_exp']}:{m['id']}" in enlazadas)
     hechos = {f"{a['_exp']}:{x['hecho']}" for a in afirmaciones for x in (a["sujeto"], a["valor"]) if x.get("hecho")}
     c["hechos_narrados"] = len(hechos)
     c["hechos_enlazados"] = len(hechos & hechos_rec)

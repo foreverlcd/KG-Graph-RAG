@@ -278,7 +278,7 @@ PC & Pregunta & Capa & Forma \\
 \begin{figure}[tb]
 \centering
 {\renewcommand{\ttt}[1]{\texttt{#1}}%
-\begin{tikzpicture}[
+\resizebox{\linewidth}{!}{\begin{tikzpicture}[
   font=\tiny,
   nodo/.style={draw, rounded corners=2pt, fill=white, inner sep=2pt, align=center, minimum width=3.3cm},
   capa/.style={draw=gray!60, fill=#1, rounded corners=3pt, inner sep=4pt},
@@ -309,7 +309,7 @@ PC & Pregunta & Capa & Forma \\
 \draw[flecha] (a2.south east) to[bend left=30] node[etq,right,pos=0.85]{P9i (vía E65)} (p2.east);
 \draw[flecha] (rec) -- node[etq,right]{\ttt{prov:wasDerivedFrom}} (a1);
 \draw[flecha] (inf) -- node[etq,above]{\ttt{J4\_that} (grafo de la proposición)} (rec);
-\end{tikzpicture}}
+\end{tikzpicture}}}
 \caption{Las capas en el hilo central del caso. La afirmación de agosto y su negación de septiembre conviven como dos
 E13 atribuidas; ambas se refieren a la misma mención de Chuquitapa porque el declarante de septiembre lo omite
 (sujeto elíptico resuelto por el anotador). La identidad de Chuquitapa es una reconstrucción con autor y creencia.
@@ -327,8 +327,8 @@ derivada del original, identificada por su suma SHA-256, y cada tramo es un comp
 declara el catálogo (19 folios) se registra con \ttt{rico:CarrierExtent}, con su fuente y la discrepancia anotada.
 
 \subsection{Capa 2: las menciones}
-Cada mención es una \ttt{picom:PersonObservation} (personas) o una \ttt{roar:Observation} (grupos, lugares y cosas)
-con su nombre literal (\ttt{crm:E41\_Appellation}). PiCo define la observación como el modo en que una persona
+Las menciones de persona son \ttt{picom:PersonObservation}; las de grupos, lugares y cosas,
+\ttt{roar:Observation}. Todas llevan su nombre literal como \ttt{crm:E41\_Appellation}. PiCo define la observación como el modo en que una persona
 \emph{está registrada} en una fuente. Las menciones no se tipifican como \ttt{crm:E21\_Person}, que afirmaría a una
 persona del mundo, y el propio expediente muestra por qué: de uno de los certificantes, \cita{don Juan Quiñones},
 el subdelegado escribe \cita{que no hay tal hombre en el pueblo de Tinta}. Toda mención lleva un ancla de Web
@@ -395,9 +395,11 @@ conjunto de datos como fuente, y los de Wikidata o TGN como identificadores adic
 \ttt{owl:sameAs}; no se copian geometrías, cuya licencia (CC BY-NC-SA) se transmitiría al grafo.
 
 En el piloto, las \cifraReconstruccionesConFechas{} inferencias de la capa~4 tienen como autor al agente de software que las propuso (un modelo de
-lenguaje), registrado como tal en la procedencia. Una auditoría hecha por una segunda instancia del modelo, que cotejó
-cada reconstrucción con la transcripción, recalibró quince valores de creencia y añadió nueve hipótesis rivales; no
-equivale a una validación experta. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
+lenguaje), registrado como tal en la procedencia. Una auditoría hecha por una segunda instancia del modelo cotejó
+con la transcripción las 35 reconstrucciones iniciales, recalibró quince valores de creencia y añadió nueve hipótesis
+rivales; no equivale a una validación experta. Las reconstrucciones añadidas o ampliadas después para conectar el
+grafo (sección~\ref{sec:evaluacion}) no han pasado esa auditoría: \cifraReconstruccionesSinAuditar{} de las
+\cifraReconstrucciones{} están hoy sin auditar en su forma actual. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
 cada dato indica su agente y si consta una validación humana, que hoy no consta en ninguno. Confirmar o reasignar cada
 reconstrucción es tarea de un investigador (sección~\ref{sec:discusion}).
 
@@ -588,6 +590,17 @@ no estaban implementados, que el código suponía un único expediente, que tres
 a mano y que las relaciones de discurso dependían de una convención no validada. Todo se corrigió o se documentó como
 límite antes de esta versión.
 
+\paragraph{Conectividad y escala.}
+Como la capa~2 no fusiona nada, el grafo solo se conecta por las reconstrucciones. Con las del piloto,
+\cifraMencionesEnlazadas{} de las \cifraMenciones{} menciones (\cifraPersonasEnlazadas{} de las \cifraPersonas{} de
+persona) pertenecen a alguna identidad propuesta y \cifraHechosEnlazados{} de los \cifraHechosNarrados{} hechos
+narrados, a algún evento; el resto son colectivos indeterminados, pronombres, menciones únicas o pasajes ambiguos,
+y se dejan sin enlazar con su motivo. Las lecturas incompatibles se mantienen como reconstrucciones rivales que
+comparten menciones. Para estimar el coste de un fondo se replicó el grafo del piloto hasta mil expedientes
+(sesenta millones de cuádruplas en un almacén Oxigraph en disco): la carga y el espacio crecen linealmente, y el
+tiempo de las consultas depende de que la restricción al expediente se escriba como patrón y no como filtro. Es una
+medición sobre réplicas, no sobre el archivo real.
+
 % =====================================================================
 \section{Discusión y limitaciones}\label{sec:discusion}
 
@@ -608,7 +621,7 @@ comprobado con un pleito civil sintético; un segundo expediente real, sorteado 
 se incorporará cuando se disponga de su transcripción.
 (ii)~Las anotaciones y las reconstrucciones del piloto se propusieron con ayuda de un modelo de lenguaje y no las ha
 validado un especialista independiente; uno de los autores actúa como único validador, por lo que no se informa
-acuerdo entre anotadores.
+acuerdo entre anotadores; la mayoría de las reconstrucciones tampoco ha pasado la auditoría del segundo modelo.
 (iii)~Sin imágenes, el folio y el lado de cada tramo no constan, salvo por las cuatro marcas del texto.
 (iv)~\cifraDefinicionesDeTrabajo{} definiciones del tesauro son de trabajo, sin fuente verificada, y las respuestas de PC03 y PC04 dependen
 de la capa de texto del PDF del catálogo, sin cotejo de imágenes.

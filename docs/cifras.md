@@ -8,36 +8,40 @@
 | afirmaciones | 504 | `\cifraAfirmaciones` |
 | alineaciones | 66 | `\cifraAlineaciones` |
 | atributos | 30 | `\cifraAtributos` |
-| candidatos | 19 | `\cifraCandidatos` |
+| candidatos | 26 | `\cifraCandidatos` |
 | catalogo registros | 66 | `\cifraCatalogoRegistros` |
 | citas | 1 049 | `\cifraCitas` |
-| clases | 41 | `\cifraClases` |
+| clases | 42 | `\cifraClases` |
 | conceptos | 164 | `\cifraConceptos` |
 | d1 espurias | 285 | `\cifraDUnoEspurias` |
 | d6 afirmaciones | 504 | `\cifraDSeisAfirmaciones` |
 | d6 negaciones | 20 | `\cifraDSeisNegaciones` |
 | definiciones de trabajo | 22 | `\cifraDefinicionesDeTrabajo` |
 | entidades no persona | 260 | `\cifraEntidadesNoPersona` |
-| entidades sin tipo | 135 | `\cifraEntidadesSinTipo` |
+| entidades sin tipo | 77 | `\cifraEntidadesSinTipo` |
 | esquemas | 12 | `\cifraEsquemas` |
 | expedientes | 1 | `\cifraExpedientes` |
 | formas | 50 | `\cifraFormas` |
-| grafos | 77 | `\cifraGrafos` |
-| hechos enlazados | 13 | `\cifraHechosEnlazados` |
+| grafos | 243 | `\cifraGrafos` |
+| hechos enlazados | 46 | `\cifraHechosEnlazados` |
 | hechos narrados | 61 | `\cifraHechosNarrados` |
 | menciones | 545 | `\cifraMenciones` |
-| menciones enlazadas | 123 | `\cifraMencionesEnlazadas` |
+| menciones enlazadas | 443 | `\cifraMencionesEnlazadas` |
 | mutaciones declaradas | 36 | `\cifraMutacionesDeclaradas` |
 | negaciones | 20 | `\cifraNegaciones` |
 | negaciones con respuesta | 4 | `\cifraNegacionesConRespuesta` |
+| personas | 285 | `\cifraPersonas` |
+| personas enlazadas | 263 | `\cifraPersonasEnlazadas` |
 | piezas | 33 | `\cifraPiezas` |
 | preguntas | 20 | `\cifraPreguntas` |
 | propiedades | 75 | `\cifraPropiedades` |
-| razonador cierre | 189 555 | `\cifraRazonadorCierre` |
+| razonador cierre | 202 408 | `\cifraRazonadorCierre` |
 | razonador inconsistencias | 0 | `\cifraRazonadorInconsistencias` |
-| razonador tripletas | 56 351 | `\cifraRazonadorTripletas` |
-| reconstrucciones | 35 | `\cifraReconstrucciones` |
-| reconstrucciones con fechas | 36 | `\cifraReconstruccionesConFechas` |
+| razonador tripletas | 59 202 | `\cifraRazonadorTripletas` |
+| reconstrucciones | 118 | `\cifraReconstrucciones` |
+| reconstrucciones auditadas | 14 | `\cifraReconstruccionesAuditadas` |
+| reconstrucciones con fechas | 119 | `\cifraReconstruccionesConFechas` |
+| reconstrucciones sin auditar | 104 | `\cifraReconstruccionesSinAuditar` |
 | terminos propios | 0 | `\cifraTerminosPropios` |
-| tripletas | 31 037 | `\cifraTripletas` |
+| tripletas | 33 806 | `\cifraTripletas` |
 | valores literales | 211 | `\cifraValoresLiterales` |

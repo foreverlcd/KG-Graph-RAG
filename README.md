@@ -18,6 +18,7 @@ proyecto (menciones, afirmaciones, tripletas, formas…) están en `docs/cifras.
 - `consultas/` — consultas SPARQL con nombre
 - `datos/` — un manifiesto por expediente (`datos/expedientes/<exp>.json`; guía en `datos/expedientes/README.md`), piezas (capa 1), registros anotados (capas 2–3), reconstrucciones (capa 4, comunes al corpus), candidatos del tesauro y dominio y rango de los atributos (CSV), y el grafo: `datos/grafo/<exp>.trig` por expediente más `datos/grafo/comun.trig`
 - `scripts/` — construir y validar el grafo, razonar, responder las preguntas de competencia, preparar un expediente nuevo, gestionar candidatos y generar las cifras
+- `articulo/` y `presentacion/` — artículo (LLNCS) y presentación (Beamer) del perfil; ambos cargan `articulo/cifras.tex` y deben actualizarse con cada cambio del modelo
 - `vendor/` — especificaciones de los estándares (descarga reproducible con `scripts/fetch_vendor.sh`)
 - `tests/` — pruebas de fuente y formato de transcripción, formas negativas, términos, capas, mapeo, preguntas de competencia, varios expedientes en un mismo corpus, candidatos, atributos, versión del tesauro, motores de consulta y cifras al día
 
