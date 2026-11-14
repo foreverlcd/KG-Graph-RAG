@@ -21,6 +21,18 @@
 \newcommand{\ttt}[1]{\texttt{\small #1}}
 \setlength{\emergencystretch}{3em}
 \newcommand{\cita}[1]{«\textit{#1}»}
+% Tablas: cuerpo \footnotesize, teletipo del mismo cuerpo y columnas de texto sin justificar.
+\newcommand{\tablafuente}{\footnotesize\renewcommand{\ttt}[1]{\texttt{##1}}\renewcommand{\arraystretch}{1.12}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+% Flotantes: evitar páginas casi vacías con una sola tabla.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{2}
+\setcounter{totalnumber}{3}
+\raggedbottom
 
 \lstdefinelanguage{turtle}{
   morekeywords={a,@prefix},
@@ -161,13 +173,13 @@ testimonios atribuidos; es una búsqueda negativa, no una prueba de inexistencia
 
 La tabla~\ref{tab:comparacion} resume en qué se diferencia OHAC de los modelos más próximos.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
-\caption{OHAC frente a los modelos más próximos. «Rol procesal»: ante quién, quién firma, quién escribe.}\label{tab:comparacion}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xcccc@{}}
+\caption{OHAC frente a los modelos más próximos. «Factoides» agrupa el modelo de factoides y FactGrid; «rol procesal»: ante quién, quién firma, quién escribe.}\label{tab:comparacion}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}Lcccc@{}}
 \toprule
- & Factoides / FactGrid & STAR & CourtDocs & OHAC \\
+ & Factoides & STAR & CourtDocs & OHAC \\
 \midrule
 Afirmación atribuida a quien la hace & sí & sí & parcial & sí \\
 Rol procesal de la actuación & no & no & parcial & sí (PC14) \\
@@ -211,12 +223,12 @@ de afirmaciones atribuidas (A), disputa («X lo afirma, Y lo niega»), \emph{no 
 \emph{no} dar una respuesta factual. Las preguntas y unas respuestas de referencia provisionales, cada una con su
 tramo, quedaron registradas en el control de versiones antes del primer cambio del modelo (commit \ttt{417c895}).
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Selección de las 20 preguntas de competencia. Capa: 1 documento, 2 menciones, 3 afirmaciones,
 4 reconstrucción, P procedencia.}\label{tab:pc}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}lXcl@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}lLcl@{}}
 \toprule
 PC & Pregunta & Capa & Forma \\
 \midrule
@@ -260,7 +272,7 @@ PC & Pregunta & Capa & Forma \\
   expediente, el tramo y un ordinal.
 \end{enumerate}
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 {\renewcommand{\ttt}[1]{\texttt{#1}}%
 \begin{tikzpicture}[
@@ -421,26 +433,26 @@ como CIDOC CRM prevé la especialización local mediante \ttt{E55\_Type}. El cos
 CIDOC CRM que ignore \ttt{P2\_has\_type} leerá «asignó \emph{coronel}» en una negación; las formas obligan a declarar
 la polaridad y toda consulta la devuelve.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Análisis de carencias (extracto). Ninguna necesidad exigió un término propio.}\label{tab:carencias}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xlc@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}P{0.34\linewidth}L@{}}
 \toprule
-Necesidad & Solución con términos existentes & ¿Término propio? \\
+Necesidad & Solución con términos existentes \\
 \midrule
-Sección y legajo & \ttt{rico:RecordSet} + concepto \ttt{doc:seccion}/\ttt{doc:legajo} & No \\
-Extensión en folios & \ttt{rico:CarrierExtent} + \ttt{rico:quantity} & No \\
-Folio individual, recto/vuelto & \ttt{rico:Instantiation} + concepto \ttt{doc:folio} & No \\
-Afirmación con actor, actuación y tiempo & \ttt{crm:E13} + \ttt{P9i} + \ttt{P14} & No \\
-Ante quién, quién firma, quién escribe & \ttt{crm:PC14} + \ttt{P14.1} + rol del tesauro & No \\
-Polaridad, fundamento, fuerza & \ttt{crm:P2\_has\_type} + concepto & No \\
-«Responde a», «según» & \ttt{crm:P17\_was\_motivated\_by} + marca \ttt{anot:} & No \\
-Mención tal como está escrita & \ttt{picom:PersonObservation}, \ttt{roar:Observation} & No \\
-Cita exacta & \ttt{oa:TextQuoteSelector} + \ttt{oa:TextPositionSelector} & No \\
-Creencia del reconstructor & \ttt{crminf:I5}, \ttt{I2}, \ttt{J4}, \ttt{J5} & No \\
-Ejercicio de cargo con vigencia & \ttt{crm:E7} + \ttt{PC14} (cargo como rol) + \ttt{E52} & No \\
-Procedencia del dato & PROV-O & No \\
+Sección y legajo & \ttt{rico:RecordSet} + concepto \ttt{doc:seccion}/\ttt{doc:legajo} \\
+Extensión en folios & \ttt{rico:CarrierExtent} + \ttt{rico:quantity} \\
+Folio individual, recto/vuelto & \ttt{rico:Instantiation} + concepto \ttt{doc:folio} \\
+Afirmación con actor, actuación y tiempo & \ttt{crm:E13} + \ttt{P9i} + \ttt{P14} \\
+Ante quién, quién firma, quién escribe & \ttt{crm:PC14} + \ttt{P14.1} + rol del tesauro \\
+Polaridad, fundamento, fuerza & \ttt{crm:P2\_has\_type} + concepto \\
+«Responde a», «según» & \ttt{crm:P17\_was\_motivated\_by} + marca \ttt{anot:} \\
+Mención tal como está escrita & \ttt{picom:PersonObservation}, \ttt{roar:Observation} \\
+Cita exacta & \ttt{oa:TextQuoteSelector} + \ttt{oa:TextPositionSelector} \\
+Creencia del reconstructor & \ttt{crminf:I5}, \ttt{I2}, \ttt{J4}, \ttt{J5} \\
+Ejercicio de cargo con vigencia & \ttt{crm:E7} + \ttt{PC14} (cargo como rol) + \ttt{E52} \\
+Procedencia del dato & PROV-O \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -452,11 +464,11 @@ Usar los estándares con datos reales, validarlos y razonar sobre ellos reveló 
 y dos carencias de expresividad (D4, D5). No los corregimos en origen: los evitamos o los medimos, y el razonador los
 informa en cada ejecución.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Defectos y carencias hallados en los estándares reutilizados.}\label{tab:defectos}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}llX@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}lP{0.17\linewidth}L@{}}
 \toprule
 Id & Estándar & Problema y tratamiento \\
 \midrule
@@ -502,11 +514,11 @@ propiedades, todas de los estándares. El grafo se
 construyó con rdflib~\cite{rdflib}, se valida con pySHACL~\cite{pyshacl} y se razona con OWL-RL~\cite{owlrl}. La
 tabla~\ref{tab:resultados} resume los resultados; todas las cifras se reproducen con las 218 pruebas del repositorio.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Resultados de la evaluación del perfil sobre el expediente piloto.}\label{tab:resultados}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xll@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}Lll@{}}
 \toprule
 Criterio & Umbral & Resultado \\
 \midrule
