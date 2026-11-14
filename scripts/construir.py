@@ -16,8 +16,12 @@ for ruta in corpus.escribir(ds):
     print(f"escrito {ruta} ({sum(len(g) for g in parte.graphs())} tripletas en "
           f"{sum(1 for g in parte.graphs() if len(g))} grafos)")
 print(f"corpus: {', '.join(exps or corpus.expedientes())}; {sum(len(g) for g in ds.graphs())} tripletas")
-conforma, _, texto = validacion.shacl(mapeo.union(ds), con_ontologias="--sin-ontologias" not in sys.argv)
+conforma, resultados, texto = validacion.shacl(mapeo.union(ds), con_ontologias="--sin-ontologias" not in sys.argv)
 print("SHACL conforma:", conforma)
+avisos = validacion.avisos(resultados)
+print(f"SHACL avisos: {len(avisos)} (conceptos candidatos en uso; no impiden conformar)")
+if avisos:
+    print(validacion.resumen_avisos(resultados))
 if not conforma:
     print(texto[:6000])
     sys.exit(1)

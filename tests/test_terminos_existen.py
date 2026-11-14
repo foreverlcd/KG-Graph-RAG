@@ -57,8 +57,9 @@ def _terminos_sparql(formas: rdflib.Graph) -> set[URIRef]:
 
 def _usadas() -> dict[URIRef, set[str]]:
     fuentes = {"unión": union(),
-               "formas.ttl": rdflib.Graph().parse(validacion.ONT / "formas.ttl"),
-               "ohac.ttl": rdflib.Graph().parse(validacion.ONT / "ohac.ttl")}
+               "formas.ttl": validacion.grafo_formas(),       # con las formas generadas de dominio y rango
+               "ohac.ttl": rdflib.Graph().parse(validacion.ONT / "ohac.ttl"),
+               "candidatos.ttl": rdflib.Graph().parse(validacion.ONT / "candidatos.ttl")}
     usadas: dict[URIRef, set[str]] = {}
     for nombre, g in fuentes.items():
         # los objetos de owl:imports son IRI nominales de ontología (versión), no términos (ver ohac.ttl)
@@ -89,7 +90,9 @@ def test_se_usan_todos_los_espacios_esperados():
 
 @functools.lru_cache(maxsize=1)
 def _tesauro() -> rdflib.Graph:
-    return rdflib.Graph().parse(validacion.ONT / "tesauro.ttl")
+    """El tesauro y sus conceptos candidatos (ontologia/candidatos.ttl), que los registros también pueden usar."""
+    from laad import esquema
+    return esquema.grafo_tesauro()
 
 
 def test_conceptos_del_tesauro_usados_estan_declarados():
@@ -98,7 +101,7 @@ def test_conceptos_del_tesauro_usados_estan_declarados():
     usados = {x for t in union() for x in t if isinstance(x, URIRef) and str(x).startswith(TES)}
     assert usados, "la unión no usa ningún concepto del tesauro"
     faltan = sorted(usados - declarados)
-    assert not faltan, "conceptos usados sin declarar en tesauro.ttl:\n" + "\n".join(map(str, faltan))
+    assert not faltan, "conceptos usados sin declarar en tesauro.ttl ni en candidatos.ttl:\n" + "\n".join(map(str, faltan))
 
 
 def test_conceptos_del_tesauro_tienen_preflabel_e_inscheme():

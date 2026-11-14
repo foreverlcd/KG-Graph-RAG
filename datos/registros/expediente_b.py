@@ -107,9 +107,12 @@ a("A-UT09-513", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-51
   "ejerce-cargo", {"concepto": "fiscal-audiencia"}, "su único Fiscal en esta Real Audiencia")
 a("A-UT09-514", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-518"},
   "se-hallaba", {"mencion": "M-UT09-520"}, "estando en las casas de sus moradas doy fe", fundamento="vista")
-a("A-UT09-515", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-517"},
+a("A-UT09-515", "UT09", "P11", "M-UT09-517", "fedatario", {"pieza": "P11"},
   "firmo", {"mencion": "M-UT09-521"}, "doy fe .- Firma Chacón",
-  nota="La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza la firma él.")
+  nota="La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza (P11) la firma él.")
+a("A-UT09-524", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-518"},
+  "ejerce-cargo", {"concepto": "consejero"}, "Don Luis Gonsalo del Rio del Concejo de su Majestad",
+  nota="Título «del Concejo de su Majestad»: concepto candidato cargo:consejero (datos/candidatos_tesauro.csv).")
 
 # ───────────── P12 · Notificación del auto a Guancachoque · UT09 ─────────────
 m("M-UT09-522", "UT09", "P12", "persona", "Yo el escrivano", "En dicho día mes y año Yo el escrivano hice igual diligencia",
@@ -219,9 +222,9 @@ a("A-UT10-511", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-513"},
 a("A-UT10-512", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-515"},
   "participa-en-hecho", {"hecho": "H-p14-defraudacion"},
   "el examen y Justificación de la defraudación que se hacia asu Magestad. cometida por el citado re caudador",
-  rol_en_hecho="participante-en-hecho",
+  rol_en_hecho="autor-de-fraude",
   nota="La defraudación es el objeto del examen encargado, no un hecho que el subdelegado dé por probado. "
-       "El tesauro no tiene un rol de «autor» de un fraude; se usa el rol genérico.")
+       "Rol: concepto candidato rol:autor-de-fraude (datos/candidatos_tesauro.csv).")
 a("A-UT10-513", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-514"},
   "participa-en-hecho", {"hecho": "H-p14-defraudacion"}, "la defraudación que se hacia asu Magestad",
   rol_en_hecho="victima")
@@ -407,8 +410,9 @@ a("A-UT12b-503", "UT12.b", "P19", MC, "declarante", {"hecho": "H-p19-castigo"},
   fundamento="oidas", segun="M-UT12.b-509", nota="«Aquel» remite a Guancachoque, nombrado en la frase anterior (M-UT12.b-509).")
 a("A-UT12b-504", "UT12.b", "P19", MC, "declarante", {"mencion": "M-UT12.b-511"},
   "participa-en-hecho", {"hecho": "H-p19-robo"}, "lo castigaban por haber denunciado el robo del cacique",
-  rol_en_hecho="participante-en-hecho", fundamento="oidas", segun="M-UT12.b-509",
-  nota="Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. El tesauro no tiene rol de autor de un robo.")
+  rol_en_hecho="autor-de-fraude", fundamento="oidas", segun="M-UT12.b-509",
+  nota="Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. Rol: concepto candidato "
+       "rol:autor-de-fraude (datos/candidatos_tesauro.csv).")
 a("A-UT12b-505", "UT12.b", "P19", MC, "declarante", {"mencion": "M-UT12.b-511"},
   "ejerce-cargo", {"concepto": "cacique"}, "denunciado el robo del cacique , en favor de la Real hacienda",
   fundamento="oidas", segun="M-UT12.b-509")
@@ -613,7 +617,11 @@ a("A-UT14-533", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
   "participa-en-hecho", {"hecho": "H-p21-motin"},
   "se amotinaron contra el corregidor y contra el padre del que declara q era cobrador del departamento en cuya noche le vaguear y maltrataron",
   rol_en_hecho="victima",
-  nota="Cargo escrito «cobrador del departamento»: no hay concepto equivalente en tes:cargos; no se anota ejerce-cargo.")
+  nota="Cargo escrito «cobrador del departamento»: se anota aparte con el concepto candidato cargo:cobrador (A-UT14-538).")
+a("A-UT14-538", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
+  "ejerce-cargo", {"concepto": "cobrador"}, "el padre del que declara q era cobrador del departamento",
+  nota="«cobrador del departamento»: concepto candidato cargo:cobrador; no se asimila a recaudador de tributos "
+       "(datos/candidatos_tesauro.csv).")
 a("A-UT14-534", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
   "parentesco", {"mencion": FO}, "contra el padre del que declara", nota="Tipo de parentesco escrito: «padre».")
 a("A-UT14-535", "UT14", "P21", FO, "declarante", {"hecho": "H-p21-motin"},

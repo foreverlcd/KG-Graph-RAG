@@ -22,9 +22,12 @@ if lote.errores:
     print("ERRORES DE REGISTRO:\n" + "\n".join(lote.errores[:80]))
     sys.exit(1)
 print(f"{exp}: {len(lote.menciones)} menciones, {len(lote.afirmaciones)} afirmaciones")
+if lote.avisos:
+    print(f"AVISOS ({len(lote.avisos)}; no son errores — ontologia/README.md):\n" + "\n".join(lote.avisos[:80]))
 ds = corpus.construir(lotes={exp: lote}, catalogo=None)
-conforma, _, texto = validacion.shacl(mapeo.union(ds), con_ontologias=True)
+conforma, resultados, texto = validacion.shacl(mapeo.union(ds), con_ontologias=True)
 print("SHACL conforma:", conforma)
+print(f"SHACL avisos: {len(validacion.avisos(resultados))}")
 if not conforma:
     print(texto[:6000])
     sys.exit(1)

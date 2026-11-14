@@ -94,8 +94,9 @@ a("A-UT15-813", "UT15", "P22", "M-UT15-815", "resolutor", {"mencion": "M-UT15-00
   "se hade servir exponerme a continuacion lo que separa y le conste como parroco interino de esta doctrina",
   nota="Petición de informe sobre la conducta y manejo de Guancachoque; el afirmante es el firmante del oficio.")
 a("A-UT15-814", "UT15", "P22", "M-UT15-815", "resolutor", {"mencion": "M-UT15-811"},
-  "tiene-condicion", {"literal": "Oriundo de el"}, "en este pueblo Manuel Guancachoque Oriundo de el",
-  nota="«Oriundo» (natural del pueblo) no equivale con seguridad a la condición fiscal «originario»; se deja literal.")
+  "tiene-condicion", {"concepto": "oriundo", "literal": "Oriundo de el"}, "en este pueblo Manuel Guancachoque Oriundo de el",
+  nota="«Oriundo» (natural del pueblo) no equivale con seguridad a la condición fiscal «originario»: concepto "
+       "candidato cond:oriundo (datos/candidatos_tesauro.csv).")
 a("A-UT15-815", "UT15", "P22", "M-UT15-815", "resolutor", {"mencion": "M-UT15-003"},
   "ejerce-cargo", {"concepto": "cura-interino"}, "le conste como parroco interino de esta doctrina")
 a("A-UT15-816", "UT15", "P22", "M-UT15-815", "resolutor", {"mencion": "M-UT15-813"},
@@ -546,7 +547,8 @@ a("A-UT20-809", "UT20", "P31", "M-UT20-810", "fedatario", {"pieza": "P31"},
 # ───────────── P32 · Certificación notarial republicana AJENA al expediente · UT20 ─────────────
 # Solo participantes de la pieza; sin afirmaciones ni relación alguna con la causa de 1806.
 m("M-UT20-816", "UT20", "P32", "persona", "Matias Ugarte", "El ciudadano Matias Ugarte = Notario Público", rol="certificante")
-m("M-UT20-817", "UT20", "P32", "lugar", "provincia de Urubamba", "Notario Público de la provincia de Urubamba certifica")
+m("M-UT20-817", "UT20", "P32", "lugar", "provincia de Urubamba", "Notario Público de la provincia de Urubamba certifica",
+  tipo="provincia")
 m("M-UT20-818", "UT20", "P32", "persona", "la señora", "la venta otorgada por la señora.")
 
 

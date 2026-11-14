@@ -1,0 +1,331 @@
+# Formas SHACL de DOMINIO Y RANGO de los atributos — GENERADO por scripts/atributos.py desde datos/atributos.csv.
+# No editar a mano. Se cargan junto a ontologia/formas.ttl (laad.validacion.grafo_formas).
+# Cada forma toma las afirmaciones (crm:E13) de UN atributo y exige que su sujeto (P140) y su valor (P141) tengan
+# como rdf:type directo una de las clases que el mapeo emite para los tipos admitidos en el CSV.
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix crm:   <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix ohac:  <https://w3id.org/laad/ohac#> .
+
+<https://w3id.org/laad/ohac#AtributoForma-autenticidad-firma> a sh:NodeShape ;
+    rdfs:comment "atr:autenticidad-firma — sujeto: pieza; valor: persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/autenticidad-firma> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:autenticidad-firma: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:autenticidad-firma: el valor de la afirmación no es de un tipo admitido (persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-calificacion-de-conducta> a sh:NodeShape ;
+    rdfs:comment "atr:calificacion-de-conducta — sujeto: grupo, persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/calificacion-de-conducta> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:calificacion-de-conducta: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:calificacion-de-conducta: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-cantidad-denunciada> a sh:NodeShape ;
+    rdfs:comment "atr:cantidad-denunciada — sujeto: grupo, persona, pieza; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/cantidad-denunciada> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:cantidad-denunciada: el sujeto de la afirmación no es de un tipo admitido (grupo, persona, pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:cantidad-denunciada: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-conoce-contenido> a sh:NodeShape ;
+    rdfs:comment "atr:conoce-contenido — sujeto: pieza; valor: literal, persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/conoce-contenido> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:conoce-contenido: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:conoce-contenido: el valor de la afirmación no es de un tipo admitido (literal, persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-da-fe> a sh:NodeShape ;
+    rdfs:comment "atr:da-fe — sujeto: hecho, pieza; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/da-fe> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:da-fe: el sujeto de la afirmación no es de un tipo admitido (hecho, pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:da-fe: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-dijo> a sh:NodeShape ;
+    rdfs:comment "atr:dijo — sujeto: grupo, persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/dijo> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:dijo: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:dijo: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-duracion> a sh:NodeShape ;
+    rdfs:comment "atr:duracion — sujeto: hecho; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/duracion> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:duracion: el sujeto de la afirmación no es de un tipo admitido (hecho)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E52_Time-Span> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:duracion: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-edad> a sh:NodeShape ;
+    rdfs:comment "atr:edad — sujeto: persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/edad> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:edad: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:edad: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-ejerce-cargo> a sh:NodeShape ;
+    rdfs:comment "atr:ejerce-cargo — sujeto: persona; valor: concepto de tes:cargos."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/ejerce-cargo> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ejerce-cargo: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned [ sh:alternativePath ( rdf:type skos:inScheme ) ] ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://w3id.org/laad/tesauro/cargos> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ejerce-cargo: el valor de la afirmación no es de un tipo admitido (concepto de tes:cargos)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-existe-persona> a sh:NodeShape ;
+    rdfs:comment "atr:existe-persona — sujeto: persona; valor: literal, lugar."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/existe-persona> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:existe-persona: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://w3id.org/roar#LocationObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:existe-persona: el valor de la afirmación no es de un tipo admitido (literal, lugar)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-fecha-del-hecho> a sh:NodeShape ;
+    rdfs:comment "atr:fecha-del-hecho — sujeto: hecho; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/fecha-del-hecho> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:fecha-del-hecho: el sujeto de la afirmación no es de un tipo admitido (hecho)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E52_Time-Span> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:fecha-del-hecho: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-filiacion> a sh:NodeShape ;
+    rdfs:comment "atr:filiacion — sujeto: persona; valor: persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/filiacion> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:filiacion: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:filiacion: el valor de la afirmación no es de un tipo admitido (persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-firma-a-ruego> a sh:NodeShape ;
+    rdfs:comment "atr:firma-a-ruego — sujeto: pieza; valor: literal, persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/firma-a-ruego> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:firma-a-ruego: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:firma-a-ruego: el valor de la afirmación no es de un tipo admitido (literal, persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-firmo> a sh:NodeShape ;
+    rdfs:comment "atr:firmo — sujeto: pieza; valor: grupo, literal, persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/firmo> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:firmo: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:firmo: el valor de la afirmación no es de un tipo admitido (grupo, literal, persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-folio-de-pieza> a sh:NodeShape ;
+    rdfs:comment "atr:folio-de-pieza — sujeto: cosa, pieza; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/folio-de-pieza> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://w3id.org/roar#Observation> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:folio-de-pieza: el sujeto de la afirmación no es de un tipo admitido (cosa, pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:folio-de-pieza: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-generales-de-la-ley> a sh:NodeShape ;
+    rdfs:comment "atr:generales-de-la-ley — sujeto: persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/generales-de-la-ley> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:generales-de-la-ley: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:generales-de-la-ley: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-lugar-del-hecho> a sh:NodeShape ;
+    rdfs:comment "atr:lugar-del-hecho — sujeto: hecho; valor: literal, lugar."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/lugar-del-hecho> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:lugar-del-hecho: el sujeto de la afirmación no es de un tipo admitido (hecho)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://w3id.org/roar#LocationObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:lugar-del-hecho: el valor de la afirmación no es de un tipo admitido (literal, lugar)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-motivo> a sh:NodeShape ;
+    rdfs:comment "atr:motivo — sujeto: hecho, persona, pieza; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/motivo> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> <https://personsincontext.org/model#PersonObservation> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:motivo: el sujeto de la afirmación no es de un tipo admitido (hecho, persona, pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:motivo: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-notifica> a sh:NodeShape ;
+    rdfs:comment "atr:notifica — sujeto: persona; valor: literal, pieza."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/notifica> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:notifica: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:notifica: el valor de la afirmación no es de un tipo admitido (literal, pieza)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-numero-de-participantes> a sh:NodeShape ;
+    rdfs:comment "atr:numero-de-participantes — sujeto: hecho; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/numero-de-participantes> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:numero-de-participantes: el sujeto de la afirmación no es de un tipo admitido (hecho)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:numero-de-participantes: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-ordena> a sh:NodeShape ;
+    rdfs:comment "atr:ordena — sujeto: cosa, grupo, persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/ordena> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ordena: el sujeto de la afirmación no es de un tipo admitido (cosa, grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ordena: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-parentesco> a sh:NodeShape ;
+    rdfs:comment "atr:parentesco — sujeto: persona; valor: persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/parentesco> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:parentesco: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:parentesco: el valor de la afirmación no es de un tipo admitido (persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-participa-en-hecho> a sh:NodeShape ;
+    rdfs:comment "atr:participa-en-hecho — sujeto: grupo, persona; valor: hecho."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/participa-en-hecho> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:participa-en-hecho: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:participa-en-hecho: el valor de la afirmación no es de un tipo admitido (hecho)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-presta-juramento> a sh:NodeShape ;
+    rdfs:comment "atr:presta-juramento — sujeto: persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/presta-juramento> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:presta-juramento: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:presta-juramento: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-ratifica-contenido> a sh:NodeShape ;
+    rdfs:comment "atr:ratifica-contenido — sujeto: pieza; valor: persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/ratifica-contenido> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ratifica-contenido: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:ratifica-contenido: el valor de la afirmación no es de un tipo admitido (persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-redacto> a sh:NodeShape ;
+    rdfs:comment "atr:redacto — sujeto: pieza; valor: literal, persona."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/redacto> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:redacto: el sujeto de la afirmación no es de un tipo admitido (pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:redacto: el valor de la afirmación no es de un tipo admitido (literal, persona)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-sabe-firmar> a sh:NodeShape ;
+    rdfs:comment "atr:sabe-firmar — sujeto: persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/sabe-firmar> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:sabe-firmar: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:sabe-firmar: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-se-conforma-con> a sh:NodeShape ;
+    rdfs:comment "atr:se-conforma-con — sujeto: persona; valor: pieza."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/se-conforma-con> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:se-conforma-con: el sujeto de la afirmación no es de un tipo admitido (persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:se-conforma-con: el valor de la afirmación no es de un tipo admitido (pieza)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-se-hallaba> a sh:NodeShape ;
+    rdfs:comment "atr:se-hallaba — sujeto: grupo, persona; valor: hecho, literal, lugar."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/se-hallaba> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:se-hallaba: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> <https://w3id.org/roar#LocationObservation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:se-hallaba: el valor de la afirmación no es de un tipo admitido (hecho, literal, lugar)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-solicita> a sh:NodeShape ;
+    rdfs:comment "atr:solicita — sujeto: grupo, persona; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/solicita> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:solicita: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:solicita: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-tiene-condicion> a sh:NodeShape ;
+    rdfs:comment "atr:tiene-condicion — sujeto: grupo, persona; valor: concepto de tes:condiciones."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/tiene-condicion> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://personsincontext.org/model#PersonObservation> <https://w3id.org/roar#Observation> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:tiene-condicion: el sujeto de la afirmación no es de un tipo admitido (grupo, persona)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned [ sh:alternativePath ( rdf:type skos:inScheme ) ] ) ;
+        sh:qualifiedValueShape [ sh:in ( <https://w3id.org/laad/tesauro/condiciones> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:tiene-condicion: el valor de la afirmación no es de un tipo admitido (concepto de tes:condiciones)."@es ] .
+
+<https://w3id.org/laad/ohac#AtributoForma-veracidad> a sh:NodeShape ;
+    rdfs:comment "atr:veracidad — sujeto: afirmacion, hecho, pieza; valor: literal."@es ;
+    sh:target [ a sh:SPARQLTarget ; sh:select """SELECT ?this WHERE { ?this <http://www.cidoc-crm.org/cidoc-crm/P177_assigned_property_of_type> <https://w3id.org/laad/tesauro/atributo/veracidad> }""" ] ;
+    sh:property [ sh:path ( crm:P140_assigned_attribute_to rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E13_Attribute_Assignment> <http://www.cidoc-crm.org/cidoc-crm/E89_Propositional_Object> <https://www.ica.org/standards/RiC/ontology#Record> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:veracidad: el sujeto de la afirmación no es de un tipo admitido (afirmacion, hecho, pieza)."@es ] ;
+    sh:property [ sh:path ( crm:P141_assigned rdf:type ) ;
+        sh:qualifiedValueShape [ sh:in ( <http://www.cidoc-crm.org/cidoc-crm/E33_Linguistic_Object> ) ] ; sh:qualifiedMinCount 1 ;
+        sh:message "atr:veracidad: el valor de la afirmación no es de un tipo admitido (literal)."@es ] .

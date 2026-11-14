@@ -35,22 +35,58 @@ def grafo_estandares() -> rdflib.Graph:
     return g
 
 
+# Perfil: el tesauro, sus conceptos candidatos (generados: scripts/candidatos.py) y el encabezado OHAC.
+ARCHIVOS_PERFIL = ("tesauro.ttl", "candidatos.ttl", "ohac.ttl")
+# Formas: las escritas a mano y las de dominio y rango de cada atributo (generadas: scripts/atributos.py).
+ARCHIVOS_FORMAS = ("formas.ttl", "formas_atributos.ttl")
+
+
 def grafo_perfil() -> rdflib.Graph:
     g = rdflib.Graph()
-    for f in ("tesauro.ttl", "ohac.ttl"):
-        g.parse(ONT / f)
+    for f in ARCHIVOS_PERFIL:
+        if (ONT / f).exists():
+            g.parse(ONT / f)
+    return g
+
+
+def grafo_formas() -> rdflib.Graph:
+    g = rdflib.Graph()
+    for f in ARCHIVOS_FORMAS:
+        if (ONT / f).exists():
+            g.parse(ONT / f)
     return g
 
 
 def shacl(datos: rdflib.Graph, con_ontologias: bool = True):
-    formas = rdflib.Graph().parse(ONT / "formas.ttl")
+    """(conforma, grafo de resultados, informe). Los AVISOS (sh:Warning: conceptos candidatos en uso, atributos
+    candidatos sin dominio ni rango) no impiden conformar; se cuentan con avisos(grafo de resultados)."""
     d = rdflib.Graph()
     for t in datos:
         d.add(t)
     for t in grafo_perfil():
         d.add(t)
     ont = jerarquia_clases() if con_ontologias else None
-    return validate(d, shacl_graph=formas, ont_graph=ont, inference="none", advanced=True, allow_warnings=True)
+    return validate(d, shacl_graph=grafo_formas(), ont_graph=ont, inference="none", advanced=True,
+                    allow_warnings=True)
+
+
+SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
+
+
+def avisos(resultados: rdflib.Graph) -> list[tuple[str, str, str]]:
+    """Avisos de una validación: (nodo foco, valor, mensaje) de cada resultado de severidad sh:Warning."""
+    out = []
+    for r in resultados.subjects(SH.resultSeverity, SH.Warning):
+        out.append((str(resultados.value(r, SH.focusNode)), str(resultados.value(r, SH.value) or ""),
+                    " ".join(sorted(str(m) for m in resultados.objects(r, SH.resultMessage)))))
+    return sorted(out)
+
+
+def resumen_avisos(resultados: rdflib.Graph) -> str:
+    """Una línea por concepto o atributo avisado, con el número de nodos que lo usan."""
+    from collections import Counter
+    cuenta = Counter((foco, msj) for foco, _, msj in avisos(resultados))
+    return "\n".join(f"  {n:>4} × {foco.rsplit('/tesauro/', 1)[-1]} — {msj}" for (foco, msj), n in sorted(cuenta.items()))
 
 
 def jerarquia_clases() -> rdflib.Graph:

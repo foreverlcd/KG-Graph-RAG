@@ -2,6 +2,7 @@
 # Se validan sobre la UNIÓN de los grafos nombrados + el tesauro (las reglas de separación de capas,
 # que dependen del grafo nombrado, se comprueban con SPARQL en tests/test_capas.py).
 # Cada forma remite a la decisión de docs/A_diagnostico.md §4 que hace cumplir.
+# El dominio y el rango de cada atributo están en ontologia/formas_atributos.ttl (generado desde datos/atributos.csv).
 
 @prefix sh:     <http://www.w3.org/ns/shacl#> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -22,6 +23,7 @@
 ohac: sh:declare
     [ sh:prefix "rdf" ;    sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ] ,
     [ sh:prefix "rdfs" ;   sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ] ,
+    [ sh:prefix "owl" ;    sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ] ,
     [ sh:prefix "skos" ;   sh:namespace "http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI ] ,
     [ sh:prefix "dct" ;    sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] ,
     [ sh:prefix "prov" ;   sh:namespace "http://www.w3.org/ns/prov#"^^xsd:anyURI ] ,
@@ -213,6 +215,28 @@ ohac:ConceptoNoInstanciadoForma a sh:NodeShape ;
             FILTER(STRSTARTS(STR($this), "https://w3id.org/laad/tesauro/"))
             { ?x rdf:type $this } UNION { ?x crm:P14_carried_out_by $this } UNION { ?x crm:P02_has_range $this }
             UNION { ?x crm:P140_assigned_attribute_to $this } }""" ] .
+
+#################################################################
+# Crecimiento controlado del tesauro: candidatos y conceptos retirados (ontologia/README.md)
+#################################################################
+ohac:ConceptoCandidatoForma a sh:NodeShape ;
+    sh:targetObjectsOf skos:member ;
+    sh:severity sh:Warning ;
+    rdfs:comment "AVISO, no violación: cada nodo del grafo que usa un concepto candidato (miembro de tes:candidatos, aún no aprobado). El foco es el concepto; sh:value, el nodo que lo usa. El grafo conforma con avisos."@es ;
+    sh:sparql [
+        sh:message "Concepto candidato en uso: pendiente de aprobación o rechazo (ontologia/README.md)." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { tes:candidatos skos:member $this . ?value ?p $this .
+                     FILTER (STRSTARTS(STR(?value), "https://w3id.org/laad/id/")) }""" ] .
+
+ohac:ConceptoRetiradoForma a sh:NodeShape ;
+    sh:targetSubjectsOf owl:deprecated ;
+    rdfs:comment "Un concepto retirado (owl:deprecated true: candidato rechazado o concepto dado de baja) conserva su IRI, pero ningún nodo del grafo puede usarlo."@es ;
+    sh:sparql [
+        sh:message "Concepto retirado (owl:deprecated) en uso; véase dct:isReplacedBy." ;
+        sh:prefixes ohac: ;
+        sh:select """SELECT $this ?value WHERE { $this owl:deprecated true . ?value ?p $this .
+                     FILTER (STRSTARTS(STR(?value), "https://w3id.org/laad/id/")) }""" ] .
 
 #################################################################
 # Capa 4 — reconstrucción del investigador
