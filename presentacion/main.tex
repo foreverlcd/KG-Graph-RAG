@@ -223,8 +223,9 @@ modelo y ninguna tiene validación humana: el grafo lo dice.
 \begin{itemize}
 \item Motor de consulta: Oxigraph. Las consultas con nombre pasaron de decenas de segundos a décimas.
 \item Prueba de escala con el piloto replicado: la carga y el espacio crecen linealmente con el número de expedientes.
-\item El coste de las consultas depende de cómo se escriben: la restricción por expediente debe ser un patrón, no un
-      filtro. El detalle está en \ttt{datos/grafo/escala.md}.
+\item Las consultas restringidas a un expediente tardan lo mismo con uno que con cien (la restricción se escribe
+      como patrón, no como filtro); las que recorren el corpus entero, como las disputas, crecen con él.
+      Detalle en \ttt{datos/grafo/escala.md}.
 \end{itemize}
 \medskip
 \footnotesize La medición usa réplicas del piloto, no el archivo real: indica cómo crece el coste, no cuánto tardará

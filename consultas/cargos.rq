@@ -1,16 +1,29 @@
 # Capa 4: ejercicios de cargo con vigencia (E7 tipado con un cargo; titular por PC14 con el cargo como rol).
 # Parámetro opcional: ?titular (reconstrucción de persona).
+# ?premisas son las etiquetas de las afirmaciones de las que deriva el ejercicio (para mostrar; el id «A-…» solo es
+# único dentro de un expediente) y ?premisasRef las mismas premisas como referencias calificadas
+# «<expediente>/afirmacion/<id>», igual que ?menciones en consultas/reconstrucciones.rq.
 SELECT ?ejercicio ?cargo ?titularLabel ?inicio ?fin ?vigenciaNota ?creencia ?autor
-       (GROUP_CONCAT(DISTINCT ?pid; separator=" ") AS ?premisas)
+       (GROUP_CONCAT(DISTINCT COALESCE(?pid, ""); separator=" ") AS ?premisas)
+       (GROUP_CONCAT(DISTINCT COALESCE(?pref, ""); separator=" ") AS ?premisasRef)
 WHERE {
   #PARAMETROS
-  ?ejercicio a crm:E7_Activity ; crm:P2_has_type ?c ; crm:P14_carried_out_by ?titular ;
-             crm:P4_has_time-span ?ts ; prov:wasGeneratedBy ?inf .
-  ?c skos:inScheme tes:cargos ; skos:prefLabel ?cargo . ?titular rdfs:label ?titularLabel .
-  OPTIONAL { ?ts crm:P82a_begin_of_the_begin ?inicio } OPTIONAL { ?ts crm:P82b_end_of_the_end ?fin }
-  OPTIONAL { ?ts crm:P3_has_note ?vigenciaNota }
-  ?inf crminf:J2_concluded_that/crminf:J5_holds_to_be ?creencia ; crm:P14_carried_out_by/rdfs:label ?autor .
-  OPTIONAL { ?ejercicio prov:wasDerivedFrom ?pr . ?pr rdfs:label ?pid }
+  #SI titular
+  ?ejercicio crm:P14_carried_out_by ?titular .
+  #FIN
+  #SI NO titular
+  ?ejercicio a crm:E7_Activity .
+  #FIN
+  LATERAL {
+    ?ejercicio a crm:E7_Activity ; crm:P2_has_type ?c ; crm:P14_carried_out_by ?titular ;
+               crm:P4_has_time-span ?ts ; prov:wasGeneratedBy ?inf .
+    ?c skos:inScheme tes:cargos ; skos:prefLabel ?cargo . ?titular rdfs:label ?titularLabel .
+  }
+  LATERAL { ?inf crminf:J2_concluded_that/crminf:J5_holds_to_be ?creencia ; crm:P14_carried_out_by/rdfs:label ?autor . }
+  LATERAL { OPTIONAL { ?ts crm:P82a_begin_of_the_begin ?inicio } } LATERAL { OPTIONAL { ?ts crm:P82b_end_of_the_end ?fin } }
+  LATERAL { OPTIONAL { ?ts crm:P3_has_note ?vigenciaNota } }
+  LATERAL { OPTIONAL { ?ejercicio prov:wasDerivedFrom ?pr . ?pr rdfs:label ?pid .
+                       BIND (REPLACE(STR(?pr), "^.*/([^/]+/[^/]+/[^/]+)$", "$1") AS ?pref) } }
 }
 GROUP BY ?ejercicio ?cargo ?titularLabel ?inicio ?fin ?vigenciaNota ?creencia ?autor
 ORDER BY ?cargo

@@ -4,19 +4,21 @@
 # Parámetro opcional: ?expediente (IRI del expediente).
 SELECT ?pieza ?tipoAct ?fecha ?lugar ?mid ?texto ?rol ?persona ?tramo ?cita WHERE {
   #PARAMETROS
-  ?act crm:P94_has_created ?pz ; crm:P2_has_type ?ta . ?pz rdfs:label ?pieza .
-  ?ta skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct .
-  ?pc a crm:PC14_carried_out_by ; crm:P01_has_domain ?act ; crm:P02_has_range ?m ;
-      crm:P14.1_in_the_role_of ?r .
-  ?r skos:inScheme tes:roles ; skos:prefLabel ?rol .
-  ?m rdfs:label ?texto .
-  ?an oa:hasBody ?m ; oa:hasTarget ?tg . ?tg oa:hasSource/rdfs:label ?tramo ; oa:hasSelector/oa:exact ?cita .
-  OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
-  OPTIONAL { ?act crm:P3_has_note ?nota . FILTER (STRSTARTS(STR(?nota), "Data (literal): "))
-             BIND (STRAFTER(STR(?nota), "Data (literal): ") AS ?lugar) }
-  OPTIONAL { ?rec prov:wasDerivedFrom ?m ; rdfs:label ?persona .
-             FILTER EXISTS { ?rec a picom:PersonReconstruction } }
-  BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
-  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
+  #INCLUIR del_expediente
+  LATERAL { ?act crm:P94_has_created ?pz ; crm:P2_has_type ?ta . ?pz rdfs:label ?pieza .
+            ?ta skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct . }
+  LATERAL { ?pc crm:P01_has_domain ?act . }
+  LATERAL {
+    ?pc a crm:PC14_carried_out_by ; crm:P02_has_range ?m ; crm:P14.1_in_the_role_of ?r .
+    ?r skos:inScheme tes:roles ; skos:prefLabel ?rol .
+    ?m rdfs:label ?texto .
+    ?an oa:hasBody ?m ; oa:hasTarget ?tg . ?tg oa:hasSource/rdfs:label ?tramo ; oa:hasSelector/oa:exact ?cita .
+    BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
+  }
+  LATERAL { OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha } }
+  LATERAL { OPTIONAL { ?act crm:P3_has_note ?nota . FILTER (STRSTARTS(STR(?nota), "Data (literal): "))
+                       BIND (STRAFTER(STR(?nota), "Data (literal): ") AS ?lugar) } }
+  LATERAL { OPTIONAL { ?rec prov:wasDerivedFrom ?m ; rdfs:label ?persona .
+                       FILTER EXISTS { ?rec a picom:PersonReconstruction } } }
 }
 ORDER BY ?pieza ?rol ?mid

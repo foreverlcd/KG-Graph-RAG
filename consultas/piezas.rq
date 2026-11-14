@@ -3,10 +3,12 @@
 # ajenas capturadas junto a él).
 SELECT ?pieza ?tipo ?titulo ?fecha ?ajena WHERE {
   #PARAMETROS
-  ?pz a rico:Record ; rdfs:label ?pieza ; rico:title ?titulo ; rico:hasDocumentaryFormType ?t .
-  ?t skos:prefLabel ?tipo .
-  OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
+  #INCLUIR del_expediente
+  LATERAL {
+    ?pz a rico:Record ; rdfs:label ?pieza ; rico:title ?titulo ; rico:hasDocumentaryFormType ?t .
+    ?t skos:prefLabel ?tipo .
+  }
+  LATERAL { OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha } }
   BIND (NOT EXISTS { ?pz rico:isOrWasIncludedIn ?e } AS ?ajena)
-  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
 }
 ORDER BY ?pieza

@@ -3,13 +3,18 @@
 # Parámetro opcional: ?expediente (IRI del expediente).
 SELECT ?pieza ?firmaEscrita ?mencionFirma ?negacion ?afirmante ?cita WHERE {
   #PARAMETROS
-  ?act crm:P94_has_created ?pz . ?pz rdfs:label ?pieza .
-  ?pf crm:P01_has_domain ?act ; crm:P02_has_range ?mf ; crm:P14.1_in_the_role_of rol:firmante .
-  ?mf rdfs:label ?firmaEscrita . BIND (STRAFTER(STR(?mf), "/mencion/") AS ?mencionFirma)
-  ?b a crm:E13_Attribute_Assignment ; rdfs:label ?negacion ; crm:P140_assigned_attribute_to ?pz ;
-     crm:P177_assigned_property_of_type atr:firmo ; crm:P141_assigned ?v ; crm:P2_has_type pol:niega ;
-     crm:P14_carried_out_by/rdfs:label ?afirmante .
-  ?an oa:hasBody ?b ; oa:hasTarget/oa:hasSelector/oa:exact ?cita .
-  FILTER (?v = ?mf || EXISTS { ?r prov:wasDerivedFrom ?v , ?mf })
-  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
+  #INCLUIR del_expediente
+  LATERAL { ?b crm:P140_assigned_attribute_to ?pz ; crm:P177_assigned_property_of_type ?atr_ . FILTER (?atr_ = atr:firmo) }
+  LATERAL {
+    ?b a crm:E13_Attribute_Assignment ; rdfs:label ?negacion ; crm:P141_assigned ?v ; crm:P2_has_type ?pol_ ;
+       crm:P14_carried_out_by/rdfs:label ?afirmante .
+    FILTER (?pol_ = pol:niega)
+    ?an oa:hasBody ?b ; oa:hasTarget/oa:hasSelector/oa:exact ?cita .
+  }
+  LATERAL { ?act crm:P94_has_created ?pz . ?pz rdfs:label ?pieza . }
+  LATERAL {
+    ?pf crm:P01_has_domain ?act ; crm:P02_has_range ?mf ; crm:P14.1_in_the_role_of ?rol_ . FILTER (?rol_ = rol:firmante)
+    ?mf rdfs:label ?firmaEscrita . BIND (STRAFTER(STR(?mf), "/mencion/") AS ?mencionFirma)
+  }
+  FILTER (?v = ?mf || EXISTS { ?r prov:wasDerivedFrom ?v . FILTER EXISTS { ?r prov:wasDerivedFrom ?mf } })
 }

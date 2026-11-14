@@ -1,0 +1,13 @@
+  # Fragmento compartido (#INCLUIR del_expediente): con el parámetro ?expediente liga ?pz a las piezas de ese
+  # expediente —las que están en su transcripción, también las ajenas capturadas junto a él— partiendo del
+  # expediente, por índice; sin él es el grupo vacío y la consulta recorre el corpus. Lo que sigue va en un bloque
+  # LATERAL { … }: se evalúa una vez por cada pieza ya ligada, así que solo toca las tripletas de ese expediente.
+  #SI expediente
+  { SELECT DISTINCT ?pz WHERE {
+      #PARAMETROS expediente
+      ?inst_ rico:isOrWasInstantiationOf ?expediente . ?parte_ rico:isOrWasComponentOf ?inst_ .
+      ?pz rico:hasOrHadInstantiation ?parte_ } }
+  #FIN
+  #SI NO expediente
+  { }
+  #FIN

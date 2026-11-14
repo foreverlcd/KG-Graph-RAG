@@ -597,9 +597,10 @@ persona) pertenecen a alguna identidad propuesta y \cifraHechosEnlazados{} de lo
 narrados, a algún evento; el resto son colectivos indeterminados, pronombres, menciones únicas o pasajes ambiguos,
 y se dejan sin enlazar con su motivo. Las lecturas incompatibles se mantienen como reconstrucciones rivales que
 comparten menciones. Para estimar el coste de un fondo se replicó el grafo del piloto hasta mil expedientes
-(sesenta millones de cuádruplas en un almacén Oxigraph en disco): la carga y el espacio crecen linealmente, y el
-tiempo de las consultas depende de que la restricción al expediente se escriba como patrón y no como filtro. Es una
-medición sobre réplicas, no sobre el archivo real.
+(sesenta millones de cuádruplas en un almacén Oxigraph en disco): la carga y el espacio crecen linealmente. Las consultas
+restringidas a un expediente, una vez escrita la restricción como patrón y no como filtro, tardan lo mismo con uno que
+con cien expedientes; las que recorren el corpus entero, como la de disputas, crecen con él. Es una medición sobre
+réplicas, no sobre el archivo real.
 
 % =====================================================================
 \section{Discusión y limitaciones}\label{sec:discusion}

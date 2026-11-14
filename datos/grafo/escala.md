@@ -18,7 +18,7 @@ de expedientes, no para afirmar cuánto tardará el corpus definitivo.
   - *En disco*: almacén persistente con la carga por lotes de Oxigraph (20 expedientes por llamada); la unión
     se carga como N-Triples (cada N-Quad sin su grafo) y al final se compacta el almacén. Es el procedimiento
     de `laad.consulta.nuevo_almacen(masivo=True)` y de `scripts/servir.py --volcar`.
-- **Consultas.** Tres consultas con nombre de `consultas/`, tal como están, sobre el expediente original:
+- **Consultas.** Tres consultas con nombre de `consultas/`, tal como estaban ese día, sobre el expediente original:
   `piezas(expediente)`, `afirmaciones(expediente, filtroEntidad, atributo)` (la forma habitual de una pregunta
   de competencia) y `afirmaciones(expediente)` (las 505 afirmaciones con todas sus facetas); y `disputas()`, que
   recorre el corpus entero. Además, una **variante** de `piezas` que no es la consulta con nombre: la misma
@@ -52,7 +52,69 @@ Con 1 000 expedientes no se intentó el almacén en memoria: extrapolando, neces
 «Supera el límite»: más de 120 s o más de 3 GB de memoria. «No ejecutada»: una consulta más ligera ya había
 superado el límite con ese tamaño.
 
-## Lectura
+## Tras reescribir las consultas (2026-11-14)
+
+Las consultas con nombre se reescribieron después de la medición anterior (`consultas/*.rq`, mecanismo en
+`laad.consulta`):
+
+- **El parámetro opcional ya no es un filtro.** `FILTER (!BOUND(?expediente) || EXISTS { … })` se sustituye por
+  bloques `#SI expediente … #FIN` que solo forman parte de la consulta cuando llega el parámetro; con él, la
+  consulta parte del expediente (expediente → transcripción → tramos → piezas) por índice.
+- **El orden de evaluación está escrito en la consulta.** Cada paso es un `LATERAL { … }` que parte de un nodo ya
+  ligado, y cada faceta opcional un `LATERAL { OPTIONAL { … } }`. Sin eso el optimizador de Oxigraph, que no tiene
+  estadísticas, resuelve cada `OPTIONAL` y cada `EXISTS` de dos tripletas recorriendo el corpus. `LATERAL` no es
+  SPARQL 1.1: para rdflib, `laad.consulta.sin_lateral` lo reescribe con `OPTIONAL` + `BOUND`.
+- **Sin subconsultas sobre el corpus entero.** `afirmaciones` agrega sus listas en un `GROUP BY` final;
+  `disputas` recorre las afirmaciones una vez y busca por índice las de la misma entidad y atributo, en vez de
+  combinar dos subconsultas del corpus.
+
+Método: el mismo (réplicas del piloto, almacén en memoria, mediana de tres ejecuciones; una sola si pasa de 5 s),
+con el grafo de hoy, que es algo mayor que el de la primera medición (70 321 cuádruplas almacenadas con un
+expediente, frente a 64 617; 505 filas de `afirmaciones`, 118 reconstrucciones). Por eso se repitieron también
+las consultas **anteriores** sobre las mismas réplicas, con 1 y 10 expedientes. Las filas devueltas por las
+consultas nuevas y las anteriores sobre el piloto son las mismas (salvo el orden de las filas que empatan en el
+`ORDER BY`).
+
+| Consulta (sobre el expediente original) | N = 1 antes | N = 1 ahora | N = 10 antes | N = 10 ahora | N = 100 ahora |
+|---|---:|---:|---:|---:|---:|
+| `piezas (expediente)` | 0,001 s | 0,001 s | 0,038 s | 0,001 s | 0,001 s |
+| `afirmaciones (expediente, filtroEntidad, atributo)` | 0,030 s | 0,014 s | 0,27 s | 0,024 s | 0,029 s |
+| `afirmaciones (expediente)` | 0,085 s | 0,13 s | 3,5 s | 0,16 s | 0,15 s |
+| `participantes (expediente)` | 0,007 s | 0,004 s | 0,25 s | 0,006 s | 0,005 s |
+| `control_secuencia (expediente)` | 0,002 s | 0,007 s | 0,037 s | 0,008 s | 0,008 s |
+| `menciones_de (expediente, filtroEntidad)` | 0,003 s | 0,002 s | 0,013 s | 0,002 s | 0,002 s |
+| `reconstrucciones ()` — todo el corpus | 0,12 s | 0,004 s | 11,8 s | 0,048 s | 1,2 s |
+| `disputas ()` — todo el corpus | 1,1 s | 0,17 s | > 90 s (interrumpida) | 1,7 s | 29 s |
+
+Carga en memoria de estas réplicas: 0,15 s y 88 MB (N = 1), 1,5 s y 343 MB (N = 10), 15,8 s y 2,8 GB (N = 100;
+6 558 880 cuádruplas almacenadas).
+
+Qué dice la tabla:
+
+- **Las consultas restringidas a un expediente ya no dependen del tamaño del corpus**: entre 1 y 100 expedientes
+  el tiempo no cambia (`afirmaciones (expediente)`: 0,13–0,16 s; en la primera medición superaba 120 s con 100).
+  Con un solo expediente dos de ellas son algo más lentas que antes (`afirmaciones (expediente)`,
+  `control_secuencia`): el recorrido paso a paso cuesta más que una combinación en bloque cuando el corpus es un
+  expediente.
+- **Lo que sigue sin escalar son las consultas sobre el corpus entero.** `disputas ()` ya no es cuadrática, pero
+  crece con el corpus (×10 y ×17 en tiempo por cada ×10 en datos): 29 s con 100 expedientes y, por extrapolación,
+  varios minutos con 1 000. Compara cada afirmación con las demás de su entidad y atributo y no tiene parámetro de
+  expediente ni de entidad que la acote. `reconstrucciones ()` también crece más que los datos (×12 y ×25): no es
+  interactiva más allá de unos cientos de expedientes. Las demás consultas sin parámetros (`afirmaciones ()`,
+  `piezas ()`, `participantes ()`, `control_secuencia ()`, `cargos ()`) devuelven filas de todo el corpus y
+  tardan al menos en proporción; solo se probaron con 1, 10 y 40 expedientes mientras se reescribían, sin
+  medición sistemática. Para un corpus grande harán falta parámetros (entidad, atributo, expediente) o resultados
+  precalculados.
+- `afirmaciones (expediente, filtroEntidad, atributo)` crece un poco (0,014 → 0,029 s): su primer paso —elegir las
+  afirmaciones a partir de varios parámetros a la vez— se deja al optimizador.
+
+**Sin medir en esta segunda ronda:** el almacén en disco (100 y 1 000 expedientes) y cualquier tamaño por encima
+de 100; las consultas anteriores con 100 expedientes (se conservan las cifras de la primera medición, arriba, con
+un grafo algo menor); el motor rdflib sobre réplicas (solo se comprobó, sobre el piloto, que devuelve
+las mismas filas que Oxigraph: `tests/test_motores.py`). Que el tiempo de las consultas por expediente sea plano
+hasta 100 en memoria hace esperable lo mismo en disco, pero no está comprobado. Una sola medición por tamaño.
+
+## Lectura (de la primera medición)
 
 1. **La carga y el espacio crecen linealmente** con el número de expedientes: unos 26 MB de memoria, o unos
    8–14 MB de disco, por expediente del tamaño del piloto. Un corpus de 1 000 expedientes como el piloto
@@ -66,10 +128,13 @@ superado el límite con ese tamaño.
    corpus. `afirmaciones` añade subconsultas con `GROUP BY` que se calculan para el corpus entero antes de
    filtrar, y `disputas` hace una autocombinación de todas las afirmaciones (0,35 s → 31 s entre 1 y 10
    expedientes). Con un expediente la diferencia no se nota; con cien, sí.
-4. Por tanto, la cifra que puede darse hoy es: **carga y almacenamiento comprobados hasta 1 000 expedientes
+4. Por tanto, la cifra que podía darse antes de reescribir las consultas era: **carga y almacenamiento comprobados hasta 1 000 expedientes
    sintéticos (60 millones de cuádruplas); consultas con nombre interactivas hasta unas decenas de
    expedientes.** Para llegar más lejos hay que reescribir las consultas (restricción al expediente como patrón,
    subconsultas correlacionadas con el expediente), no cambiar de almacén.
+5. **Después de la reescritura** (sección anterior): carga y almacenamiento, lo mismo; consultas con nombre
+   restringidas a un expediente, de tiempo constante comprobado hasta 100 expedientes sintéticos en memoria;
+   consultas sobre el corpus entero, crecientes con su tamaño (`disputas ()`: 29 s con 100 expedientes).
 
 ## Cautelas
 

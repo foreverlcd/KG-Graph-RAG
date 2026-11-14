@@ -3,6 +3,7 @@
 Se ejecuta CADA consulta con nombre (consultas/*.rq), con y sin parámetros, sobre el corpus de datos/grafo/ en los dos
 motores. Las filas deben coincidir como multiconjunto; si la consulta tiene ORDER BY, también debe coincidir la
 secuencia de sus claves de orden (las filas que empatan en todas las claves pueden salir en otro orden).
+Las consultas usan LATERAL (Oxigraph); para rdflib laad.consulta las reescribe en SPARQL 1.1 (sin_lateral).
 Este módulo es lento a propósito: es el único que sigue ejecutando las consultas pesadas en rdflib.
 """
 from __future__ import annotations
@@ -21,12 +22,15 @@ CASOS = [
     ("afirmaciones", dict(expediente=E)),
     ("afirmaciones", dict(expediente=E, filtroEntidad=C.persona("huancachoque"), atributo=C.atributo("tiene-condicion"))),
     ("afirmaciones", dict(expediente=E, filtroAfirmante=C.persona("cano"), atributo=C.atributo("ejerce-cargo"))),
+    ("afirmaciones", dict(pieza_iri=C.pieza(EXPEDIENTE_PILOTO, "P09"))),
     ("candidatos_en_uso", {}),
     ("cargos", {}),
     ("cargos", dict(titular=C.persona("chuquitapa"))),
     ("catalogo", {}),
     ("control_secuencia", {}),
     ("control_secuencia", dict(expediente=E)),
+    ("control_secuencia", dict(expediente=E, desde=1805, hasta=1807)),          # parámetros enteros
+    ("control_secuencia", dict(hasta=1805)),
     ("disputas", {}),
     ("disputas_firma", dict(expediente=E)),
     ("identificadores_externos", {}),
@@ -101,6 +105,49 @@ def test_parametros_validados():
         C.sparql("piezas", {"x y": E})
     assert f"VALUES ?expediente {{ <{E}> }}" in C.sparql("piezas", {"expediente": E})
     assert "#PARAMETROS" not in C.sparql("piezas")
+
+
+def test_bloques_condicionales_y_fragmentos():
+    """#SI … #FIN solo deja el bloque si llega el parámetro (#SI NO: si no llega); #PARAMETROS con nombres repite el
+    VALUES dentro de una subconsulta; #INCLUIR trae un fragmento compartido. El parámetro opcional es un patrón que
+    solo existe cuando se pide, no un FILTER (!BOUND(?p) || …)."""
+    codigo = lambda q: "\n".join(x for x in q.split("\n") if not x.lstrip().startswith("#"))  # noqa: E731
+    con, sin = codigo(C.sparql("piezas", {"expediente": E})), codigo(C.sparql("piezas"))
+    assert con.count(f"VALUES ?expediente {{ <{E}> }}") == 2 and "rico:isOrWasInstantiationOf ?expediente" in con
+    assert "?expediente" not in sin and "isOrWasInstantiationOf" not in sin
+    for q in (con, sin):
+        assert not re.search(r"(?m)^\s*#(SI|FIN|INCLUIR|PARAMETROS)\b", q)
+    assert all("!BOUND(?expediente)" not in codigo(C.texto_consulta(n)) for n in C.nombres())
+    assert "VALUES ?desde { 1805 }" in C.sparql("control_secuencia", {"desde": 1805})
+    assert "?fc_" in C.sparql("control_secuencia") and "?fc_" not in codigo(C.sparql("control_secuencia", {"hasta": 1807}))
+    with pytest.raises(ValueError):
+        C.sparql("control_secuencia", {"desde": True})
+    with pytest.raises(ValueError):
+        C.sparql("control_secuencia", {"desde": "1805"})
+
+
+def test_lateral_se_reescribe_para_rdflib():
+    """LATERAL (Oxigraph) no existe en rdflib: sin_lateral lo reescribe en SPARQL 1.1 con OPTIONAL + BOUND."""
+    q = C.sin_lateral("SELECT * WHERE { ?a ?b ?c . LATERAL { ?c ?d ?e . } LATERAL { OPTIONAL { ?e ?f ?g } } }")
+    assert "LATERAL" not in q and q.count("OPTIONAL") == 2 and "FILTER (BOUND(?_ok1))" in q and "?_ok2" not in q
+    rdflib.Graph().query(q)                                                  # es SPARQL 1.1 válido
+    assert all("LATERAL" not in C.sin_lateral(C.sparql(n)) for n in C.nombres())
+    with pytest.raises(ValueError):
+        C.sin_lateral("SELECT * WHERE { ?a ?b ?c LATERAL { SELECT ?c WHERE { ?c ?d ?e } } }")
+
+
+def test_control_de_secuencia_sin_intervalo_fijo():
+    """El intervalo plausible sale de la carátula del expediente (± ?margen) o de ?desde/?hasta, no de la consulta."""
+    fuera = lambda **p: {f["p1"] for f in C.consultar("control_secuencia", expediente=E, **p) if f["p2"] is None}  # noqa: E731
+    assert fuera() == fuera(desde=1805, hasta=1807) == {"P31"}
+    assert fuera(margen=5) == fuera(hasta=1810) == set()
+    assert "P00" in fuera(desde=1807)
+
+
+def test_cargos_con_premisas_calificadas():
+    for f in C.consultar("cargos"):
+        assert [r.rsplit("/", 1)[1] for r in f["premisasRef"].split()] == f["premisas"].split()
+        assert all(r.startswith(f"{EXPEDIENTE_PILOTO}/afirmacion/") for r in f["premisasRef"].split())
 
 
 def test_la_union_no_duplica_tripletas_repetidas_en_dos_grafos():

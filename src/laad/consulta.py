@@ -152,25 +152,33 @@ def consultable(ds: rdflib.Dataset):
 
 
 def texto_consulta(nombre: str) -> str:
-    return (CONSULTAS / "_prefijos.rq").read_text() + "\n" + (CONSULTAS / f"{nombre}.rq").read_text()
+    """Prefijos + texto de la consulta con nombre, con sus fragmentos ya incluidos (#INCLUIR) y las marcas
+    #PARAMETROS, #SI … #FIN todavía sin resolver (eso lo hace sparql, que conoce los parámetros)."""
+    return (CONSULTAS / "_prefijos.rq").read_text() + "\n" + _incluir((CONSULTAS / f"{nombre}.rq").read_text())
 
 
 _IRI_SEGURA = re.compile(r"^https?://[^\s<>\"{}|\\^`]+$")
+_NOMBRE = r"[A-Za-z_][A-Za-z0-9_]*"
+
+
+def _celda(k: str, x) -> str:
+    """Un valor de parámetro como término SPARQL: IRI validada o número entero (p. ej. un año). Nada más: el
+    agente nunca inyecta texto SPARQL libre."""
+    if isinstance(x, int) and not isinstance(x, bool):
+        return str(x)
+    if not _IRI_SEGURA.match(str(x)):
+        raise ValueError(f"IRI no válida para {k}: {x!r}")
+    return f"<{x}>"
 
 
 def _values(params: dict) -> str:
-    """Bloque VALUES con IRIs validadas (el agente nunca inyecta texto SPARQL libre)."""
+    """Bloque VALUES con IRIs validadas o enteros (el agente nunca inyecta texto SPARQL libre)."""
     lineas = []
     for k, v in params.items():
-        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", k):
+        if not re.fullmatch(_NOMBRE, k):
             raise ValueError(f"parámetro no válido: {k}")
         vals = v if isinstance(v, (list, tuple)) else [v]
-        celdas = []
-        for x in vals:
-            if not _IRI_SEGURA.match(str(x)):
-                raise ValueError(f"IRI no válida para {k}: {x!r}")
-            celdas.append(f"<{x}>")
-        lineas.append(f"VALUES ?{k} {{ {' '.join(celdas)} }}")
+        lineas.append(f"VALUES ?{k} {{ {' '.join(_celda(k, x) for x in vals)} }}")
     return "\n  ".join(lineas)
 
 
@@ -202,25 +210,125 @@ def limpiar_cache() -> None:
     almacen.cache_clear()
 
 
-_MARCA = re.compile(r"(?m)^[ \t]*#PARAMETROS[ \t]*$")
+# Marcas de las consultas con nombre (cada una, sola en su línea):
+#   #PARAMETROS            bloque VALUES de todos los parámetros recibidos;
+#   #PARAMETROS a b        bloque VALUES solo de los parámetros nombrados que se hayan recibido (para repetir el
+#                          valor DENTRO de una subconsulta, que no ve las variables de fuera);
+#   #SI a b … #FIN         el bloque solo forma parte de la consulta si se recibieron TODOS los parámetros nombrados;
+#   #SI NO a b … #FIN      el bloque solo forma parte de la consulta si no se recibió NINGUNO;
+#   #INCLUIR nombre        el texto de consultas/_nombre.rq (fragmento compartido por varias consultas).
+# Así un parámetro opcional es un patrón de tripletas que solo existe cuando se pide —el motor lo resuelve por
+# índice y no toca el resto del corpus—, en vez de un FILTER (!BOUND(?p) || EXISTS {…}) evaluado fila a fila
+# sobre el corpus entero (datos/grafo/escala.md).
+_MARCA = re.compile(rf"^[ \t]*#PARAMETROS((?:[ \t]+{_NOMBRE})*)[ \t]*$")
+_SI = re.compile(rf"^[ \t]*#SI((?:[ \t]+{_NOMBRE})+)[ \t]*$")
+_FIN = re.compile(r"^[ \t]*#FIN[ \t]*$")
+_INCLUIR = re.compile(rf"(?m)^[ \t]*#INCLUIR[ \t]+({_NOMBRE})[ \t]*$")
+
+
+def _incluir(q: str) -> str:
+    return _INCLUIR.sub(lambda m: (CONSULTAS / f"_{m.group(1)}.rq").read_text().rstrip("\n"), q)
 
 
 def sparql(nombre: str, params: dict | None = None) -> str:
-    """Texto SPARQL final de una consulta con nombre: prefijos + consulta con el bloque VALUES de los parámetros
-    en el lugar de la línea #PARAMETROS."""
-    q = texto_consulta(nombre)
-    if params and not _MARCA.search(q):
+    """Texto SPARQL final de una consulta con nombre: prefijos + consulta, con los bloques condicionales
+    (#SI … #FIN) resueltos según los parámetros recibidos y un bloque VALUES en cada línea #PARAMETROS."""
+    params = params or {}
+    valores = _values(params)                         # valida nombres y valores aunque la consulta no los use
+    salida, pila, admite = [], [], False
+    for linea in texto_consulta(nombre).split("\n"):
+        if m := _SI.match(linea):
+            nombres_ = m.group(1).split()
+            if nombres_[0] == "NO":
+                pila.append(not any(k in params for k in nombres_[1:]))
+            else:
+                pila.append(all(k in params for k in nombres_))
+        elif _FIN.match(linea):
+            if not pila:
+                raise ValueError(f"la consulta {nombre} tiene un #FIN sin #SI")
+            pila.pop()
+        elif not all(pila):
+            continue
+        elif m := _MARCA.match(linea):
+            pedidos = m.group(1).split()
+            admite = admite or not pedidos
+            bloque = _values({k: params[k] for k in pedidos if k in params}) if pedidos else valores
+            salida.append("  " + bloque)
+        else:
+            salida.append(linea)
+    if pila:
+        raise ValueError(f"la consulta {nombre} tiene un #SI sin #FIN")
+    if params and not admite:
         raise ValueError(f"la consulta {nombre} no admite parámetros")
-    return _MARCA.sub(lambda _: "  " + _values(params or {}), q, count=1)
+    return "\n".join(salida)
 
 
-_CONCAT = re.compile(r'''GROUP_CONCAT\s*\(\s*DISTINCT\s+\?\w+\s*;\s*separator\s*=\s*"([^"]*)"\s*\)\s+AS\s+\?(\w+)''', re.I)
+# GROUP_CONCAT(DISTINCT ?v; separator="…") AS ?columna, o sobre COALESCE(?v, "") cuando ?v puede no estar ligada
+# (rdflib falla al agregar con DISTINCT una variable sin ligar).
+_CONCAT = re.compile(r'''GROUP_CONCAT\s*\(\s*DISTINCT\s+(?:\?\w+|COALESCE\s*\(\s*\?\w+\s*,\s*""\s*\))\s*;\s*separator\s*=\s*"([^"]*)"\s*\)\s+AS\s+\?(\w+)''', re.I)
+# LATERAL (SEP-0006; lo admite Oxigraph, no rdflib): «A LATERAL { B }» evalúa B una vez por cada solución de A, con
+# sus variables ya ligadas, o sea por índice; es lo que fija el orden de evaluación de las consultas con nombre
+# (el optimizador de Oxigraph no tiene estadísticas: suelto, puede empezar por el patrón que recorre el corpus).
+# «A LATERAL { OPTIONAL { B } }» es un OPTIONAL resuelto del mismo modo (un OPTIONAL suelto se resuelve recorriendo
+# B entero).
+# Para rdflib (SPARQL 1.1) se reescribe con lo único que rdflib evalúa siempre pasando las soluciones de la
+# izquierda a la derecha, el OPTIONAL: «{ A LATERAL { B } C }» pasa a ser
+# «{ { A OPTIONAL { B BIND (true AS ?_okN) } FILTER (BOUND(?_okN)) } C }» —las soluciones de A sin B se descartan
+# ahí mismo, como en la unión— y «A LATERAL { OPTIONAL { B } }» pasa a ser «A OPTIONAL { B }». Reglas para las
+# consultas (tests/test_motores.py comprueba que dan las mismas filas): B no es una subconsulta (SELECT) ni termina
+# en comentario; un FILTER se escribe después de lo que usa; y, como rdflib ordena las tripletas de cada bloque sin
+# saber qué viene ligado de fuera, cada B es corto y parte de un nodo ya ligado.
+_LATERAL = re.compile(r"\bLATERAL\s*\{")
+_OPTIONAL = re.compile(r"OPTIONAL\s*\{")
+
+
+def _cierre(q: str, i: int) -> int:
+    """Posición de la llave que cierra el grupo cuyo contenido empieza en q[i] (las consultas con nombre no llevan
+    llaves dentro de literales ni de comentarios)."""
+    n = 1
+    while n:
+        if i >= len(q):
+            raise ValueError("llaves sin cerrar en la consulta")
+        n += (q[i] == "{") - (q[i] == "}")
+        i += 1
+    return i - 1
+
+
+def _apertura(q: str, i: int) -> int:
+    """Posición de la llave que abre el grupo que contiene q[i]."""
+    n = 1
+    while n:
+        i -= 1
+        if i < 0:
+            raise ValueError("LATERAL fuera de un grupo")
+        n += (q[i] == "}") - (q[i] == "{")
+    return i
+
+
+def sin_lateral(q: str) -> str:
+    """La misma consulta en SPARQL 1.1, para rdflib (ver arriba)."""
+    q = "\n".join(linea for linea in q.split("\n") if not linea.lstrip().startswith("#"))
+    n = 0
+    while m := _LATERAL.search(q):
+        fin = _cierre(q, m.end())
+        dentro = q[m.end():fin].strip()
+        if re.match(r"SELECT\b", dentro, re.I):
+            raise ValueError("LATERAL { SELECT … } no tiene equivalente directo para rdflib")
+        o = _OPTIONAL.match(dentro)
+        if o and _cierre(dentro, o.end()) == len(dentro) - 1:               # LATERAL { OPTIONAL { B } }
+            q = q[:m.start()] + dentro + q[fin + 1:]
+        else:
+            n += 1
+            ini = _apertura(q, m.start()) + 1
+            q = (q[:ini] + " { " + q[ini:m.start()] + f"OPTIONAL {{ {dentro} BIND (true AS ?_ok{n}) }} "
+                 f"FILTER (BOUND(?_ok{n})) }} " + q[fin + 1:])
+    return q
 
 
 def _consultar(nombre: str, ds, params: dict) -> list[dict]:
     q = sparql(nombre, params)
     if isinstance(ds, rdflib.Graph):                 # rdflib.Dataset es un rdflib.Graph
-        res = ds.query(q)
+        res = ds.query(sin_lateral(q))
         filas = [{str(k): (str(r[k]) if r[k] is not None else None) for k in res.vars} for r in res]
     else:
         res = ds.query(q)                            # el grafo por defecto del almacén ya es la unión (_unir)
@@ -228,11 +336,11 @@ def _consultar(nombre: str, ds, params: dict) -> list[dict]:
         # .value es el IRI de un NamedNode, la forma léxica de un Literal o la etiqueta de un nodo en blanco
         filas = [{n: (t.value if (t := sol[n]) is not None else None) for n in nombres} for sol in res]
     # SPARQL no fija el orden de los elementos de GROUP_CONCAT (cada motor da el suyo, y rdflib uno distinto en cada
-    # ejecución): se ordenan aquí para que la fila sea la misma con cualquier motor y en cualquier ejecución.
+    # ejecución): se ordenan aquí para que la fila sea la misma con cualquier motor y en cualquier ejecución. Un
+    # grupo sin valores (o solo con el «» de COALESCE(?v, "")) deja la columna sin ligar (None) en los dos motores.
     for separador, columna in _CONCAT.findall(q):
         for f in filas:
-            if f.get(columna):
-                f[columna] = separador.join(sorted(f[columna].split(separador)))
+            f[columna] = separador.join(sorted(x for x in (f.get(columna) or "").split(separador) if x)) or None
     return filas
 
 

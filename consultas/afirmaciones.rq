@@ -1,51 +1,80 @@
 # Afirmaciones (capa 3) con TODAS sus facetas: quién, con qué rol, ante quién, quién firma la pieza, tipo de
 # actuación, fecha escrita, sujeto, atributo, valor, polaridad, fundamento, fuerza, cita, tramo y folio.
-# Parámetros (bloque VALUES insertado en #PARAMETROS por laad.consulta): ?atributo, ?sujeto, ?pieza_iri,
-# ?filtroEntidad (reconstrucción de capa 4: afirmaciones cuyo sujeto deriva en ella), ?filtroAfirmante
-# (reconstrucción de capa 4: afirmaciones hechas por cualquiera de sus menciones), ?expediente (IRI del expediente:
-# solo sus afirmaciones; los ids de registro —?aid, ?pieza— solo son únicos dentro de un expediente).
-SELECT ?a ?aid ?afirmante ?afirmanteR ?rolAf ?pieza ?tipoAct ?fecha ?ante ?firmantes ?sujetoLabel ?atributo ?atrLabel
-       ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
-       ?redactorDoc ?redaccionDisputada ?respondeA ?segun
+# Parámetros (todos opcionales): ?atributo, ?sujeto, ?pieza_iri, ?filtroEntidad (reconstrucción de capa 4:
+# afirmaciones cuyo sujeto deriva en ella), ?filtroAfirmante (reconstrucción de capa 4: afirmaciones hechas por
+# cualquiera de sus menciones), ?expediente (IRI del expediente: solo sus afirmaciones; los ids de registro —?aid,
+# ?pieza— solo son únicos dentro de un expediente).
+# Forma (datos/grafo/escala.md): 1.º se eligen las afirmaciones (?a) partiendo de los parámetros recibidos, por
+# índice; 2.º, para cada una (LATERAL), se leen sus facetas, y cada faceta opcional es un LATERAL { OPTIONAL { … } }
+# (un OPTIONAL suelto se resolvería recorriendo esa faceta en todo el corpus). Las listas (?afirmanteR, ?ante, ?firmantes,
+# ?redactorDoc) se agregan en el GROUP BY final, que conserva una fila por cada combinación de las demás variables:
+# no hay subconsultas calculadas sobre el corpus entero. Las listas se agregan sobre
+# COALESCE(?v, "") porque rdflib no agrega con DISTINCT una variable sin ligar; laad.consulta quita el elemento
+# vacío y deja sin ligar la lista vacía.
+SELECT ?a ?aid ?afirmante
+       (GROUP_CONCAT(DISTINCT COALESCE(?rl, ""); separator=" | ") AS ?afirmanteR)
+       ?rolAf ?pieza ?tipoAct ?fecha
+       (GROUP_CONCAT(DISTINCT COALESCE(?recL, ""); separator=" / ") AS ?ante)
+       (GROUP_CONCAT(DISTINCT COALESCE(?fL, ""); separator=" / ") AS ?firmantes)
+       ?sujetoLabel ?atributo ?atrLabel ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
+       (GROUP_CONCAT(DISTINCT COALESCE(?rdL, ""); separator=" / ") AS ?redactorDoc)
+       ?redaccionDisputada ?respondeA ?segun
 WHERE {
+  # 1.º Las afirmaciones pedidas. (Si una pieza ocupa varios tramos, ?a sale repetida: el GROUP BY final la reúne.)
   #PARAMETROS
-  ?a a crm:E13_Attribute_Assignment ; rdfs:label ?aid ;
-     crm:P177_assigned_property_of_type ?atributo ; crm:P140_assigned_attribute_to ?sujeto ; crm:P141_assigned ?valor ;
-     crm:P9i_forms_part_of ?act ; crm:P14_carried_out_by ?af .
-  ?atributo skos:prefLabel ?atrLabel .
-  ?af rdfs:label ?afirmante .
-  OPTIONAL { SELECT ?af (GROUP_CONCAT(DISTINCT ?rl; separator=" | ") AS ?afirmanteR) WHERE {
-      ?rp prov:wasDerivedFrom ?af ; a picom:PersonReconstruction ; rdfs:label ?rl } GROUP BY ?af }
-  ?pc crm:P01_has_domain ?a ; crm:P02_has_range ?af ; crm:P14.1_in_the_role_of ?rolC . ?rolC skos:prefLabel ?rolAf .
-  ?a crm:P2_has_type ?polC . ?polC skos:inScheme tes:polaridades ; skos:prefLabel ?pol .
-  ?a crm:P2_has_type ?funC . ?funC skos:inScheme tes:fundamentos ; skos:prefLabel ?fundamento .
-  ?a crm:P2_has_type ?fzaC . ?fzaC skos:inScheme tes:fuerzas ; skos:prefLabel ?fuerza .
-  ?act crm:P94_has_created ?pz ; crm:P2_has_type ?taC . ?taC skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct .
-  ?pz rdfs:label ?pieza . BIND (?pz AS ?pieza_iri)
-  FILTER (!BOUND(?filtroEntidad) || EXISTS { ?filtroEntidad prov:wasDerivedFrom ?sujeto })
-  FILTER (!BOUND(?filtroAfirmante) || EXISTS { ?filtroAfirmante prov:wasDerivedFrom ?af })
-  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
-  OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
-  OPTIONAL { SELECT ?act (GROUP_CONCAT(DISTINCT ?recL; separator=" / ") AS ?ante) WHERE {
-      ?pr crm:P01_has_domain ?act ; crm:P02_has_range ?rec ; crm:P14.1_in_the_role_of ?rr .
-      ?rr skos:broader* rol:receptor . ?rec rdfs:label ?recL } GROUP BY ?act }
-  OPTIONAL { SELECT ?act (GROUP_CONCAT(DISTINCT ?fL; separator=" / ") AS ?firmantes) WHERE {
-      ?pf crm:P01_has_domain ?act ; crm:P02_has_range ?fi ; crm:P14.1_in_the_role_of ?fr .
-      ?fr skos:broader* rol:firmante . ?fi rdfs:label ?fL } GROUP BY ?act }
-  OPTIONAL { ?sujeto rdfs:label ?sujetoLabel }
-  OPTIONAL { ?valor skos:prefLabel ?vl1 } OPTIONAL { ?valor rdfs:label ?vl2 }
-  OPTIONAL { ?valor crm:P190_has_symbolic_content ?vl3 } OPTIONAL { ?valor crm:P1_is_identified_by/crm:P190_has_symbolic_content ?vl4 }
+  #SI expediente
+  ?inst_ rico:isOrWasInstantiationOf ?expediente . ?parte_ rico:isOrWasComponentOf ?inst_ .
+  ?pieza_iri rico:hasOrHadInstantiation ?parte_ .
+  #FIN
+  #SI filtroEntidad
+  ?filtroEntidad prov:wasDerivedFrom ?sujeto .
+  #FIN
+  #SI filtroAfirmante
+  ?filtroAfirmante prov:wasDerivedFrom ?af .
+  #FIN
+  ?a crm:P140_assigned_attribute_to ?sujeto ; crm:P14_carried_out_by ?af ; crm:P9i_forms_part_of ?act ;
+     crm:P177_assigned_property_of_type ?atributo ; a crm:E13_Attribute_Assignment .
+  ?act crm:P94_has_created ?pieza_iri .
+  # 2.º Sus facetas, en pasos cortos: cada LATERAL parte de un nodo ya ligado (ningún paso recorre el corpus).
+  LATERAL { ?a rdfs:label ?aid ; crm:P177_assigned_property_of_type ?atributo ; crm:P140_assigned_attribute_to ?sujeto ;
+               crm:P141_assigned ?valor ; crm:P9i_forms_part_of ?act ; crm:P14_carried_out_by ?af . }
+  LATERAL { ?atributo skos:prefLabel ?atrLabel . ?af rdfs:label ?afirmante . ?act crm:P94_has_created ?pz ; crm:P2_has_type ?taC . }
+  LATERAL { ?pz rdfs:label ?pieza . ?taC skos:inScheme tes:actuaciones ; skos:prefLabel ?tipoAct . }
+  LATERAL { ?pc crm:P01_has_domain ?a . }
+  LATERAL { ?pc crm:P02_has_range ?af ; crm:P14.1_in_the_role_of ?rolC . }
+  LATERAL { ?rolC skos:prefLabel ?rolAf . }
+  LATERAL { ?a crm:P2_has_type ?polC . ?polC skos:inScheme tes:polaridades ; skos:prefLabel ?pol . }
+  LATERAL { ?a crm:P2_has_type ?funC . ?funC skos:inScheme tes:fundamentos ; skos:prefLabel ?fundamento . }
+  LATERAL { ?a crm:P2_has_type ?fzaC . ?fzaC skos:inScheme tes:fuerzas ; skos:prefLabel ?fuerza . }
+  LATERAL { ?an oa:hasBody ?a . }
+  LATERAL { ?an oa:hasTarget ?tg . }
+  LATERAL { ?tg oa:hasSource ?tr ; oa:hasSelector ?qs . }
+  LATERAL { ?qs oa:exact ?cita . ?tr rdfs:label ?tramo . FILTER EXISTS { ?qs a oa:TextQuoteSelector } }
+  LATERAL { OPTIONAL { ?rp prov:wasDerivedFrom ?af . ?rp rdfs:label ?rl . FILTER EXISTS { ?rp a picom:PersonReconstruction } } }
+  LATERAL { OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha } }
+  LATERAL { OPTIONAL { ?pr crm:P01_has_domain ?act ; crm:P02_has_range ?rec ; crm:P14.1_in_the_role_of ?rr .
+             ?rr skos:broader* rol:receptor . ?rec rdfs:label ?recL } }
+  LATERAL { OPTIONAL { ?pf crm:P01_has_domain ?act ; crm:P02_has_range ?fi ; crm:P14.1_in_the_role_of ?fr .
+             ?fr skos:broader* rol:firmante . ?fi rdfs:label ?fL } }
+  LATERAL { OPTIONAL { ?sujeto rdfs:label ?sujetoLabel } }
+  LATERAL { OPTIONAL { ?valor skos:prefLabel ?vl1 } } LATERAL { OPTIONAL { ?valor rdfs:label ?vl2 } }
+  LATERAL { OPTIONAL { ?valor crm:P190_has_symbolic_content ?vl3 } } LATERAL { OPTIONAL { ?valor crm:P1_is_identified_by/crm:P190_has_symbolic_content ?vl4 } }
   BIND (COALESCE(?vl1, ?vl3, ?vl4, ?vl2) AS ?valorLabel)
-  ?an oa:hasBody ?a ; oa:hasTarget ?tg . ?tg oa:hasSource ?tr ; oa:hasSelector ?qs .
-  ?qs a oa:TextQuoteSelector ; oa:exact ?cita . ?tr rdfs:label ?tramo .
-  OPTIONAL { ?tr rico:isOrWasDerivedFromInstantiation ?fo . ?fo rico:title ?folio }
-  OPTIONAL { ?a crm:P3_has_note ?nota }
+  LATERAL { OPTIONAL { ?tr rico:isOrWasDerivedFromInstantiation ?fo . ?fo rico:title ?folio } }
+  LATERAL { OPTIONAL { ?a crm:P3_has_note ?nota } }
   BIND (EXISTS { ?a crm:P2_has_type <https://w3id.org/laad/tesauro/anotacion/sujeto-eliptico> } AS ?eliptico)
   # Quién escribe: lo que dice el propio documento (PC14 rol:redactor) y si hay afirmaciones que lo disputan.
-  OPTIONAL { SELECT ?act (GROUP_CONCAT(DISTINCT ?rdL; separator=" / ") AS ?redactorDoc) WHERE {
-      ?prd crm:P01_has_domain ?act ; crm:P02_has_range ?rd ; crm:P14.1_in_the_role_of rol:redactor . ?rd rdfs:label ?rdL } GROUP BY ?act }
-  BIND (EXISTS { ?x crm:P140_assigned_attribute_to ?pz ; crm:P177_assigned_property_of_type atr:redacto } AS ?redaccionDisputada)
-  OPTIONAL { ?a crm:P17_was_motivated_by ?ra . ?ra a crm:E13_Attribute_Assignment ; rdfs:label ?respondeA }
-  OPTIONAL { ?a crm:P17_was_motivated_by ?sm . ?sm a picom:PersonObservation ; rdfs:label ?segun }
+  LATERAL { OPTIONAL { ?prd crm:P01_has_domain ?act ; crm:P02_has_range ?rd ; crm:P14.1_in_the_role_of rol:redactor . ?rd rdfs:label ?rdL } }
+  # (EXISTS anidado: primero las afirmaciones sobre ESTA pieza, después su atributo; con las dos tripletas juntas
+  # el motor empieza por todas las afirmaciones de redacción del corpus.)
+  BIND (EXISTS { ?x crm:P140_assigned_attribute_to ?pz . FILTER EXISTS { ?x crm:P177_assigned_property_of_type atr:redacto } }
+        AS ?redaccionDisputada)
+  LATERAL { OPTIONAL { ?a crm:P17_was_motivated_by ?ra . ?ra rdfs:label ?respondeA . FILTER EXISTS { ?ra a crm:E13_Attribute_Assignment } } }
+  LATERAL { OPTIONAL { ?a crm:P17_was_motivated_by ?sm . ?sm rdfs:label ?segun . FILTER EXISTS { ?sm a picom:PersonObservation } } }
 }
+# Claves de grupo: las columnas y, además, los nodos intermedios que distinguen una fila de otra (dos anotaciones
+# de la misma afirmación son dos filas, como antes de agrupar).
+GROUP BY ?a ?aid ?afirmante ?rolAf ?pieza ?tipoAct ?fecha ?sujetoLabel ?atributo ?atrLabel ?valor ?valorLabel ?pol
+         ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico ?redaccionDisputada ?respondeA ?segun
+         ?af ?sujeto ?act ?pz ?pc ?rolC ?polC ?funC ?fzaC ?taC ?an ?tg ?tr ?qs ?fo ?ra ?sm ?vl1 ?vl2 ?vl3 ?vl4
 ORDER BY ?pieza ?aid
