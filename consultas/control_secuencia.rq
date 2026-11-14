@@ -1,5 +1,8 @@
-# Control: piezas cuyo orden físico contradice el orden de sus fechas normalizadas (capa 4, R-fechas-normalizadas),
+# Control: piezas cuyo orden físico contradice el orden de sus fechas normalizadas (capa 4, R-fechas-normalizadas-<exp>),
 # o con año fuera del intervalo 1806–1807. Señala, no corrige (docs/01_materiales.md F1–F6).
+# Parámetro opcional: ?expediente (IRI del expediente).
+# LIMITACIÓN: el intervalo 1805–1807 es el del expediente piloto (cc-14-18); para otros expedientes la segunda rama
+# no vale hasta que el intervalo esperado sea un dato del expediente.
 SELECT ?p1 ?f1 ?p2 ?f2 ?motivo WHERE {
   #PARAMETROS
   {
@@ -13,5 +16,6 @@ SELECT ?p1 ?f1 ?p2 ?f2 ?motivo WHERE {
     ?ax crm:P94_has_created ?x ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 . ?x rdfs:label ?p1 .
     FILTER (YEAR(?f1) > 1807 || YEAR(?f1) < 1805) BIND ("año fuera del expediente" AS ?motivo)
   }
+  FILTER (!BOUND(?expediente) || EXISTS { ?x rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
 }
 ORDER BY ?p1 ?p2

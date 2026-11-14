@@ -1,5 +1,6 @@
 # Disputa (c) "texto/afirmación": la pieza muestra la firma de X (capa 2, rol firmante en la actuación) y en capa 3
 # alguien niega que X firmara esa pieza (atr:firmo, pol:niega). Se compara por reconstrucción si existe.
+# Parámetro opcional: ?expediente (IRI del expediente).
 SELECT ?pieza ?firmaEscrita ?mencionFirma ?negacion ?afirmante ?cita WHERE {
   #PARAMETROS
   ?act crm:P94_has_created ?pz . ?pz rdfs:label ?pieza .
@@ -10,4 +11,5 @@ SELECT ?pieza ?firmaEscrita ?mencionFirma ?negacion ?afirmante ?cita WHERE {
      crm:P14_carried_out_by/rdfs:label ?afirmante .
   ?an oa:hasBody ?b ; oa:hasTarget/oa:hasSelector/oa:exact ?cita .
   FILTER (?v = ?mf || EXISTS { ?r prov:wasDerivedFrom ?v , ?mf })
+  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
 }

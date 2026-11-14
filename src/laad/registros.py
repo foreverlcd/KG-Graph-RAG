@@ -5,10 +5,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import fuente
 from .esquema import Afirmacion, Mencion, Pieza
-
-RAIZ = Path(__file__).resolve().parents[2]
-PIEZAS = RAIZ / "datos" / "piezas.jsonl"
 
 
 @dataclass
@@ -18,6 +16,10 @@ class Lote:
     afirmaciones: dict[str, Afirmacion] = field(default_factory=dict)
     errores: list[str] = field(default_factory=list)
 
+    def hechos(self) -> set[str]:
+        """Hechos narrados (H-…) que alguna afirmación del lote usa como sujeto o como valor."""
+        return {h for a in self.afirmaciones.values() for h in (a.sujeto.hecho, a.valor.hecho) if h}
+
 
 def _leer(ruta: Path):
     for n, linea in enumerate(ruta.read_text(encoding="utf-8").splitlines(), 1):
@@ -25,7 +27,11 @@ def _leer(ruta: Path):
             yield n, json.loads(linea)
 
 
-def cargar(rutas_registros: list[Path], ruta_piezas: Path = PIEZAS) -> Lote:
+def cargar(rutas_registros: list[Path], ruta_piezas: Path | None = None) -> Lote:
+    """Carga los registros del expediente EN CURSO (fuente.usando_expediente): las citas se verifican contra su
+    transcripción. Sin `ruta_piezas`, las piezas son las que nombra su manifiesto."""
+    if ruta_piezas is None:
+        ruta_piezas = fuente.ruta(fuente.manifiesto()["piezas"])
     lote = Lote()
     for n, d in _leer(ruta_piezas):
         try:

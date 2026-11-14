@@ -6,16 +6,18 @@ from pathlib import Path
 
 import rdflib
 
-from laad import mapeo
-from laad.registros import cargar
+from laad import corpus, mapeo
+from laad.corpus import RAIZ, RECONSTRUCCIONES  # noqa: F401
+from laad.preguntas import EXPEDIENTE_PILOTO
 
-from laad.hilo import LOTES, PROCEDENCIA, RECONSTRUCCIONES, REGISTROS, RAIZ  # noqa: F401
-from laad.hilo import construir as _construir_canonico
+LOTES = corpus.rutas_registros(EXPEDIENTE_PILOTO)      # registros del expediente piloto (según su manifiesto)
+REGISTROS = LOTES[0]
+PROCEDENCIA = corpus.procedencia(EXPEDIENTE_PILOTO)
 
 
 def construir() -> rdflib.Dataset:
-    """Construye un Dataset nuevo (sin caché), igual que scripts/construir.py."""
-    return _construir_canonico()
+    """Construye un Dataset nuevo del corpus (sin caché), igual que scripts/construir.py."""
+    return corpus.construir()
 
 
 @functools.lru_cache(maxsize=1)

@@ -1,12 +1,13 @@
 """Capa 0 — acceso a la fuente de verdad (transcripción paleográfica).
 
 Reglas (ver docs/01_materiales.md y docs/decisiones/ADR-002-citas.md):
-* La única fuente citable es corpus/Transcripcion_CC_L14E18.txt.
+* La única fuente citable de cada expediente es la transcripción paleográfica que nombra su manifiesto
+  (datos/expedientes/<exp>.json); el expediente en curso lo fija usando_expediente(exp).
 * El texto se carga sin tocar: solo se quita el BOM y se convierte CRLF→LF.
 * Unidad de transcripción (UT): bloque entre líneas '#'. Probablemente una imagen
   o página del original; NO es un folio. UT00 = carátula.
 * Tramo: parte de una UT delimitada por una marca de folio explícita escrita por el
-  transcriptor ('Folio 20', 'folio 28', 'Folio 33', '[Folio 34 ]'). Solo los tramos
+  transcriptor (p. ej. 'Folio 20', '[Folio 34 ]'; las lista el manifiesto). Solo los tramos
   que siguen a una marca tienen folio explícito; el resto queda "no consta".
   Recto/vuelto no consta en ningún punto de la transcripción.
 * Una cita es válida si, tras colapsar secuencias de espacios en blanco a un solo
@@ -27,16 +28,30 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
 MANIFIESTOS = RAIZ / "datos" / "expedientes"
+# Expediente que rige cuando nadie fija el contexto (usando_expediente): el piloto. Es solo una comodidad para
+# las utilidades de una sola fuente (verificar una cita suelta); todo lo que construye el grafo fija el contexto.
 EXPEDIENTE_POR_DEFECTO = "cc-14-18"
 _EXPEDIENTE = contextvars.ContextVar("expediente", default=EXPEDIENTE_POR_DEFECTO)
 
 
-@lru_cache(maxsize=None)
 def manifiesto(exp: str | None = None) -> dict:
-    """Manifiesto del expediente: transcripción, marcas de folio verificadas a mano y jerarquía archivística.
+    """Manifiesto del expediente: la ÚNICA fuente de su configuración (transcripción, marcas de folio verificadas
+    a mano, jerarquía archivística, piezas, registros, fechas, procedencia del lote y signatura en el catálogo).
     Todo lo que es propio de un expediente vive aquí, no en el código (revisión C2)."""
-    exp = exp or _EXPEDIENTE.get()
-    return json.loads((MANIFIESTOS / f"{exp}.json").read_text(encoding="utf-8"))
+    return _manifiesto(MANIFIESTOS, exp or _EXPEDIENTE.get())
+
+
+@lru_cache(maxsize=None)
+def _manifiesto(directorio: Path, exp: str) -> dict:
+    ruta = directorio / f"{exp}.json"
+    if not ruta.exists():
+        raise KeyError(f"expediente desconocido: {exp!r} (no existe {ruta})")
+    return json.loads(ruta.read_text(encoding="utf-8"))
+
+
+def expedientes() -> list[str]:
+    """Identificadores de los expedientes con manifiesto, en orden alfabético."""
+    return sorted(p.stem for p in MANIFIESTOS.glob("*.json"))
 
 
 def expediente_actual() -> str:
@@ -52,8 +67,13 @@ def usando_expediente(exp: str):
         _EXPEDIENTE.reset(tok)
 
 
+def ruta(relativa: str | Path) -> Path:
+    """Ruta de un archivo citado en un manifiesto: relativa a la raíz del repositorio (o absoluta)."""
+    return RAIZ / relativa
+
+
 def ruta_transcripcion(exp: str | None = None) -> Path:
-    return RAIZ / manifiesto(exp)["transcripcion"]
+    return ruta(manifiesto(exp)["transcripcion"])
 
 
 def marcas_folio(exp: str | None = None) -> list[tuple[str, str, str]]:
@@ -61,9 +81,6 @@ def marcas_folio(exp: str | None = None) -> list[tuple[str, str, str]]:
     «De folio 4», «En folio 10») NO son marcas del transcriptor y no figuran aquí."""
     return [tuple(x) for x in manifiesto(exp)["marcas_folio"]]
 
-
-TRANSCRIPCION = ruta_transcripcion(EXPEDIENTE_POR_DEFECTO)
-MARCAS_FOLIO = marcas_folio(EXPEDIENTE_POR_DEFECTO)
 
 _WS = re.compile(r"\s+")
 
@@ -91,7 +108,11 @@ def texto_canonico(ruta: Path | None = None) -> str:
 
 
 def sha256(ruta: Path | None = None) -> str:
-    ruta = ruta or ruta_transcripcion()
+    return _sha256(ruta or ruta_transcripcion())
+
+
+@lru_cache(maxsize=None)
+def _sha256(ruta: Path) -> str:
     return hashlib.sha256(ruta.read_bytes()).hexdigest()
 
 
@@ -100,12 +121,13 @@ def _linea(texto: str, pos: int) -> int:
 
 
 def tramos(exp: str | None = None) -> tuple[Tramo, ...]:
-    return _tramos(exp or _EXPEDIENTE.get())
+    return _tramos(ruta_transcripcion(exp), tuple(marcas_folio(exp)))
 
 
-@lru_cache(maxsize=16)
-def _tramos(exp: str) -> tuple[Tramo, ...]:
-    t = texto_canonico(ruta_transcripcion(exp))
+@lru_cache(maxsize=None)
+def _tramos(transcripcion: Path, marcas: tuple[tuple[str, str, str], ...]) -> tuple[Tramo, ...]:
+    """Caché por archivo y marcas (no por identificador): dos manifiestos distintos nunca comparten tramos."""
+    t = texto_canonico(transcripcion)
     # 1) unidades de transcripción
     uts: list[tuple[str, int, int]] = []
     pos, n = 0, 0
@@ -117,7 +139,7 @@ def _tramos(exp: str) -> tuple[Tramo, ...]:
     res: list[Tramo] = []
     for ut, a, b in uts:
         cortes = []
-        for ut_m, marca, folio in marcas_folio(exp):
+        for ut_m, marca, folio in marcas:
             if ut_m == ut:
                 k = t.find(marca, a, b)
                 if k < 0:
@@ -139,8 +161,8 @@ def _tramos(exp: str) -> tuple[Tramo, ...]:
     return tuple(res)
 
 
-def tramo(id_: str) -> Tramo:
-    for tr in tramos():
+def tramo(id_: str, exp: str | None = None) -> Tramo:
+    for tr in tramos(exp):
         if tr.id == id_:
             return tr
     raise KeyError(id_)

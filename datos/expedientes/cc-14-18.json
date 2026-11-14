@@ -62,5 +62,21 @@
       "padre": "arc/legajo/cc-14"
     }
   ],
-  "piezas": "datos/piezas.jsonl"
+  "piezas": "datos/piezas.jsonl",
+  "registros": [
+    "datos/registros/hilo_central.jsonl",
+    "datos/registros/expediente_a.jsonl",
+    "datos/registros/expediente_b.jsonl",
+    "datos/registros/expediente_c.jsonl"
+  ],
+  "fechas": "datos/fechas_normalizadas.csv",
+  "fechas_argumento": "Lectura literal de cada fecha escrita al calendario gregoriano, sin corregir las fechas de secuencia imposible (F1–F6); el control de secuencia las señala.",
+  "lote": {
+    "nombre": "anotacion-manual-expediente-v1",
+    "agente": "claude-opus-5-5",
+    "tipo_agente": "SoftwareAgent",
+    "plan": "anotacion-manual",
+    "fecha": "2026-11-13T00:00:00"
+  },
+  "signatura_catalogo": "CCc 14 (18)"
 }

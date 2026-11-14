@@ -145,8 +145,9 @@ def test_pc15_cadena_de_autoridades_por_pieza():
     r = P.pc15()
     assert r.forma == "D"
     porp = {}
-    for f in r.afirmaciones:
+    for f in r.participaciones:
         porp.setdefault(f["pieza"], set()).add(f["rol"])
+    assert "PC15" not in r.texto() and "fedatario" in r.texto()      # la respuesta se puede componer como texto
     assert "fedatario" in porp["P11"] and "notificado" in porp["P11"]
     assert "testigo de asistencia" in porp["P16"]
     assert any(l.startswith("Piezas sin firmante anotado:") and "P15" in l for l in r.extra)

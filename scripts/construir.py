@@ -1,22 +1,21 @@
-"""Construye el grafo del expediente CC 14-18, lo serializa en TriG y lo valida (SHACL).
+"""Construye el grafo del corpus (todos los expedientes con manifiesto), lo serializa y lo valida (SHACL).
 
-Uso: python scripts/construir.py [--sin-ontologias]
+Escribe en datos/grafo/ un par <exp>.trig + <exp>.nq por expediente (sus capas 1–3) y comun.trig + comun.nq (capa 4,
+argumentación, procedencia y catálogo). Los .nq, ordenados, son la forma canónica para git.
+Uso: python scripts/construir.py [--sin-ontologias] [expediente ...]
 """
 import sys, pathlib
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "src"))
-from laad import mapeo, validacion
+from laad import corpus, mapeo, validacion
 
-from laad.hilo import construir
-ds = construir()
-out = RAIZ / "datos/grafo/cc-14-18.trig"
-out.parent.mkdir(exist_ok=True)
-ds.serialize(out, format="trig")
-# Forma canónica para git: N-Quads ordenado (el orden de TriG de rdflib no es estable entre ejecuciones;
-# los grafos son isomorfos, ver tests/test_mapeo.py).
-nq = sorted(l for l in ds.serialize(format="nquads").splitlines() if l.strip())
-(out.with_suffix(".nq")).write_text("\n".join(nq) + "\n", encoding="utf-8")
-print(f"escrito {out} ({sum(len(g) for g in ds.graphs())} tripletas en {len(list(ds.graphs()))} grafos)")
+exps = [a for a in sys.argv[1:] if not a.startswith("--")] or None
+ds = corpus.construir(exps)
+for ruta in corpus.escribir(ds):
+    parte = mapeo.nuevo_dataset(); parte.parse(ruta, format="trig")
+    print(f"escrito {ruta} ({sum(len(g) for g in parte.graphs())} tripletas en "
+          f"{sum(1 for g in parte.graphs() if len(g))} grafos)")
+print(f"corpus: {', '.join(exps or corpus.expedientes())}; {sum(len(g) for g in ds.graphs())} tripletas")
 conforma, _, texto = validacion.shacl(mapeo.union(ds), con_ontologias="--sin-ontologias" not in sys.argv)
 print("SHACL conforma:", conforma)
 if not conforma:

@@ -1,9 +1,10 @@
 """Comprueba la consistencia del grafo con un razonador OWL 2 RL (owlrl).
 
-Carga la unión de datos/grafo/cc-14-18.trig + tesauro + todos los estándares de vendor/, calcula el
+Carga la unión de datos/grafo/*.trig (todos los expedientes y las capas comunes) + tesauro + todos los
+estándares de vendor/, calcula el
 cierre OWL RL y extrae los mensajes de inconsistencia que owlrl añade como tripletas
 <http://www.daml.org/2002/03/agents/agent-ont#error>. Escribe datos/grafo/razonador.txt.
-Uso: python scripts/razonar.py [ruta.trig]
+Uso: python scripts/razonar.py [ruta.trig ...]
 """
 import sys, time, pathlib
 import rdflib, owlrl
@@ -12,9 +13,11 @@ sys.path.insert(0, str(RAIZ / "src"))
 from laad import validacion
 
 ERROR = rdflib.URIRef("http://www.daml.org/2002/03/agents/agent-ont#error")
-trig = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else RAIZ / "datos/grafo/cc-14-18.trig"
+trigs = [pathlib.Path(a) for a in sys.argv[1:]] or sorted((RAIZ / "datos/grafo").glob("*.trig"))
 t0 = time.time()
-ds = rdflib.Dataset(); ds.parse(trig, format="trig")
+ds = rdflib.Dataset()
+for trig in trigs:
+    ds.parse(trig, format="trig")
 g = rdflib.Graph()
 for ctx in ds.graphs():
     for t in ctx: g.add(t)

@@ -57,10 +57,30 @@ Condicion = _enum("Condicion", "condiciones")
 TipoEntidad = _enum("TipoEntidad", "entidades")
 ValorCreencia = _enum("ValorCreencia", "creencias")
 
-ID_PIEZA = r"^P\d{2}$"
+ID_PIEZA = r"^P\d{2,3}$"
 ID_MENCION = r"^M-[A-Za-z0-9.]+-\d{3}$"
 ID_AFIRMACION = r"^A-[A-Za-z0-9.]+-\d{3}$"
 ID_HECHO = r"^H-[a-z0-9-]+$"
+ID_EXPEDIENTE = r"[a-z0-9]+(?:-[a-z0-9]+)*"
+# La capa 4 es común a todos los expedientes: sus referencias a menciones, hechos narrados y afirmaciones van
+# CALIFICADAS con el expediente («cc-14-18:M-UT01-003»), porque los ids de registro solo son únicos dentro de uno.
+_REF = re.compile(rf"^({ID_EXPEDIENTE}):(.+)$")
+_ID_LOCAL = {"mencion": ID_MENCION, "hecho": ID_HECHO, "afirmacion": ID_AFIRMACION}
+
+
+def separar_ref(ref: str, *clases: str) -> tuple[str, str, str]:
+    """«cc-14-18:M-UT01-003» → ("cc-14-18", "M-UT01-003", "mencion"). `clases` restringe lo admitido
+    ("mencion", "hecho", "afirmacion"). Una referencia sin calificar o mal formada es un error."""
+    m = _REF.match(ref)
+    if not m:
+        raise ValueError(f"referencia sin calificar: {ref!r}; en la capa 4 se escribe «expediente:id» "
+                         f"(p. ej. «cc-14-18:{ref}»)")
+    exp, local = m.groups()
+    for clase in clases or tuple(_ID_LOCAL):
+        if re.match(_ID_LOCAL[clase], local):
+            return exp, local, clase
+    raise ValueError(f"referencia mal formada: {ref!r}; tras el expediente se espera un id de "
+                     f"{' o '.join(clases or tuple(_ID_LOCAL))}")
 
 
 def _tramos_validos() -> set[str]:
@@ -212,7 +232,9 @@ class Reconstruccion(_Base):
     id: str = Field(pattern=r"^R-[a-z0-9-]+$")
     tipo: Literal["identidad", "hecho", "cargo"]
     etiqueta: str
-    menciones: list[str] = Field(default_factory=list, description="identidad: ids de mención; hecho: ids de hecho narrado")
+    menciones: list[str] = Field(default_factory=list, description="identidad: ids de mención; hecho: ids de hecho "
+                                 "narrado. Siempre calificados con el expediente («cc-14-18:M-UT01-003», "
+                                 "«cc-14-18:H-p01-prision»); pueden mezclar expedientes")
     # — solo para tipo "cargo" —
     titular: Optional[str] = Field(None, pattern=r"^R-[a-z0-9-]+$", description="Reconstrucción de identidad del titular")
     cargo: Optional[str] = Field(None, description="Concepto de tes:cargos")
@@ -222,7 +244,8 @@ class Reconstruccion(_Base):
     fin: Optional[str] = Field(None, pattern=r"^\d{4}(-\d{2}(-\d{2})?)?$")
     vigencia_literal: Optional[str] = Field(None, description="Cómo se sabe la vigencia («consta en 1806», «no consta inicio»)")
     identificador_externo: Optional[str] = Field(None, description="p. ej. HGIS:6000357")
-    premisas: list[str] = Field(default_factory=list, description="IDs de afirmaciones usadas como premisa")
+    premisas: list[str] = Field(default_factory=list, description="Afirmaciones usadas como premisa, calificadas "
+                                "con el expediente («cc-14-18:A-UT11-004»)")
     creencia: ValorCreencia
     argumento: str = Field(min_length=20)
     autor: str
@@ -232,6 +255,13 @@ class Reconstruccion(_Base):
 
     @model_validator(mode="after")
     def _cargo(self):
+        try:
+            for ref in self.menciones:
+                separar_ref(ref, "hecho" if self.tipo == "hecho" else "mencion")
+            for ref in self.premisas:
+                separar_ref(ref, "afirmacion")
+        except ValueError as e:
+            raise ValueError(f"{self.id}: {e}") from None
         if self.tipo == "cargo":
             if not (self.titular and self.cargo and self.premisas):
                 raise ValueError(f"{self.id}: un cargo exige titular, cargo y al menos una premisa")

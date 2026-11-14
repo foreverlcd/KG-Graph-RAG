@@ -42,7 +42,7 @@ from rdflib.namespace import DCTERMS, OWL, PROV, SH
 from laad import mapeo as M
 from laad import validacion
 
-from ._fixtures import copia_union, union
+from ._fixtures import EXPEDIENTE_PILOTO, PROCEDENCIA, copia_union, union
 
 OHAC = rdflib.Namespace("https://w3id.org/laad/ohac#")
 ANIDADORES = (SH.property, SH.sparql, SH.qualifiedValueShape)
@@ -318,20 +318,20 @@ def m_lote_reconstruccion_sin_autor(g):
 
 
 def m_lote_actividad_sin_plan(g):
-    asoc = URIRef(f"{M.ID['actividad/anotacion-manual-expediente-v1']}/asociacion")
+    asoc = URIRef(f"{M.ID[f'actividad/{EXPEDIENTE_PILOTO}/{PROCEDENCIA.lote}']}/asociacion")
     _quitar(g, asoc, PROV.hadPlan)
-    return M.G["texto/anotacion-manual-expediente-v1"]
+    return M.grafo_iri("texto", PROCEDENCIA.lote, exp=EXPEDIENTE_PILOTO)
 
 
 def m_afirmacion_responde_sin_marca(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT11-004"]
+    a = M.afirmacion_iri("A-UT11-004", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["responde-a"]) in g
     g.remove((a, M.CRM.P2_has_type, M.ANOT["responde-a"]))
     return a
 
 
 def m_afirmacion_segun_sin_marca(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT11-005"]
+    a = M.afirmacion_iri("A-UT11-005", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["segun-otro"]) in g
     g.remove((a, M.CRM.P2_has_type, M.ANOT["segun-otro"]))
     return a
@@ -387,14 +387,14 @@ def m_cargo_sin_premisa(g):
 
 
 def m_afirmacion_eliptica_sin_nota(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT01-002"]
+    a = M.afirmacion_iri("A-UT01-002", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["sujeto-eliptico"]) in g
     _quitar(g, a, M.CRM.P3_has_note)
     return a
 
 
 def m_pieza_tipo_abstracto(g):
-    p = M.ID["cc-14-18/pieza/P13"]
+    p = M.pieza_iri("P13", EXPEDIENTE_PILOTO)
     _quitar(g, p, M.RICO.hasDocumentaryFormType)
     g.add((p, M.RICO.hasDocumentaryFormType, M.ACT["de-autoridad"]))
     return p

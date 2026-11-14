@@ -2,7 +2,8 @@
 # actuación, fecha escrita, sujeto, atributo, valor, polaridad, fundamento, fuerza, cita, tramo y folio.
 # Parámetros (bloque VALUES insertado en #PARAMETROS por laad.consulta): ?atributo, ?sujeto, ?pieza_iri,
 # ?filtroEntidad (reconstrucción de capa 4: afirmaciones cuyo sujeto deriva en ella), ?filtroAfirmante
-# (reconstrucción de capa 4: afirmaciones hechas por cualquiera de sus menciones).
+# (reconstrucción de capa 4: afirmaciones hechas por cualquiera de sus menciones), ?expediente (IRI del expediente:
+# solo sus afirmaciones; los ids de registro —?aid, ?pieza— solo son únicos dentro de un expediente).
 SELECT ?a ?aid ?afirmante ?afirmanteR ?rolAf ?pieza ?tipoAct ?fecha ?ante ?firmantes ?sujetoLabel ?atributo ?atrLabel
        ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
        ?redactorDoc ?redaccionDisputada ?respondeA ?segun
@@ -23,6 +24,7 @@ WHERE {
   ?pz rdfs:label ?pieza . BIND (?pz AS ?pieza_iri)
   FILTER (!BOUND(?filtroEntidad) || EXISTS { ?filtroEntidad prov:wasDerivedFrom ?sujeto })
   FILTER (!BOUND(?filtroAfirmante) || EXISTS { ?filtroAfirmante prov:wasDerivedFrom ?af })
+  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
   OPTIONAL { ?pz rico:hasCreationDate/rico:expressedDate ?fecha }
   OPTIONAL { SELECT ?act (GROUP_CONCAT(DISTINCT ?recL; separator=" / ") AS ?ante) WHERE {
       ?pr crm:P01_has_domain ?act ; crm:P02_has_range ?rec ; crm:P14.1_in_the_role_of ?rr .

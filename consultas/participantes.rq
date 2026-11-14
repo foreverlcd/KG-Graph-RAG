@@ -1,6 +1,7 @@
 # PC15: quién participa en cada actuación y con qué papel procesal (firmante, redactor, escribano, receptor,
 # testigo de asistencia…), según las menciones con rol en la pieza (capa 2, PC14 + P14.1). Si una reconstrucción
 # de identidad (capa 4) agrupa la mención, se devuelve su etiqueta en ?persona; si no, queda vacía.
+# Parámetro opcional: ?expediente (IRI del expediente).
 SELECT ?pieza ?tipoAct ?fecha ?lugar ?mid ?texto ?rol ?persona ?tramo ?cita WHERE {
   #PARAMETROS
   ?act crm:P94_has_created ?pz ; crm:P2_has_type ?ta . ?pz rdfs:label ?pieza .
@@ -16,5 +17,6 @@ SELECT ?pieza ?tipoAct ?fecha ?lugar ?mid ?texto ?rol ?persona ?tramo ?cita WHER
   OPTIONAL { ?rec prov:wasDerivedFrom ?m ; rdfs:label ?persona .
              FILTER EXISTS { ?rec a picom:PersonReconstruction } }
   BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
+  FILTER (!BOUND(?expediente) || EXISTS { ?pz rico:hasOrHadInstantiation/rico:isOrWasComponentOf/rico:isOrWasInstantiationOf ?expediente })
 }
 ORDER BY ?pieza ?rol ?mid

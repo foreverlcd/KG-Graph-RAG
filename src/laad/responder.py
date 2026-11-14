@@ -57,6 +57,9 @@ class Respuesta:
     afirmaciones: list[dict] = field(default_factory=list)
     reconstrucciones: list[dict] = field(default_factory=list)
     extra: list[str] = field(default_factory=list)
+    # Filas de consultas/participantes.rq (PC15): datos de la respuesta que NO son afirmaciones de capa 3; su texto
+    # va en `extra` (no tienen polaridad ni fundamento, y texto() no las pinta como afirmaciones).
+    participaciones: list[dict] = field(default_factory=list)
 
     def texto(self) -> str:
         out = [f"PREGUNTA: {self.pregunta}", f"RESPUESTA ({self.forma}): {self.resumen}", ""]
@@ -73,10 +76,11 @@ class Respuesta:
 
 
 def _unicas(filas: list[dict]) -> list[dict]:
+    """Una fila por afirmación (por su IRI: el id «A-…» se repite entre expedientes)."""
     vistos, out = set(), []
     for f in filas:
-        if f["aid"] not in vistos:
-            vistos.add(f["aid"])
+        if f["a"] not in vistos:
+            vistos.add(f["a"])
             out.append(f)
     return out
 
@@ -86,9 +90,12 @@ def _quien(r: dict) -> str:
     return f"«{r['afirmante']}»{ident} ({r['tipoAct']} {r['pieza']}, {r['tramo']})"
 
 
-def disputa(entidad: str, atributo: str, valor_label: str | None = None) -> tuple[str, list[dict]]:
-    """Agrupa las afirmaciones sobre una entidad y atributo; resume «X lo afirma, Y lo niega»."""
-    filas = _unicas(consultar("afirmaciones", filtroEntidad=entidad, atributo=atr_iri(atributo)))
+def disputa(entidad: str, atributo: str, valor_label: str | None = None,
+            expediente: str | None = None) -> tuple[str, list[dict]]:
+    """Agrupa las afirmaciones sobre una entidad y atributo; resume «X lo afirma, Y lo niega».
+    `expediente` (IRI) las restringe a un expediente; sin él, las de todo el corpus."""
+    filtro = {"expediente": expediente} if expediente else {}
+    filas = _unicas(consultar("afirmaciones", filtroEntidad=entidad, atributo=atr_iri(atributo), **filtro))
     if valor_label:
         filas = [f for f in filas if f["valorLabel"] == valor_label]
     if not filas:
