@@ -2,10 +2,13 @@
 
 > **Archivos de referencia:**
 > * Perfil: `ontologia/ohac.ttl`.
-> * Tesauro: `ontologia/tesauro.ttl`.
-> * Formas: `ontologia/formas.ttl`.
-> * Mapeo: `src/laad/mapeo.py`.
-> * Grafo de ejemplo: `datos/grafo/cc-14-18.trig`.
+> * Tesauro: `ontologia/tesauro.ttl`; conceptos candidatos: `ontologia/candidatos.ttl`; política de cambios: `ontologia/README.md`.
+> * Formas: `ontologia/formas.ttl` y `ontologia/formas_atributos.ttl` (generado).
+> * Mapeo: `src/laad/mapeo.py`; corpus de expedientes: `src/laad/corpus.py`.
+> * Grafo: `datos/grafo/<exp>.trig` por expediente (hoy `cc-14-18.trig`) y `datos/grafo/comun.trig`.
+>
+> **Cifras.** Los recuentos que cambian con los datos (menciones, afirmaciones, tripletas, formas, conceptos…)
+> están en `docs/cifras.md`, que se genera. Este documento remite allí y solo da una cifra cuando lleva fecha.
 >
 > La tabla completa de correspondencias está en `docs/C_correspondencias.md`; la trazabilidad pregunta → término →
 > consulta → prueba, en `docs/C_trazabilidad.md`. Las notas de alcance literales de cada término, en
@@ -29,17 +32,24 @@
 
 | Grafo | Capa | Contenido | Produce |
 |---|---|---|---|
-| `g:documento` | 1 | Jerarquía archivística, piezas, actuaciones, instanciaciones (original, transcripción, tramos, folios) | Curación humana (`datos/piezas.jsonl` + manifiesto) |
-| `g:texto/<lote>` | 2 | Menciones (observaciones) + anclas `oa:` + participaciones en la actuación (PC14) | Extracción (LLM o anotador) |
-| `g:afirmaciones/<lote>` | 3 | E13 + PC14 del afirmante + anclas `oa:` + hechos narrados (E89) | Extracción |
+| `g:<exp>/documento` | 1 | Jerarquía archivística, piezas, actuaciones, instanciaciones (original, transcripción, tramos, folios) | Curación humana (archivo de piezas + manifiesto) |
+| `g:<exp>/texto/<lote>` | 2 | Menciones (observaciones) + anclas `oa:` + participaciones en la actuación (PC14) | Extracción (LLM o anotador) |
+| `g:<exp>/afirmaciones/<lote>` | 3 | E13 + PC14 del afirmante + anclas `oa:` + hechos narrados (E89) | Extracción |
 | `g:reconstruccion/R-x` | 4 | Una proposición del investigador: identidad, evento o ejercicio de cargo | Investigador |
 | `g:argumentacion/R-x` | 4 | La inferencia (I5) y la creencia (I2) **sobre** `g:reconstruccion/R-x` | Investigador |
 | `g:procedencia` | P | PROV-O de todos los grafos | Mapeo |
+| `g:catalogo` | C | Fichas e índices del catálogo del ARC, como dato a contrastar (ADR-033) | Extracción del catálogo |
+
+**Grafos propios y grafos comunes (ADR-036).** Los grafos de las capas 1–3 llevan el identificador del expediente (`<exp>`, p. ej. `g:cc-14-18/documento`). Los de la capa 4, la procedencia y el catálogo son comunes a todo el corpus: una reconstrucción puede reunir menciones de varios expedientes y el catálogo los describe a todos. `scripts/construir.py` escribe un par `datos/grafo/<exp>.trig` + `.nq` por expediente y `comun.trig` + `comun.nq` con lo común (`corpus.partes`, `corpus.escribir`); los `.nq`, ordenados, son la forma canónica para git.
 
 Identificadores:
 
 * `https://w3id.org/laad/id/<expediente>/{pieza,actuacion,mencion,afirmacion,hecho,anotacion,transcripcion/<sha12>/<tramo>}/…`
 * Las entidades reconstruidas (`id:persona/…`, `id:lugar/…`, `id:evento/…`, `id:ejercicio-cargo/…`) **no** llevan expediente, porque pueden reunir menciones de varios.
+* La actividad que genera las capas 2–3 es `id:actividad/<exp>/<lote>`; la que cura las piezas, `id:actividad/<exp>/curacion-piezas-v1`.
+* En los registros de la capa 4 (`datos/reconstrucciones.jsonl`), toda referencia a una mención, un hecho narrado o una afirmación va **calificada con el expediente**: `cc-14-18:M-UT01-003`, `cc-14-18:H-p01-alboroto`, `cc-14-18:A-UT11-001`. Los ids de registro solo son únicos dentro de un expediente; una referencia sin calificar es un error (`esquema.separar_ref`).
+
+**Configuración.** Cada expediente se declara en su manifiesto `datos/expedientes/<exp>.json`: transcripción y su formato, marcas de folio, jerarquía, archivo de piezas, lista de registros, fechas normalizadas, lote de anotación y signatura en el catálogo. `src/laad/corpus.py`, que sustituye al antiguo `hilo.py`, no contiene ningún identificador de expediente (ADR-037); el único que queda en el código es el expediente por defecto de la capa de fuente (`fuente.EXPEDIENTE_POR_DEFECTO`, el piloto), que se usa cuando no se indica otro. La guía para añadir uno está en `datos/expedientes/README.md`.
 
 **Pendiente:** registrar el espacio `w3id.org/laad` (hoy es nominal).
 
@@ -119,7 +129,9 @@ Cada reconstrucción es un **par de grafos**:
 
 **Hipótesis en competencia.** Coexisten como reconstrucciones distintas, sin elegir una (p. ej. R-declarante-p19-es-martin «probable» frente a -es-mariano «posible»).
 
-**Fechas normalizadas.** Son una reconstrucción más (R-fechas-normalizadas). `consultas/control_secuencia.rq` las contrasta con el orden físico y **señala** F1, F2, F5 y F6 sin corregirlas.
+**Reconstrucciones entre expedientes.** Como las referencias van calificadas (`<exp>:M-…`), una misma reconstrucción puede derivar de menciones de expedientes distintos. `mapeo.capa_reconstruccion` las resuelve contra los lotes cargados y falla si citan un expediente que no está en el corpus (`tests/test_multi_expediente.py`, con el expediente real y uno sintético en el mismo conjunto de datos).
+
+**Fechas normalizadas.** Son una reconstrucción más, propia de cada expediente (`g:reconstruccion/R-fechas-normalizadas-<exp>`; el argumento de la lectura se toma de `fechas_argumento` en el manifiesto). `consultas/control_secuencia.rq` las contrasta con el orden físico y **señala** F1, F2, F5 y F6 sin corregirlas.
 
 ### 3.6 Capa P — procedencia del dato (PROV-O)
 
@@ -133,18 +145,27 @@ Cada reconstrucción es un **par de grafos**:
 
 ## 4. Tesauro SKOS: lo andino y lo procesal como datos
 
-* **Doce esquemas, 164 conceptos.** Ver `docs/C_correspondencias.md` §T. El tesauro **nunca** se usa como clase: SHACL `ConceptoNoInstanciadoForma`.
+* **Doce esquemas** (el número de conceptos, en `docs/cifras.md`). Ver `docs/C_correspondencias.md` §T. El tesauro **nunca** se usa como clase: SHACL `ConceptoNoInstanciadoForma`.
 * **Ayllu.** Es un *grupo* (`roar:Observation` / `E74`, `P2_has_type ent:ayllu`). Si hace falta su territorio, este se modela como lugar aparte.
 * **Condiciones y cargos.** Originario, forastero, tributario, reservado; cacique, recaudador de tributos, segunda, alcalde, principal. Son **atribuciones de alguien** (`atr:tiene-condicion`, `atr:ejerce-cargo`) y solo se vuelven rasgos de una persona en una reconstrucción de capa 4 con creencia.
 * **Rarezas conservadas sin asimilar.**
   * «India Ordinaria» → `cond:ordinario` con nota, **no** = originario.
   * «Sanbo» → `cond:zambo`.
   * «Gobernador» (UT12.a) → `cargo:gobernador` con nota de referente dudoso.
-* **Definiciones de trabajo.** Las escribió el modelador. Unos 100 conceptos aún no tienen `skos:definition`, y todos deben revisarlos historiadores (`skos:editorialNote`).
+* **Definiciones.** Todos los conceptos aprobados tienen `skos:definition` (ADR-032); las marcadas «definición de trabajo» no tienen fuente verificada (cuántas, en `docs/cifras.md`) y todas deben revisarlas historiadores (`skos:editorialNote`).
+
+### 4.1 Cómo crece el tesauro (versión 0.2.0)
+
+La política completa está en `ontologia/README.md` y el registro de cambios en `ontologia/CHANGELOG.md`. En resumen:
+
+* **Conceptos candidatos (ADR-038).** Quien anota y encuentra algo que el tesauro no tiene lo **propone y lo usa**, sin aproximarlo con una nota. `scripts/candidatos.py` (`--proponer`, `--aprobar`, `--rechazar`, `--listar`) mantiene `datos/candidatos_tesauro.csv` y genera `ontologia/candidatos.ttl`: cada candidato es un `skos:Concept` de su esquema, miembro de la `skos:Collection` `tes:candidatos`, con definición, ejemplo literal, proponente, fecha y expediente. La forma `ohac:ConceptoCandidatoForma` señala cada uso con un **aviso** (`sh:Warning`) y el grafo conforma. La lista de trabajo del curador es `consultas/candidatos_en_uso.rq`.
+* **Aprobar, rechazar, retirar.** Al aprobarse, el concepto pasa a la sección generada «APROBADOS» de `tesauro.ttl` con la misma IRI: ningún registro se toca. Un candidato rechazado o un concepto retirado **no se borra**: queda con `owl:deprecated true` y, si lo hay, `dct:isReplacedBy`; usarlo es un error en los registros y una violación SHACL (`ohac:ConceptoRetiradoForma`). Una IRI no se renombra ni se reutiliza.
+* **Dominio y rango por atributo (ADR-039).** `datos/atributos.csv` dice qué puede ser el sujeto y el valor de cada atributo (`persona`, `grupo`, `lugar`, `cosa`, `pieza`, `hecho`, `afirmacion`, `concepto`, `literal`). Se comprueba dos veces: al cargar los registros (`laad.esquema`, `laad.registros`) y en el grafo, con una forma por atributo en `ontologia/formas_atributos.ttl`, que genera `scripts/atributos.py`. El grafo no distingue `grupo` de `cosa` (ambos son `roar:Observation`); esa diferencia solo la comprueban los registros.
+* **Versión (ADR-040).** `MAYOR.MENOR.PARCHE`, una sola para todo `ontologia/`, en `owl:versionInfo` de cada esquema y de `ohac.ttl`. MAYOR: puede invalidar lo ya anotado (retirar un concepto, restringir un dominio o un rango, endurecer una forma). MENOR: todo lo anterior sigue siendo válido (aprobar un candidato, ampliar un dominio). PARCHE: correcciones sin cambio de significado. Proponer o rechazar un candidato no cambia la versión. Mientras sea `0.x`, el tesauro es de trabajo.
 
 ## 5. Formas SHACL (perfil)
 
-Hay 16 formas con nombre, y cada una tiene al menos una prueba negativa (`tests/test_formas_negativas.py`).
+`ontologia/formas.ttl` contiene las formas con nombre de la tabla, y cada una tiene al menos una prueba negativa (`tests/test_formas_negativas.py`). A ellas se suma una forma de dominio y rango por atributo en `ontologia/formas_atributos.ttl` (§4.1). El número total de formas y el de mutaciones declaradas están en `docs/cifras.md`.
 
 | Forma | Hace cumplir |
 |---|---|
@@ -157,6 +178,8 @@ Hay 16 formas con nombre, y cada una tiene al menos una prueba negativa (`tests/
 | ParticipacionForma | El rol va en PC14 y pertenece a `tes:roles` (o a `tes:cargos` para el ejercicio de un cargo) |
 | AfirmacionForma | Un afirmante con rol de la rama afirmante; una actuación, un sujeto, un atributo de la lista cerrada y un valor; una polaridad, un fundamento y una fuerza; ancla; **sin `J5` ni `J2`** (sin verdad); nota obligatoria en las decisiones del anotador |
 | ConceptoNoInstanciadoForma | Ningún concepto como clase, agente o sujeto |
+| ConceptoCandidatoForma | **Aviso** (`sh:Warning`), no violación: cada nodo que usa un concepto candidato (miembro de `tes:candidatos`) |
+| ConceptoRetiradoForma | Ningún nodo usa un concepto retirado (`owl:deprecated true`) |
 | ReconstruccionForma, CargoForma, InferenciaForma, CreenciaForma | La capa 4 lleva derivación, inferencia con autor, argumento y fecha, y creencia de la lista |
 | LoteConProcedenciaForma | Los grafos de las capas 1–3 tienen actividad, agente, plan y transcripción; los de la capa 4, autor y fecha |
 
@@ -198,12 +221,12 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 
 | Id | Estándar | Defecto | Efecto | Cómo se trató |
 |---|---|---|---|---|
-| D1 | ROAR 0.1 | `prov:wasDerivedFrom rdfs:domain roar:Reconstruction` es un dominio global sobre una propiedad de PROV. Como `prov:hadPrimarySource ⊑ prov:wasDerivedFrom` y `roar:Observation ⊓ roar:Reconstruction = ∅`, el patrón de PiCo (observación + `hadPrimarySource`) aplicado a una observación ROAR es **inconsistente** | El razonador OWL RL detectó 1 inconsistencia (M-UT01-007). Tras la corrección quedan 0, más 59 tipificaciones espurias de observaciones PiCo como `roar:Reconstruction` en el modelo revisado | Las observaciones ROAR usan `roar:documentedIn`; `scripts/razonar.py` informa de las espurias en cada ejecución |
+| D1 | ROAR 0.1 | `prov:wasDerivedFrom rdfs:domain roar:Reconstruction` es un dominio global sobre una propiedad de PROV. Como `prov:hadPrimarySource ⊑ prov:wasDerivedFrom` y `roar:Observation ⊓ roar:Reconstruction = ∅`, el patrón de PiCo (observación + `hadPrimarySource`) aplicado a una observación ROAR es **inconsistente** | El razonador OWL RL detectó 1 inconsistencia (M-UT01-007). Tras la corrección quedan 0, más las tipificaciones espurias de observaciones PiCo como `roar:Reconstruction` (cuántas, en `docs/cifras.md`: «d1 espurias») | Las observaciones ROAR usan `roar:documentedIn`; `scripts/razonar.py` informa de las espurias en cada ejecución |
 | D2 | PiCo 1.1.0 | `pico.ttl` declara `picot_roles: <…/roles/>`, pero los conceptos publicados usan `…/ThesaurusHistorischePersoonsgegevens/NNN`. Además, `prov:wasAssociatedWith` aparece como `owl:DatatypeProperty` | Las alineaciones podrían apuntar a IRIs que no resuelven | Se usa la IRI del concepto publicado (`ohac.ttl`) |
 | D3 | CRMinf 1.2.1 | `J2_concluded_that` es subpropiedad de P175, P175i y P185 | Una inferencia RDFS ingenua añadiría relaciones temporales | No se hace inferencia RDFS para SHACL (solo jerarquía de clases) |
 | D4 | CRMinf 1.2.1 | `I6_Belief_Value` no está declarada como clase y el rango de J5 es un literal; `J6_adopted` solo aparece en una fórmula (errata) | Los valores de creencia no pueden ser conceptos | Literal de J5 = `skos:notation` de `cre:*` + `sh:in` |
 | D5 | RiC-O 1.1 | Expresa la *extensión* en folios (`rico:CarrierExtent` + `rico:quantity` + `rico:hasUnitOfMeasurement`), pero no el folio individual direccionable, ni recto y verso, ni los niveles *sección* y *legajo* de la tradición hispana; DocumentaryFormTypes no incluye tipos judiciales | — | Extensión con `rico:CarrierExtent` (19 folios según el catálogo, contrastado: K5); folio, sección y legajo como conceptos SKOS con propiedades de RiC-O |
-| D6 | CRMinf 1.2.1 | Declara `crm:E13_Attribute_Assignment ⊑ crminf:I1_Argumentation`, cuya nota de alcance define I1 como «honest inferences or observations» (el actor cree correcto el valor resultante). Además ofrece `J33_assigned_propositions` como atajo cuya ruta completa termina en `J5 = TRUE`; el atajo no se impone a ninguna E13, pero documenta la misma lectura | Cargado CRMinf, toda afirmación de la capa 3 hereda por la jerarquía una **presunción de sinceridad** del testigo. En un pleito con retractación jurada y firmas «sin saber sus contenidos» (informe del subdelegado, A-UT17-111…114) eso es un juicio histórico, no un dato | Se documenta, no se corrige: la E13 de la capa 3 se interpreta como **afirmación profesada en el registro**. `scripts/razonar.py` cuenta las E13 inferidas I1 (74) y las negaciones afectadas (12). ADR-021 |
+| D6 | CRMinf 1.2.1 | Declara `crm:E13_Attribute_Assignment ⊑ crminf:I1_Argumentation`, cuya nota de alcance define I1 como «honest inferences or observations» (el actor cree correcto el valor resultante). Además ofrece `J33_assigned_propositions` como atajo cuya ruta completa termina en `J5 = TRUE`; el atajo no se impone a ninguna E13, pero documenta la misma lectura | Cargado CRMinf, toda afirmación de la capa 3 hereda por la jerarquía una **presunción de sinceridad** del testigo. En un pleito con retractación jurada y firmas «sin saber sus contenidos» (informe del subdelegado, A-UT17-111…114) eso es un juicio histórico, no un dato | Se documenta, no se corrige: la E13 de la capa 3 se interpreta como **afirmación profesada en el registro**. `scripts/razonar.py` cuenta las E13 inferidas I1 y las negaciones afectadas (`docs/cifras.md`: «d6 afirmaciones» y «d6 negaciones»). ADR-021 |
 | D7 | CIDOC CRM 7.1.3 + PiCo 1.1.0 | `P14_carried_out_by` tiene rango `E39_Actor`, de modo que toda mención que afirma se infiere `E39_Actor`; y `picom:PersonObservation ⊑ picom:Person ⊑ pnv:Person` | La capa 2 no afirma existencia por tipado propio (no se usa E21), pero la inferencia sí tipa como actores a las menciones afirmantes, incluido el certificante del que el juez dice «no hay tal hombre» | Se interpreta según la nota de alcance de PiCo: la observación es «how a person is recorded on a Source»; `E39` inferido = actor **tal como consta en la fuente**. La existencia e identidad solo se proponen en la capa 4. ADR-026 |
 
 ## 8. Límites conocidos y trabajo pendiente
@@ -212,7 +235,7 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 
 * **L1. Folio y recto/vuelto** de 19 de los 23 tramos: requiere las imágenes (`fuente/folios_cotejo.csv`). Las autorreferencias del documento («De folio 4», «a folios 2») ya están como afirmaciones (PC02) y permitirían reconstruir la foliación en la capa 4.
 * **L2. Normalización de valores literales** («dies» / «diez»; horas compatibles como «a media noche» y «primer puesto del gallo»). Hoy la consulta de disputas los **señala** («valores distintos (revisar)») y no los juzga. Las negaciones explícitas se detectan por `responde_a`, no por el texto. Una normalización de capa 4 con autor resolvería el resto.
-* **L3. Identidad entre expedientes.** Las reconstrucciones se mapean con el lote de un expediente. Para unir menciones de dos expedientes, los ids de mención deben calificarse con el expediente (`cc-14-18:M-UT01-001`). El IRI ya lo permite; falta el cargador.
+* **L3. Identidad entre expedientes.** Resuelto el 2026-11-14 en lo técnico (ADR-036): las reconstrucciones citan los registros calificados con el expediente (`cc-14-18:M-UT01-001`) y pueden unir menciones de varios. Solo está probado con un expediente sintético junto al real (`tests/test_multi_expediente.py`); el corpus sigue teniendo un único expediente real.
 * **L4. Discurso referido de segundo grado.** «Cano dice que Santiago le dijo X» se modela con `segun` + `fun:oidas`. La alternativa más fiel, un E13 anidado («Santiago afirmó X», atribuido por Cano), queda sin implementar.
 
 **Decisiones de modelado con coste explícito:**
@@ -223,9 +246,9 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 
 **Cobertura pendiente:**
 
-* **L8. Anotación.** Expediente completo anotado (544 menciones, 500 afirmaciones; ADR-030), por el modelo y sin validación humana; las lecturas dudosas constan en la `nota` de cada registro. PC03 y PC04 se responden según el catálogo (capa C, ADR-033).
-* **L9. Tesauro.** Los 164 conceptos tienen definición (ADR-032); 22 son definiciones de trabajo sin fuente verificada y todas deben validarlas historiadores.
-* **L10. Rendimiento.** RDF genera unas 25 tripletas por afirmación. El razonador tarda unos 79 s y lleva el grafo de 5,5 k a unas 103 k tripletas (30 k con los estándares). Asumible a escala de expediente; para la serie completa habrá que medirlo.
+* **L8. Anotación.** Expediente completo anotado (ADR-030; recuento de menciones y afirmaciones en `docs/cifras.md`), por el modelo y sin validación humana; las lecturas dudosas constan en la `nota` de cada registro. PC03 y PC04 se responden según el catálogo (capa C, ADR-033).
+* **L9. Tesauro.** Todos los conceptos aprobados tienen definición (ADR-032); las de trabajo no tienen fuente verificada y todas deben validarlas historiadores. Los conceptos candidatos (§4.1) están pendientes de aprobación o rechazo por un curador; hoy nadie los ha revisado.
+* **L10. Rendimiento y escala.** La consulta se hace sobre Oxigraph (ADR-042) y tarda centésimas o décimas de segundo con un expediente. La medición de escala (`datos/grafo/escala.md`, 2026-11-14, con el expediente piloto replicado, no con expedientes reales) comprueba la carga y el almacenamiento hasta 1 000 expedientes sintéticos, pero las consultas con nombre, tal como están escritas, solo son interactivas hasta unas decenas de expedientes: habrá que reescribirlas (restricción al expediente como patrón de tripletas), no cambiar de almacén. La construcción del grafo, la validación SHACL y el razonador OWL RL siguen en rdflib, por expediente, y no se midieron a escala; el tamaño del grafo antes y después del cierre está en `docs/cifras.md`.
 
 ## 9. Decisión: RDF nativo frente a grafo de propiedades
 
@@ -237,7 +260,7 @@ Son defectos de interoperabilidad, documentados para comunicarlos a sus mantened
 | Separación de capas | Grafos nombrados con procedencia propia por capa (PROV sobre el grafo) | Propiedades o etiquetas de capa en cada nodo; la procedencia se repite por nodo |
 | Reificación (E13, PC14) | Nativa en CRM: nodos | Natural: atributos en aristas. **Ventaja del grafo de propiedades** |
 | Validación | SHACL estándar + razonador OWL RL | Restricciones propias o un esquema ad hoc |
-| Consulta | SPARQL (verboso; ~2 s por consulta en rdflib) | Cypher (más legible) |
+| Consulta | SPARQL (verboso). Motor: Oxigraph desde el 2026-11-14 (ADR-042); tiempos en `datos/grafo/escala.md` | Cypher (más legible) |
 | Enlace externo (HGIS, WHG, PiCo) | IRIs y alineaciones SKOS | Cadenas |
 | Intercambio con archivos | RiC-O es el formato de intercambio de la ICA | Requiere exportar |
 
@@ -259,7 +282,7 @@ Un revisor sin acceso a `docs/` leyó el código, los datos y los estándares. S
 | Hallazgo | Gravedad | Acción | Estado |
 |---|---|---|---|
 | C1 Cargos con vigencia no implementados | Crítico | Registro `cargo` → E7 + PC14 (cargo como rol) + E52; `CargoForma`; PC18 | Resuelto |
-| C2 Supuestos de un solo expediente (prefijo, jerarquía, transcripción, marcas, `FUERZA` en código, sin «cosa», afirmante solo persona, valores solo cargo y condición) | Crítico | Manifiesto por expediente + variable de contexto; fuerza en el tesauro; clase `cosa`; afirmante grupo; `dct:conformsTo`; prueba con expediente civil sintético | Resuelto (salvo L3) |
+| C2 Supuestos de un solo expediente (prefijo, jerarquía, transcripción, marcas, `FUERZA` en código, sin «cosa», afirmante solo persona, valores solo cargo y condición) | Crítico | Manifiesto por expediente + variable de contexto; fuerza en el tesauro; clase `cosa`; afirmante grupo; `dct:conformsTo`; prueba con expediente civil sintético | Resuelto (L3 resuelto el 2026-11-14, ADR-036) |
 | C3 Faltaban «quién escribe» y el discurso referido | Crítico | `redactorDoc` + `redaccionDisputada` en la consulta; `segun` → P17 | Resuelto (L4 pendiente) |
 | I1 Disputas por comparación literal; filas duplicadas | Importante | `responde_a`; «valores distintos (revisar)»; consulta sin duplicados (74 filas para 74 afirmaciones) | Resuelto (L2 pendiente) |
 | I2 Decisiones de la capa 4 dentro de la capa 3 | Importante | Marcas `anot:*` + nota obligatoria (SHACL) | Mitigado (L6) |
@@ -271,4 +294,4 @@ Un revisor sin acceso a `docs/` leyó el código, los datos y los estándares. S
 | I8 Lugares | Importante | Sicuani, Cusco, San Pedro (posible) y ayllus Tinta y Uchu; HGIS como E42 | Resuelto |
 | Menor: hechos como E5 | Menor | E89 + P70 | Resuelto |
 | Menor: atributos sin raíz, creencias sin uso | Menor | `topConceptOf` y `skos:notation` | Resuelto |
-| Menor: definiciones faltantes | Menor | — | Resuelto: 164/164 (ADR-032; 22 de trabajo) |
+| Menor: definiciones faltantes | Menor | — | Resuelto: todos los conceptos definidos (ADR-032; las de trabajo, en `docs/cifras.md`) |

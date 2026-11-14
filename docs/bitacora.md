@@ -1,7 +1,7 @@
 # Bitácora de trabajo
 
 > Registro cronológico de hechos, incidencias y correcciones, para la reproducibilidad y para el futuro artículo.
-> Fecha de todas las entradas: 2026-11-12. La rama git indica dónde quedó cada cambio.
+> La fecha de cada entrada es la de su sección. La rama git indica dónde quedó cada cambio.
 
 ## Organización del trabajo
 
@@ -83,3 +83,15 @@
 | 32 | PC12 pasó a «A» con el expediente completo | Falso positivo: la vista fiscal resume la queja y llama «Yndio» al denunciante | ADR-035 |
 | 33 | Razonador sobre el expediente completo | 0 inconsistencias; D1: 285 tipificaciones espurias; D6: 500 E13 leídas como I1, 20 negaciones | Cifras del artículo actualizadas |
 | 34 | Segundo expediente real (CO Cusco L70 E15) | No hay transcripción disponible | Sigue pendiente; no se puede completar con los insumos actuales |
+
+## 2026-11-14 — Varios expedientes, tesauro que crece, Oxigraph y cifras de una sola fuente
+
+| # | Tarea | Resultado | Acción |
+|---|---|---|---|
+| 35 | Varios expedientes en un mismo corpus (commit `0c95557`) | Los grafos de las capas 1–3 llevan el expediente (`g:<exp>/documento`, `g:<exp>/texto/<lote>`, `g:<exp>/afirmaciones/<lote>`); la capa 4, la procedencia y el catálogo son comunes. Las reconstrucciones citan `<exp>:M-…`, `<exp>:H-…` y `<exp>:A-…` y pueden unir menciones de expedientes distintos. `src/laad/corpus.py` sustituye a `hilo.py`. El grafo se escribe en `datos/grafo/<exp>.trig/.nq` más `comun.trig/.nq`; `scripts/validar_lote.py` exige el expediente como primer argumento | ADR-036 y 037; resuelve el límite L3. Probado con el expediente real y uno sintético (`tests/test_multi_expediente.py`); sigue sin haber un segundo expediente real |
+| 36 | Tesauro que crece (commit `809c57b`) | Conceptos candidatos (`datos/candidatos_tesauro.csv` → `ontologia/candidatos.ttl`, colección `tes:candidatos`, `scripts/candidatos.py`) con aviso SHACL (`sh:Warning`); conceptos retirados con `owl:deprecated` + `dct:isReplacedBy`, nunca borrados; dominio y rango por atributo (`datos/atributos.csv` → `ontologia/formas_atributos.ttl`, `scripts/atributos.py`); versión 0.2.0, `ontologia/CHANGELOG.md` y política en `ontologia/README.md` | ADR-038, 039 y 040. Los candidatos están pendientes de un curador |
+| 37 | Formato de transcripción configurable (commit `6216b89`) | Clave `formato` del manifiesto (`separador`, `encabezado`, `marca_folio`, `ignorar`, `codificacion`) en `src/laad/fuente.py`; `scripts/nuevo_expediente.py` y guía `datos/expedientes/README.md` | ADR-041. El piloto no declara `formato` y no cambia |
+| 38 | Motor de consulta (commit `6216b89`) | Oxigraph por defecto (`src/laad/consulta.py`); `LAAD_MOTOR=rdflib` como alternativa; `scripts/servir.py`. Una consulta de afirmaciones filtrada pasa de unos 15 s en rdflib a centésimas de segundo | ADR-042; `tests/test_motores.py` exige las mismas filas en los dos motores |
+| 39 | Medición de escala | Expediente piloto replicado hasta 1 000 veces: carga y almacenamiento lineales; las consultas con nombre, tal como están, solo son interactivas hasta unas decenas de expedientes | `datos/grafo/escala.md`; reescribir las consultas queda pendiente (límite L10) |
+| 40 | Cifras de una sola fuente | `scripts/cifras.py` genera `datos/cifras.json`, `articulo/cifras.tex` y `docs/cifras.md`; `tests/test_cifras.py` falla si no están al día. La documentación citaba cifras desfasadas (544 menciones, 500 afirmaciones, «205 pruebas», «~2 s por consulta») | ADR-043. Regla: la documentación no repite cifras variables a mano; remite a `docs/cifras.md` o las da con fecha. Documentos de `docs/` y `README.md` puestos al día |
+| 41 | Búsqueda de «skills» para Claude Code útiles al proyecto | Ninguna encaja de forma específica con ontologías de archivos históricos; no se instaló ninguna | `docs/anexos/J_skills.md` |

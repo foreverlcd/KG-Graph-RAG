@@ -7,6 +7,10 @@
 >
 > Los umbrales que dependen de la literatura citan su fuente. Los demás son propuestas del modelador, a discutir con
 > el equipo.
+>
+> **Cifras.** Las mediciones que cambian con los datos (citas, menciones, afirmaciones, formas, mutaciones,
+> resultados del razonador) no se repiten aquí: están en `docs/cifras.md`, que genera `scripts/cifras.py` y que
+> `tests/test_cifras.py` mantiene al día. Las cifras que este documento conserva llevan su fecha.
 
 ## 0. Restricción de insumos (2026-11-12, ADR-022) y criterios redefinidos
 
@@ -27,13 +31,13 @@ mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) 
 
 | # | Criterio | Umbral | Estado | Medición |
 |---|---|---|---|---|
-| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | 1 044/1 044 citas de registros (expediente completo) + 33 piezas; folio r/v necesita imágenes |
-| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | 16 formas, 34 mutaciones detectadas (la forma de pieza apunta desde el 2026-11-13 a los objetos de `crm:P94_has_created`) |
-| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0; 285 tipificaciones espurias por D1 (ROAR) con el expediente completo |
+| 1 | Cita = subcadena exacta del tramo | **100 %** (bloqueante) | CUMPLE (tramo) / PENDIENTE (folio r/v) | Todas las citas de los registros del expediente completo y de sus piezas (recuento en `docs/cifras.md`: «citas», «piezas»); un registro con cita no literal no entra en el grafo; folio r/v necesita imágenes |
+| 2a | SHACL | **0 violaciones** y cada forma con prueba negativa | CUMPLE | Formas y mutaciones declaradas: `docs/cifras.md` («formas», «mutaciones declaradas»). Desde el 2026-11-14 incluyen una forma de dominio y rango por atributo y la forma de concepto retirado; los conceptos candidatos en uso producen avisos (`sh:Warning`), que no son violaciones |
+| 2b | Razonador | **0 inconsistencias**, 0 individuos de `owl:Nothing` | CUMPLE (con D1 informado) | OWL 2 RL (owlrl): 0 / 0 con el expediente completo; tipificaciones espurias por D1 (ROAR) y lecturas D6 en `docs/cifras.md` |
 | 2c | OOPS! | **0 trampas críticas** | CUMPLE | 0 críticas; 1 «Important» (P34, artefacto) |
 | 3 | 20 PC con respuesta fijada por historiador antes de construir | ≥ 18/20 correctas; **6/6** en las de DISPUTA/NC | PENDIENTE (falta historiador) | Respuestas provisionales: 20/20 respondidas (PC03 y PC04 según el catálogo, capa C; PC15 por los papeles procesales de cada pieza) |
-| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; expediente anotado por el modelo: 500 afirmaciones y 544 menciones |
-| 5 | Segundo expediente sin clases nuevas | **0** clases y propiedades nuevas en el núcleo; 0 cambios en las formas | PENDIENTE (falta su transcripción); prueba estructural CUMPLE | Elegido a ciegas: CO Cusco Leg. 70 Exp. 15. Un expediente civil sintético entra sin clases ni propiedades nuevas (`tests/test_segundo_expediente_sintetico.py`) |
+| 4 | Estándar de oro de dos anotadores | α de Krippendorff ≥ 0,80 (≥ 0,67 aceptable); P ≥ 0,90, R ≥ 0,80 | PENDIENTE (faltan anotadores) | Protocolo definido; expediente anotado entero por el modelo (recuento en `docs/cifras.md`: «menciones», «afirmaciones») |
+| 5 | Segundo expediente sin clases nuevas | **0** clases y propiedades nuevas en el núcleo; 0 cambios en las formas | PENDIENTE (falta su transcripción); prueba estructural CUMPLE | Elegido a ciegas: CO Cusco Leg. 70 Exp. 15. Un expediente civil sintético entra sin clases ni propiedades nuevas (`tests/test_segundo_expediente_sintetico.py`) y convive con el real en un mismo conjunto de datos, con una reconstrucción que une menciones de ambos (`tests/test_multi_expediente.py`) |
 | 6 | Contraste con fuentes independientes | Cada discrepancia registrada; ninguna resuelta en silencio | PARCIAL | Catálogo: 5 discrepancias y 66 fichas e índices extraídos (PC03/PC04); auditoría de la capa 4 por un segundo modelo (anexo I, no es validación humana); HGIS: Tinta; parroquiales y matrícula: localizadas o no localizadas, sin consultar |
 | 7 | Líneas base (LLM con contexto completo; RAG vectorial) | El grafo gana las PC de agregación con atribución | PENDIENTE (fase de conexión) | Hipótesis registrada antes de medir |
 
@@ -46,12 +50,13 @@ mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) 
 
 ## 2. Validación formal (criterio 2)
 
-* **SHACL.** `ontologia/formas.ttl` se valida con pyshacl contra la unión de los grafos, el tesauro y la jerarquía de clases de los estándares (`src/laad/validacion.py`). Las reglas que dependen del grafo nombrado (separación de capas) se comprueban con `tests/test_capas.py`.
-  * **Pruebas negativas.** `tests/test_formas_negativas.py` introduce 35 mutaciones y exige que cada forma con nombre dispare al menos una vez. Así se descubrió que `ActuacionForma` aprobaba en vacío (`docs/bitacora.md`).
-* **Razonador.** `scripts/razonar.py` hace un cierre OWL 2 RL (owlrl) de los datos con RiC-O 1.1, CRM 7.1.3 + PC, CRMinf 1.2.1, PROV-O, SKOS, OA, PiCo y ROAR (modelo revisado: 30 320 tripletas → 103 284). Tarda unos 79 s.
+* **SHACL.** `ontologia/formas.ttl` y `ontologia/formas_atributos.ttl` (dominio y rango de cada atributo, generado desde `datos/atributos.csv`) se validan con pyshacl contra la unión de los grafos, el tesauro y la jerarquía de clases de los estándares (`src/laad/validacion.py`). Las reglas que dependen del grafo nombrado (separación de capas) se comprueban con `tests/test_capas.py`.
+  * **Pruebas negativas.** `tests/test_formas_negativas.py` introduce mutaciones (cuántas, en `docs/cifras.md`) y exige que cada forma con nombre dispare al menos una vez. Así se descubrió que `ActuacionForma` aprobaba en vacío (`docs/bitacora.md`).
+  * **Avisos.** El uso de un concepto candidato del tesauro es un aviso (`sh:Warning`), no una violación: el grafo conforma y `scripts/construir.py` imprime el recuento. El uso de un concepto retirado (`owl:deprecated`) sí es una violación (`ontologia/README.md`).
+* **Razonador.** `scripts/razonar.py` hace un cierre OWL 2 RL (owlrl) de los datos con RiC-O 1.1, CRM 7.1.3 + PC, CRMinf 1.2.1, PROV-O, SKOS, OA, PiCo y ROAR (modelo revisado del 2026-11-12, solo el hilo central: 30 320 tripletas → 103 284, unos 79 s; con el expediente completo, las cifras de `docs/cifras.md`: «razonador tripletas» y «razonador cierre»).
   * Primera ejecución: **1 inconsistencia real** (defecto D1 de ROAR, `docs/C_modelo.md` §7).
   * Tras la corrección: 0.
-  * Se informa además de 59 tipificaciones espurias que el axioma de ROAR sigue produciendo sobre observaciones PiCo.
+  * Se informa además de las tipificaciones espurias que el axioma de ROAR sigue produciendo sobre observaciones PiCo (59 en el modelo revisado del 2026-11-12; valor actual en `docs/cifras.md`).
   * Límite: OWL RL no es completo para OWL 2 DL. Un razonador DL (HermiT) sobre CRM no es viable directamente, porque CRM es RDFS y no OWL DL.
 * **OOPS!** Servicio REST (oops.linkeddata.es) sobre `ohac.ttl` + `tesauro.ttl` en RDF/XML. Respuesta guardada en `datos/evaluacion/oops_respuesta.xml`.
   * Con `owl:imports` el servicio devuelve «unexpected error». Sin ellos: 0 críticas y 1 «Important» (P34 *Untyped class* sobre `skos:Concept`/`skos:ConceptScheme`), producida precisamente por haber quitado la importación de SKOS.
@@ -67,7 +72,7 @@ mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) 
 * **Umbral.**
   * **6/6** en las preguntas cuya respuesta es «en disputa» o «no lo dice». Son la razón de ser del modelo.
   * **≥ 18/20** en total, contando como correcta una respuesta que contiene todas las afirmaciones pertinentes con su atribución correcta.
-* **Estado.** El grafo responde 17 PC. Las 3 restantes (PC03, PC04 y PC15) **no fallan por el modelo**: faltan anotaciones (fichas del catálogo; cadena completa de autoridades). Cada una indica en `preguntas.py` qué hay que anotar, y ninguna requiere términos nuevos.
+* **Estado.** Desde el 2026-11-13 el grafo responde las 20 PC de forma provisional: PC03 y PC04 según el catálogo (capa C, ADR-033) y PC15 por los papeles procesales anotados en cada pieza. Hasta entonces respondía 17, porque faltaban esas anotaciones, no términos. Sigue pendiente lo que el criterio exige: las respuestas de referencia fijadas antes de ver el grafo.
 
 ## 4. Estándar de oro y extracción (criterio 4)
 
@@ -96,10 +101,10 @@ mutaciones, razonador, segundo expediente a ciegas (cuando haya transcripción) 
   * Es de otra **sección** (causa ordinaria, no criminal), lo que hace la prueba más exigente.
 * **Criterio de éxito.**
   * **0** clases o propiedades nuevas en OHAC y **0** cambios en `formas.ttl`.
-  * Se permite añadir **conceptos** al tesauro, que es un dato. Se cuentan y se informan, junto con la proporción de registros que necesitan un concepto nuevo.
+  * Se permite añadir **conceptos** al tesauro, que es un dato. Se cuentan y se informan, junto con la proporción de registros que necesitan un concepto nuevo. Desde el 2026-11-14 hay un cauce para ello: los conceptos nuevos entran como **candidatos** (`scripts/candidatos.py --proponer`, con expediente y ejemplo), el grafo los señala con avisos y `consultas/candidatos_en_uso.rq` los cuenta.
   * Cambios de código permitidos: solo parametrizar el expediente.
-* **Parametrización.** Hecha en la revisión 1: cada expediente tiene un manifiesto `datos/expedientes/<id>.json` con su transcripción, sus marcas de folio y su jerarquía, y el código no contiene constantes de CC L14E18. Queda pendiente la identidad entre expedientes (`docs/C_modelo.md` §8, L3).
-* **Estado.** PENDIENTE: no hay transcripción de ese expediente en el proyecto.
+* **Parametrización.** Hecha en la revisión 1 y completada el 2026-11-14: cada expediente tiene un manifiesto `datos/expedientes/<id>.json` con su transcripción y el formato de esta, sus marcas de folio, su jerarquía, sus piezas, sus registros, sus fechas y su lote de anotación; `src/laad/corpus.py` no contiene ningún identificador de expediente. Los grafos de las capas 1–3 llevan el expediente y las reconstrucciones pueden unir menciones de varios (`docs/C_modelo.md` §2, ADR-036 y 037). `scripts/nuevo_expediente.py` prepara el esqueleto de un expediente nuevo; la guía está en `datos/expedientes/README.md`.
+* **Estado.** PENDIENTE: no hay transcripción de ese expediente en el proyecto. Lo comprobado hasta hoy es con un expediente **sintético**, no con uno real.
 
 ## 6. Contraste con fuentes independientes (criterio 6)
 
