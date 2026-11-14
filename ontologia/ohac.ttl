@@ -4,13 +4,16 @@
 # Toda necesidad del modelo se cubre con términos verificados de RiC-O 1.1, CIDOC CRM 7.1.3 (+PC), CRMinf 1.2.1,
 # PROV-O, SKOS, Web Annotation, PiCo 1.1.0 y ROAR 0.1. OHAC consiste en:
 #   1. este encabezado (importaciones con versión fijada),
-#   2. el tesauro SKOS (ontologia/tesauro.ttl) — lo andino y lo procesal, como datos,
-#   3. las formas SHACL (ontologia/formas.ttl) — las reglas del perfil,
+#   2. el tesauro SKOS (ontologia/tesauro.ttl) — lo andino y lo procesal, como datos — y sus conceptos candidatos
+#      (ontologia/candidatos.ttl, generado: lo propuesto durante la anotación y aún no aprobado),
+#   3. las formas SHACL (ontologia/formas.ttl) y las de dominio y rango de cada atributo
+#      (ontologia/formas_atributos.ttl, generado desde datos/atributos.csv) — las reglas del perfil,
 #   4. las alineaciones de abajo (skos:closeMatch hacia el tesauro de roles de PiCo).
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct:  <http://purl.org/dc/terms/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix ohac: <https://w3id.org/laad/ohac#> .
 @prefix rol:  <https://w3id.org/laad/tesauro/rol/> .
 @prefix picot_roles: <https://terms.personsincontext.org/ThesaurusHistorischePersoonsgegevens/> .
@@ -20,7 +23,8 @@
 <https://w3id.org/laad/ohac> a owl:Ontology ;
     rdfs:label "OHAC — perfil de aplicación LAAD"@es ;
     dct:description "Perfil de aplicación (no ontología de dominio) para el Fondo Intendencia del ARC. No declara términos propios."@es ;
-    owl:versionInfo "0.1.0" ;
+    owl:versionInfo "0.2.0" ;
+    dct:modified "2026-11-14"^^xsd:date ;
     owl:imports <https://www.ica.org/standards/RiC/ontology/1.1> ,
                 <http://www.cidoc-crm.org/cidoc-crm/7.1.3/> ,
                 <http://www.cidoc-crm.org/extensions/crminf/1.2.1/> ,

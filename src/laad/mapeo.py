@@ -1,12 +1,15 @@
 """Mapeo DETERMINISTA de registros planos a RDF (TriG), una capa por grafo nombrado.
 
 Mismo registro -> mismas tripletas; ids repetidos -> error. No hay LLM en este paso.
-Patrones (docs/C_modelo.md):
-  capa 1  g:documento            RiC-O (jerarquía, piezas, instanciaciones, tramos) + crm:E65_Creation (actuación)
-  capa 2  g:texto/<lote>         picom:PersonObservation / roar:LocationObservation / roar:Observation + oa:Annotation
-  capa 3  g:afirmaciones/<lote>  crm:E13_Attribute_Assignment (STAR) + PC14 para roles + oa:Annotation
-  capa 4  g:reconstruccion/<id>  picom:PersonReconstruction / crm:E5_Event + crminf:I5/I2
-  P       g:procedencia          PROV-O (cómo se produjo cada grafo)
+Patrones (docs/C_modelo.md). Las capas 1–3 son de UN expediente y su grafo lleva el expediente en el nombre;
+las demás son comunes a todo el corpus (una reconstrucción puede reunir menciones de varios expedientes):
+  capa 1  g:<exp>/documento            RiC-O (jerarquía, piezas, instanciaciones, tramos) + crm:E65_Creation
+  capa 2  g:<exp>/texto/<lote>         picom:PersonObservation / roar:LocationObservation / roar:Observation + oa:Annotation
+  capa 3  g:<exp>/afirmaciones/<lote>  crm:E13_Attribute_Assignment (STAR) + PC14 para roles + oa:Annotation
+  capa 4  g:reconstruccion/<id>        picom:PersonReconstruction / crm:E5_Event (común)
+          g:argumentacion/<id>         crminf:I5/I2 (común)
+  P       g:procedencia                PROV-O (cómo se produjo cada grafo; común)
+  C       g:catalogo                   fichas del catálogo del ARC (común)
 """
 from __future__ import annotations
 
@@ -19,7 +22,7 @@ from rdflib import BNode, Dataset, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import DCTERMS, OWL, PROV, RDF, RDFS, SKOS, XSD
 
 from . import fuente
-from .esquema import Afirmacion, Mencion, Pieza, Reconstruccion
+from .esquema import Afirmacion, Mencion, Pieza, Reconstruccion, separar_ref
 from .registros import Lote
 
 # ── espacios de nombres (verificados en vendor/, ver tests/test_terminos_existen.py) ──
@@ -77,19 +80,36 @@ def exp_id() -> str:
     return fuente.expediente_actual()
 
 
-def iri(*partes: str) -> URIRef:
-    return ID["/".join([exp_id(), *partes])]
+def iri(*partes: str, exp: str | None = None) -> URIRef:
+    """IRI de un recurso de un expediente (el indicado o, si no, el que está en curso)."""
+    return ID["/".join([exp or exp_id(), *partes])]
 
 
-def pieza_iri(p: str) -> URIRef: return iri("pieza", p)
-def actuacion_iri(p: str) -> URIRef: return iri("actuacion", p)
-def mencion_iri(m: str) -> URIRef: return iri("mencion", m)
-def afirmacion_iri(a: str) -> URIRef: return iri("afirmacion", a)
-def hecho_iri(h: str) -> URIRef: return iri("hecho", h)
+def grafo_iri(*partes: str, exp: str | None = None) -> URIRef:
+    """Grafo nombrado de una capa propia de un expediente: g:<exp>/documento, g:<exp>/texto/<lote>…"""
+    return G["/".join([exp or exp_id(), *partes])]
 
 
-def transcripcion_iri() -> URIRef:
-    return iri("transcripcion", fuente.sha256()[:12])
+def expediente_de_grafo(gid) -> str | None:
+    """Expediente al que pertenece un grafo nombrado, o None si es un grafo común (capa 4, procedencia, catálogo)."""
+    m = re.match(re.escape(str(G)) + r"([^/]+)/(documento$|texto/|afirmaciones/)", str(gid))
+    return m.group(1) if m else None
+
+
+def pieza_iri(p: str, exp: str | None = None) -> URIRef: return iri("pieza", p, exp=exp)
+def actuacion_iri(p: str, exp: str | None = None) -> URIRef: return iri("actuacion", p, exp=exp)
+def mencion_iri(m: str, exp: str | None = None) -> URIRef: return iri("mencion", m, exp=exp)
+def afirmacion_iri(a: str, exp: str | None = None) -> URIRef: return iri("afirmacion", a, exp=exp)
+def hecho_iri(h: str, exp: str | None = None) -> URIRef: return iri("hecho", h, exp=exp)
+
+
+def expediente_iri(exp: str | None = None) -> URIRef:
+    """IRI archivística del expediente: el último nivel de la jerarquía de su manifiesto."""
+    return ID[fuente.manifiesto(exp)["jerarquia"][-1]["id"]]
+
+
+def transcripcion_iri(exp: str | None = None) -> URIRef:
+    return iri("transcripcion", fuente.sha256(fuente.ruta_transcripcion(exp))[:12], exp=exp)
 
 
 def tramo_iri(t: str) -> URIRef:
@@ -99,7 +119,7 @@ def tramo_iri(t: str) -> URIRef:
 @dataclass(frozen=True)
 class Procedencia:
     """Metadatos de cómo se produjo un lote (capa P)."""
-    lote: str
+    lote: str                  # nombre del lote DENTRO de su expediente
     agente: str                # p. ej. "claude-opus-5-5" o "anotador-a"
     tipo_agente: str           # "SoftwareAgent" | "Person"
     plan: str                  # p. ej. "prompts/extraccion_v1.md" o "anotacion-manual"
@@ -163,7 +183,7 @@ def _participa(g: Graph, actividad: URIRef, actor: URIRef, rol: str, ident: str)
 
 # ───────────────────────── capa 1 ─────────────────────────
 def capa_documento(ds: Dataset, piezas: dict[str, Pieza]) -> Graph:
-    g = ds.graph(G.documento)
+    g = ds.graph(grafo_iri("documento"))
     pref = {"rst": RST, "doc": DOC}
     jer = []
     for n in fuente.manifiesto()["jerarquia"]:
@@ -266,7 +286,7 @@ CLASES_MENCION = {
 
 
 def capa_texto(ds: Dataset, menciones: dict[str, Mencion], lote: str) -> Graph:
-    g = ds.graph(G[f"texto/{lote}"])
+    g = ds.graph(grafo_iri("texto", lote))
     for mm in menciones.values():
         mi = mencion_iri(mm.id)
         for c in CLASES_MENCION[mm.clase]:
@@ -300,7 +320,7 @@ def _ref(campo) -> URIRef | None:
 
 
 def capa_afirmaciones(ds: Dataset, lote_reg: Lote, lote: str) -> Graph:
-    g = ds.graph(G[f"afirmaciones/{lote}"])
+    g = ds.graph(grafo_iri("afirmaciones", lote))
     for a in lote_reg.afirmaciones.values():
         ai = afirmacion_iri(a.id)
         act = actuacion_iri(a.pieza)
@@ -367,18 +387,40 @@ CLASES_RECONSTRUCCION = {
 }
 
 
-def nodo_reconstruccion(r: Reconstruccion, lote_reg: Lote) -> URIRef:
+_IRI_DE = {"mencion": mencion_iri, "hecho": hecho_iri, "afirmacion": afirmacion_iri}
+
+
+def resolver_ref(ref: str, lotes: dict[str, Lote], *clases: str) -> URIRef:
+    """IRI de una referencia calificada de la capa 4 («cc-14-18:M-UT01-003»), tras comprobar que el expediente
+    está cargado y que el registro existe en él. Sin calificar, mal formada o inexistente: ValueError."""
+    exp, local, clase = separar_ref(ref, *clases)
+    lote = lotes.get(exp)
+    if lote is None:
+        raise ValueError(f"referencia {ref!r}: el expediente {exp!r} no está cargado (cargados: {sorted(lotes)})")
+    existentes = {"mencion": lote.menciones, "afirmacion": lote.afirmaciones, "hecho": lote.hechos()}[clase]
+    if local not in existentes:
+        raise ValueError(f"referencia {ref!r}: no existe {clase} {local} en el expediente {exp}")
+    return _IRI_DE[clase](local, exp)
+
+
+def _clase_mencion(ref: str, lotes: dict[str, Lote]) -> str:
+    resolver_ref(ref, lotes, "mencion")
+    exp, local, _ = separar_ref(ref, "mencion")
+    return lotes[exp].menciones[local].clase
+
+
+def nodo_reconstruccion(r: Reconstruccion, lotes: dict[str, Lote]) -> URIRef:
+    """La reconstrucción no pertenece a ningún expediente: su IRI no lleva ninguno."""
     slug = r.id[2:]
     if r.tipo == "identidad":
-        clase = lote_reg.menciones[r.menciones[0]].clase
-        return ID[f"{clase}/{slug}"]
+        return ID[f"{_clase_mencion(r.menciones[0], lotes)}/{slug}"]
     if r.tipo == "hecho":
         return ID[f"evento/{slug}"]
     return ID[f"ejercicio-cargo/{slug}"]
 
 
 def _argumentacion(ds: Dataset, rid: str, autor: str, fecha: str, argumento: str, creencia: str,
-                   premisas: list[str], gi: URIRef) -> URIRef:
+                   premisas: list[URIRef], gi: URIRef) -> URIRef:
     """CRMinf en un grafo PROPIO (revisión I4): la creencia del investigador sobre el grafo gi (I4) no forma
     parte de la proposición que evalúa. Devuelve la IRI de la inferencia (también prov:Activity, como en PiCo)."""
     ga = ds.graph(G[f"argumentacion/{rid}"])
@@ -389,7 +431,7 @@ def _argumentacion(ds: Dataset, rid: str, autor: str, fecha: str, argumento: str
     ga.add((inf, PROV.wasAssociatedWith, ID[f"agente/{autor}"]))
     ga.add((inf, CRM.P3_has_note, Literal(argumento, lang="es")))
     for p in premisas:   # premisas: afirmaciones de capa 3 (E13 ⊑ crminf:I1_Argumentation en CRMinf 1.2.1)
-        ga.add((inf, CRM.P17_was_motivated_by, afirmacion_iri(p)))
+        ga.add((inf, CRM.P17_was_motivated_by, p))
     ga.add((inf, CRMINF.J2_concluded_that, cre))
     ga.add((cre, RDF.type, CRMINF.I2_Belief))
     ga.add((cre, CRMINF.J4_that, gi))
@@ -425,69 +467,85 @@ def _fecha_iso(x: str) -> tuple[Literal, Literal]:
     return Literal(ini, datatype=XSD.date), Literal(fin, datatype=XSD.date)
 
 
-def capa_reconstruccion(ds: Dataset, recs: list[Reconstruccion], lote_reg: Lote) -> None:
+def capa_reconstruccion(ds: Dataset, recs: list[Reconstruccion], lotes: dict[str, Lote]) -> None:
+    """Capa 4, común al corpus. `lotes` son TODOS los lotes cargados (expediente → Lote): cada referencia va
+    calificada con su expediente y se comprueba que existe; una reconstrucción puede mezclar expedientes."""
     por_id = {r.id: r for r in recs}
+    if len(por_id) != len(recs):
+        raise ValueError("reconstrucciones con id repetido")
     for r in recs:
-        gi = G[f"reconstruccion/{r.id}"]
-        g = ds.graph(gi)
-        nodo = nodo_reconstruccion(r, lote_reg)
-        inf = _argumentacion(ds, r.id, r.autor, r.fecha, r.argumento, r.creencia, r.premisas, gi)
-        g.add((nodo, RDFS.label, Literal(r.etiqueta, lang="es")))
-        if r.tipo == "identidad":
-            clases = {lote_reg.menciones[m].clase for m in r.menciones}
-            if len(clases) != 1:
-                raise ValueError(f"{r.id}: menciones de clases distintas {clases}")
-            for t in CLASES_RECONSTRUCCION[clases.pop()]:
-                g.add((nodo, RDF.type, t))
-            for m in r.menciones:
-                g.add((nodo, PROV.wasDerivedFrom, mencion_iri(m)))
-            g.add((nodo, PROV.wasGeneratedBy, inf))       # patrón PiCo: la reconstrucción la genera una actividad
-        elif r.tipo == "hecho":
-            g.add((nodo, RDF.type, CRM.E5_Event))
-            for h in r.menciones:  # aquí 'menciones' lleva ids de hechos narrados (E89)
-                g.add((nodo, PROV.wasDerivedFrom, hecho_iri(h)))
-            g.add((nodo, PROV.wasGeneratedBy, inf))
-        else:  # cargo: ejercicio de un cargo con vigencia (revisión C1)
-            tit = por_id.get(r.titular)
-            if tit is None or tit.tipo != "identidad":
-                raise ValueError(f"{r.id}: titular {r.titular} no es una reconstrucción de identidad")
-            persona = nodo_reconstruccion(tit, lote_reg)
-            cargo = CARGO[r.cargo]
-            g.add((nodo, RDF.type, CRM.E7_Activity))
-            g.add((nodo, CRM.P2_has_type, cargo))
-            _participa_cargo(g, nodo, persona, cargo)
-            for p in r.premisas:
-                g.add((nodo, PROV.wasDerivedFrom, afirmacion_iri(p)))
-            g.add((nodo, PROV.wasGeneratedBy, inf))
-            if r.ambito:
-                amb = nodo_reconstruccion(por_id[r.ambito], lote_reg)
-                g.add((nodo, CRM.P7_took_place_at, amb))
-            if r.ambito_literal:
-                g.add((nodo, CRM.P3_has_note, Literal(f"Ámbito (literal): {r.ambito_literal}", lang="es")))
-            ts = URIRef(f"{nodo}/vigencia")
-            g.add((nodo, CRM["P4_has_time-span"], ts))
-            g.add((ts, RDF.type, CRM["E52_Time-Span"]))
-            if r.inicio:
-                g.add((ts, CRM.P82a_begin_of_the_begin, _fecha_iso(r.inicio)[0]))
-            if r.fin:
-                g.add((ts, CRM.P82b_end_of_the_end, _fecha_iso(r.fin)[1]))
-            if r.vigencia_literal:
-                g.add((ts, CRM.P3_has_note, Literal(r.vigencia_literal, lang="es")))
-        if r.externo or r.identificador_externo:
-            ide = URIRef(f"{nodo}/identificador-externo")
-            g.add((nodo, CRM.P48_has_preferred_identifier, ide))
-            g.add((ide, RDF.type, CRM.E42_Identifier))
-            g.add((ide, CRM.P190_has_symbolic_content, Literal(r.identificador_externo or r.externo)))
-            if r.externo:
-                g.add((nodo, RDFS.seeAlso, URIRef(r.externo)))
-            if (r.identificador_externo or "").startswith("HGIS:"):
-                g.add((ide, DCTERMS.source, URIRef(HGIS_DATASET)))
-        for k, otra in enumerate(r.ver_tambien, 1):
-            ide = URIRef(f"{nodo}/identificador-externo/{k}")
-            g.add((nodo, CRM.P1_is_identified_by, ide))
-            g.add((ide, RDF.type, CRM.E42_Identifier))
-            g.add((ide, CRM.P190_has_symbolic_content, Literal(otra)))
-            g.add((nodo, RDFS.seeAlso, URIRef(otra)))
+        try:
+            _reconstruccion(ds, r, por_id, lotes)
+        except ValueError as e:
+            if str(e).startswith(r.id):
+                raise
+            raise ValueError(f"{r.id}: {e}") from None
+
+
+def _reconstruccion(ds: Dataset, r: Reconstruccion, por_id: dict[str, Reconstruccion], lotes: dict[str, Lote]) -> None:
+    gi = G[f"reconstruccion/{r.id}"]
+    g = ds.graph(gi)
+    nodo = nodo_reconstruccion(r, lotes)
+    premisas = [resolver_ref(p, lotes, "afirmacion") for p in r.premisas]
+    inf = _argumentacion(ds, r.id, r.autor, r.fecha, r.argumento, r.creencia, premisas, gi)
+    g.add((nodo, RDFS.label, Literal(r.etiqueta, lang="es")))
+    if r.tipo == "identidad":
+        clases = {_clase_mencion(m, lotes) for m in r.menciones}
+        if len(clases) != 1:
+            raise ValueError(f"{r.id}: menciones de clases distintas {clases}")
+        for t in CLASES_RECONSTRUCCION[clases.pop()]:
+            g.add((nodo, RDF.type, t))
+        for m in r.menciones:
+            g.add((nodo, PROV.wasDerivedFrom, resolver_ref(m, lotes, "mencion")))
+        g.add((nodo, PROV.wasGeneratedBy, inf))       # patrón PiCo: la reconstrucción la genera una actividad
+    elif r.tipo == "hecho":
+        g.add((nodo, RDF.type, CRM.E5_Event))
+        for h in r.menciones:  # aquí 'menciones' lleva ids de hechos narrados (E89)
+            g.add((nodo, PROV.wasDerivedFrom, resolver_ref(h, lotes, "hecho")))
+        g.add((nodo, PROV.wasGeneratedBy, inf))
+    else:  # cargo: ejercicio de un cargo con vigencia (revisión C1)
+        tit = por_id.get(r.titular)
+        if tit is None or tit.tipo != "identidad":
+            raise ValueError(f"{r.id}: titular {r.titular} no es una reconstrucción de identidad")
+        persona = nodo_reconstruccion(tit, lotes)
+        cargo = CARGO[r.cargo]
+        g.add((nodo, RDF.type, CRM.E7_Activity))
+        g.add((nodo, CRM.P2_has_type, cargo))
+        _participa_cargo(g, nodo, persona, cargo)
+        for p in premisas:
+            g.add((nodo, PROV.wasDerivedFrom, p))
+        g.add((nodo, PROV.wasGeneratedBy, inf))
+        if r.ambito:
+            if r.ambito not in por_id:
+                raise ValueError(f"{r.id}: ámbito {r.ambito} no es una reconstrucción conocida")
+            amb = nodo_reconstruccion(por_id[r.ambito], lotes)
+            g.add((nodo, CRM.P7_took_place_at, amb))
+        if r.ambito_literal:
+            g.add((nodo, CRM.P3_has_note, Literal(f"Ámbito (literal): {r.ambito_literal}", lang="es")))
+        ts = URIRef(f"{nodo}/vigencia")
+        g.add((nodo, CRM["P4_has_time-span"], ts))
+        g.add((ts, RDF.type, CRM["E52_Time-Span"]))
+        if r.inicio:
+            g.add((ts, CRM.P82a_begin_of_the_begin, _fecha_iso(r.inicio)[0]))
+        if r.fin:
+            g.add((ts, CRM.P82b_end_of_the_end, _fecha_iso(r.fin)[1]))
+        if r.vigencia_literal:
+            g.add((ts, CRM.P3_has_note, Literal(r.vigencia_literal, lang="es")))
+    if r.externo or r.identificador_externo:
+        ide = URIRef(f"{nodo}/identificador-externo")
+        g.add((nodo, CRM.P48_has_preferred_identifier, ide))
+        g.add((ide, RDF.type, CRM.E42_Identifier))
+        g.add((ide, CRM.P190_has_symbolic_content, Literal(r.identificador_externo or r.externo)))
+        if r.externo:
+            g.add((nodo, RDFS.seeAlso, URIRef(r.externo)))
+        if (r.identificador_externo or "").startswith("HGIS:"):
+            g.add((ide, DCTERMS.source, URIRef(HGIS_DATASET)))
+    for k, otra in enumerate(r.ver_tambien, 1):
+        ide = URIRef(f"{nodo}/identificador-externo/{k}")
+        g.add((nodo, CRM.P1_is_identified_by, ide))
+        g.add((ide, RDF.type, CRM.E42_Identifier))
+        g.add((ide, CRM.P190_has_symbolic_content, Literal(otra)))
+        g.add((nodo, RDFS.seeAlso, URIRef(otra)))
 
 
 def _participa_cargo(g: Graph, actividad: URIRef, persona: URIRef, cargo: URIRef) -> None:
@@ -500,11 +558,16 @@ def _participa_cargo(g: Graph, actividad: URIRef, persona: URIRef, cargo: URIRef
     g.add((actividad, CRM.P14_carried_out_by, persona))
 
 
-def capa_fechas(ds: Dataset, ruta: Path, autor: str, fecha: str) -> None:
-    """Capa 4: lectura normalizada de las fechas escritas (una reconstrucción más, con autor y creencia).
-    La fecha escrita (capa 1) no se toca; aquí se añade un segundo E52 con P82a/P82b."""
+ARGUMENTO_FECHAS = ("Lectura literal de cada fecha escrita al calendario gregoriano, sin corregir las fechas de "
+                    "secuencia imposible; el control de secuencia las señala.")
+
+
+def capa_fechas(ds: Dataset, ruta: Path, autor: str, fecha: str, argumento: str | None = None) -> None:
+    """Capa 4: lectura normalizada de las fechas escritas del expediente EN CURSO (una reconstrucción más, con
+    autor y creencia, propia de ese expediente: R-fechas-normalizadas-<exp>). La fecha escrita (capa 1) no se
+    toca; aquí se añade un segundo E52 con P82a/P82b."""
     import csv
-    rid = "R-fechas-normalizadas"
+    rid = f"R-fechas-normalizadas-{exp_id()}"
     gi = G[f"reconstruccion/{rid}"]
     g = ds.graph(gi)
     for fila in csv.DictReader(ruta.open(encoding="utf-8")):
@@ -516,9 +579,7 @@ def capa_fechas(ds: Dataset, ruta: Path, autor: str, fecha: str) -> None:
         g.add((ts, CRM.P82b_end_of_the_end, Literal(fila["fecha"], datatype=XSD.date)))
         if fila["nota"]:
             g.add((ts, CRM.P3_has_note, Literal(fila["nota"], lang="es")))
-    _argumentacion(ds, rid, autor, fecha,
-                   "Lectura literal de cada fecha escrita al calendario gregoriano, sin corregir las fechas de "
-                   "secuencia imposible (F1–F6); el control de secuencia las señala.", "probable", [], gi)
+    _argumentacion(ds, rid, autor, fecha, argumento or ARGUMENTO_FECHAS, "probable", [], gi)
 
 
 def _agente(pg: Graph, nombre: str, tipo: str | None = None) -> URIRef:
@@ -533,11 +594,13 @@ def _agente(pg: Graph, nombre: str, tipo: str | None = None) -> URIRef:
 
 # ───────────────────────── capa P ─────────────────────────
 def procedencia(ds: Dataset, pr: Procedencia, grafos: list[tuple[URIRef, str]]) -> None:
+    """Procedencia de grafos del expediente EN CURSO: la actividad lleva el expediente en su IRI (dos expedientes
+    pueden llamar igual a su lote sin que sus actividades se confundan)."""
     pg = ds.graph(G.procedencia)
     trans = transcripcion_iri()
     pg.add((trans, RDF.type, PROV.Entity))
     pg.add((trans, DCTERMS.identifier, Literal("sha256:" + fuente.sha256())))
-    act = ID[f"actividad/{pr.lote}"]
+    act = ID[f"actividad/{exp_id()}/{pr.lote}"]
     ag = _agente(pg, pr.agente, pr.tipo_agente)
     plan = ID[f"plan/{pr.plan}"]
     pg.add((plan, RDF.type, PROV.Plan))
@@ -559,7 +622,7 @@ def procedencia(ds: Dataset, pr: Procedencia, grafos: list[tuple[URIRef, str]]) 
         pg.add((gi, PROV.generatedAtTime, Literal(pr.fecha, datatype=XSD.dateTime)))
         pg.add((gi, DCTERMS.type, ID[f"capa/{capa}"]))
     if pr.validado_por:
-        val = ID[f"actividad/validacion-{pr.lote}"]
+        val = ID[f"actividad/{exp_id()}/validacion-{pr.lote}"]
         vag = _agente(pg, pr.validado_por, "Person")
         pg.add((val, RDF.type, PROV.Activity))
         pg.add((val, PROV.wasAssociatedWith, vag))
@@ -576,14 +639,19 @@ def _sig(signatura: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", signatura.lower()).strip("-")
 
 
-def capa_catalogo(ds: Dataset, ruta: Path, agente: str, fecha: str) -> Graph:
+def capa_catalogo(ds: Dataset, ruta: Path, agente: str, fecha: str,
+                  signaturas: dict[str, URIRef] | None = None) -> Graph:
     """Fichas e índices del catálogo del ARC (Tomo I) como descripciones archivísticas de terceros.
 
     Cada ficha o entrada de índice es un rico:RecordPart del catálogo (la descripción, no el expediente) con su texto literal en rico:scopeAndContent y
     rico:describesOrDescribed hacia el expediente descrito; lo que la ficha dice es afirmación de los catalogadores,
     nunca un hecho del modelo. La pertinencia para PC03/PC04 es una nota del extractor (prov:Entity que referencia la ficha), con
     su motivo y sus dudas; no se infiere nada más del texto de la ficha.
+
+    `signaturas` (signatura del catálogo → IRI del expediente, de los manifiestos: «signatura_catalogo») dice qué
+    fichas describen un expediente del corpus: esa ficha apunta a la IRI del expediente, no a un nodo del catálogo.
     """
+    signaturas = signaturas or {}
     g = ds.graph(G.catalogo)
     cat = ID["arc/catalogo/intendencia-tomo-1"]
     g.add((cat, RDF.type, RICO.Record))
@@ -599,10 +667,9 @@ def capa_catalogo(ds: Dataset, ruta: Path, agente: str, fecha: str) -> Graph:
             sig = r["signatura_indice"]
             nodo = ID[f"arc/catalogo/ficha/{_sig(sig)}"]
             g.add((nodo, RDFS.label, Literal(f"Ficha del catálogo {sig}")))
-            base = r.get("es_expediente_base")
-            exp = ID["arc/expediente/cc-14-18"] if base else ID[f"arc/catalogo/expediente/{_sig(sig)}"]
+            exp = signaturas.get(sig) or ID[f"arc/catalogo/expediente/{_sig(sig)}"]
             g.add((nodo, RICO.describesOrDescribed, exp))
-            if not base:
+            if sig not in signaturas:
                 g.add((exp, RDF.type, RICO.RecordSet))
                 g.add((exp, RDFS.label, Literal(f"{r['seccion']}, serie {r['serie']}, legajo {r['legajo']}, "
                                                 f"expediente {r['expediente']} ({sig})")))
@@ -650,12 +717,17 @@ def capa_catalogo(ds: Dataset, ruta: Path, agente: str, fecha: str) -> Graph:
 
 
 # ───────────────────────── orquestación ─────────────────────────
-def construir(lote_reg: Lote, pr: Procedencia, reconstrucciones: list[Reconstruccion] = (),
-              fechas: Path | None = None, catalogo: Path | None = None) -> Dataset:
-    if lote_reg.errores:
-        raise ValueError("lote con errores; no se mapea:\n" + "\n".join(lote_reg.errores))
+def nuevo_dataset() -> Dataset:
     ds = Dataset()
     _ns(ds)
+    return ds
+
+
+def capas_expediente(ds: Dataset, lote_reg: Lote, pr: Procedencia, fechas: Path | None = None,
+                     argumento_fechas: str | None = None) -> None:
+    """Capas 1–3 del expediente EN CURSO (fuente.usando_expediente), su procedencia y sus fechas normalizadas."""
+    if lote_reg.errores:
+        raise ValueError(f"lote de {exp_id()} con errores; no se mapea:\n" + "\n".join(lote_reg.errores))
     gdoc = capa_documento(ds, lote_reg.piezas)
     gtex = capa_texto(ds, lote_reg.menciones, pr.lote)
     gafi = capa_afirmaciones(ds, lote_reg, pr.lote)
@@ -663,11 +735,17 @@ def construir(lote_reg: Lote, pr: Procedencia, reconstrucciones: list[Reconstruc
                                 plan="curacion-manual-piezas", fecha=pr.fecha),
                 [(gdoc.identifier, "documento")])
     procedencia(ds, pr, [(gtex.identifier, "texto"), (gafi.identifier, "afirmaciones")])
-    capa_reconstruccion(ds, list(reconstrucciones), lote_reg)
     if fechas is not None:
-        capa_fechas(ds, fechas, pr.agente, pr.fecha[:10])
-    if catalogo is not None:
-        capa_catalogo(ds, catalogo, pr.agente, pr.fecha)
+        capa_fechas(ds, fechas, pr.agente, pr.fecha[:10], argumento_fechas)
+
+
+def construir(lote_reg: Lote, pr: Procedencia, reconstrucciones: list[Reconstruccion] = (),
+              fechas: Path | None = None) -> Dataset:
+    """Dataset de UN solo expediente (el que está en curso) con las reconstrucciones dadas. El corpus entero
+    (todos los expedientes más las capas comunes) lo construye laad.corpus.construir."""
+    ds = nuevo_dataset()
+    capas_expediente(ds, lote_reg, pr, fechas)
+    capa_reconstruccion(ds, list(reconstrucciones), {exp_id(): lote_reg})
     return ds
 
 

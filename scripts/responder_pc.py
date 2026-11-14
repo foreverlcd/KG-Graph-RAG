@@ -2,10 +2,11 @@
 import sys, pathlib
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "src"))
-from laad.preguntas import PREGUNTAS
+from laad.preguntas import EXPEDIENTE_PILOTO, PREGUNTAS
 
 partes = ["# Respuestas del grafo a las preguntas de competencia\n",
-          "> Generado por `scripts/responder_pc.py` a partir de `datos/grafo/cc-14-18.trig`. No editar a mano.\n"]
+          "> Generado por `scripts/responder_pc.py` a partir de `datos/grafo/*.trig` (expediente piloto: "
+          f"`{EXPEDIENTE_PILOTO}`). No editar a mano.\n"]
 for pc in sorted(PREGUNTAS):
     partes.append(f"## {pc}\n\n```text\n{PREGUNTAS[pc]().texto()}```\n")
 out = RAIZ / "docs/anexos/respuestas_pc.md"

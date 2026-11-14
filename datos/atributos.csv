@@ -1,0 +1,33 @@
+atributo,sujeto,valor,nota
+autenticidad-firma,pieza,persona,
+calificacion-de-conducta,persona|grupo,literal,
+cantidad-denunciada,persona|grupo|pieza,literal,
+conoce-contenido,pieza,persona|literal,
+da-fe,pieza|hecho,literal,atributo candidato (datos/candidatos_tesauro.csv)
+dijo,persona|grupo,literal,
+duracion,hecho,literal,
+edad,persona,literal,
+ejerce-cargo,persona,concepto,concepto de tes:cargos
+existe-persona,persona,lugar|literal,
+fecha-del-hecho,hecho,literal,
+filiacion,persona,persona,
+firma-a-ruego,pieza,persona|literal,
+firmo,pieza,persona|grupo|literal,
+folio-de-pieza,pieza|cosa,literal,"cosa: documento citado que no es una pieza de este expediente (el expediente remitido «en folio 10», A-UT09-517 y A-UT10-501); su foliación también es autorreferencia del texto"
+generales-de-la-ley,persona,literal,
+lugar-del-hecho,hecho,lugar|literal,
+motivo,hecho|pieza|persona,literal,
+notifica,persona,pieza|literal,atributo candidato (datos/candidatos_tesauro.csv)
+numero-de-participantes,hecho,literal,
+ordena,persona|grupo|cosa,literal,"cosa: orden impersonal sobre un documento o un bien, sin destinatario escrito («Desglocese de este Expediente, y agreguese…», A-UT10-514); el sujeto es la cosa afectada"
+parentesco,persona,persona,
+participa-en-hecho,persona|grupo,hecho,
+presta-juramento,persona,literal,
+ratifica-contenido,pieza,persona,
+redacto,pieza,persona|literal,
+sabe-firmar,persona,literal,
+se-conforma-con,persona,pieza,
+se-hallaba,persona|grupo,lugar|hecho|literal,
+solicita,persona|grupo,literal,
+tiene-condicion,persona|grupo,concepto,concepto de tes:condiciones
+veracidad,pieza|hecho|afirmacion,literal,

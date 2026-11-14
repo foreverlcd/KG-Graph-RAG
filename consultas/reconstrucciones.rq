@@ -1,12 +1,22 @@
-# Capa 4: reconstrucciones que incluyen una mención o hecho (?m), con autor, fecha, creencia y argumento.
+# Capa 4: reconstrucciones que incluyen una mención o hecho (?m; sin él, todas), con autor, fecha, creencia y argumento.
+# ?menciones lista de qué deriva cada una como «<expediente>/mencion/<id>» (o …/hecho/…, …/afirmacion/…): la capa 4
+# es común al corpus y una reconstrucción puede reunir registros de varios expedientes.
 SELECT ?entidad ?label ?creencia ?autor ?fecha ?argumento (GROUP_CONCAT(DISTINCT ?mid; separator=" ") AS ?menciones)
 WHERE {
   #PARAMETROS
-  ?entidad prov:wasDerivedFrom ?m ; rdfs:label ?label ; prov:wasGeneratedBy ?inf .
-  ?entidad prov:wasDerivedFrom ?otra . BIND (REPLACE(STR(?otra), "^.*/([^/]+/[^/]+)$", "$1") AS ?mid)
-  ?inf crm:P14_carried_out_by ?ag ; crm:P3_has_note ?argumento ; crminf:J2_concluded_that ?cre ;
-       crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?fecha .
-  ?cre crminf:J5_holds_to_be ?creencia . ?ag rdfs:label ?autor .
+  #SI m
+  ?entidad prov:wasDerivedFrom ?m .
+  #FIN
+  #SI NO m
+  { SELECT DISTINCT ?entidad WHERE { ?entidad prov:wasDerivedFrom ?algo_ } }
+  #FIN
+  LATERAL { ?entidad rdfs:label ?label ; prov:wasGeneratedBy ?inf . }
+  LATERAL {
+    ?inf crm:P14_carried_out_by ?ag ; crm:P3_has_note ?argumento ; crminf:J2_concluded_that ?cre ;
+         crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?fecha .
+    ?cre crminf:J5_holds_to_be ?creencia . ?ag rdfs:label ?autor .
+  }
+  LATERAL { ?entidad prov:wasDerivedFrom ?otra . BIND (REPLACE(STR(?otra), "^.*/([^/]+/[^/]+/[^/]+)$", "$1") AS ?mid) }
 }
 GROUP BY ?entidad ?label ?creencia ?autor ?fecha ?argumento
 ORDER BY ?label

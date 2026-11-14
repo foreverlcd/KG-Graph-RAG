@@ -1,0 +1,18 @@
+# Conceptos CANDIDATOS del tesauro (ontologia/candidatos.ttl: propuestos durante la anotación, aún sin aprobar) que
+# algún nodo del grafo usa, con el número de nodos que los usan. Es la lista de trabajo del curador del tesauro:
+# cada fila pide aprobar el concepto o rechazarlo y corregir sus registros (ontologia/README.md).
+# Parámetro opcional: ?esquema (IRI de un esquema del tesauro, p. ej. tes:cargos).
+SELECT ?concepto ?esquema ?etiqueta ?definicion ?propuesto (COUNT(DISTINCT ?nodo) AS ?usos)
+       (MIN(?nodoLabel) AS ?ejemploDeUso)
+WHERE {
+  #PARAMETROS
+  tes:candidatos skos:member ?concepto .
+  ?concepto skos:inScheme ?esquema ; skos:prefLabel ?etiqueta .
+  OPTIONAL { ?concepto skos:definition ?definicion }
+  OPTIONAL { ?concepto dct:created ?propuesto }
+  ?nodo ?p ?concepto .
+  FILTER (STRSTARTS(STR(?nodo), STR(id:)))
+  OPTIONAL { ?nodo rdfs:label ?nodoLabel }
+}
+GROUP BY ?concepto ?esquema ?etiqueta ?definicion ?propuesto
+ORDER BY DESC(?usos) ?concepto

@@ -77,7 +77,7 @@
 | Quién reconstruye y por qué | `crminf:I5_Inference_Making` ∧ `prov:Activity` + `crm:P14_carried_out_by` (agente) + `crm:P3_has_note` (argumento) + `crm:P17_was_motivated_by` (E13 premisas) + `crm:P4_has_time-span`. Vive en un **grafo de argumentación propio** (`g:argumentacion/R-x`; revisión I4) | CRMinf + CRM + PROV | sí | `crminf:J1_used_as_premise`: su rango es `I2_Belief`, no E13 (en CRMinf 1.2.1, E13 ⊑ I1). Meter la creencia dentro de la propia proposición: la contaminaría |
 | Creencia | `crminf:I2_Belief` + `crminf:J4_that` → `crminf:I4_Proposition_Set` (= el grafo nombrado de la reconstrucción) + `crminf:J5_holds_to_be` (literal = `skos:notation` de `cre:*`) | CRMinf 1.2.1 + tesauro | sí | `I6_Belief_Value` como clase: no existe en la 1.2.1 |
 | Reconstrucciones en competencia | Dos grafos nombrados con creencias distintas (p. ej. R-declarante-p19-es-martin frente a -es-mariano) | — | — | Elegir una sola: el grafo no debe resolver en silencio |
-| Fecha normalizada | Segundo `crm:E52_Time-Span` con `crm:P82a_begin_of_the_begin` / `crm:P82b_end_of_the_end` (xsd:date), en el grafo R-fechas-normalizadas | CRM | sí | Sobrescribir la fecha escrita |
+| Fecha normalizada | Segundo `crm:E52_Time-Span` con `crm:P82a_begin_of_the_begin` / `crm:P82b_end_of_the_end` (xsd:date), en el grafo `g:reconstruccion/R-fechas-normalizadas-<exp>` (uno por expediente) | CRM | sí | Sobrescribir la fecha escrita |
 | Cargo con vigencia | `crm:E7_Activity` (ejercicio del cargo) + `crm:P2_has_type cargo:*` + `PC14` (titular, con **el cargo como `P14.1_in_the_role_of`**) + `crm:P4_has_time-span` (P82a/P82b + nota de vigencia) + `crm:P7_took_place_at` (ámbito) + `prov:wasDerivedFrom` (E13 premisas) | CRM + PROV | sí | `rico:PositionHoldingRelation` (RiC-O 1.1): dejaría la capa 4 en RiC-O y la separaría de las premisas en CRM |
 
 ## Capa P — procedencia del dato (PROV-O)
@@ -93,7 +93,7 @@
 
 ## Tesauro SKOS (T)
 
-Contiene 12 esquemas y 164 conceptos (`ontologia/tesauro.ttl`, recuento por `skos:inScheme`):
+Contiene 12 esquemas (`ontologia/tesauro.ttl`, versión 0.2.0). El total de conceptos aprobados y el de candidatos están en `docs/cifras.md`; el reparto por esquema que sigue es el de la versión 0.1.0 (2026-11-13, recuento por `skos:inScheme`) y no cambia mientras no se apruebe un candidato:
 
 * actuaciones (16)
 * roles (24)
@@ -110,11 +110,23 @@ Contiene 12 esquemas y 164 conceptos (`ontologia/tesauro.ttl`, recuento por `sko
 
 Las alineaciones con PiCo están en `ontologia/ohac.ttl` (`skos:closeMatch` / `skos:relatedMatch`).
 
+### Crecimiento del tesauro (desde la versión 0.2.0)
+
+Solo vocabulario estándar (SKOS, DCTERMS, OWL como anotación y PROV). La política está en `ontologia/README.md`.
+
+| Necesidad | Término | Estándar | Alternativa descartada y por qué |
+|---|---|---|---|
+| Concepto candidato (propuesto, aún no aprobado) | `skos:Concept` en su esquema + `skos:member` de la `skos:Collection` `tes:candidatos` (`ontologia/candidatos.ttl`); `dct:created`, `dct:source` y `prov:wasAttributedTo` para fecha, expediente y proponente | SKOS + DCTERMS + PROV | Una propiedad propia de «estado»: OHAC no declara términos. Rechazar el registro o aproximar el concepto con una nota: se pierde lo que el anotador encontró |
+| Aviso al usar un candidato | `ohac:ConceptoCandidatoForma` con `sh:severity sh:Warning` | SHACL | Violación: impediría construir el grafo mientras el curador decide |
+| Concepto retirado o candidato rechazado | `owl:deprecated true` + `dct:isReplacedBy` (+ `skos:historyNote`) | OWL + DCTERMS + SKOS | Borrar el concepto o renombrar su IRI: rompe los grafos y las reconstrucciones que la citan |
+| Dominio y rango de un atributo | Una `sh:NodeShape` por atributo sobre las E13 que lo usan (`ontologia/formas_atributos.ttl`, generado desde `datos/atributos.csv`) | SHACL | `rdfs:domain` / `rdfs:range`: los atributos son conceptos SKOS, no propiedades, y OHAC no declara propiedades |
+| Versión del tesauro y del perfil | `owl:versionInfo` + `dct:modified` en cada esquema y en `ohac.ttl` | OWL + DCTERMS | — |
+
 ## Lo que OHAC añade
 
 **Nada en la T-Box.** El análisis de carencias de `docs/C_modelo.md` §6 no encontró ninguna necesidad sin término estándar. OHAC se reduce a:
 
 * el encabezado con las importaciones fijadas;
-* el tesauro (datos);
-* las formas SHACL (reglas del perfil);
+* el tesauro (datos) y sus conceptos candidatos;
+* las formas SHACL (reglas del perfil), incluidas las de dominio y rango por atributo;
 * las alineaciones.

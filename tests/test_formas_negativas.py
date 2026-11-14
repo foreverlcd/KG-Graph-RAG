@@ -1,4 +1,5 @@
-"""Pruebas negativas de las formas SHACL (ontologia/formas.ttl): ninguna forma aprueba en vacío.
+"""Pruebas negativas de las formas SHACL (ontologia/formas.ttl y ontologia/formas_atributos.ttl): ninguna forma
+aprueba en vacío.
 
 Cada mutación introduce una violación mínima y concreta sobre nodos DISTINTOS de una copia de la unión.
 Todas las mutaciones se aplican a un único grafo y se valida una sola vez (≈10 s); después cada caso
@@ -26,6 +27,11 @@ Forma → casos:
   AfirmacionForma (+)        afirmacion-eliptica-sin-nota                     (revisión I2)
   AfirmacionForma (+)        afirmacion-responde-sin-marca, afirmacion-segun-sin-marca (revisión 2, n.º 6)
   PiezaForma (+)             pieza-tipo-abstracto-sin-fuerza                  (revisión C2)
+  ConceptoCandidatoForma     concepto-candidato-en-uso (AVISO: sh:Warning, no violación)
+  ConceptoRetiradoForma      concepto-retirado-en-uso
+  AtributoForma-<atributo>   atributo-<atributo>-sujeto, atributo-<atributo>-valor: dos casos por cada atributo de
+                             datos/atributos.csv, generados (una afirmación nueva cuyo sujeto o cuyo valor es de un
+                             tipo que el atributo no admite)
 """
 from __future__ import annotations
 
@@ -36,13 +42,16 @@ from dataclasses import dataclass
 import pytest
 import rdflib
 from rdflib import RDF, Literal, URIRef
+from rdflib.collection import Collection
 from rdflib.compare import to_isomorphic
-from rdflib.namespace import DCTERMS, OWL, PROV, SH
+from rdflib.namespace import DCTERMS, OWL, PROV, SH, SKOS
+
+from laad import esquema
 
 from laad import mapeo as M
 from laad import validacion
 
-from ._fixtures import copia_union, union
+from ._fixtures import EXPEDIENTE_PILOTO, PROCEDENCIA, copia_union, union
 
 OHAC = rdflib.Namespace("https://w3id.org/laad/ohac#")
 ANIDADORES = (SH.property, SH.sparql, SH.qualifiedValueShape)
@@ -75,7 +84,7 @@ def _en(esquema: str) -> Callable[[rdflib.term.Node], bool]:
 
 @functools.lru_cache(maxsize=1)
 def _formas() -> rdflib.Graph:
-    return rdflib.Graph().parse(validacion.ONT / "formas.ttl")
+    return validacion.grafo_formas()      # formas.ttl + formas_atributos.ttl, como en validacion.shacl()
 
 
 def _formas_con_nombre() -> list[URIRef]:
@@ -100,6 +109,7 @@ class Resultado:
     foco: rdflib.term.Node
     formas: frozenset
     mensaje: str
+    severidad: rdflib.term.Node = SH.Violation
 
 
 @functools.lru_cache(maxsize=1)
@@ -129,7 +139,8 @@ def _resultados(g_res: rdflib.Graph) -> list[Resultado]:
     for r in g_res.subjects(RDF.type, SH.ValidationResult):   # incluye los anidados en sh:detail
         out.append(Resultado(g_res.value(r, SH.focusNode),
                              frozenset(_formas_de(g_res, g_res.value(r, SH.sourceShape))),
-                             " ".join(str(m) for m in g_res.objects(r, SH.resultMessage))))
+                             " ".join(str(m) for m in g_res.objects(r, SH.resultMessage)),
+                             g_res.value(r, SH.resultSeverity)))
     return out
 
 
@@ -141,6 +152,7 @@ class Mutacion:
     aplicar: Callable[[rdflib.Graph], rdflib.term.Node]   # devuelve el foco esperado
     mensaje: str | None = None                           # subcadena del sh:resultMessage, si hace falta
     xfail: str | None = None
+    severidad: URIRef = SH.Violation                     # severidad esperada del resultado
 
 
 def m_pieza_sin_titulo(g):
@@ -318,20 +330,20 @@ def m_lote_reconstruccion_sin_autor(g):
 
 
 def m_lote_actividad_sin_plan(g):
-    asoc = URIRef(f"{M.ID['actividad/anotacion-manual-expediente-v1']}/asociacion")
+    asoc = URIRef(f"{M.ID[f'actividad/{EXPEDIENTE_PILOTO}/{PROCEDENCIA.lote}']}/asociacion")
     _quitar(g, asoc, PROV.hadPlan)
-    return M.G["texto/anotacion-manual-expediente-v1"]
+    return M.grafo_iri("texto", PROCEDENCIA.lote, exp=EXPEDIENTE_PILOTO)
 
 
 def m_afirmacion_responde_sin_marca(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT11-004"]
+    a = M.afirmacion_iri("A-UT11-004", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["responde-a"]) in g
     g.remove((a, M.CRM.P2_has_type, M.ANOT["responde-a"]))
     return a
 
 
 def m_afirmacion_segun_sin_marca(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT11-005"]
+    a = M.afirmacion_iri("A-UT11-005", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["segun-otro"]) in g
     g.remove((a, M.CRM.P2_has_type, M.ANOT["segun-otro"]))
     return a
@@ -387,14 +399,14 @@ def m_cargo_sin_premisa(g):
 
 
 def m_afirmacion_eliptica_sin_nota(g):
-    a = M.ID["cc-14-18/afirmacion/A-UT01-002"]
+    a = M.afirmacion_iri("A-UT01-002", EXPEDIENTE_PILOTO)
     assert (a, M.CRM.P2_has_type, M.ANOT["sujeto-eliptico"]) in g
     _quitar(g, a, M.CRM.P3_has_note)
     return a
 
 
 def m_pieza_tipo_abstracto(g):
-    p = M.ID["cc-14-18/pieza/P13"]
+    p = M.pieza_iri("P13", EXPEDIENTE_PILOTO)
     _quitar(g, p, M.RICO.hasDocumentaryFormType)
     g.add((p, M.RICO.hasDocumentaryFormType, M.ACT["de-autoridad"]))
     return p
@@ -408,6 +420,85 @@ MUTACIONES += [
 ]
 
 
+# ── crecimiento del tesauro: candidatos (aviso) y retirados (violación) ──
+def m_concepto_candidato_en_uso(g):
+    """ent:carcel pasa a ser candidato en la copia: cada mención que lo usa debe dar un AVISO."""
+    assert any(g.subjects(M.CRM.P2_has_type, M.ENT.carcel))
+    g.add((esquema.COLECCION_CANDIDATOS, SKOS.member, M.ENT.carcel))
+    return M.ENT.carcel
+
+
+def m_concepto_retirado_en_uso(g):
+    assert any(g.subjects(M.CRM.P2_has_type, M.ENT.plaza))
+    g.add((M.ENT.plaza, OWL.deprecated, Literal(True)))
+    return M.ENT.plaza
+
+
+MUTACIONES += [
+    Mutacion("concepto-candidato-en-uso", OHAC.ConceptoCandidatoForma, m_concepto_candidato_en_uso, "candidato",
+             severidad=SH.Warning),
+    Mutacion("concepto-retirado-en-uso", OHAC.ConceptoRetiradoForma, m_concepto_retirado_en_uso, "retirado"),
+]
+
+
+# ── dominio y rango de cada atributo (formas generadas desde datos/atributos.csv) ──
+PRUEBA = rdflib.Namespace("https://w3id.org/laad/id/prueba/")
+
+
+def _nodos_de_tipo(g: rdflib.Graph) -> dict[str, rdflib.term.Node]:
+    """Un nodo real del grafo de cada tipo que puede ser sujeto o valor (dos literales: de texto y de tiempo)."""
+    return {
+        "persona": _n(g, M.PICOM.PersonObservation, 0),
+        "lugar": _n(g, M.ROAR.LocationObservation, 0),
+        "grupo": _n(g, M.ROAR.Observation, 0),        # el grafo no distingue grupo de cosa
+        "pieza": _pieza(g, 0),
+        "hecho": _n(g, M.CRM.E89_Propositional_Object, 0),
+        "afirmacion": _n(g, M.CRM.E13_Attribute_Assignment, 0),
+        "literal": _n(g, M.CRM.E33_Linguistic_Object, 1),
+        "tiempo": next(o for a in _de_tipo(g, M.CRM.E13_Attribute_Assignment)
+                       if (a, M.CRM.P177_assigned_property_of_type, M.ATR["fecha-del-hecho"]) in g
+                       for o in g.objects(a, M.CRM.P141_assigned)),
+        "concepto-cargo": M.CARGO.cacique,
+        "concepto-condicion": M.COND.indio,
+    }
+
+
+def _tipos_rdf(g: rdflib.Graph, nodo) -> set:
+    """rdf:type directo del nodo en el grafo o, si es un concepto, sus esquemas en el tesauro."""
+    return set(g.objects(nodo, RDF.type)) | set(esquema.grafo_tesauro_en_cache().objects(nodo, SKOS.inScheme))
+
+
+def _admitidas(atributo: str, lado: str) -> set:
+    """IRIs (clases o esquemas) que la forma generada del atributo admite para el sujeto o el valor."""
+    f = _formas()
+    forma = OHAC[f"AtributoForma-{atributo}"]
+    inicio = M.CRM.P140_assigned_attribute_to if lado == "sujeto" else M.CRM.P141_assigned
+    for prop in f.objects(forma, SH.property):
+        if f.value(f.value(prop, SH.path), RDF.first) == inicio:
+            return set(Collection(f, f.value(f.value(prop, SH.qualifiedValueShape), SH["in"])))
+    raise AssertionError(f"la forma de {atributo} no restringe el {lado}")
+
+
+def _m_atributo(atributo: str, lado: str) -> Callable[[rdflib.Graph], rdflib.term.Node]:
+    def aplicar(g):
+        nodos = _nodos_de_tipo(g)
+        admite = {l: _admitidas(atributo, l) for l in ("sujeto", "valor")}
+        bueno = {l: next(n for n in nodos.values() if _tipos_rdf(g, n) & admite[l]) for l in admite}
+        malo = next(n for n in nodos.values() if not _tipos_rdf(g, n) & admite[lado])
+        a = PRUEBA[f"atributo/{atributo}/{lado}"]             # afirmación nueva: no interfiere con las demás
+        g.add((a, RDF.type, M.CRM.E13_Attribute_Assignment))
+        g.add((a, M.CRM.P177_assigned_property_of_type, M.ATR[atributo]))
+        g.add((a, M.CRM.P140_assigned_attribute_to, malo if lado == "sujeto" else bueno["sujeto"]))
+        g.add((a, M.CRM.P141_assigned, malo if lado == "valor" else bueno["valor"]))
+        return a
+    return aplicar
+
+
+ATRIBUTOS_CON_FILA = sorted(esquema.dominio_rango())
+MUTACIONES += [Mutacion(f"atributo-{atr}-{lado}", OHAC[f"AtributoForma-{atr}"], _m_atributo(atr, lado), f"el {lado} de")
+               for atr in ATRIBUTOS_CON_FILA for lado in ("sujeto", "valor")]
+
+
 @functools.lru_cache(maxsize=1)
 def _validacion_mutada():
     g = copia_union()
@@ -417,8 +508,13 @@ def _validacion_mutada():
 
 
 # ─────────────────────────── pruebas ───────────────────────────
+@functools.lru_cache(maxsize=1)
+def _validacion_sin_mutar():
+    return validacion.shacl(union(), con_ontologias=True)
+
+
 def test_union_sin_modificar_conforma():
-    conforma, _, texto = validacion.shacl(union(), con_ontologias=True)
+    conforma, _, texto = _validacion_sin_mutar()
     assert conforma, texto[:3000]
 
 
@@ -441,6 +537,28 @@ def test_forma_detecta_violacion(mut: Mutacion):
     _, resultados, focos = _validacion_mutada()
     foco = focos[mut.id]
     del_foco = [r for r in resultados if r.foco == foco]
-    ok = [r for r in del_foco if mut.forma in r.formas and (mut.mensaje is None or mut.mensaje in r.mensaje)]
+    ok = [r for r in del_foco if mut.forma in r.formas and (mut.mensaje is None or mut.mensaje in r.mensaje)
+          and r.severidad == mut.severidad]
     assert ok, (f"{mut.id}: ninguna violación de {mut.forma} con foco {foco}; resultados del foco: "
                 f"{[(sorted(str(f) for f in r.formas if isinstance(f, URIRef)), r.mensaje[:120]) for r in del_foco]}")
+
+
+def test_el_lado_correcto_de_la_afirmacion_de_prueba_no_se_denuncia():
+    """Las formas de atributo no denuncian de más: en cada afirmación de prueba solo falla el lado mutado."""
+    _, resultados, focos = _validacion_mutada()
+    for atr in ATRIBUTOS_CON_FILA:
+        for lado, otro in (("sujeto", "valor"), ("valor", "sujeto")):
+            foco = focos[f"atributo-{atr}-{lado}"]
+            de_mas = [r.mensaje for r in resultados if r.foco == foco and OHAC[f"AtributoForma-{atr}"] in r.formas
+                      and f"el {otro} de" in r.mensaje]
+            assert not de_mas, (atr, lado, de_mas)
+
+
+def test_un_concepto_candidato_en_uso_solo_avisa():
+    """El uso de un candidato es sh:Warning: el grafo sin mutar conforma y, aun así, la validación lo lista."""
+    conforma, g_res, _ = _validacion_sin_mutar()
+    assert conforma
+    assert {sev for sev in g_res.objects(None, SH.resultSeverity)} <= {SH.Warning}
+    _, resultados, focos = _validacion_mutada()
+    del_candidato = [r for r in resultados if r.foco == focos["concepto-candidato-en-uso"]]
+    assert del_candidato and all(r.severidad == SH.Warning for r in del_candidato)

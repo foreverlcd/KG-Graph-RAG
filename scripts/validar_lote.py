@@ -1,26 +1,33 @@
-"""Valida registros nuevos JUNTO con los existentes, sin escribir el grafo del repositorio.
+"""Valida registros nuevos de un expediente JUNTO con los que ya tiene, sin escribir el grafo del repositorio.
 
-Carga datos/registros/hilo_central.jsonl + los .jsonl dados, comprueba esquema e integridad referencial,
-mapea a RDF (lo que verifica que toda cita es subcadena literal anclable en su tramo) y valida SHACL.
-Uso: python scripts/validar_lote.py datos/registros/otro.jsonl [...]
+Carga los registros que lista el manifiesto del expediente + los .jsonl dados, comprueba esquema e integridad
+referencial, mapea a RDF todo el corpus (lo que verifica que toda cita es subcadena literal anclable en su tramo y
+que las reconstrucciones siguen resolviendo sus referencias) y valida SHACL.
+Uso: python scripts/validar_lote.py <expediente> datos/<expediente>/otro.jsonl [...]
 """
 import sys, pathlib
 RAIZ = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "src"))
-from laad import mapeo, validacion
-from laad.hilo import FECHAS, LOTES, PROCEDENCIA, RECONSTRUCCIONES
-from laad.registros import cargar
+from laad import corpus, mapeo, validacion
 
-extra = [pathlib.Path(p).resolve() for p in sys.argv[1:]]
-rutas = [r for r in LOTES if r.exists() and r not in extra] + extra
-lote = cargar(rutas)
+if len(sys.argv) < 2 or sys.argv[1] not in corpus.expedientes():
+    print(f"Uso: python scripts/validar_lote.py <expediente> [registros.jsonl ...]\n"
+          f"expedientes con manifiesto: {', '.join(corpus.expedientes())}")
+    sys.exit(2)
+exp = sys.argv[1]
+extra = [pathlib.Path(p).resolve() for p in sys.argv[2:]]
+rutas = [r for r in corpus.rutas_registros(exp) if r.exists() and r not in extra] + extra
+lote = corpus.cargar(exp, rutas)
 if lote.errores:
     print("ERRORES DE REGISTRO:\n" + "\n".join(lote.errores[:80]))
     sys.exit(1)
-print(f"registros: {len(lote.menciones)} menciones, {len(lote.afirmaciones)} afirmaciones")
-ds = mapeo.construir(lote, PROCEDENCIA, mapeo.cargar_reconstrucciones(RECONSTRUCCIONES), fechas=FECHAS)
-conforma, _, texto = validacion.shacl(mapeo.union(ds), con_ontologias=True)
+print(f"{exp}: {len(lote.menciones)} menciones, {len(lote.afirmaciones)} afirmaciones")
+if lote.avisos:
+    print(f"AVISOS ({len(lote.avisos)}; no son errores — ontologia/README.md):\n" + "\n".join(lote.avisos[:80]))
+ds = corpus.construir(lotes={exp: lote}, catalogo=None)
+conforma, resultados, texto = validacion.shacl(mapeo.union(ds), con_ontologias=True)
 print("SHACL conforma:", conforma)
+print(f"SHACL avisos: {len(validacion.avisos(resultados))}")
 if not conforma:
     print(texto[:6000])
     sys.exit(1)

@@ -1,0 +1,257 @@
+% Presentación del perfil OHAC (proyecto LAAD).
+% Compilar con:  latexmk -pdf main.tex
+% Las cifras NO se escriben aquí: salen de ../articulo/cifras.tex, que genera scripts/cifras.py.
+% tests/test_cifras.py comprueba que esta presentación y el artículo usan las mismas.
+\documentclass[aspectratio=169,11pt]{beamer}
+\usetheme{metropolis}
+\metroset{block=fill,numbering=fraction,progressbar=frametitle}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands,es-tabla,es-nodecimaldot]{babel}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{csquotes}
+\input{../articulo/cifras.tex}
+
+\definecolor{tinta}{HTML}{23373B}
+\definecolor{ocre}{HTML}{B5651D}
+\setbeamercolor{alerted text}{fg=ocre}
+\setbeamercolor{progress bar}{fg=ocre}
+\newcommand{\cita}[1]{«\textit{#1}»}
+\newcommand{\ttt}[1]{\texttt{\small #1}}
+\tikzset{capa/.style={draw=tinta!60, fill=#1, rounded corners=3pt, minimum height=0.8cm,
+  align=left, text width=13.2cm, font=\footnotesize}}
+\newcommand{\cifra}[1]{\textbf{\alert{#1}}}
+
+\title{OHAC: afirmaciones atribuidas en expedientes coloniales}
+\subtitle{Perfil de aplicación ontológico para el Archivo Regional del Cusco}
+\author{Jhon Jesus Quispe Machaca \and Ian Logan Will Quispe Ventura}
+\institute{Universidad Nacional de San Antonio Abad del Cusco}
+\date{Versión del tesauro 0.2.0 · \today}
+
+\begin{document}
+\maketitle
+
+% ---------------------------------------------------------------------
+\begin{frame}{Un expediente no registra hechos}
+Registra lo que \alert{alguien afirmó}, ante quién, en qué actuación y con qué fuerza procesal.
+
+\medskip
+Causa criminal, Legajo 14, Expediente 18 (Tinta, 1806): Manuel Huancachoque contra el cacique recaudador
+Andrés Chuquitapa.
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Agosto: certificación}
+Chuquitapa fue \cita{complice y coronel} de Túpac Amaru.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Septiembre: declaración jurada}
+\cita{Comisionado por este y no coronel}. Otro testigo niega haber firmado; un tercero no sabe escribir.
+\end{block}
+\end{columns}
+
+\medskip
+El fiscal concluye que las quejas son \cita{menos conforme a la verdad}. ¿Quién tiene razón? El grafo no lo decide.
+\end{frame}
+
+\begin{frame}{Tres maneras de perder la trama de voces}
+Las cometió nuestro prototipo anterior (grafo de propiedades poblado por un modelo de lenguaje):
+\begin{enumerate}
+\item Cada afirmación se volvió una tripleta \alert{sobre el mundo}.
+\item La resolución del tribunal se tomó como \alert{valor de verdad}.
+\item Todas las grafías de un nombre se \alert{fusionaron} en una persona.
+\end{enumerate}
+\medskip
+Resultado: la frase del fiscal quedó atribuida a ocho declarantes, entre ellos el propio denunciante.
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{Cuatro capas, cada una en sus grafos nombrados}
+\centering
+\begin{tikzpicture}[node distance=1.5mm]
+\node[capa=ocre!12] (c4) {\textbf{4 · Reconstrucciones} — identidades y hechos \emph{propuestos}, con autor, fecha y creencia (CRMinf, PiCo, ROAR)};
+\node[capa=tinta!10, below=of c4] (c3) {\textbf{3 · Afirmaciones atribuidas} — quién afirma, sobre quién, qué atributo, qué valor, polaridad y fuerza (CIDOC CRM E13)};
+\node[capa=tinta!6, below=of c3] (c2) {\textbf{2 · Menciones} — cada aparición escrita, sin fusionar, con su cita literal (PiCo, ROAR, Web Annotation)};
+\node[capa=tinta!3, below=of c2] (c1) {\textbf{1 · Documento} — expediente, piezas, actuaciones, tramos de la transcripción (RiC-O, CIDOC CRM)};
+\node[capa=white, below=of c1] (p) {\textbf{P · Procedencia del dato} — qué proceso, qué agente, qué versión de la transcripción (PROV-O)};
+\end{tikzpicture}
+
+\smallskip
+\footnotesize Sin valores de verdad en las capas 1--3. Solo la capa 4 tiene creencias, y las hipótesis rivales coexisten.
+\end{frame}
+
+\begin{frame}{Cero términos propios}
+OHAC declara \cifra{\cifraTerminosPropios} clases y propiedades. Se compone de:
+\begin{itemize}
+\item importaciones con versión fijada: RiC-O 1.1, CIDOC CRM 7.1.3, CRMinf 1.2.1, PiCo, ROAR, PROV-O, SKOS, Web Annotation;
+\item un \alert{tesauro SKOS} con \cifra{\cifraEsquemas} esquemas y \cifra{\cifraConceptos} conceptos, todos definidos
+      (cargos, condiciones, tipos de actuación, roles, atributos, polaridad, fuerza…);
+\item \cifra{\cifraFormas} \alert{formas SHACL} que hacen cumplir el perfil;
+\item \cifra{\cifraAlineaciones} alineaciones externas, solo \ttt{closeMatch} o \ttt{relatedMatch}.
+\end{itemize}
+\medskip
+Lo andino y lo procesal son \alert{datos}, no clases: el ayllu es un grupo, no un lugar; \cita{India Ordinaria} no se
+iguala a \emph{originaria}.
+\end{frame}
+
+\begin{frame}{Una negación en el grafo}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Quién afirma (\ttt{P14}) & mención «Isidro Cano», declarante \\
+En qué actuación (\ttt{P9i}) & declaración jurada de septiembre \\
+Sobre quién (\ttt{P140}) & mención «Andres Chuquitapa» (sujeto elíptico, marcado) \\
+Qué atributo (\ttt{P177}) & \emph{ejerce-cargo} \\
+Qué valor (\ttt{P141}) & \emph{coronel rebelde} \\
+Polaridad y fuerza (\ttt{P2}) & \alert{niega} · testimonial \\
+Responde a (\ttt{P17}) & la afirmación de agosto \\
+Cita literal & \cita{Comisionado por este y no coronel} \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Ningún nodo dice si Chuquitapa fue coronel. La pregunta se responde como \alert{disputa}: quién lo afirma, quién lo
+niega y qué autoridad se pronunció (ninguna).
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{El piloto en cifras}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}
+\item \cifra{\cifraPiezas} piezas
+\item \cifra{\cifraMenciones} menciones
+\item \cifra{\cifraAfirmaciones} afirmaciones (\cifra{\cifraNegaciones} negaciones)
+\item \cifra{\cifraCitas} citas literales, todas subcadena exacta de la transcripción
+\item \cifra{\cifraReconstruccionesConFechas} reconstrucciones
+\end{itemize}
+\column{0.5\textwidth}
+\begin{itemize}
+\item \cifra{\cifraTripletas} tripletas en \cifra{\cifraGrafos} grafos nombrados
+\item \cifra{\cifraClases} clases y \cifra{\cifraPropiedades} propiedades, todas de estándares
+\item \cifra{\cifraCatalogoRegistros} fichas e índices del catálogo
+\item \cifra{\cifraPreguntas} preguntas de competencia
+\end{itemize}
+\end{columns}
+\medskip
+\footnotesize Las cifras de estas diapositivas y las del artículo salen del mismo guion (\ttt{scripts/cifras.py});
+una prueba falla si quedan desfasadas.
+\end{frame}
+
+\begin{frame}{Evaluación sin anotadores externos}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Criterio & Resultado \\
+\midrule
+Citas que son subcadena exacta del tramo & \cifraCitas/\cifraCitas \\
+Violaciones SHACL del grafo & 0 \\
+Mutaciones del grafo que SHACL rechaza & \cifraMutacionesDeclaradas/\cifraMutacionesDeclaradas \\
+Inconsistencias bajo OWL 2 RL (\cifraRazonadorCierre{} tripletas tras el cierre) & \cifraRazonadorInconsistencias \\
+Términos nuevos para un pleito civil sintético & 0 \\
+Preguntas de competencia respondidas & \cifraPreguntas/\cifraPreguntas \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Las preguntas se escribieron \alert{antes} de modelar. La forma de cada respuesta (dato, disputa, \emph{no consta})
+se calcula, no se escribe a mano: una orden no implica su cumplimiento.
+\end{frame}
+
+\begin{frame}{Lo que los estándares no esperaban}
+Siete defectos y carencias, hallados al validar y razonar con datos reales:
+\begin{itemize}
+\item \textbf{D1} ROAR: un dominio global vuelve inconsistente el patrón de PiCo (lo detectó el razonador).
+\item \textbf{D6} CRMinf 1.2.1: toda E13 es una \emph{argumentación} \enquote{honesta}. Cada testimonio hereda una
+      \alert{presunción de sinceridad}: \cifra{\cifraDSeisAfirmaciones} afirmaciones, \cifra{\cifraDSeisNegaciones} de
+      ellas negaciones.
+\item \textbf{D7} CRM + PiCo: toda mención que afirma se infiere actor.
+\item D2--D5: prefijos, relaciones temporales heredadas, valores de creencia literales, folios en RiC-O.
+\end{itemize}
+\medskip
+No se corrigen en origen: se evitan o se miden, y el razonador los informa en cada ejecución.
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{Pensado para un fondo, no para un expediente}
+\begin{itemize}
+\item Cada expediente se declara en un \alert{manifiesto}: signatura, piezas, lotes, formato de su transcripción.
+\item Las capas 1--3 viven en grafos del expediente: \ttt{g:<exp>/documento}, \ttt{g:<exp>/texto/…},
+      \ttt{g:<exp>/afirmaciones/…}.
+\item La capa 4 es común: una reconstrucción puede unir \ttt{cc-14-18:M-…} con una mención de \alert{otro
+      expediente} sin tocar las capas inferiores de ninguno.
+\item Las consultas admiten restringirse a un expediente o recorrer el corpus.
+\end{itemize}
+\medskip
+Hoy hay \cifra{\cifraExpedientes} expediente real; la generalización se prueba con expedientes sintéticos. El segundo
+expediente real espera su transcripción.
+\end{frame}
+
+\begin{frame}{Un vocabulario que crece sin cambiar el esquema}
+Lo que en otro modelo sería una propiedad nueva aquí es un \alert{concepto} del tesauro.
+\begin{enumerate}
+\item El anotador encuentra un cargo, una condición o una relación que no existe.
+\item La propone como \alert{candidato}, con definición, ejemplo citado y autor.
+\item Los datos que la usan son válidos; SHACL los señala con un \alert{aviso}, no con un error.
+\item Un investigador la aprueba (cambio menor de versión) o la rechaza.
+\end{enumerate}
+\medskip
+\begin{itemize}
+\item \cifra{\cifraCandidatos} candidatos en uso en el piloto (p.~ej. \emph{notifica}, \emph{Real Audiencia}, \emph{oriundo}).
+\item Dominio y rango de los \cifra{\cifraAtributos} atributos, declarados en una tabla de la que se generan las formas.
+\item Conceptos retirados: \ttt{owl:deprecated} con sustituto; usarlos es una violación.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conectividad del grafo}
+La capa 2 no fusiona nada; lo que conecta el grafo son las reconstrucciones de la capa 4.
+\begin{itemize}
+\item \cifra{\cifraMencionesEnlazadas} de \cifra{\cifraMenciones} menciones pertenecen a alguna de las
+      \cifra{\cifraReconstrucciones} reconstrucciones (\cifra{\cifraPersonasEnlazadas} de \cifra{\cifraPersonas} de persona).
+\item \cifra{\cifraHechosEnlazados} de \cifra{\cifraHechosNarrados} hechos narrados están reconstruidos.
+\item \cifra{\cifraEntidadesSinTipo} de \cifra{\cifraEntidadesNoPersona} menciones que no son de persona carecen de tipo de entidad.
+\end{itemize}
+\medskip
+Cada enlace es una \alert{hipótesis} con autor (un modelo de lenguaje), argumento y grado de creencia; las lecturas
+incompatibles coexisten como rivales. \cifra{\cifraReconstruccionesSinAuditar} no han pasado la auditoría del segundo
+modelo y ninguna tiene validación humana: el grafo lo dice.
+\end{frame}
+
+\begin{frame}{Consulta y escala}
+\begin{itemize}
+\item Motor de consulta: Oxigraph. Las consultas con nombre pasaron de decenas de segundos a décimas.
+\item Prueba de escala con el piloto replicado: la carga y el espacio crecen linealmente con el número de expedientes.
+\item Las consultas restringidas a un expediente tardan lo mismo con uno que con cien (la restricción se escribe
+      como patrón, no como filtro); las que recorren el corpus entero, como las disputas, crecen con él.
+      Detalle en \ttt{datos/grafo/escala.md}.
+\end{itemize}
+\medskip
+\footnotesize La medición usa réplicas del piloto, no el archivo real: indica cómo crece el coste, no cuánto tardará
+el corpus definitivo.
+\end{frame}
+
+\begin{frame}{Límites}
+\begin{itemize}
+\item Un solo expediente real ($n=1$).
+\item Anotaciones y reconstrucciones propuestas con un modelo de lenguaje; un único validador humano, sin acuerdo
+      entre anotadores.
+\item Sin imágenes: el folio y el lado de cada tramo no constan, salvo cuatro marcas del texto.
+\item \cifra{\cifraDefinicionesDeTrabajo} definiciones del tesauro son de trabajo, sin fuente verificada.
+\item OWL 2 RL es incompleto: la ausencia de inconsistencias es condición necesaria, no suficiente.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Siguiente paso}
+Poblar el modelo a escala:
+\begin{itemize}
+\item un modelo de lenguaje rellena \alert{registros planos} con cita literal obligatoria;
+\item un mapeo determinista los lleva al grafo;
+\item el modelo de lenguaje no decide identidades, verdades ni folios.
+\end{itemize}
+\medskip
+Recurso: \url{https://github.com/foreverlcd/KG-Graph-RAG}
+\end{frame}
+
+\end{document}

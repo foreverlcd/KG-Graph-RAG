@@ -334,7 +334,7 @@ Estado del tesauro (`ontologia/tesauro.ttl`, comprobado): 266 literales `@es`, *
 | 4 | `skos:closeMatch` / `skos:relatedMatch` hacia el AAT y Wikidata en `doc:`, `act:`, `cargo:` y `ent:`, revisados a mano, con una prueba que prohíba `skos:exactMatch` hacia fuera | T | No | Medio | Media |
 | 5 | Extensión del expediente y de cada pieza en folios con `rico:CarrierExtent` (cuando haya imágenes o catálogo) | 1 | No | Bajo | Media |
 | 6 | Etiquetas `@quz` / `@qu` atestiguadas y `skos:historyNote` en los conceptos andinos | T | No | Medio (requiere historiador) | Media |
-| 7 | Literal EDTF opcional en R-fechas-normalizadas | 4 | No | Bajo | Baja |
+| 7 | Literal EDTF opcional en R-fechas-normalizadas (desde el 2026-11-14, un grafo por expediente: `R-fechas-normalizadas-<exp>`) | 4 | No | Bajo | Baja |
 | 8 | Si llegan las imágenes: manifiesto IIIF 3.0, `oa:FragmentSelector` por folio y, opcionalmente, `crmtex:TX6` para el acto de transcribir y `crm:E22` + `P46` para el original | 1–2 | Importa CRMtex | Medio | Futura |
 
 ---

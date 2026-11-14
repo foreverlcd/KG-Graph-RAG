@@ -3,6 +3,7 @@ import pytest
 from rdflib import Namespace, URIRef
 from rdflib.namespace import PROV, RDF
 
+from laad import mapeo
 from tests._fixtures import dataset
 
 CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
@@ -14,8 +15,13 @@ G = "https://w3id.org/laad/grafo/"
 
 
 def capa(gid: URIRef) -> str:
+    """Capa de un grafo nombrado: g:<exp>/documento, g:<exp>/texto/<lote>, g:<exp>/afirmaciones/<lote> (propias de
+    un expediente) o g:reconstruccion/…, g:argumentacion/…, g:procedencia, g:catalogo (comunes)."""
     s = str(gid)
-    for c in ("documento", "texto", "afirmaciones", "reconstruccion", "argumentacion", "procedencia", "catalogo"):
+    exp = mapeo.expediente_de_grafo(gid)
+    if exp:
+        return s[len(G + exp) + 1:].split("/")[0]
+    for c in ("reconstruccion", "argumentacion", "procedencia", "catalogo"):
         if s.startswith(G + c):
             return c
     return "otro"
@@ -47,6 +53,13 @@ def donde(pred, obj=None):
 ])
 def test_termino_solo_en_su_capa(pred, obj, capas):
     assert donde(pred, obj) == capas
+
+
+def test_todo_grafo_es_de_una_capa_conocida():
+    """Ningún grafo queda fuera del esquema de nombres; las capas 1–3 llevan siempre su expediente."""
+    for ctx in dataset().graphs():
+        if len(ctx):
+            assert capa(ctx.identifier) != "otro", ctx.identifier
 
 
 def test_ninguna_mencion_se_fusiona_en_capa_2():

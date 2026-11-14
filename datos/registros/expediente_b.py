@@ -46,12 +46,12 @@ m("M-UT09-502", "UT09", "P10", "persona", "Juez subdelegado del partido de Tinta
   "remitame al Juez subdelegado del partido de Tinta", rol="destinatario")
 m("M-UT09-503", "UT09", "P10", "lugar", "partido de Tinta", "remitame al Juez subdelegado del partido de Tinta", tipo="partido")
 m("M-UT09-504", "UT09", "P10", "persona", "Don Andrés Chuquitapa", "notificando primero al Recaudado Don Andrés Chuquitapa")
-m("M-UT09-505", "UT09", "P10", "cosa", "su escrito", "sobre el bullicio azonada a parcialidad que expresa en su escrito el querello")
+m("M-UT09-505", "UT09", "P10", "cosa", "su escrito", "sobre el bullicio azonada a parcialidad que expresa en su escrito el querello", tipo="documento")
 m("M-UT09-506", "UT09", "P10", "persona", "el querello", "que expresa en su escrito el querello haciendo al mismo tiempo")
-m("M-UT09-507", "UT09", "P10", "cosa", "las fojas antecedentes", "se acompañan en las fojas antecedentes de ratifiquen")
+m("M-UT09-507", "UT09", "P10", "cosa", "las fojas antecedentes", "se acompañan en las fojas antecedentes de ratifiquen", tipo="documento")
 m("M-UT09-508", "UT09", "P10", "persona", "dicho querello", "cuydando de que a dicho querello no se le incomode ni trate mal")
-m("M-UT09-509", "UT09", "P10", "cosa", "la sumaria informasion", "a recivido la sumaria informasion correspondiente")
-m("M-UT09-510", "UT09", "P10", "cosa", "su informe", "lo remita con su informe")
+m("M-UT09-509", "UT09", "P10", "cosa", "la sumaria informasion", "a recivido la sumaria informasion correspondiente", tipo="documento")
+m("M-UT09-510", "UT09", "P10", "cosa", "su informe", "lo remita con su informe", tipo="documento")
 m("M-UT09-511", "UT09", "P10", "persona", "el denunciante", "la denuncia de tributarios y solicitud del denunciante")
 m("M-UT09-512", "UT09", "P10", "persona", "Apoderado Fiscal", "oyendo sobre ellos al Apoderado Fiscal ynforme por ceparado")
 m("M-UT09-513", "UT09", "P10", "persona", "Castilla", "Firma Castilla", rol="firmante")
@@ -107,9 +107,12 @@ a("A-UT09-513", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-51
   "ejerce-cargo", {"concepto": "fiscal-audiencia"}, "su único Fiscal en esta Real Audiencia")
 a("A-UT09-514", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-518"},
   "se-hallaba", {"mencion": "M-UT09-520"}, "estando en las casas de sus moradas doy fe", fundamento="vista")
-a("A-UT09-515", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-517"},
+a("A-UT09-515", "UT09", "P11", "M-UT09-517", "fedatario", {"pieza": "P11"},
   "firmo", {"mencion": "M-UT09-521"}, "doy fe .- Firma Chacón",
-  nota="La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza la firma él.")
+  nota="La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza (P11) la firma él.")
+a("A-UT09-524", "UT09", "P11", "M-UT09-517", "fedatario", {"mencion": "M-UT09-518"},
+  "ejerce-cargo", {"concepto": "consejero"}, "Don Luis Gonsalo del Rio del Concejo de su Majestad",
+  nota="Título «del Concejo de su Majestad»: concepto candidato cargo:consejero (datos/candidatos_tesauro.csv).")
 
 # ───────────── P12 · Notificación del auto a Guancachoque · UT09 ─────────────
 m("M-UT09-522", "UT09", "P12", "persona", "Yo el escrivano", "En dicho día mes y año Yo el escrivano hice igual diligencia",
@@ -124,18 +127,18 @@ a("A-UT09-516", "UT09", "P12", "M-UT09-522", "fedatario", {"mencion": "M-UT09-52
 
 # ───────────── P13 · Oficio del Presidente al subdelegado (28 de agosto) · UT09 ─────────────
 m("M-UT09-525", "UT09", "P13", "persona", "vuestra Merced", "En folio 10 remito a vuestra Merced un expediente", rol="destinatario")
-m("M-UT09-526", "UT09", "P13", "cosa", "un expediente", "remito a vuestra Merced un expediente relativo a 51 yndios")
+m("M-UT09-526", "UT09", "P13", "cosa", "un expediente", "remito a vuestra Merced un expediente relativo a 51 yndios", tipo="expediente")
 m("M-UT09-527", "UT09", "P13", "grupo", "51 yndios tributarios", "un expediente relativo a 51 yndios tributarios que ha denunciado")
 m("M-UT09-528", "UT09", "P13", "persona", "Manuel Guancachoque", "que ha denunciado Manuel Guancachoque yndio del Pueblo de Tinta")
 m("M-UT09-529", "UT09", "P13", "lugar", "Pueblo de Tinta", "yndio del Pueblo de Tinta te er ocultos", tipo="pueblo")
 m("M-UT09-530", "UT09", "P13", "cosa", "matrícula", "te er ocultos y fuera de matrícula Don Andrés", tipo="matricula")
 m("M-UT09-531", "UT09", "P13", "persona", "Don Andrés Choquetapa", "fuera de matrícula Don Andrés Choquetapa Recaudador de Reales Tributos")
-m("M-UT09-532", "UT09", "P13", "cosa", "mi Auto de esté día", "evacue vuestra Merced quanto en mi Auto de esté día")
+m("M-UT09-532", "UT09", "P13", "cosa", "mi Auto de esté día", "evacue vuestra Merced quanto en mi Auto de esté día", tipo="documento")
 m("M-UT09-533", "UT09", "P13", "persona", "Señor Fiscal", "con arreglo a lo pedido por el Señor Fiscal se ordena")
 m("M-UT09-534", "UT09", "P13", "lugar", "Cusco", "Cusco y Agosto 28 de 1806", tipo="ciudad")
 m("M-UT09-535", "UT09", "P13", "persona", "Ruiz de Castilla", "(CAV) Ruiz de Castilla", rol="firmante")
 m("M-UT09-536", "UT09", "P13", "persona", "subdelegado de Tinta", "Al subdelegado de Tinta", rol="destinatario")
-m("M-UT09-537", "UT09", "P13", "lugar", "Tinta", "Al subdelegado de Tinta")
+m("M-UT09-537", "UT09", "P13", "lugar", "Tinta", "Al subdelegado de Tinta", tipo="partido")
 
 a("A-UT09-517", "UT09", "P13", "M-UT09-535", "resolutor", {"mencion": "M-UT09-526"},
   "folio-de-pieza", {"literal": "En folio 10"}, "En folio 10 remito a vuestra Merced un expediente",
@@ -158,10 +161,10 @@ a("A-UT09-523", "UT09", "P13", "M-UT09-535", "resolutor", {"mencion": "M-UT09-53
   "se-conforma-con", {"pieza": "P07"}, "con arreglo a lo pedido por el Señor Fiscal se ordena")
 
 # ───────────── P14 · Providencia del subdelegado en Sicuani (17 de septiembre) · UT10 ─────────────
-m("M-UT10-501", "UT10", "P14", "cosa", "la precedente Orden", "Por recibida la precedente Orden del muy ilustre señor presidente")
+m("M-UT10-501", "UT10", "P14", "cosa", "la precedente Orden", "Por recibida la precedente Orden del muy ilustre señor presidente", tipo="documento")
 m("M-UT10-502", "UT10", "P14", "persona", "muy ilustre señor presidente", "la precedente Orden del muy ilustre señor presidente con el Expediente")
-m("M-UT10-503", "UT10", "P14", "cosa", "Expediente", "con el Expediente en folio 10 que la acompaña")
-m("M-UT10-504", "UT10", "P14", "cosa", "la denuncia", "respecto de que la denuncia que se halla al fin de el en folio 2")
+m("M-UT10-503", "UT10", "P14", "cosa", "Expediente", "con el Expediente en folio 10 que la acompaña", tipo="expediente")
+m("M-UT10-504", "UT10", "P14", "cosa", "la denuncia", "respecto de que la denuncia que se halla al fin de el en folio 2", tipo="documento")
 m("M-UT10-505", "UT10", "P14", "persona", "Manuel Guancachoque", "hecha por el.Indio Manuel Guancachoque en 27 de Agosto")
 m("M-UT10-506", "UT10", "P14", "grupo", "cinquenta y un Indios", "correspondiente de cinquenta y un Indios que dice tener ocultos")
 m("M-UT10-507", "UT10", "P14", "cosa", "Matricula", "fuera de Matricula en el pueblo de Tinta", tipo="matricula")
@@ -174,14 +177,14 @@ m("M-UT10-512", "UT10", "P14", "persona", "apoderado Fiscal de la presente Revic
 m("M-UT10-513", "UT10", "P14", "persona", "Sr. Presidente", "por el mismo Sr. Presidente con fecha. 29 de mayo")
 m("M-UT10-514", "UT10", "P14", "persona", "Magestad", "la defraudación que se hacia asu Magestad. cometida")
 m("M-UT10-515", "UT10", "P14", "persona", "el citado re caudador", "cometida por el citado re caudador: Desglocese")
-m("M-UT10-516", "UT10", "P14", "cosa", "este Expediente", "Desglocese de este Expediente, y agreguese")
+m("M-UT10-516", "UT10", "P14", "cosa", "este Expediente", "Desglocese de este Expediente, y agreguese", tipo="expediente")
 m("M-UT10-517", "UT10", "P14", "cosa", "la primera denuncia", "agreguese a el de la primera denuncia, en el")
-m("M-UT10-518", "UT10", "P14", "cosa", "el Informe", "eragua sea el Informe, que.se nos manda hacer")
+m("M-UT10-518", "UT10", "P14", "cosa", "el Informe", "eragua sea el Informe, que.se nos manda hacer", tipo="documento")
 m("M-UT10-519", "UT10", "P14", "persona", "M. Y. S. P.", "se devolvería a manos del M. Y. S. P. como lo tiene Ordenado")
 m("M-UT10-520", "UT10", "P14", "lugar", "Pueblo de Tinta", "que se deben practicar en el Pueblo de Tinta con la cautela", tipo="pueblo")
 m("M-UT10-521", "UT10", "P14", "persona", "Manuel Guancachoque", "el asunto que ha representado Manuel Guancachoque en aquel Superior Govierno")
 m("M-UT10-522", "UT10", "P14", "persona", "el citado Guancachoque", "los hechos que ha expuesto el citado Guancachoque y con lo que resulte")
-m("M-UT10-523", "UT10", "P14", "cosa", "Decreto de 27 de Agosto", "dese la Cuenta Ordenada por . Decreto de 27 de Agosto al presente año")
+m("M-UT10-523", "UT10", "P14", "cosa", "Decreto de 27 de Agosto", "dese la Cuenta Ordenada por . Decreto de 27 de Agosto al presente año", tipo="documento")
 m("M-UT10-524", "UT10", "P14", "persona", "Pedro de la Mara", "Decreto de 27 de Agosto al presente año. Pedro de la Mara", rol="firmante")
 
 MARA = "M-UT10-524"
@@ -219,9 +222,9 @@ a("A-UT10-511", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-513"},
 a("A-UT10-512", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-515"},
   "participa-en-hecho", {"hecho": "H-p14-defraudacion"},
   "el examen y Justificación de la defraudación que se hacia asu Magestad. cometida por el citado re caudador",
-  rol_en_hecho="participante-en-hecho",
+  rol_en_hecho="autor-de-fraude",
   nota="La defraudación es el objeto del examen encargado, no un hecho que el subdelegado dé por probado. "
-       "El tesauro no tiene un rol de «autor» de un fraude; se usa el rol genérico.")
+       "Rol: concepto candidato rol:autor-de-fraude (datos/candidatos_tesauro.csv).")
 a("A-UT10-513", "UT10", "P14", MARA, "resolutor", {"mencion": "M-UT10-514"},
   "participa-en-hecho", {"hecho": "H-p14-defraudacion"}, "la defraudación que se hacia asu Magestad",
   rol_en_hecho="victima")
@@ -239,24 +242,24 @@ a("A-UT10-517", "UT10", "P14", MARA, "resolutor", {"mencion": MARA},
   "se-conforma-con", {"pieza": "P07"}, "con arreglo à lo pedido por el Minis terio Fiscal")
 
 # ───────────── P15 · Nota de desglose (Tinta, 23 de septiembre) · UT10 ─────────────
-m("M-UT10-525", "UT10", "P15", "cosa", "las dos fojas De denuncia y pedimiento", "Se agrego las dos fojas De denuncia y pedimiento")
+m("M-UT10-525", "UT10", "P15", "cosa", "las dos fojas De denuncia y pedimiento", "Se agrego las dos fojas De denuncia y pedimiento", tipo="documento")
 m("M-UT10-526", "UT10", "P15", "cosa", "expediente de la primera denuncia",
-  "al expediente de la primera denuncia que hiso Manuel Guancachoque")
+  "al expediente de la primera denuncia que hiso Manuel Guancachoque", tipo="expediente")
 m("M-UT10-527", "UT10", "P15", "persona", "Manuel Guancachoque", "la primera denuncia que hiso Manuel Guancachoque Tinta 23.")
-m("M-UT10-528", "UT10", "P15", "lugar", "Tinta", "Manuel Guancachoque Tinta 23. de Septiembre de 1806")
+m("M-UT10-528", "UT10", "P15", "lugar", "Tinta", "Manuel Guancachoque Tinta 23. de Septiembre de 1806", tipo="pueblo")
 # La nota no lleva firma ni nombre de quien la pone: sin afirmante posible en la pieza; no se crean afirmaciones.
 
 # ───────────── P16 · Auto cabeza de la información (Mara, con testigos) · UT10–UT11 ─────────────
 m("M-UT10-529", "UT10", "P16", "persona", "M. J. §. P.", "Información mandada ruenir pret M. J. §. P. sobre los hechos")
 m("M-UT10-530", "UT10", "P16", "persona", "Manuel Guancachoque", "sobre los hechos que ha representado Manuel Guancachoque, y en cumplimiento")
-m("M-UT10-531", "UT10", "P16", "cosa", "Auto que antecede", "en cumplimiento del . Auto que antecede, notifiquese")
+m("M-UT10-531", "UT10", "P16", "cosa", "Auto que antecede", "en cumplimiento del . Auto que antecede, notifiquese", tipo="documento")
 m("M-UT10-532", "UT10", "P16", "persona", "D. Andres Chuquitapa", "notifiquese al recaudaor de tributos D. Andres Chuquitapa", rol="destinatario")
 m("M-UT10-533", "UT10", "P16", "persona", "Guancachoque", "incomode ni infiera perjuicio, Guancachoque, en odio")
 m("M-UT10-534", "UT10", "P16", "cosa", "su denuncia", "en odio de su denuncia bajose")
 m("M-UT11-501", "UT11", "P16", "lugar", "Pueblo", "necerario separarlo de este que Pueblo interin se reune", tipo="pueblo")
-m("M-UT11-502", "UT11", "P16", "cosa", "la expresada información", "interin se reune. la expresada información respecto.")
+m("M-UT11-502", "UT11", "P16", "cosa", "la expresada información", "interin se reune. la expresada información respecto.", tipo="documento")
 m("M-UT11-503", "UT11", "P16", "grupo", "todos los Indios", "A que todos los Indios que manifiesta la denuncia ultima")
-m("M-UT11-504", "UT11", "P16", "cosa", "la denuncia ultima", "que manifiesta la denuncia ultima estan matriculados")
+m("M-UT11-504", "UT11", "P16", "cosa", "la denuncia ultima", "que manifiesta la denuncia ultima estan matriculados", tipo="documento")
 m("M-UT11-505", "UT11", "P16", "persona", "Chuquitapa", "haga de Saber a Chuquitapa se retire")
 m("M-UT11-506", "UT11", "P16", "lugar", "este Pueblo", "se retire, de este Pueblo à distan.", tipo="pueblo")
 m("M-UT11-507", "UT11", "P16", "persona", "Don Mariano Figueroa", "las diligencias que se van a practicar) por Don Mariano Figueroa")
@@ -303,7 +306,7 @@ a("A-UT11-507", "UT11", "P17", "M-UT11-511", "fedatario", {"pieza": "P17"},
 
 # ───────────── P18 · Declaración jurada de Isidro Cano (complemento) · UT11–UT12.a ─────────────
 m("M-UT11-512", "UT11", "P18", "lugar", "pueblo de Tinta", "En el pueblo de Tinta, Veinte y tres dias del mes", tipo="pueblo")
-m("M-UT11-513", "UT11", "P18", "cosa", "la certificación", "siendole manifestado la certificación De esta forma prima de este Expediente")
+m("M-UT11-513", "UT11", "P18", "cosa", "la certificación", "siendole manifestado la certificación De esta forma prima de este Expediente", tipo="documento")
 m("M-UT11-514", "UT11", "P18", "persona", "Don Andres", "sucedió en tiempo de corregidor Don Andres")
 m("M-UT11-515", "UT11", "P18", "persona", "Tupa amaro", "en tiempo del rebelde Tupa amaro fue")
 m("M-UT11-516", "UT11", "P18", "persona", "Guancachoque", "que estuvo preso Guancachoque de que todos los Yndios")
@@ -315,7 +318,7 @@ m("M-UT11-521", "UT11", "P18", "grupo", "los Yndios", "le siguieron pegando los 
 m("M-UT12.a-501", "UT12.a", "P18", "lugar", "la Real cárcel", "pusieron en la Real cárcel que es cuando pude", tipo="carcel")
 m("M-UT12.a-502", "UT12.a", "P18", "persona", "Manuel Guancachoque", "sugerido de escuchado por Manuel Guancachoque para dar")
 m("M-UT12.a-503", "UT12.a", "P18", "lugar", "su casa", "porque este fue a su casa supli candole", tipo="edificio")
-m("M-UT12.a-504", "UT12.a", "P18", "cosa", "plata", "nomledio ninguna plata ni otro agasajo alguno")
+m("M-UT12.a-504", "UT12.a", "P18", "cosa", "plata", "nomledio ninguna plata ni otro agasajo alguno", tipo="dinero")
 
 CANO = "M-UT11-001"
 MATA = "M-UT11-002"
@@ -361,20 +364,20 @@ a("A-UT12a-506", "UT12.a", "P18", MATA, "fedatario", {"pieza": "P18"},
 
 # ───────────── P19 · Declaración sobre la certificación «Martin casorla» (complemento) · UT12.a–UT13 ─────────────
 m("M-UT12.a-505", "UT12.a", "P19", "lugar", "pueblo de Tinta", "vecino Español de este pueblo de Tinta a quien", tipo="pueblo")
-m("M-UT12.a-506", "UT12.a", "P19", "cosa", "la certificación", "siendole manifestado la certificación De folio 4")
+m("M-UT12.a-506", "UT12.a", "P19", "cosa", "la certificación", "siendole manifestado la certificación De folio 4", tipo="documento")
 m("M-UT12.b-501", "UT12.b", "P19", "persona", "Manuel Guancacho que", "es cierto que Manuel Guancacho que le suplico")
 m("M-UT12.b-502", "UT12.b", "P19", "grupo", "los Yndios", "Certificacion de que los Yndios que lo llevaban preso")
 m("M-UT12.b-503", "UT12.b", "P19", "lugar", "la cárcel", "que lo llevaban preso ala cárcel o alguno", tipo="carcel")
 m("M-UT12.b-504", "UT12.b", "P19", "grupo", "alguno parien tes de Chuquitapa", "o alguno parien tes de Chuquitapa lo golpeaban")
 m("M-UT12.b-505", "UT12.b", "P19", "persona", "Chuquitapa", "parien tes de Chuquitapa lo golpeaban con puñadas")
-m("M-UT12.b-506", "UT12.b", "P19", "cosa", "un papelito", "que pusiere en un papelito lo mis mo")
-m("M-UT12.b-507", "UT12.b", "P19", "cosa", "el papel", "firmo su nombre en el papel que se le ha manifestado")
+m("M-UT12.b-506", "UT12.b", "P19", "cosa", "un papelito", "que pusiere en un papelito lo mis mo", tipo="documento")
+m("M-UT12.b-507", "UT12.b", "P19", "cosa", "el papel", "firmo su nombre en el papel que se le ha manifestado", tipo="documento")
 m("M-UT12.b-508", "UT12.b", "P19", "persona", "Guancachoque", "se le castigaba a Guancachoque por haber denunciado")
 m("M-UT12.b-509", "UT12.b", "P19", "persona", "Guancachoque", "sabia haber preso a Guancachoque,y que esto")
 m("M-UT12.b-510", "UT12.b", "P19", "lugar", "la carcel", "porque estando en la carcel aquel dijo", tipo="carcel")
 m("M-UT12.b-511", "UT12.b", "P19", "persona", "el cacique", "denunciado el robo del cacique , en favor de la Real hacienda")
 m("M-UT12.b-512", "UT12.b", "P19", "grupo", "los Yndios", "esa misma noche se alzaron los Yndios todos con barrotes")
-m("M-UT12.b-513", "UT12.b", "P19", "cosa", "el papelito", "no los puso el en el papelito que mando hacer")
+m("M-UT12.b-513", "UT12.b", "P19", "cosa", "el papelito", "no los puso el en el papelito que mando hacer", tipo="documento")
 m("M-UT12.b-514", "UT12.b", "P19", "persona", "Simon Arce", "que mando hacer a Simon Arce que es verdad")
 m("M-UT12.b-515", "UT12.b", "P19", "grupo", "quatro o seis Yndios", "vio a quatro o seis Yndios en la puerta de la carcel")
 m("M-UT12.b-516", "UT12.b", "P19", "lugar", "la carcel", "en la puerta de la carcel con garrotes", tipo="carcel")
@@ -407,8 +410,9 @@ a("A-UT12b-503", "UT12.b", "P19", MC, "declarante", {"hecho": "H-p19-castigo"},
   fundamento="oidas", segun="M-UT12.b-509", nota="«Aquel» remite a Guancachoque, nombrado en la frase anterior (M-UT12.b-509).")
 a("A-UT12b-504", "UT12.b", "P19", MC, "declarante", {"mencion": "M-UT12.b-511"},
   "participa-en-hecho", {"hecho": "H-p19-robo"}, "lo castigaban por haber denunciado el robo del cacique",
-  rol_en_hecho="participante-en-hecho", fundamento="oidas", segun="M-UT12.b-509",
-  nota="Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. El tesauro no tiene rol de autor de un robo.")
+  rol_en_hecho="autor-de-fraude", fundamento="oidas", segun="M-UT12.b-509",
+  nota="Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. Rol: concepto candidato "
+       "rol:autor-de-fraude (datos/candidatos_tesauro.csv).")
 a("A-UT12b-505", "UT12.b", "P19", MC, "declarante", {"mencion": "M-UT12.b-511"},
   "ejerce-cargo", {"concepto": "cacique"}, "denunciado el robo del cacique , en favor de la Real hacienda",
   fundamento="oidas", segun="M-UT12.b-509")
@@ -526,7 +530,7 @@ a("A-UT14-510", "UT14", "P20", ANTE20, "fedatario", {"pieza": "P20"},
 
 # ───────────── P21 · Declaración jurada de Fernando Orue (complemento) · UT14 ─────────────
 m("M-UT14-510", "UT14", "P21", "persona", "fernando orue", "si la firma q dise fernando orue presenta en la certificacion")
-m("M-UT14-511", "UT14", "P21", "cosa", "la certificacion de este expediente", "presenta en la certificacion de este expediente es echa")
+m("M-UT14-511", "UT14", "P21", "cosa", "la certificacion de este expediente", "presenta en la certificacion de este expediente es echa", tipo="documento")
 m("M-UT14-512", "UT14", "P21", "persona", "guancachoque", "privado la prision de guancachoqueel q es ahijado")
 m("M-UT14-513", "UT14", "P21", "persona", "hermano mayor del q declaro", "es ahijado del hermano mayor del q declaro le llebo")
 m("M-UT14-514", "UT14", "P21", "persona", "un hijo suyo", "bajo a un hijo suyo q la pusieron")
@@ -536,8 +540,8 @@ m("M-UT14-517", "UT14", "P21", "persona", "tupa-amaru", "en tiempo del rebelde t
 m("M-UT14-518", "UT14", "P21", "persona", "insurgente tupa", "a fabor del insurgente tupa aunque")
 m("M-UT14-519", "UT14", "P21", "persona", "d juan antonio repuras", "del sor corregidor d juan antonio repuras haviendo")
 m("M-UT14-520", "UT14", "P21", "persona", "Diego orue", "un muchacho Diego orue sobrino del q declaran")
-m("M-UT14-521", "UT14", "P21", "cosa", "un caballo", "a vacar un caballo del corral de chuquitapa")
-m("M-UT14-522", "UT14", "P21", "lugar", "corral de chuquitapa", "un caballo del corral de chuquitapa lo mando")
+m("M-UT14-521", "UT14", "P21", "cosa", "un caballo", "a vacar un caballo del corral de chuquitapa", tipo="bien-mueble")
+m("M-UT14-522", "UT14", "P21", "lugar", "corral de chuquitapa", "un caballo del corral de chuquitapa lo mando", tipo="edificio")
 m("M-UT14-523", "UT14", "P21", "persona", "chuquitapa", "del corral de chuquitapa lo mando poner")
 m("M-UT14-524", "UT14", "P21", "lugar", "la carcel", "lo mando poner a la carcel con sus propios criados", tipo="carcel")
 m("M-UT14-525", "UT14", "P21", "grupo", "sus propios criados", "a la carcel con sus propios criados de lo q resulto")
@@ -613,7 +617,11 @@ a("A-UT14-533", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
   "participa-en-hecho", {"hecho": "H-p21-motin"},
   "se amotinaron contra el corregidor y contra el padre del que declara q era cobrador del departamento en cuya noche le vaguear y maltrataron",
   rol_en_hecho="victima",
-  nota="Cargo escrito «cobrador del departamento»: no hay concepto equivalente en tes:cargos; no se anota ejerce-cargo.")
+  nota="Cargo escrito «cobrador del departamento»: se anota aparte con el concepto candidato cargo:cobrador (A-UT14-538).")
+a("A-UT14-538", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
+  "ejerce-cargo", {"concepto": "cobrador"}, "el padre del que declara q era cobrador del departamento",
+  nota="«cobrador del departamento»: concepto candidato cargo:cobrador; no se asimila a recaudador de tributos "
+       "(datos/candidatos_tesauro.csv).")
 a("A-UT14-534", "UT14", "P21", FO, "declarante", {"mencion": "M-UT14-529"},
   "parentesco", {"mencion": FO}, "contra el padre del que declara", nota="Tipo de parentesco escrito: «padre».")
 a("A-UT14-535", "UT14", "P21", FO, "declarante", {"hecho": "H-p21-motin"},

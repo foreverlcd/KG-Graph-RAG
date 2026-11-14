@@ -4,10 +4,16 @@
 # Ningún concepto de este tesauro se usa como clase (rdf:type); se usan como valor de crm:P2_has_type,
 # crm:P14.1_in_the_role_of, crm:P141_assigned o crm:P177_assigned_property_of_type.
 # Las definiciones son de trabajo del modelador y deben revisarlas historiadores (skos:editorialNote).
+#
+# VERSIÓN Y CAMBIOS: el tesauro se versiona entero (§0, owl:versionInfo + dct:modified en cada esquema); la historia está
+# en ontologia/CHANGELOG.md y la política (proponer, aprobar, rechazar, retirar; nunca borrar ni renombrar una IRI) en
+# ontologia/README.md. Lo que un anotador necesita y aquí falta se propone como CANDIDATO (datos/candidatos_tesauro.csv
+# → ontologia/candidatos.ttl); al aprobarse entra en la sección generada «APROBADOS» del final de este archivo.
 
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dct:  <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix tes:  <https://w3id.org/laad/tesauro/> .
 @prefix act:  <https://w3id.org/laad/tesauro/actuacion/> .
@@ -41,6 +47,23 @@ tes:fundamentos a skos:ConceptScheme ; skos:prefLabel "Fundamento de conocimient
 tes:fuerzas a skos:ConceptScheme ; skos:prefLabel "Fuerza institucional de la afirmación"@es .
 tes:creencias a skos:ConceptScheme ; skos:prefLabel "Valores de creencia del investigador (CRMinf I6)"@es .
 tes:documentos a skos:ConceptScheme ; skos:prefLabel "Tipos documentales y de soporte"@es .
+
+#################################################################
+# 0. Versión del tesauro (una sola para todos los esquemas; ontologia/CHANGELOG.md)
+#    Al publicar una versión se cambian a la vez TODAS las líneas de este bloque (tests/test_tesauro_version.py).
+#################################################################
+tes:actuaciones owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:roles owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:condiciones owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:cargos owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:entidades owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:atributos owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:polaridades owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:fundamentos owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:fuerzas owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:creencias owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:documentos owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
+tes:anotacion owl:versionInfo "0.2.0" ; dct:modified "2026-11-14"^^xsd:date .
 
 #################################################################
 # 1. Tipos de actuación
@@ -289,7 +312,7 @@ atr:existe-persona a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel
     skos:definition "Sujeto: mención de persona. Valor: lugar. Sirve para «no hay tal hombre en el pueblo de Tinta»."@es .
 atr:cantidad-denunciada a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "cantidad (de tributarios, dinero, etc.)"@es .
 atr:ordena a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "ordena o manda"@es ;
-    skos:definition "Sujeto: destinatario de la orden (mención) o, si no lo hay, la persona afectada. Valor: acción mandada, tal como se escribe. El afirmante es quien ordena. La orden no implica su ejecución."@es .
+    skos:definition "Sujeto: destinatario de la orden (mención) o, si no lo hay, la persona afectada; en una orden impersonal sobre un documento o un bien («desglósese», «agréguese»), la cosa afectada. Valor: acción mandada, tal como se escribe. El afirmante es quien ordena. La orden no implica su ejecución."@es .
 atr:se-conforma-con a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "se conforma con (adopta) un dictamen"@es ;
     skos:definition "Sujeto: la autoridad que resuelve (mención). Valor: la pieza dictaminadora que adopta (vista fiscal, informe). Registra la cadena de dependencia de las resoluciones."@es ;
     skos:editorialNote "ruta-crm: crminf:I5_Inference_Making -J1_used_as_premise-> creencia sobre el dictamen (solo capa 4); en capa 3 queda como E13"@es .
@@ -300,7 +323,7 @@ atr:generales-de-la-ley a skos:Concept ; skos:inScheme tes:atributos ; skos:pref
 atr:firma-a-ruego a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "firma a ruego de otro"@es ;
     skos:definition "Sujeto: pieza. Valor: quien firma por el que no sabe (mención) o literal."@es .
 atr:folio-de-pieza a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "la pieza está en tal folio (autorreferencia del expediente)"@es ;
-    skos:definition "Sujeto: pieza referida. Valor: literal del folio tal como lo cita el documento («De folio 4», «a folios 2»). Base para reconstruir la foliación en capa 4."@es .
+    skos:definition "Sujeto: pieza referida o, si lo citado no es una pieza de este expediente, la mención del documento (cosa). Valor: literal del folio tal como lo cita el documento («De folio 4», «a folios 2», «en folio 10»). Base para reconstruir la foliación en capa 4."@es .
 atr:solicita a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "solicita"@es .
 atr:se-hallaba a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "estaba presente o ausente"@es .
 atr:edad a skos:Concept ; skos:inScheme tes:atributos ; skos:prefLabel "edad declarada"@es .
@@ -632,3 +655,6 @@ anot:segun-otro a skos:Concept ; skos:inScheme tes:anotacion ; skos:topConceptOf
 <https://w3id.org/laad/tesauro/rol/victima> skos:definition "Papel de quien, en el hecho narrado, padece el daño o agravio (golpe, despojo, prisión injusta)."@es ;
     skos:editorialNote "Definición de trabajo: fuente no verificada."@es .
 # <<< FIN DEFINICIONES
+
+# >>> APROBADOS — GENERADO por scripts/candidatos.py desde datos/candidatos_tesauro.csv (filas con estado «aprobado»). No editar a mano.
+# <<< FIN APROBADOS

@@ -1,5 +1,5 @@
 """Pruebas de la capa de fuente: segmentación, marcas de folio y verificador de citas."""
-from laad.fuente import tramos, tramo, verificar_cita, sha256, MARCAS_FOLIO
+from laad.fuente import tramos, tramo, verificar_cita, sha256, marcas_folio
 
 SHA_ESPERADO = "bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe"
 
@@ -14,7 +14,7 @@ def test_21_unidades_de_transcripcion():
 
 
 def test_marcas_de_folio_abren_su_tramo():
-    for ut, marca, folio in MARCAS_FOLIO:
+    for ut, marca, folio in marcas_folio():
         conf = [t for t in tramos() if t.ut == ut and t.folio == folio]
         assert len(conf) == 1 and conf[0].texto.startswith(marca)
 

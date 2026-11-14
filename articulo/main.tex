@@ -21,6 +21,20 @@
 \newcommand{\ttt}[1]{\texttt{\small #1}}
 \setlength{\emergencystretch}{3em}
 \newcommand{\cita}[1]{«\textit{#1}»}
+% Cifras generadas a partir de los datos (scripts/cifras.py); no se escriben a mano en el texto.
+\input{cifras}
+% Tablas: cuerpo \footnotesize, teletipo del mismo cuerpo y columnas de texto sin justificar.
+\newcommand{\tablafuente}{\footnotesize\renewcommand{\ttt}[1]{\texttt{##1}}\renewcommand{\arraystretch}{1.12}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+% Flotantes: evitar páginas casi vacías con una sola tabla.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{2}
+\setcounter{totalnumber}{3}
+\raggedbottom
 
 \lstdefinelanguage{turtle}{
   morekeywords={a,@prefix},
@@ -161,13 +175,13 @@ testimonios atribuidos; es una búsqueda negativa, no una prueba de inexistencia
 
 La tabla~\ref{tab:comparacion} resume en qué se diferencia OHAC de los modelos más próximos.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
-\caption{OHAC frente a los modelos más próximos. «Rol procesal»: ante quién, quién firma, quién escribe.}\label{tab:comparacion}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xcccc@{}}
+\caption{OHAC frente a los modelos más próximos. «Factoides» agrupa el modelo de factoides y FactGrid; «rol procesal»: ante quién, quién firma, quién escribe.}\label{tab:comparacion}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}Lcccc@{}}
 \toprule
- & Factoides / FactGrid & STAR & CourtDocs & OHAC \\
+ & Factoides & STAR & CourtDocs & OHAC \\
 \midrule
 Afirmación atribuida a quien la hace & sí & sí & parcial & sí \\
 Rol procesal de la actuación & no & no & parcial & sí (PC14) \\
@@ -211,12 +225,12 @@ de afirmaciones atribuidas (A), disputa («X lo afirma, Y lo niega»), \emph{no 
 \emph{no} dar una respuesta factual. Las preguntas y unas respuestas de referencia provisionales, cada una con su
 tramo, quedaron registradas en el control de versiones antes del primer cambio del modelo (commit \ttt{417c895}).
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Selección de las 20 preguntas de competencia. Capa: 1 documento, 2 menciones, 3 afirmaciones,
 4 reconstrucción, P procedencia.}\label{tab:pc}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}lXcl@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}lLcl@{}}
 \toprule
 PC & Pregunta & Capa & Forma \\
 \midrule
@@ -243,9 +257,10 @@ PC & Pregunta & Capa & Forma \\
 \subsection{Principios}
 
 \begin{enumerate}
-\item \textbf{Capas separadas.} Cada capa vive en grafos nombrados propios: \ttt{g:documento},
-  \ttt{g:texto/<lote>}, \ttt{g:afirmaciones/<lote>}, \ttt{g:reconstruccion/R-x} y \ttt{g:argumentacion/R-x}, más
-  \ttt{g:procedencia}.
+\item \textbf{Capas separadas.} Cada capa vive en grafos nombrados propios. Los de las capas~1--3 llevan el
+  expediente en su nombre (\ttt{g:<exp>/documento}, \ttt{g:<exp>/texto/<lote>}, \ttt{g:<exp>/afirmaciones/<lote>});
+  los de la capa~4 (\ttt{g:reconstruccion/R-x}, \ttt{g:argumentacion/R-x}) y \ttt{g:procedencia} son comunes al
+  corpus, porque una identidad puede reunir menciones de expedientes distintos.
 \item \textbf{Sin valores de verdad en las capas 1--3.} Una resolución es una afirmación con fuerza institucional
   resolutiva; no hace verdadero lo resuelto. Solo la capa~4 tiene creencias, siempre con autor y fecha.
 \item \textbf{Sin fusión en la capa 2.} Cada aparición escrita de una persona, un grupo o un lugar es un nodo. Las
@@ -260,10 +275,10 @@ PC & Pregunta & Capa & Forma \\
   expediente, el tramo y un ordinal.
 \end{enumerate}
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 {\renewcommand{\ttt}[1]{\texttt{#1}}%
-\begin{tikzpicture}[
+\resizebox{\linewidth}{!}{\begin{tikzpicture}[
   font=\tiny,
   nodo/.style={draw, rounded corners=2pt, fill=white, inner sep=2pt, align=center, minimum width=3.3cm},
   capa/.style={draw=gray!60, fill=#1, rounded corners=3pt, inner sep=4pt},
@@ -294,7 +309,7 @@ PC & Pregunta & Capa & Forma \\
 \draw[flecha] (a2.south east) to[bend left=30] node[etq,right,pos=0.85]{P9i (vía E65)} (p2.east);
 \draw[flecha] (rec) -- node[etq,right]{\ttt{prov:wasDerivedFrom}} (a1);
 \draw[flecha] (inf) -- node[etq,above]{\ttt{J4\_that} (grafo de la proposición)} (rec);
-\end{tikzpicture}}
+\end{tikzpicture}}}
 \caption{Las capas en el hilo central del caso. La afirmación de agosto y su negación de septiembre conviven como dos
 E13 atribuidas; ambas se refieren a la misma mención de Chuquitapa porque el declarante de septiembre lo omite
 (sujeto elíptico resuelto por el anotador). La identidad de Chuquitapa es una reconstrucción con autor y creencia.
@@ -312,8 +327,8 @@ derivada del original, identificada por su suma SHA-256, y cada tramo es un comp
 declara el catálogo (19 folios) se registra con \ttt{rico:CarrierExtent}, con su fuente y la discrepancia anotada.
 
 \subsection{Capa 2: las menciones}
-Cada mención es una \ttt{picom:PersonObservation} (personas) o una \ttt{roar:Observation} (grupos, lugares y cosas)
-con su nombre literal (\ttt{crm:E41\_Appellation}). PiCo define la observación como el modo en que una persona
+Las menciones de persona son \ttt{picom:PersonObservation}; las de grupos, lugares y cosas,
+\ttt{roar:Observation}. Todas llevan su nombre literal como \ttt{crm:E41\_Appellation}. PiCo define la observación como el modo en que una persona
 \emph{está registrada} en una fuente. Las menciones no se tipifican como \ttt{crm:E21\_Person}, que afirmaría a una
 persona del mundo, y el propio expediente muestra por qué: de uno de los certificantes, \cita{don Juan Quiñones},
 el subdelegado escribe \cita{que no hay tal hombre en el pueblo de Tinta}. Toda mención lleva un ancla de Web
@@ -341,7 +356,7 @@ su mención en la certificación de agosto; tomar el afirmante de otra pieza; o 
 Cada una se marca con un concepto \ttt{anot:*} y una nota obligatoria, y el lote registra su autoría.
 
 \begin{lstlisting}[language=turtle, float=t, caption={La negación de Isidro Cano en septiembre (capa 3, abreviada).
-La afirmación de agosto que niega es \ttt{A-UT01-001}.}, label=lst:e13]
+La afirmación de agosto que niega es \ttt{A-UT01-001}; \ttt{id:} abrevia aquí el espacio de nombres del expediente.}, label=lst:e13]
 id:afirmacion/A-UT11-004 a crm:E13_Attribute_Assignment ;
     crm:P14_carried_out_by           id:mencion/M-UT11-001 ;      # «Isidro Cano», declarante
     crm:P9i_forms_part_of            id:actuacion/P18 ;           # declaración jurada, septiembre
@@ -379,10 +394,12 @@ Los lugares reconstruidos llevan el identificador de HGIS de las Indias como \tt
 conjunto de datos como fuente, y los de Wikidata o TGN como identificadores adicionales y \ttt{rdfs:seeAlso}, nunca
 \ttt{owl:sameAs}; no se copian geometrías, cuya licencia (CC BY-NC-SA) se transmitiría al grafo.
 
-En el piloto, las 36 inferencias de la capa~4 tienen como autor al agente de software que las propuso (un modelo de
-lenguaje), registrado como tal en la procedencia. Una auditoría hecha por una segunda instancia del modelo, que cotejó
-cada reconstrucción con la transcripción, recalibró quince valores de creencia y añadió nueve hipótesis rivales; no
-equivale a una validación experta. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
+En el piloto, las \cifraReconstruccionesConFechas{} inferencias de la capa~4 tienen como autor al agente de software que las propuso (un modelo de
+lenguaje), registrado como tal en la procedencia. Una auditoría hecha por una segunda instancia del modelo cotejó
+con la transcripción las 35 reconstrucciones iniciales, recalibró quince valores de creencia y añadió nueve hipótesis
+rivales; no equivale a una validación experta. Las reconstrucciones añadidas o ampliadas después para conectar el
+grafo (sección~\ref{sec:evaluacion}) no han pasado esa auditoría: \cifraReconstruccionesSinAuditar{} de las
+\cifraReconstrucciones{} están hoy sin auditar en su forma actual. El modelo lo hace visible en lugar de ocultarlo: la procedencia de
 cada dato indica su agente y si consta una validación humana, que hoy no consta en ninguno. Confirmar o reasignar cada
 reconstrucción es tarea de un investigador (sección~\ref{sec:discusion}).
 
@@ -390,23 +407,40 @@ reconstrucción es tarea de un investigador (sección~\ref{sec:discusion}).
 Cada grafo es un \ttt{prov:Entity} generado por una actividad que usó la transcripción (con su suma), asociada a un
 agente (persona o programa) y a un plan (la guía o el \emph{prompt}).
 
-El tesauro tiene 12 esquemas y 164 conceptos: tipos de actuación, roles procesales, condiciones, cargos, tipos de
+El tesauro tiene \cifraEsquemas{} esquemas y \cifraConceptos{} conceptos: tipos de actuación, roles procesales, condiciones, cargos, tipos de
 entidad, atributos, polaridad, fundamento, fuerza, creencia, niveles documentales y marcas del anotador. Todos tienen
 definición; cada una nombra su fuente (la Recopilación de Indias, la Ordenanza de Intendentes de 1782, el diccionario
-de Escriche, o el propio modelo para los conceptos técnicos) o se marca como definición de trabajo (22). Conserva las
+de Escriche, o el propio modelo para los conceptos técnicos) o se marca como definición de trabajo (\cifraDefinicionesDeTrabajo). Conserva las
 rarezas del documento sin asimilarlas: \cita{India Ordinaria} no se iguala a \emph{originaria}, y el ayllu es un
-\emph{grupo}, no un lugar. Las 66 alineaciones externas (Wikidata y Getty AAT) usan solo \ttt{skos:closeMatch} o
+\emph{grupo}, no un lugar. Las \cifraAlineaciones{} alineaciones externas (Wikidata y Getty AAT) usan solo \ttt{skos:closeMatch} o
 \ttt{relatedMatch}, porque las etiquetas engañan: en Wikidata, la etiqueta quechua \emph{ayllu} está asignada a los
 ítems \emph{familia} y \emph{comunidad}, y el ítem «cacique» corresponde al sentido caribeño. Las etiquetas quechuas
 solo se añaden si están atestiguadas en el vocabulario de González Holguín (1608).
 
-Dieciséis formas SHACL~\cite{shacl} hacen cumplir el perfil. Toda afirmación tiene exactamente un afirmante con un rol
+El perfil se hace cumplir con \cifraFormas{} formas SHACL~\cite{shacl}. Toda afirmación tiene exactamente un afirmante con un rol
 de la rama \emph{afirmante}, una actuación, un sujeto, un atributo de la lista cerrada, un valor, una polaridad, un
 fundamento, una fuerza y un ancla, y \emph{ninguna} creencia; ningún concepto del tesauro se usa como clase; toda
 reconstrucción tiene inferencia con autor, argumento, fecha y una creencia de la lista; y todo lote de las capas~1--3
 tiene actividad, agente, plan y transcripción. Las importaciones del perfil usan las IRI de ontología o de versión que
 declaran los propios estándares, y un catálogo OASIS las resuelve contra copias locales verificadas por suma, de modo
 que el perfil carga en editores como Protégé sin depender de la red.
+
+\subsection{Crecimiento: más expedientes y vocabulario abierto}\label{sec:crecimiento}
+El perfil está pensado para un fondo, no para un expediente. Cada expediente se declara en un manifiesto (signatura,
+piezas, lotes de anotación, formato de su transcripción) y produce sus propios grafos; el código no nombra ninguno.
+Las referencias de la capa~4 van calificadas con el expediente (\ttt{cc-14-18:M-UT01-004}), de modo que una
+reconstrucción puede proponer que dos menciones de expedientes distintos son la misma persona sin tocar las capas~1--3
+de ninguno.
+
+Que el perfil no declare propiedades no cierra el vocabulario. Lo que en otros modelos sería una propiedad nueva es
+aquí un concepto del esquema de atributos, y añadirlo no cambia el esquema RDF. Cuando un anotador encuentra un
+cargo, una condición o una relación que el tesauro no tiene, la propone como \emph{concepto candidato}, con
+definición, ejemplo citado y autor: los datos que la usan son válidos, pero una forma de severidad \ttt{sh:Warning}
+los señala hasta que un investigador la aprueba o la rechaza. El piloto tiene \cifraCandidatos{} candidatos en uso.
+Un concepto retirado se marca \ttt{owl:deprecated} con su sustituto y usarlo es una violación. El dominio y el rango
+de cada atributo (qué clase de mención admite como sujeto y como valor) se declaran en una tabla de la que se generan
+las formas, y el tesauro se versiona con numeración semántica y registro de cambios: aprobar un candidato es un cambio
+menor; retirar un concepto, uno mayor.
 
 % =====================================================================
 \section{Análisis de carencias}\label{sec:carencias}
@@ -421,26 +455,26 @@ como CIDOC CRM prevé la especialización local mediante \ttt{E55\_Type}. El cos
 CIDOC CRM que ignore \ttt{P2\_has\_type} leerá «asignó \emph{coronel}» en una negación; las formas obligan a declarar
 la polaridad y toda consulta la devuelve.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Análisis de carencias (extracto). Ninguna necesidad exigió un término propio.}\label{tab:carencias}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xlc@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}P{0.34\linewidth}L@{}}
 \toprule
-Necesidad & Solución con términos existentes & ¿Término propio? \\
+Necesidad & Solución con términos existentes \\
 \midrule
-Sección y legajo & \ttt{rico:RecordSet} + concepto \ttt{doc:seccion}/\ttt{doc:legajo} & No \\
-Extensión en folios & \ttt{rico:CarrierExtent} + \ttt{rico:quantity} & No \\
-Folio individual, recto/vuelto & \ttt{rico:Instantiation} + concepto \ttt{doc:folio} & No \\
-Afirmación con actor, actuación y tiempo & \ttt{crm:E13} + \ttt{P9i} + \ttt{P14} & No \\
-Ante quién, quién firma, quién escribe & \ttt{crm:PC14} + \ttt{P14.1} + rol del tesauro & No \\
-Polaridad, fundamento, fuerza & \ttt{crm:P2\_has\_type} + concepto & No \\
-«Responde a», «según» & \ttt{crm:P17\_was\_motivated\_by} + marca \ttt{anot:} & No \\
-Mención tal como está escrita & \ttt{picom:PersonObservation}, \ttt{roar:Observation} & No \\
-Cita exacta & \ttt{oa:TextQuoteSelector} + \ttt{oa:TextPositionSelector} & No \\
-Creencia del reconstructor & \ttt{crminf:I5}, \ttt{I2}, \ttt{J4}, \ttt{J5} & No \\
-Ejercicio de cargo con vigencia & \ttt{crm:E7} + \ttt{PC14} (cargo como rol) + \ttt{E52} & No \\
-Procedencia del dato & PROV-O & No \\
+Sección y legajo & \ttt{rico:RecordSet} + concepto \ttt{doc:seccion}/\ttt{doc:legajo} \\
+Extensión en folios & \ttt{rico:CarrierExtent} + \ttt{rico:quantity} \\
+Folio individual, recto/vuelto & \ttt{rico:Instantiation} + concepto \ttt{doc:folio} \\
+Afirmación con actor, actuación y tiempo & \ttt{crm:E13} + \ttt{P9i} + \ttt{P14} \\
+Ante quién, quién firma, quién escribe & \ttt{crm:PC14} + \ttt{P14.1} + rol del tesauro \\
+Polaridad, fundamento, fuerza & \ttt{crm:P2\_has\_type} + concepto \\
+«Responde a», «según» & \ttt{crm:P17\_was\_motivated\_by} + marca \ttt{anot:} \\
+Mención tal como está escrita & \ttt{picom:PersonObservation}, \ttt{roar:Observation} \\
+Cita exacta & \ttt{oa:TextQuoteSelector} + \ttt{oa:TextPositionSelector} \\
+Creencia del reconstructor & \ttt{crminf:I5}, \ttt{I2}, \ttt{J4}, \ttt{J5} \\
+Ejercicio de cargo con vigencia & \ttt{crm:E7} + \ttt{PC14} (cargo como rol) + \ttt{E52} \\
+Procedencia del dato & PROV-O \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -452,17 +486,17 @@ Usar los estándares con datos reales, validarlos y razonar sobre ellos reveló 
 y dos carencias de expresividad (D4, D5). No los corregimos en origen: los evitamos o los medimos, y el razonador los
 informa en cada ejecución.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Defectos y carencias hallados en los estándares reutilizados.}\label{tab:defectos}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}llX@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}lP{0.17\linewidth}L@{}}
 \toprule
 Id & Estándar & Problema y tratamiento \\
 \midrule
 D1 & ROAR 0.1 & Declara un dominio global (\ttt{roar:Reconstruction}) sobre \ttt{prov:wasDerivedFrom}. Como
 \ttt{prov:hadPrimarySource} es subpropiedad de esta, el patrón de PiCo aplicado a una observación de ROAR es
-inconsistente (lo detectó el razonador). Las observaciones de ROAR usan \ttt{roar:documentedIn}; quedan 285
+inconsistente (lo detectó el razonador). Las observaciones de ROAR usan \ttt{roar:documentedIn}; quedan \cifraDUnoEspurias{}
 tipificaciones espurias de observaciones de PiCo, que se informan. \\
 D2 & PiCo 1.1.0 & El prefijo de roles de la ontología no coincide con las IRI publicadas del tesauro de roles. Se usan
 las IRI publicadas. \\
@@ -474,7 +508,7 @@ D5 & RiC-O 1.1 & Expresa la extensión en folios, pero no el folio individual di
 \emph{sección} y \emph{legajo}; sus tipos documentales no incluyen tipos judiciales. Se resuelve con conceptos SKOS. \\
 D6 & CRMinf 1.2.1 & Declara \ttt{E13} subclase de \ttt{I1\_Argumentation}, cuya nota de alcance la define como
 inferencia u observación \enquote{honesta}. Con CRMinf cargado, cada testimonio hereda una presunción de sinceridad.
-Se documenta y se mide (500 afirmaciones; 20 negaciones). \\
+Se documenta y se mide (\cifraDSeisAfirmaciones{} afirmaciones; \cifraDSeisNegaciones{} negaciones). \\
 D7 & CRM + PiCo & El rango de \ttt{P14\_carried\_out\_by} es \ttt{E39\_Actor} y
 \ttt{picom:PersonObservation} es subclase de \ttt{picom:Person}: toda mención que afirma se infiere actor. Se
 interpreta como actor \emph{tal como consta en la fuente}; la existencia solo se propone en la capa~4. \\
@@ -496,23 +530,23 @@ hemos encontrado descrito en la literatura.
 \section{Evaluación}\label{sec:evaluacion}
 
 La evaluación se apoya en comprobaciones que no dependen de anotadores externos. El grafo cubre el expediente
-completo: 33 piezas, 544 menciones, 500 afirmaciones y 36 reconstrucciones (incluida la de las fechas normalizadas),
-más 66 fichas e índices del catálogo. Tiene 30\,884 tripletas distintas en 77 grafos nombrados y usa 41 clases y 75
+completo: \cifraPiezas{} piezas, \cifraMenciones{} menciones, \cifraAfirmaciones{} afirmaciones y \cifraReconstruccionesConFechas{} reconstrucciones (incluida la de las fechas normalizadas),
+más \cifraCatalogoRegistros{} fichas e índices del catálogo. Tiene \cifraTripletas{} tripletas distintas en \cifraGrafos{} grafos nombrados y usa \cifraClases{} clases y \cifraPropiedades{}
 propiedades, todas de los estándares. El grafo se
 construyó con rdflib~\cite{rdflib}, se valida con pySHACL~\cite{pyshacl} y se razona con OWL-RL~\cite{owlrl}. La
-tabla~\ref{tab:resultados} resume los resultados; todas las cifras se reproducen con las 218 pruebas del repositorio.
+tabla~\ref{tab:resultados} resume los resultados; las cifras de este artículo no se escriben a mano: un guion las calcula a partir de los datos y una prueba falla si el texto queda desfasado.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Resultados de la evaluación del perfil sobre el expediente piloto.}\label{tab:resultados}
-\scriptsize
-\begin{tabularx}{\linewidth}{@{}Xll@{}}
+\tablafuente
+\begin{tabularx}{\linewidth}{@{}Lll@{}}
 \toprule
 Criterio & Umbral & Resultado \\
 \midrule
-Citas que son subcadena exacta del tramo (única normalización: espacios) & 100\,\% & 1\,044/1\,044 \\
+Citas que son subcadena exacta del tramo (única normalización: espacios) & 100\,\% & \cifraCitas/\cifraCitas \\
 Conformidad SHACL del grafo & 0 violaciones & 0 \\
-Mutaciones del grafo que SHACL debe rechazar & todas & 34/34 \\
+Mutaciones del grafo que SHACL debe rechazar & todas & \cifraMutacionesDeclaradas/\cifraMutacionesDeclaradas \\
 Inconsistencias bajo OWL~2~RL (datos + estándares + perfil) & 0 & 0 \\
 IRI de estándares inexistentes en su versión publicada & 0 & 0 \\
 Importaciones resueltas por el catálogo contra copias verificadas & todas & 8/8 \\
@@ -548,13 +582,25 @@ una fecha en la capa~1, se quita la marca de una relación de discurso) y se exi
 forma esperada. Esta práctica reveló una forma que aprobaba en vacío porque su consulta no seleccionaba ningún nodo.
 
 \paragraph{Razonamiento y revisiones.}
-El cierre OWL~2~RL de la unión de datos, perfil y estándares (55\,940 tripletas; 188\,412 tras el cierre) no produce
+El cierre OWL~2~RL de la unión de datos, perfil y estándares (\cifraRazonadorTripletas{} tripletas; \cifraRazonadorCierre{} tras el cierre) no produce
 inconsistencias; fue el razonador el que detectó el defecto D1, al inferir una instancia de dos clases disjuntas de
 ROAR. Dos revisores independientes, sin acceso a la documentación de diseño, examinaron el código, los datos y los
 estándares, uno antes y otro después de redactar este artículo. Señalaron, entre otros, que los cargos con vigencia
 no estaban implementados, que el código suponía un único expediente, que tres respuestas de PC tenían su forma escrita
 a mano y que las relaciones de discurso dependían de una convención no validada. Todo se corrigió o se documentó como
 límite antes de esta versión.
+
+\paragraph{Conectividad y escala.}
+Como la capa~2 no fusiona nada, el grafo solo se conecta por las reconstrucciones. Con las del piloto,
+\cifraMencionesEnlazadas{} de las \cifraMenciones{} menciones (\cifraPersonasEnlazadas{} de las \cifraPersonas{} de
+persona) pertenecen a alguna identidad propuesta y \cifraHechosEnlazados{} de los \cifraHechosNarrados{} hechos
+narrados, a algún evento; el resto son colectivos indeterminados, pronombres, menciones únicas o pasajes ambiguos,
+y se dejan sin enlazar con su motivo. Las lecturas incompatibles se mantienen como reconstrucciones rivales que
+comparten menciones. Para estimar el coste de un fondo se replicó el grafo del piloto hasta mil expedientes
+(sesenta millones de cuádruplas en un almacén Oxigraph en disco): la carga y el espacio crecen linealmente. Las consultas
+restringidas a un expediente, una vez escrita la restricción como patrón y no como filtro, tardan lo mismo con uno que
+con cien expedientes; las que recorren el corpus entero, como la de disputas, crecen con él. Es una medición sobre
+réplicas, no sobre el archivo real.
 
 % =====================================================================
 \section{Discusión y limitaciones}\label{sec:discusion}
@@ -567,18 +613,18 @@ los estándares. Puede generarse como vista de lectura a partir del TriG, nunca 
 
 \paragraph{Negación.}
 La polaridad se expresa como un tipo de la E13. La alternativa sin términos propios sería que la negación fuese una
-E13 cuyo sujeto es la afirmación negada; solo es posible cuando esta consta en el expediente (4 de las 20
+E13 cuyo sujeto es la afirmación negada; solo es posible cuando esta consta en el expediente (\cifraNegacionesConRespuesta{} de las \cifraNegaciones{}
 negaciones), por lo que se mantuvo la forma uniforme.
 
 \paragraph{Limitaciones.}
-(i)~La evaluación es de un solo expediente ($n=1$), anotado en sus 33 piezas. La generalización solo se ha
+(i)~La evaluación es de un solo expediente ($n=1$), anotado en sus \cifraPiezas{} piezas. La generalización solo se ha
 comprobado con un pleito civil sintético; un segundo expediente real, sorteado a ciegas con semilla fija entre 3\,651,
 se incorporará cuando se disponga de su transcripción.
 (ii)~Las anotaciones y las reconstrucciones del piloto se propusieron con ayuda de un modelo de lenguaje y no las ha
 validado un especialista independiente; uno de los autores actúa como único validador, por lo que no se informa
-acuerdo entre anotadores.
+acuerdo entre anotadores; la mayoría de las reconstrucciones tampoco ha pasado la auditoría del segundo modelo.
 (iii)~Sin imágenes, el folio y el lado de cada tramo no constan, salvo por las cuatro marcas del texto.
-(iv)~22 definiciones del tesauro son de trabajo, sin fuente verificada, y las respuestas de PC03 y PC04 dependen
+(iv)~\cifraDefinicionesDeTrabajo{} definiciones del tesauro son de trabajo, sin fuente verificada, y las respuestas de PC03 y PC04 dependen
 de la capa de texto del PDF del catálogo, sin cotejo de imágenes.
 (v)~OWL~2~RL es incompleto y CIDOC CRM se distribuye en RDFS, de modo que la ausencia de inconsistencias es una
 condición necesaria, no suficiente.
@@ -598,7 +644,7 @@ frente a líneas base sin grafo, quedan fuera de este artículo.
 \paragraph{Disponibilidad, mantenimiento y cita.}
 El perfil (tesauro, formas, alineaciones, catálogo y consultas), el mapeo, el grafo de ejemplo en TriG y N-Quads
 canónico, las pruebas y la documentación de diseño, con el registro de decisiones y las auditorías, se publican en
-\url{https://github.com/foreverlcd/KG-Graph-RAG} bajo \pendiente{licencias}. Las versiones siguen numeración semántica (actual: 0.1.0); cada
+\url{https://github.com/foreverlcd/KG-Graph-RAG} bajo \pendiente{licencias}. Las versiones siguen numeración semántica (actual: 0.2.0); cada
 publicación recibe un DOI de versión y el DOI de concepto de Zenodo es la cita canónica \pendiente{DOI}. Los autores
 mantienen el recurso y atienden incidencias en el repositorio \pendiente{plan de mantenimiento más allá del proyecto}.
 

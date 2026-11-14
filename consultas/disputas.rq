@@ -7,36 +7,37 @@
 #  (c) "texto/afirmación": la pieza muestra una firma (capa 2) y alguien niega en capa 3 haber firmado.
 # Entidad = reconstrucción de capa 4 de la que deriva el sujeto, o la propia pieza si el sujeto es una pieza.
 # Los valores se comparan por su reconstrucción si la tienen (dos grafías de la misma persona no son disputa).
+# Forma (datos/grafo/escala.md): se recorren las afirmaciones del corpus UNA vez (?a) y, para cada una (LATERAL), se
+# buscan por índice las otras afirmaciones (?b) sobre la misma entidad y atributo. El coste es lineal en el corpus
+# más, por cada entidad y atributo, el cuadrado de sus afirmaciones; no hay autocombinación del corpus entero.
 SELECT ?entidad ?entLabel ?atributo ?tipo (COUNT(DISTINCT ?x) AS ?n) (GROUP_CONCAT(DISTINCT ?xid; separator=" ") AS ?afirmaciones)
 WHERE {
   #PARAMETROS
-  {
-    SELECT ?a ?entidad ?atributo ?vk ?pol WHERE {
-      ?a a crm:E13_Attribute_Assignment ; crm:P140_assigned_attribute_to ?s ;
-         crm:P177_assigned_property_of_type ?atributo ; crm:P141_assigned ?v ; crm:P2_has_type ?pol .
-      ?pol skos:inScheme tes:polaridades .
-      { ?entidad prov:wasDerivedFrom ?s . ?entidad a ?ce . FILTER (?ce IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
-      UNION { ?s a rico:Record . BIND (?s AS ?entidad) }
-      OPTIONAL { ?ev prov:wasDerivedFrom ?v . ?ev a ?cv . FILTER (?cv IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) }
-      OPTIONAL { ?v crm:P190_has_symbolic_content ?t1 }
-      OPTIONAL { ?v crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2 }
-      BIND (COALESCE(?ev, ?t1, ?t2, ?v) AS ?vk)
-    }
+  # Lado ?a: afirmación, su entidad y la clave de su valor (?vk).
+  ?a crm:P177_assigned_property_of_type ?atributo .
+  LATERAL { ?a a crm:E13_Attribute_Assignment ; crm:P140_assigned_attribute_to ?s ; crm:P141_assigned ?v ; crm:P2_has_type ?pol .
+            ?pol skos:inScheme tes:polaridades . }
+  LATERAL {
+    { ?entidad prov:wasDerivedFrom ?s . ?entidad a ?ce . FILTER (?ce IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
+    UNION { ?s a rico:Record . BIND (?s AS ?entidad) }
   }
-  {
-    SELECT ?b ?entidad ?atributo ?vk2 ?pol2 WHERE {
-      ?b a crm:E13_Attribute_Assignment ; crm:P140_assigned_attribute_to ?s ;
-         crm:P177_assigned_property_of_type ?atributo ; crm:P141_assigned ?v ; crm:P2_has_type ?pol2 .
-      ?pol2 skos:inScheme tes:polaridades .
-      { ?entidad prov:wasDerivedFrom ?s . ?entidad a ?ce . FILTER (?ce IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
-      UNION { ?s a rico:Record . BIND (?s AS ?entidad) }
-      OPTIONAL { ?ev prov:wasDerivedFrom ?v . ?ev a ?cv . FILTER (?cv IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) }
-      OPTIONAL { ?v crm:P190_has_symbolic_content ?t1 }
-      OPTIONAL { ?v crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2 }
-      BIND (COALESCE(?ev, ?t1, ?t2, ?v) AS ?vk2)
-    }
+  LATERAL { OPTIONAL { ?ev prov:wasDerivedFrom ?v . ?ev a ?cv . FILTER (?cv IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) } }
+  LATERAL { OPTIONAL { ?v crm:P190_has_symbolic_content ?t1 } }
+  LATERAL { OPTIONAL { ?v crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2 } }
+  BIND (COALESCE(?ev, ?t1, ?t2, ?v) AS ?vk)
+  # Lado ?b: las demás afirmaciones sobre la misma entidad (por sus sujetos ?sb) y el mismo atributo.
+  LATERAL {
+    { ?entidad prov:wasDerivedFrom ?sb . ?entidad a ?ceb . FILTER (?ceb IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction, roar:Reconstruction)) }
+    UNION { ?entidad a rico:Record . BIND (?entidad AS ?sb) }
   }
+  LATERAL { ?b crm:P140_assigned_attribute_to ?sb . }
+  LATERAL { ?b crm:P177_assigned_property_of_type ?atributo ; a crm:E13_Attribute_Assignment ; crm:P141_assigned ?vb ;
+               crm:P2_has_type ?pol2 . ?pol2 skos:inScheme tes:polaridades . }
   FILTER (?a != ?b)
+  LATERAL { OPTIONAL { ?evb prov:wasDerivedFrom ?vb . ?evb a ?cvb . FILTER (?cvb IN (picom:PersonReconstruction, crm:E5_Event, roar:LocationReconstruction)) } }
+  LATERAL { OPTIONAL { ?vb crm:P190_has_symbolic_content ?t1b } }
+  LATERAL { OPTIONAL { ?vb crm:P1_is_identified_by/crm:P190_has_symbolic_content ?t2b } }
+  BIND (COALESCE(?evb, ?t1b, ?t2b, ?vb) AS ?vk2)
   # (Un FILTER dentro de un grupo de UNION solo ve las variables de ese grupo: el tipo se calcula aquí fuera.)
   # (d) "niega lo afirmado": el anotador enlazó ?b con ?a (responde_a) y ?b niega; no depende de la grafía del valor.
   BIND (IF(?pol2 = pol:niega && EXISTS { ?b crm:P17_was_motivated_by ?a }, "niega lo afirmado (responde_a)",
@@ -45,8 +46,8 @@ WHERE {
            && ?pol = pol:afirma && ?pol2 = pol:afirma && ?vk != ?vk2, "valores distintos (revisar)", ?nada))) AS ?tipo)
   FILTER (BOUND(?tipo))
   VALUES ?lado { 1 2 } BIND (IF(?lado = 1, ?a, ?b) AS ?x)
-  ?x rdfs:label ?xid .
-  OPTIONAL { ?entidad rdfs:label ?l1 } OPTIONAL { ?entidad rico:title ?l2 }
+  LATERAL { ?x rdfs:label ?xid . }
+  LATERAL { OPTIONAL { ?entidad rdfs:label ?l1 } } LATERAL { OPTIONAL { ?entidad rico:title ?l2 } }
   BIND (COALESCE(?l2, ?l1) AS ?entLabel)
 }
 GROUP BY ?entidad ?entLabel ?atributo ?tipo

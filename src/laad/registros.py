@@ -1,14 +1,17 @@
-"""Carga y valida registros planos (piezas, menciones, afirmaciones) con integridad referencial."""
+"""Carga y valida registros planos (piezas, menciones, afirmaciones) con integridad referencial.
+
+Además de las referencias, comprueba el DOMINIO Y RANGO de cada atributo (datos/atributos.csv) con la clase real
+de cada mención, y deja en `Lote.avisos` lo que no es un error pero debe revisarse: conceptos candidatos en uso y
+atributos candidatos sin dominio ni rango declarados (ontologia/README.md)."""
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import fuente
+from . import esquema
 from .esquema import Afirmacion, Mencion, Pieza
-
-RAIZ = Path(__file__).resolve().parents[2]
-PIEZAS = RAIZ / "datos" / "piezas.jsonl"
 
 
 @dataclass
@@ -17,6 +20,11 @@ class Lote:
     menciones: dict[str, Mencion] = field(default_factory=dict)
     afirmaciones: dict[str, Afirmacion] = field(default_factory=dict)
     errores: list[str] = field(default_factory=list)
+    avisos: list[str] = field(default_factory=list)   # no impiden mapear: candidatos en uso, atributos sin fila
+
+    def hechos(self) -> set[str]:
+        """Hechos narrados (H-…) que alguna afirmación del lote usa como sujeto o como valor."""
+        return {h for a in self.afirmaciones.values() for h in (a.sujeto.hecho, a.valor.hecho) if h}
 
 
 def _leer(ruta: Path):
@@ -25,7 +33,11 @@ def _leer(ruta: Path):
             yield n, json.loads(linea)
 
 
-def cargar(rutas_registros: list[Path], ruta_piezas: Path = PIEZAS) -> Lote:
+def cargar(rutas_registros: list[Path], ruta_piezas: Path | None = None) -> Lote:
+    """Carga los registros del expediente EN CURSO (fuente.usando_expediente): las citas se verifican contra su
+    transcripción. Sin `ruta_piezas`, las piezas son las que nombra su manifiesto."""
+    if ruta_piezas is None:
+        ruta_piezas = fuente.ruta(fuente.manifiesto()["piezas"])
     lote = Lote()
     for n, d in _leer(ruta_piezas):
         try:
@@ -86,3 +98,27 @@ def _integridad(lote: Lote) -> None:
         for h in filter(None, [a.sujeto.hecho, a.valor.hecho]):
             if not h.startswith(f"H-{a.pieza.lower()}-"):
                 E.append(f"{a.id}: el hecho {h} debe ser local a la pieza {a.pieza} (H-{a.pieza.lower()}-…)")
+        _dominio_rango(lote, a)
+    for r in [*lote.piezas.values(), *lote.menciones.values(), *lote.afirmaciones.values()]:
+        for esq, c in r.candidatos_usados():
+            lote.avisos.append(f"{r.id}: usa el concepto candidato {c} (tes:{esq}), pendiente de aprobación")
+
+
+def _dominio_rango(lote: Lote, a: Afirmacion) -> None:
+    """El sujeto y el valor de la afirmación son de un tipo que su atributo admite (datos/atributos.csv), ahora
+    con la clase real de cada mención. Un atributo candidato sin fila es un aviso; uno del tesauro, un error."""
+    if a.atributo not in esquema.dominio_rango():
+        if a.atributo in esquema.candidatos("atributos"):
+            lote.avisos.append(f"{a.id}: el atributo candidato {a.atributo} no tiene dominio ni rango declarados "
+                               f"en datos/atributos.csv; no se comprueban su sujeto ni su valor")
+        else:
+            lote.errores.append(f"{a.id}: el atributo {a.atributo} no tiene fila en datos/atributos.csv")
+        return
+
+    def clase(ref):
+        return lote.menciones[ref].clase if ref in lote.menciones else None
+
+    error = esquema.error_dominio_rango(a.atributo, esquema.tipos_de(a.sujeto, clase(a.sujeto.mencion)),
+                                        esquema.tipos_de(a.valor, clase(a.valor.mencion), valor=True))
+    if error:
+        lote.errores.append(f"{a.id}: {error}")

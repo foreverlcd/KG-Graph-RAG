@@ -1,13 +1,15 @@
 # PC20: de qué versión de la transcripción, qué proceso y qué agente procede una afirmación o mención (?x).
+# Se parte de los grafos que contienen ?x; lo demás se lee de cada grafo (LATERAL), sin recorrer la procedencia
+# de los demás expedientes.
 SELECT ?grafo ?capa ?actividad ?agente ?tipoAgente ?plan ?transcripcion ?sha ?fecha ?validador WHERE {
   #PARAMETROS
   GRAPH ?grafo { ?x ?p ?o }
-  ?grafo dct:type ?capa .
-  OPTIONAL { ?grafo prov:wasGeneratedBy ?actividad . ?actividad prov:used ?transcripcion ;
+  LATERAL { ?grafo dct:type ?capa . }
+  LATERAL { OPTIONAL { ?grafo prov:wasGeneratedBy ?actividad . ?actividad prov:used ?transcripcion ;
              prov:qualifiedAssociation [ prov:agent ?ag ; prov:hadPlan ?pl ] ; prov:endedAtTime ?fecha .
-             ?transcripcion dct:identifier ?sha . ?pl rdfs:label ?plan }
-  OPTIONAL { ?grafo prov:wasAttributedTo ?ag2 }
-  BIND (COALESCE(?ag, ?ag2) AS ?agx) ?agx rdfs:label ?agente ; a ?tipoAgente .
-  FILTER (?tipoAgente IN (prov:SoftwareAgent, prov:Person))
-  OPTIONAL { ?val prov:used ?grafo ; prov:wasAssociatedWith/rdfs:label ?validador }
+             ?transcripcion dct:identifier ?sha . ?pl rdfs:label ?plan } }
+  LATERAL { OPTIONAL { ?grafo prov:wasAttributedTo ?ag2 } }
+  BIND (COALESCE(?ag, ?ag2) AS ?agx)
+  LATERAL { ?agx rdfs:label ?agente ; a ?tipoAgente . FILTER (?tipoAgente IN (prov:SoftwareAgent, prov:Person)) }
+  LATERAL { OPTIONAL { ?val prov:used ?grafo ; prov:wasAssociatedWith/rdfs:label ?validador } }
 }

@@ -1,0 +1,228 @@
+# Conceptos CANDIDATOS del tesauro LAAD — GENERADO por scripts/candidatos.py desde datos/candidatos_tesauro.csv. No editar a mano.
+# Un candidato es un concepto que un anotador necesitó y el tesauro no tenía: puede usarse en los registros (la validación
+# lo señala con un aviso, no con un error) hasta que se apruebe —pasa a ontologia/tesauro.ttl— o se rechace —queda aquí,
+# owl:deprecated, y usarlo es un error—. Política: ontologia/README.md.
+
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix tes:  <https://w3id.org/laad/tesauro/> .
+
+tes:candidatos a skos:Collection ; skos:prefLabel "Conceptos candidatos (pendientes de revisión)"@es ;
+    dct:description "Conceptos propuestos durante la anotación que aún no forman parte del tesauro. No tienen versión: entran en una al aprobarse."@es ;
+    skos:member <https://w3id.org/laad/tesauro/atributo/da-fe> ,
+        <https://w3id.org/laad/tesauro/atributo/notifica> ,
+        <https://w3id.org/laad/tesauro/cargo/abogado> ,
+        <https://w3id.org/laad/tesauro/cargo/capitan-general> ,
+        <https://w3id.org/laad/tesauro/cargo/cobrador> ,
+        <https://w3id.org/laad/tesauro/cargo/consejero> ,
+        <https://w3id.org/laad/tesauro/cargo/fiscal> ,
+        <https://w3id.org/laad/tesauro/cargo/granadero> ,
+        <https://w3id.org/laad/tesauro/cargo/notario-publico> ,
+        <https://w3id.org/laad/tesauro/condicion/oriundo> ,
+        <https://w3id.org/laad/tesauro/entidad/bien-mueble> ,
+        <https://w3id.org/laad/tesauro/entidad/calle> ,
+        <https://w3id.org/laad/tesauro/entidad/comun> ,
+        <https://w3id.org/laad/tesauro/entidad/dinero> ,
+        <https://w3id.org/laad/tesauro/entidad/documento> ,
+        <https://w3id.org/laad/tesauro/entidad/expediente> ,
+        <https://w3id.org/laad/tesauro/entidad/institucion> ,
+        <https://w3id.org/laad/tesauro/entidad/ministerio-fiscal> ,
+        <https://w3id.org/laad/tesauro/entidad/provincia> ,
+        <https://w3id.org/laad/tesauro/entidad/real-audiencia> ,
+        <https://w3id.org/laad/tesauro/entidad/real-hacienda> ,
+        <https://w3id.org/laad/tesauro/entidad/regimiento> ,
+        <https://w3id.org/laad/tesauro/entidad/region> ,
+        <https://w3id.org/laad/tesauro/entidad/superior-gobierno> ,
+        <https://w3id.org/laad/tesauro/entidad/tierra> ,
+        <https://w3id.org/laad/tesauro/rol/autor-de-fraude> .
+
+<https://w3id.org/laad/id/agente/claude-fable-5-2> a prov:Agent ; rdfs:label "claude-fable-5-2" .
+<https://w3id.org/laad/id/agente/claude-opus-5-5> a prov:Agent ; rdfs:label "claude-opus-5-5" .
+
+# ── pendientes ──
+<https://w3id.org/laad/tesauro/atributo/da-fe> a skos:Concept ; skos:inScheme tes:atributos ; skos:topConceptOf tes:atributos ;
+    skos:prefLabel "da fe"@es ;
+    skos:definition "Sujeto: pieza o hecho. Valor: literal de la fórmula. El afirmante es el fedatario."@es ;
+    skos:example "UT08: «doy fe»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/atributo/notifica> a skos:Concept ; skos:inScheme tes:atributos ; skos:topConceptOf tes:atributos ;
+    skos:prefLabel "notifica"@es ;
+    skos:definition "Sujeto: persona notificada. Valor: lo notificado (pieza o literal). El afirmante es quien notifica."@es ;
+    skos:example "UT08: diligencias de notificación"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lotes a y c) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/abogado> a skos:Concept ; skos:inScheme tes:cargos ; skos:topConceptOf tes:cargos ;
+    skos:prefLabel "abogado"@es ;
+    skos:definition "Letrado que defiende o asesora en juicio."@es ;
+    skos:example "UT08"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/capitan-general> a skos:Concept ; skos:inScheme tes:cargos ; skos:broader <https://w3id.org/laad/tesauro/cargo/oficial-real> ;
+    skos:prefLabel "capitán general"@es ;
+    skos:definition "Tratamiento del presidente de la Audiencia como jefe militar del distrito («Señor Capitan General»)."@es ;
+    skos:example "UT17: «Señor Capitan General»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_c) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/cobrador> a skos:Concept ; skos:inScheme tes:cargos ; skos:topConceptOf tes:cargos ;
+    skos:prefLabel "cobrador (del departamento)"@es ;
+    skos:definition "Encargado de cobrar un ramo o tributo en una demarcación; no se asimila a recaudador sin prueba."@es ;
+    skos:example "UT14: padre de Orue"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/consejero> a skos:Concept ; skos:inScheme tes:cargos ; skos:broader <https://w3id.org/laad/tesauro/cargo/oficial-real> ;
+    skos:prefLabel "del consejo de Su Majestad"@es ;
+    skos:definition "Título honorífico de quien pertenece al Consejo del rey."@es ;
+    skos:example "UT08: «consejo de su Majestad»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/fiscal> a skos:Concept ; skos:inScheme tes:cargos ; skos:broader <https://w3id.org/laad/tesauro/cargo/oficial-real> ;
+    skos:prefLabel "fiscal (sin especificar)"@es ;
+    skos:definition "Fiscal nombrado sin precisar si es el de la Audiencia, el agente fiscal o el protector."@es ;
+    skos:example "UT16.a: «el señor Agustin Fiscal»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_c) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/granadero> a skos:Concept ; skos:inScheme tes:cargos ; skos:broader <https://w3id.org/laad/tesauro/cargo/soldado> ;
+    skos:prefLabel "granadero"@es ;
+    skos:definition "Soldado de la compañía de granaderos de un regimiento de milicias."@es ;
+    skos:example "UT04: «soldado granadero»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/cargo/notario-publico> a skos:Concept ; skos:inScheme tes:cargos ; skos:topConceptOf tes:cargos ;
+    skos:prefLabel "notario público"@es ;
+    skos:definition "Fedatario que autoriza instrumentos; en el expediente, el notario de la pieza republicana ajena."@es ;
+    skos:example "UT20: Matías Ugarte"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_c) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/condicion/oriundo> a skos:Concept ; skos:inScheme tes:condiciones ; skos:topConceptOf tes:condiciones ;
+    skos:prefLabel "oriundo"@es ;
+    skos:definition "Natural del lugar que se nombra («oriundo de él»). Dice origen, no categoría fiscal: no equivale con seguridad a «originario»."@es ;
+    skos:example "UT15: «Manuel Guancachoque Oriundo de el»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (revisión de dominio y rango) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/bien-mueble> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "bien mueble o semoviente"@es ;
+    skos:definition "Objeto o animal mencionado como bien (caballo, llave, bebida)."@es ;
+    skos:example "UT14: «a vacar un caballo del corral de chuquitapa»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/calle> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/edificio> ;
+    skos:prefLabel "calle"@es ;
+    skos:definition "Vía pública de un pueblo o ciudad."@es ;
+    skos:example "UT02: «calles»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/comun> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "común de indios"@es ;
+    skos:definition "El conjunto de los indios de un pueblo o ayllu como cuerpo que representa o en cuyo nombre se actúa."@es ;
+    skos:example "UT18: «a nombre del común y Principales de los citados Ayllos»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/dinero> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "dinero"@es ;
+    skos:definition "Cantidad de moneda o caudal mencionado como objeto (lo usurpado, lo pagado, las reales arcas)."@es ;
+    skos:example "UT06: «la ingente cantidad de dinero que ha usurpado»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/documento> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "documento"@es ;
+    skos:definition "Escrito mencionado como objeto dentro de otra pieza (certificación, decreto, auto, escrito, informe, papel), sea o no una pieza conservada del expediente."@es ;
+    skos:example "UT17: «la Certificación a folios 2»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/expediente> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/documento> ;
+    skos:prefLabel "expediente"@es ;
+    skos:definition "Conjunto de actuaciones mencionado como objeto que se remite, se recibe o del que se desglosan fojas."@es ;
+    skos:example "UT09: «remito a vuestra Merced un expediente»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/institucion> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "institución"@es ;
+    skos:definition "Concepto agrupador de cuerpos e instituciones nombrados como tales (tribunales, cajas, gobierno)."@es ;
+    skos:example "UT09: «esta Real Audiencia» (agrupa real-audiencia, real-hacienda, superior-gobierno y ministerio-fiscal)"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lotes a y b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/ministerio-fiscal> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/institucion> ;
+    skos:prefLabel "Ministerio Fiscal"@es ;
+    skos:definition "El oficio del fiscal como institución."@es ;
+    skos:example "UT10: «el Minis terio Fiscal»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/provincia> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "provincia"@es ;
+    skos:definition "Demarcación territorial nombrada como provincia (uso colonial tardío o republicano)."@es ;
+    skos:example "UT20: «provincia de Urubamba»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lotes a y c) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/real-audiencia> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/institucion> ;
+    skos:prefLabel "Real Audiencia"@es ;
+    skos:definition "Tribunal superior del distrito (Cusco, desde 1787)."@es ;
+    skos:example "UT09: «esta Real Audiencia»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lotes a y b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/real-hacienda> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/institucion> ;
+    skos:prefLabel "Real Hacienda"@es ;
+    skos:definition "El fisco real y su administración."@es ;
+    skos:example "UT04: «a favor de la Real Hacienda»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lotes a y b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/regimiento> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "regimiento"@es ;
+    skos:definition "Cuerpo de milicias de un partido, compuesto de compañías."@es ;
+    skos:example "UT01: «regimiento de este partido»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_a) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/region> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "región o continente"@es ;
+    skos:definition "Espacio geográfico amplio sin jurisdicción propia."@es ;
+    skos:example "UT16.b: «casi toda la America meridional»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/superior-gobierno> a skos:Concept ; skos:inScheme tes:entidades ; skos:broader <https://w3id.org/laad/tesauro/entidad/institucion> ;
+    skos:prefLabel "Superior Gobierno"@es ;
+    skos:definition "El gobierno superior del distrito, a cargo del presidente."@es ;
+    skos:example "UT10: «aquel Superior Govierno»"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_b) el 2026-11-13 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/entidad/tierra> a skos:Concept ; skos:inScheme tes:entidades ; skos:topConceptOf tes:entidades ;
+    skos:prefLabel "tierra o chacra"@es ;
+    skos:definition "Tierra de cultivo mencionada como bien."@es ;
+    skos:example "UT01: «quitando sus chacras o tierras»"@es ;
+    dct:created "2026-11-14"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-fable-5-2> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-fable-5-2 (conectividad de entidades) el 2026-11-14 al anotar el expediente cc-14-18."@es .
+<https://w3id.org/laad/tesauro/rol/autor-de-fraude> a skos:Concept ; skos:inScheme tes:roles ; skos:broader <https://w3id.org/laad/tesauro/rol/participante-en-hecho> ;
+    skos:prefLabel "autor de fraude o robo"@es ;
+    skos:definition "Papel de quien, en el hecho narrado, defrauda o sustrae."@es ;
+    skos:example "UT14"@es ;
+    dct:created "2026-11-13"^^xsd:date ; prov:wasAttributedTo <https://w3id.org/laad/id/agente/claude-opus-5-5> ; dct:source <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+    skos:editorialNote "Concepto candidato: pendiente de revisión; puede aprobarse o rechazarse."@es ;
+    skos:historyNote "Propuesto por claude-opus-5-5 (lote expediente_b) el 2026-11-13 al anotar el expediente cc-14-18."@es .

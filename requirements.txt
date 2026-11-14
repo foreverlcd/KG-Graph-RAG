@@ -1,6 +1,7 @@
 rdflib==7.6.0
 pyshacl==0.40.2
 owlrl
+pyoxigraph==0.5.13
 pytest
 pydantic==2.14.3
 jsonschema

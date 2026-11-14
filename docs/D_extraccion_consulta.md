@@ -2,7 +2,8 @@
 
 > **Alcance de esta fase.** Lo implementado y probado:
 > * el **esquema plano y cerrado** (`src/laad/esquema.py`);
-> * el **cargador con integridad** (`src/laad/registros.py`);
+> * la **capa de fuente** con el formato de transcripción configurable (`src/laad/fuente.py`);
+> * el **cargador con integridad** (`src/laad/registros.py`) y el **corpus de expedientes** (`src/laad/corpus.py`);
 > * el **mapeo determinista** (`src/laad/mapeo.py`);
 > * las **consultas con nombre** (`consultas/*.rq`, `src/laad/consulta.py`);
 > * el **compositor de respuestas** (`src/laad/responder.py`, `src/laad/preguntas.py`).
@@ -18,7 +19,8 @@ transcripción ──► [LLM o anotador] ──► registros planos (JSON) ─�
 ```
 
 El LLM rellena tres tipos de registro y nunca ve IRIs, clases ni propiedades de CRM, RiC-O, PROV ni oa:. Las listas
-cerradas se **generan del tesauro** (`conceptos(esquema)`): no hay una segunda lista que pueda desincronizarse. El
+cerradas se **generan del tesauro** (`conceptos(esquema)`) y de sus conceptos candidatos: no hay una segunda lista que
+pueda desincronizarse. El
 mapeo a RDF es una función pura. El mismo lote produce grafos isomorfos (`tests/test_mapeo.py`), y un id repetido
 aborta el proceso. Esa colisión de ids fue el fallo 2.1 del intento previo.
 
@@ -26,11 +28,11 @@ aborta el proceso. Esa colisión de ids fue el fallo 2.1 del intento previo.
 
 | Decide el extractor (LLM o humano) | No decide nunca |
 |---|---|
-| Menciones tal como están escritas, con su cita | El tipo de actuación de la pieza: viene de `datos/piezas.jsonl`, curado a mano (fallo 2.4) |
+| Menciones tal como están escritas, con su cita | El tipo de actuación de la pieza: viene del archivo de piezas que declara el manifiesto (`datos/piezas.jsonl` en el piloto), curado a mano (fallo 2.4) |
 | Rol del mencionado en la pieza (de la lista cerrada) | El folio: viene de la capa de fuente (fallo 2.2) |
 | Afirmaciones: afirmante, sujeto, atributo, valor, polaridad, fundamento, cita | Si dos menciones son la misma persona (capa 4, investigador) |
 | Si el sujeto es elíptico; entonces está obligado a explicarlo en `nota` | Si una afirmación es verdadera (no existe ese campo) |
-| | La fuerza institucional: se deriva de la actuación, con una tabla fija en `mapeo.FUERZA` |
+| Un concepto que el tesauro no tiene: lo **propone** como candidato y lo usa (§2.1) | La fuerza institucional: se deriva del tipo de actuación, según el tesauro (`act:x skos:related fza:y`) |
 
 Esta división responde a lo que ha encontrado la literatura reciente. Las fichas están en `docs/anexos/F_informe_precedentes_y_literatura.md` §2.
 
@@ -69,15 +71,43 @@ Se define en `src/laad/esquema.py` (Pydantic v2, `extra="forbid"`).
 Al LLM se le dará el JSON Schema que genera Pydantic, como salida estructurada. Siempre se re-valida en Python,
 porque la salida estructurada no garantiza que la cita sea literal.
 
+En una `Reconstruccion`, las menciones, los hechos y las premisas se escriben calificados con el expediente
+(`cc-14-18:M-UT01-003`): la capa 4 es común al corpus y los ids de registro solo son únicos dentro de un expediente
+(`esquema.separar_ref`, ADR-036).
+
+### 2.1 Listas cerradas que crecen: candidatos, dominio y rango
+
+* **Conceptos candidatos.** Las listas cerradas incluyen los conceptos aprobados del tesauro y los candidatos
+  pendientes (`ontologia/candidatos.ttl`). Un registro que usa un candidato se acepta con un **aviso**
+  (`Lote.avisos`, y `sh:Warning` en el grafo); uno que usa un concepto retirado se rechaza y el mensaje dice cuál
+  usar en su lugar. Se propone con `scripts/candidatos.py --proponer` (ADR-038; procedimiento en
+  `ontologia/README.md`).
+* **Dominio y rango.** `datos/atributos.csv` dice qué puede ser sujeto y valor de cada atributo. El esquema lo
+  comprueba al cargar cada afirmación y `registros.py` lo repite con la clase real de cada mención; el grafo lo
+  comprueba otra vez con `ontologia/formas_atributos.ttl` (ADR-039). Un atributo candidato sin fila solo produce
+  un aviso.
+
+### 2.2 La transcripción: formato configurable
+
+La segmentación de la transcripción en unidades (`UT00`, `UT01`, …) y tramos ya no supone la convención del piloto.
+La clave opcional `formato` del manifiesto la describe con cinco claves, todas opcionales (`separador`, `encabezado`,
+`marca_folio`, `ignorar`, `codificacion`; valores por defecto en `fuente.FORMATO_POR_DEFECTO`). Sin esa clave rige la
+del piloto: unidades separadas por líneas `#` y marcas de folio escritas a mano en `marcas_folio`. Lo que casa
+`ignorar` (texto editorial) se sustituye por espacios: no es citable y los desplazamientos siguen siendo los del
+archivo. Una clave desconocida o una expresión que no compila es un error. `scripts/nuevo_expediente.py` crea el
+esqueleto del manifiesto en estado `borrador` y muestra la tabla de tramos para que una persona la revise antes de
+anotar (`--solo-ver` no escribe nada). La guía completa está en `datos/expedientes/README.md`; las pruebas, en
+`tests/test_formato_transcripcion.py` (ADR-041).
+
 ## 3. Extracción con LLM (especificación de la fase siguiente)
 
 1. **Unidad de trabajo: una pieza.** El extractor recibe:
    * el texto **paleográfico** de sus tramos, nunca el modernizado;
-   * la ficha de la pieza (tipo, fecha y tramos, de `piezas.jsonl`);
+   * la ficha de la pieza (tipo, fecha y tramos, del archivo de piezas del expediente);
    * el esquema;
    * la guía de anotación, cuyo ejemplo es `hilo_central.py`.
 2. **Salida:** una lista de registros de mención y de afirmación.
-3. **Validación.** Cada registro que falla vuelve al LLM con el mensaje exacto del validador, hasta 2 reintentos. Si sigue fallando, se descarta y se registra. **No se repara la cita a mano.**
+3. **Validación.** `scripts/validar_lote.py <expediente> [registros.jsonl …]` valida un lote nuevo junto con el resto del corpus sin escribir el grafo (el expediente es el primer argumento, obligatorio). Cada registro que falla vuelve al LLM con el mensaje exacto del validador, hasta 2 reintentos. Si sigue fallando, se descarta y se registra. **No se repara la cita a mano.**
 4. **Procedencia.** Cada lote es un grafo nombrado con su `prov:Activity`, que registra:
    * modelo y versión;
    * prompt versionado en `prompts/`, como `prov:Plan`;
@@ -92,7 +122,7 @@ porque la salida estructurada no garantiza que la cita sea literal.
 
 El agente conversacional **no genera SPARQL libre**.
 
-1. **Elige una consulta con nombre** de `consultas/`: `afirmaciones`, `disputas`, `disputas_firma`, `reconstrucciones`, `menciones_de`, `piezas`, `control_secuencia` o `procedencia`.
+1. **Elige una consulta con nombre** de `consultas/` (`consulta.nombres()` las lista; entre ellas `afirmaciones`, `disputas`, `disputas_firma`, `reconstrucciones`, `menciones_de`, `piezas`, `participantes`, `cargos`, `catalogo`, `control_secuencia`, `procedencia` y `candidatos_en_uso`). Varias admiten el parámetro opcional `?expediente`.
 2. **Le pasa IRIs**, que `consulta._values` valida y convierte en un bloque `VALUES`.
 3. **Para resolver nombres de entidades**, por ejemplo «Chuquitapa», consulta el índice de etiquetas de las reconstrucciones y de las menciones, y devuelve candidatos. Esta parte está pendiente; hoy los slugs se pasan a mano.
 4. **Compone la respuesta** con `responder.Respuesta`, que garantiza:
@@ -105,7 +135,39 @@ El agente conversacional **no genera SPARQL libre**.
 
 Las respuestas completas a las 20 PC están en `docs/anexos/respuestas_pc.md`.
 
-## 5. Rendimiento medido (2026-11-12, en el portátil del proyecto)
+### 4.1 Motor de consulta: Oxigraph
+
+Desde el 2026-11-14 las consultas se ejecutan por defecto en **Oxigraph** (`pyoxigraph`), cargado desde los N-Quads
+canónicos de `datos/grafo/` más el tesauro y los candidatos; el grafo por defecto de la consulta es la unión de los
+grafos nombrados, materializada al cargar. La variable de entorno `LAAD_MOTOR=rdflib` vuelve al motor anterior
+(rdflib en memoria, sin dependencias compiladas), y `tests/test_motores.py` comprueba que los dos devuelven las
+mismas filas. rdflib sigue siendo quien **construye, serializa y valida** el grafo; Oxigraph solo lo consulta
+(ADR-042).
+
+`scripts/servir.py` responde una consulta con nombre desde la línea de órdenes
+(`scripts/servir.py piezas expediente=cc-14-18`); no es un servidor HTTP. Con `--volcar` escribe un almacén
+persistente en disco y con `--almacen` lo consulta sin volver a cargar el corpus.
+
+## 5. Rendimiento medido
+
+### 5.1 Medición del 2026-11-14 (expediente completo, Oxigraph)
+
+| Operación | Tiempo | Fuente |
+|---|---|---|
+| Carga del corpus en Oxigraph (memoria) | 0,13 s | `datos/grafo/escala.md` |
+| `piezas(expediente)` | 0,002 s | `datos/grafo/escala.md` |
+| `afirmaciones(expediente, filtroEntidad, atributo)` | 0,026 s | `datos/grafo/escala.md` |
+| `afirmaciones(expediente)`, todas con sus facetas | 0,081 s | `datos/grafo/escala.md` |
+| `disputas()` | 0,35 s | `datos/grafo/escala.md` |
+| La misma `afirmaciones` filtrada con `LAAD_MOTOR=rdflib` | ≈ 15 s (frente a 0,05 s con Oxigraph en la misma ejecución) | Medición puntual al redactar este apartado; una sola ejecución |
+
+La medición de escala replica el expediente piloto hasta 1 000 veces (no son expedientes reales). Su conclusión:
+la carga y el almacenamiento crecen linealmente y están comprobados hasta 1 000 expedientes sintéticos; las
+consultas con nombre, tal como están escritas, solo son interactivas hasta unas decenas de expedientes y habrá que
+reescribirlas (restricción al expediente como patrón de tripletas). No se midieron a escala la construcción del
+grafo, la validación SHACL ni el razonador. Método, tablas y cautelas: `datos/grafo/escala.md`.
+
+### 5.2 Medición del 2026-11-12 (solo el hilo central, rdflib; histórica)
 
 | Operación | Tiempo |
 |---|---|
@@ -113,4 +175,4 @@ Las respuestas completas a las 20 PC están en `docs/anexos/respuestas_pc.md`.
 | Consulta `afirmaciones` filtrada | ≈ 2 s |
 | `disputas` | 2,5 s. La primera versión tardaba 144 s y fallaba en los casos de piezas; ver la bitácora |
 | Cierre OWL RL con todos los estándares | ≈ 79 s |
-| Batería de pruebas completa (205 pruebas) | ≈ 90 s |
+| Batería de pruebas completa (205 pruebas en esa fecha) | ≈ 90 s |

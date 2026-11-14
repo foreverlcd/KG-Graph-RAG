@@ -41,13 +41,13 @@ m("M-UT00-201", "UT00", "P00", "persona", "Manuel Mancachoque", "Expediente segu
 m("M-UT00-202", "UT00", "P00", "grupo", "Ayllo Tinta", "le ha inferido el casique del Ayllo Tinta", tipo="ayllu")
 m("M-UT00-203", "UT00", "P00", "persona", "D. Andres Chuquitapa", "el casique del Ayllo Tinta D. Andres Chuquitapa")
 m("M-UT00-204", "UT00", "P00", "cosa", "matricula", "se le borre de la matricula en que lo han numerado", tipo="matricula")
-m("M-UT00-205", "UT00", "P00", "grupo", "Real Hacienda", "Instancia Real Hacienda")
+m("M-UT00-205", "UT00", "P00", "grupo", "Real Hacienda", "Instancia Real Hacienda", tipo="real-hacienda")
 # Sin afirmaciones: la carátula no nombra autor (ni escribano ni archivero) que pueda ser afirmante.
 
 # ───────────── P01 · Certificación de Isidro Cano · UT01 ─────────────
 m("M-UT01-201", "UT01", "P01", "grupo", "compañía de Tinta de Milicias", "de esta compañía de Tinta de Milicias de este cuerpo",
   tipo="compania-milicias")
-m("M-UT01-202", "UT01", "P01", "grupo", "regimiento de este partido", "del regimiento de este partido sertifico")
+m("M-UT01-202", "UT01", "P01", "grupo", "regimiento de este partido", "del regimiento de este partido sertifico", tipo="regimiento")
 m("M-UT01-203", "UT01", "P01", "lugar", "este partido", "del regimiento de este partido sertifico", tipo="partido")
 m("M-UT01-204", "UT01", "P01", "grupo", "sus enemigos", "lo esta lo estropearon sus enemigos lo tendieron")
 m("M-UT01-205", "UT01", "P01", "lugar", "la carcel", "lo pusieron a la carcel a esa noche", tipo="carcel")
@@ -57,14 +57,14 @@ m("M-UT01-208", "UT01", "P01", "grupo", "los españoles", "hacen una matanza a l
 m("M-UT01-209", "UT01", "P01", "lugar", "la plaza", "porque estaba cubierto de indiada la plaza", tipo="plaza")
 m("M-UT01-210", "UT01", "P01", "grupo", "indiada", "porque estaba cubierto de indiada la plaza")
 m("M-UT01-211", "UT01", "P01", "persona", "don Antonio Reparas", "En tiempo del señor corregidor don Antonio Reparas")
-m("M-UT01-212", "UT01", "P01", "cosa", "Chicha", "cargando. [....] y Chicha ay se alzaron")
+m("M-UT01-212", "UT01", "P01", "cosa", "Chicha", "cargando. [....] y Chicha ay se alzaron", tipo="bien-mueble")
 m("M-UT01-213", "UT01", "P01", "persona", "don Miguel Orey", "se alzaron contra el capitan don Miguel Orey")
 m("M-UT01-214", "UT01", "P01", "grupo", "cerca de sesenta indios", "con pedradas palos cerca de sesenta indios")
 m("M-UT01-215", "UT01", "P01", "lugar", "su tienda", "pedrearon su tienda hasta quebrar la puerta", tipo="edificio")
 m("M-UT01-216", "UT01", "P01", "persona", "capitán Orey", "Y el dicho capitán Orey escapo por una ventana")
 m("M-UT01-217", "UT01", "P01", "persona", "su mujer", "su mujer resien parida le causo un horror")
 m("M-UT01-218", "UT01", "P01", "grupo", "los indios", "A los indios perjudica quitando sus chacras")
-m("M-UT01-219", "UT01", "P01", "cosa", "sus chacras o tierras", "perjudica quitando sus chacras o tierras")
+m("M-UT01-219", "UT01", "P01", "cosa", "sus chacras o tierras", "perjudica quitando sus chacras o tierras", tipo="tierra")
 m("M-UT01-220", "UT01", "P01", "grupo", "los tributarios", "les harrea con fainas a los tributarios")
 m("M-UT01-221", "UT01", "P01", "grupo", "los señores jueces", "pongan remedio los señores jueces porque", rol="destinatario")
 m("M-UT01-222", "UT01", "P01", "persona", "dicho alzado", "de sus traiciones, del dicho alzado")
@@ -155,7 +155,7 @@ a("A-UT01-232", "UT01", "P01", C1, "certificante", {"mencion": "M-UT01-208"},
   nota="Víctimas intentadas («hacen una matanza»).")
 
 # ───────────── P02 · Certificación de Santiago Cazorla · UT02 ─────────────
-m("M-UT02-201", "UT02", "P02", "grupo", "regimiento de Tinta", "sargento primero del regimiento de Tinta de la primera compañía")
+m("M-UT02-201", "UT02", "P02", "grupo", "regimiento de Tinta", "sargento primero del regimiento de Tinta de la primera compañía", tipo="regimiento")
 m("M-UT02-202", "UT02", "P02", "grupo", "primera compañía", "del regimiento de Tinta de la primera compañía", tipo="compania-milicias")
 m("M-UT02-203", "UT02", "P02", "grupo", "mi compañía", "ha estado soldado en mi compañía más de cinco años", tipo="compania-milicias")
 m("M-UT02-204", "UT02", "P02", "lugar", "Tinta", "doy mi certificación en Tinta agosto", tipo="pueblo")
@@ -175,7 +175,7 @@ a("A-UT02-204", "UT02", "P02", C2, "certificante", {"mencion": "M-UT02-003", "el
 
 # ───────────── P03 · Certificación a nombre de Juan Quiñones · UT02 ─────────────
 m("M-UT02-206", "UT02", "P03", "persona", "Manuel Huancachoque", "al denunciante Manuel Huancachoque, cuasi lo acaban")
-m("M-UT02-207", "UT02", "P03", "lugar", "las calles públicas", "en las calles públicas y plaza los indios")
+m("M-UT02-207", "UT02", "P03", "lugar", "las calles públicas", "en las calles públicas y plaza los indios", tipo="calle")
 m("M-UT02-208", "UT02", "P03", "lugar", "plaza", "en las calles públicas y plaza los indios", tipo="plaza")
 m("M-UT02-209", "UT02", "P03", "grupo", "los indios", "plaza los indios del cacique don Andrés")
 m("M-UT02-210", "UT02", "P03", "persona", "don Andrés Chukitapa", "del cacique don Andrés Chukitapa a puñetes")
@@ -186,7 +186,7 @@ m("M-UT02-214", "UT02", "P03", "lugar", "la cárcel", "allegaron a la puerta de 
 m("M-UT02-215", "UT02", "P03", "persona", "dicho Guancachoque", "a dar muerte a dicho Guancachoque")
 m("M-UT02-216", "UT02", "P03", "grupo", "los españoles", "despues pasar a los españoles")
 m("M-UT02-217", "UT02", "P03", "grupo", "todos los españoles", "porque todos los españoles tuvimos por bien hecho")
-m("M-UT02-218", "UT02", "P03", "grupo", "Real Hacienda", "haver manifestado el robo a favor de la Real Hacienda")
+m("M-UT02-218", "UT02", "P03", "grupo", "Real Hacienda", "haver manifestado el robo a favor de la Real Hacienda", tipo="real-hacienda")
 m("M-UT02-219", "UT02", "P03", "lugar", "esta plaza", "en cada esquina de esta plaza hubo", tipo="plaza")
 m("M-UT02-220", "UT02", "P03", "grupo", "un montón de indios", "hubo un montón de indios y pusieron de guardia")
 m("M-UT02-221", "UT02", "P03", "persona", "don Santiago Cazorla", "en la puerta de don Santiago Cazorla")
@@ -196,7 +196,7 @@ m("M-UT02-224", "UT02", "P03", "grupo", "los indios", "hizo embriagar a los indi
 m("M-UT02-225", "UT02", "P03", "lugar", "su casa", "a su casa hicieron pedazos la puerta", tipo="edificio")
 m("M-UT02-226", "UT02", "P03", "grupo", "dos españoles", "lo vimos entre dos españoles")
 m("M-UT02-227", "UT02", "P03", "persona", "don Javier Aparicio", "con don Javier Aparicio español soldado")
-m("M-UT02-228", "UT02", "P03", "cosa", "la llave de la carcel", "si esa noche parece la llave de la carcel")
+m("M-UT02-228", "UT02", "P03", "cosa", "la llave de la carcel", "si esa noche parece la llave de la carcel", tipo="bien-mueble")
 m("M-UT02-229", "UT02", "P03", "grupo", "los señores jueces", "para que es cierto los señores jueces pongan remedio",
   rol="destinatario")
 
@@ -287,7 +287,7 @@ m("M-UT03-204", "UT03", "P04", "grupo", "Ayllu de tinta", "los Indios del Ayllu 
 m("M-UT03-205", "UT03", "P04", "persona", "Manuel Huancachoque", "de tinta contra Manuel Huancachoque. Que declaro")
 m("M-UT03-206", "UT03", "P04", "grupo", "los Indios ocultados", "Que declaro por los Indios ocultados")
 m("M-UT03-207", "UT03", "P04", "persona", "nuestro soberano", "ocultados a favor de nuestro soberano")
-m("M-UT03-208", "UT03", "P04", "cosa", "reales arcas", "y aumento a las reales arcas a dicho")
+m("M-UT03-208", "UT03", "P04", "cosa", "reales arcas", "y aumento a las reales arcas a dicho", tipo="dinero")
 m("M-UT03-209", "UT03", "P04", "persona", "dicho denunciante", "a dicho denunciante los indios llevaron preso")
 m("M-UT03-210", "UT03", "P04", "grupo", "los indios", "dicho denunciante los indios llevaron preso")
 m("M-UT03-211", "UT03", "P04", "lugar", "la cárcel", "llevaron preso a la cárcel maltratando", tipo="carcel")
@@ -373,8 +373,8 @@ a("A-UT03-225", "UT03", "P04", C4, "certificante", {"mencion": "M-UT03-002", "el
 
 # ───────────── P05 · Certificación a nombre de Martín Cazorla · UT04 ─────────────
 m("M-UT04-201", "UT04", "P05", "persona", "Manuel Huancachoque", "Tuve grande sentimiento por Manuel Huancachoque")
-m("M-UT04-202", "UT04", "P05", "grupo", "Real Hacienda", "denunciante a favor de la Real Hacienda que defendió")
-m("M-UT04-203", "UT04", "P05", "cosa", "las reales arcas", "que defendió a las reales arcas")
+m("M-UT04-202", "UT04", "P05", "grupo", "Real Hacienda", "denunciante a favor de la Real Hacienda que defendió", tipo="real-hacienda")
+m("M-UT04-203", "UT04", "P05", "cosa", "las reales arcas", "que defendió a las reales arcas", tipo="dinero")
 m("M-UT04-204", "UT04", "P05", "persona", "cacique", "el total robo del cacique que dice en usurpación")
 m("M-UT04-205", "UT04", "P05", "grupo", "los indios", "los indios estiraron a golpes de los pelos")
 m("M-UT04-206", "UT04", "P05", "lugar", "la cárcel", "de los pelos pusieron a la cárcel", tipo="carcel")
@@ -382,16 +382,17 @@ m("M-UT04-207", "UT04", "P05", "persona", "mi cacique", "declararon el robo de m
 m("M-UT04-208", "UT04", "P05", "lugar", "la cárcel", "pidieron a la cárcel al denunciante", tipo="carcel")
 m("M-UT04-209", "UT04", "P05", "persona", "denunciante", "a la cárcel al denunciante, maltratando")
 m("M-UT04-210", "UT04", "P05", "grupo", "los Indios", "se alzaron los Indios todos con garrotes")
-m("M-UT04-211", "UT04", "P05", "grupo", "Real Hacienda", "condolían por a favor de la Real Hacienda que hablamos")
-m("M-UT04-212", "UT04", "P05", "grupo", "Real Hacienda", "Sintiéndonos a favor de la Real Hacienda")
+m("M-UT04-211", "UT04", "P05", "grupo", "Real Hacienda", "condolían por a favor de la Real Hacienda que hablamos", tipo="real-hacienda")
+m("M-UT04-212", "UT04", "P05", "grupo", "Real Hacienda", "Sintiéndonos a favor de la Real Hacienda", tipo="real-hacienda")
 m("M-UT04-213", "UT04", "P05", "grupo", "los señores jueces", "romediando aora los señores jueces abra", rol="destinatario")
 
 m("M-UT04-214", "UT04", "P05", "persona", "desvalido", "en usurpación al desvalido lo castigaron")
 
 C5 = "M-UT04-001"
 a("A-UT04-201", "UT04", "P05", C5, "certificante", {"mencion": C5},
-  "ejerce-cargo", {"concepto": "soldado"}, "Yo el soldado granadero Martin Cazorla",
-  nota="«granadero» no tiene concepto propio en tes:cargos; se registra el cargo genérico soldado.")
+  "ejerce-cargo", {"concepto": "granadero"}, "Yo el soldado granadero Martin Cazorla",
+  nota="«soldado granadero»: concepto candidato cargo:granadero (más específico que soldado; "
+       "datos/candidatos_tesauro.csv).")
 a("A-UT04-202", "UT04", "P05", C5, "certificante", {"mencion": C5},
   "calificacion-de-conducta", {"literal": "soldado fiel hijo de la causa real"}, "como soldado fiel hijo de la causa real")
 a("A-UT04-203", "UT04", "P05", C5, "certificante", {"mencion": "M-UT04-201", "eliptico": True},
@@ -446,7 +447,7 @@ m("M-UT05-204", "UT05", "P06", "lugar", "partido de este nombre", "Tinta, partid
 m("M-UT05-205", "UT05", "P06", "persona", "mi soberano y señor natural", "fidelidad a mi soberano y señor natural")
 m("M-UT05-206", "UT05", "P06", "grupo", "Indios tributarios", "considerable número de Indios tributarios que")
 m("M-UT05-207", "UT05", "P06", "persona", "muy ilustre señor presidente", "de orden del muy ilustre señor presidente que")
-m("M-UT05-208", "UT05", "P06", "grupo", "Real Audiencia", "presidente que esta Real Audiencia se procedio")
+m("M-UT05-208", "UT05", "P06", "grupo", "Real Audiencia", "presidente que esta Real Audiencia se procedio", tipo="real-audiencia")
 m("M-UT05-209", "UT05", "P06", "persona", "actual apoderado del fiscal", "por el actual apoderado del fiscal que ha sido")
 m("M-UT05-210", "UT05", "P06", "persona", "recaudador", "a presencia del recaudador y juez subdelegado")
 m("M-UT05-211", "UT05", "P06", "persona", "juez subdelegado", "a presencia del recaudador y juez subdelegado")
@@ -534,30 +535,32 @@ m("M-UT06-201", "UT06", "P06", "lugar", "pueblo", "a ser expelido del pueblo, y 
 m("M-UT06-202", "UT06", "P06", "grupo", "una caterva de indios", "se apareció una caterva de indios")
 m("M-UT06-203", "UT06", "P06", "lugar", "el pueblo", "los alaridos aterrorizaron el pueblo", tipo="pueblo")
 m("M-UT06-204", "UT06", "P06", "persona", "el subdelegado", "sin que el subdelegado se moviese")
+m("M-UT06-221", "UT06", "P06", "grupo", "otros", "y otros, decían que lo harian con hondas y piedras")
 m("M-UT06-205", "UT06", "P06", "persona", "Chuquitapa", "ha hecho de mi Chuquitapa lo que ha querido")
 m("M-UT06-206", "UT06", "P06", "grupo", "las milicias de aquella provincia", "empleado en las milicias de aquella provincia")
-m("M-UT06-207", "UT06", "P06", "lugar", "aquella provincia", "las milicias de aquella provincia, hasta")
+m("M-UT06-207", "UT06", "P06", "lugar", "aquella provincia", "las milicias de aquella provincia, hasta", tipo="provincia")
 m("M-UT06-208", "UT06", "P06", "grupo", "vecindario", "el objeto de la ogerisa del vecindario")
 m("M-UT06-209", "UT06", "P06", "persona", "Chuquitapa", "por parte de Chuquitapa se me amenaza")
 m("M-UT06-210", "UT06", "P06", "persona", "Monarca", "mi fidelidad al Monarca padezca")
 m("M-UT06-211", "UT06", "P06", "persona", "vuestro señor", "a la celosa protección de vuestro señor")
-m("M-UT06-212", "UT06", "P06", "cosa", "documentos calificativos del hecho", "tener yo documentos calificativos del hecho que refiero")
+m("M-UT06-212", "UT06", "P06", "cosa", "documentos calificativos del hecho", "tener yo documentos calificativos del hecho que refiero", tipo="documento")
 m("M-UT06-213", "UT06", "P06", "persona", "muy ilustre señor presidente", "esta mi representación al muy ilustre señor presidente")
 m("M-UT06-214", "UT06", "P06", "cosa", "matricula", "se me saque de la matricula relevándoseme", tipo="matricula")
 m("M-UT06-215", "UT06", "P06", "persona", "Chuquitapa", "que mi por Chuquitapa ni por otros")
 m("M-UT06-216", "UT06", "P06", "grupo", "otros de su compañía", "ni por otros de su compañía se me infiera")
-m("M-UT06-217", "UT06", "P06", "cosa", "ingente cantidad de dinero", "la ingente cantidad de dinero que ha usurpado aquel")
-m("M-UT06-218", "UT06", "P06", "grupo", "Juzgado", "elevar mi queja al Juzgado que expreso")
+m("M-UT06-217", "UT06", "P06", "cosa", "ingente cantidad de dinero", "la ingente cantidad de dinero que ha usurpado aquel", tipo="dinero")
+m("M-UT06-218", "UT06", "P06", "grupo", "Juzgado", "elevar mi queja al Juzgado que expreso", tipo="institucion")
 m("M-UT06-219", "UT06", "P06", "persona", "vuestro señor", "A vuestro señor pido y suplico")
 m("M-UT06-220", "UT06", "P06", "persona", "aquel", "dinero que ha usurpado aquel al Real grasia")
 
 a("A-UT06-201", "UT06", "P06", D, "denunciante", {"mencion": D},
   "participa-en-hecho", {"hecho": "H-p06-prision"}, "al fin me encerraron allí", rol_en_hecho="preso",
   fundamento="experiencia-propia", nota="El afirmante es la mención inicial del escrito (UT05), misma pieza.")
-a("A-UT06-202", "UT06", "P06", D, "denunciante", {"hecho": "H-p06-maltrato"},
+a("A-UT06-202", "UT06", "P06", D, "denunciante", {"mencion": "M-UT06-221"},
   "dijo", {"literal": "decían que lo harian con hondas y piedras"},
   "y otros, decían que lo harian con hondas y piedras",
-  nota="Amenaza referida de los agresores (sujeto plural sin mención); se ancla al hecho del maltrato.")
+  nota="Amenaza referida de los agresores: el sujeto es el plural escrito «otros» (M-UT06-221), como pide atr:dijo; "
+       "no el hecho del maltrato.")
 a("A-UT06-203", "UT06", "P06", D, "denunciante", {"mencion": "M-UT06-202"},
   "participa-en-hecho", {"hecho": "H-p06-alboroto"}, "se apareció una caterva de indios, a quienes había entregado",
   rol_en_hecho="agresor", fundamento="experiencia-propia")
@@ -608,14 +611,14 @@ a("A-UT06-218", "UT06", "P06", D, "denunciante", {"hecho": "H-p06-alboroto"},
 # ───────────── P07 · Vista fiscal · UT07–UT08 ─────────────
 m("M-UT07-201", "UT07", "P07", "persona", "Muy ilustre Señor Presidente", "Muy ilustre Señor Presidente El fiscal", rol="destinatario")
 m("M-UT07-202", "UT07", "P07", "persona", "El fiscal de su Majestad", "El fiscal de su Majestad acompañando", rol="dictaminador")
-m("M-UT07-203", "UT07", "P07", "cosa", "el antecedente escrito", "acompañando el antecedente escrito que le ha presentado")
+m("M-UT07-203", "UT07", "P07", "cosa", "el antecedente escrito", "acompañando el antecedente escrito que le ha presentado", tipo="documento")
 m("M-UT07-204", "UT07", "P07", "persona", "Manuel Guancachoque", "presentado Manuel Guancachoque indio del Pueblo de Tinta")
 m("M-UT07-205", "UT07", "P07", "lugar", "Pueblo de Tinta", "indio del Pueblo de Tinta: Dice", tipo="pueblo")
 m("M-UT07-206", "UT07", "P07", "grupo", "cincuenta y un tributarios", "aver denunciado cincuenta y un tributarios en la revisita")
 m("M-UT07-207", "UT07", "P07", "lugar", "aquel partido", "en la revisita de aquel partido contra", tipo="partido")
 m("M-UT07-208", "UT07", "P07", "grupo", "sus parciales", "este y sus parciales amén")
 m("M-UT07-209", "UT07", "P07", "lugar", "la carcel", "estando aquel en la carcel", tipo="carcel")
-m("M-UT07-210", "UT07", "P07", "cosa", "las certificaciones de testigos", "lo califican con las certificaciones de testigos que acompañan")
+m("M-UT07-210", "UT07", "P07", "cosa", "las certificaciones de testigos", "lo califican con las certificaciones de testigos que acompañan", tipo="documento")
 m("M-UT07-211", "UT07", "P07", "persona", "subdelegado del partido de Tinta", "la respectiva orden del subdelegado del partido de Tinta")
 m("M-UT07-212", "UT07", "P07", "lugar", "partido de Tinta", "del subdelegado del partido de Tinta, para", tipo="partido")
 m("M-UT07-213", "UT07", "P07", "persona", "el referido recaudador", "el referido recaudador incomode")
@@ -708,10 +711,10 @@ a("A-UT08-205", "UT08", "P07", F, "dictaminador", {"mencion": "M-UT08-203"},
 
 # ───────────── P08 · Notificación del decreto al fiscal · UT08 ─────────────
 m("M-UT08-205", "UT08", "P08", "lugar", "Cusco", "En el Cusco y Agosto veinte y tres", tipo="ciudad")
-m("M-UT08-206", "UT08", "P08", "cosa", "el Decreto que antecede", "en el presente el Decreto que antecede al Señor")
+m("M-UT08-206", "UT08", "P08", "cosa", "el Decreto que antecede", "en el presente el Decreto que antecede al Señor", tipo="documento")
 m("M-UT08-207", "UT08", "P08", "persona", "Don Luis Gomez del Rio", "al Señor Don Luis Gomez del Rio del consejo", rol="notificado")
-m("M-UT08-233", "UT08", "P08", "grupo", "consejo de su Majestad", "del consejo de su Majestad su fiscal")
-m("M-UT08-208", "UT08", "P08", "grupo", "Real Audiencia", "su fiscal en esta Real Audiencia estando")
+m("M-UT08-233", "UT08", "P08", "grupo", "consejo de su Majestad", "del consejo de su Majestad su fiscal", tipo="institucion")
+m("M-UT08-208", "UT08", "P08", "grupo", "Real Audiencia", "su fiscal en esta Real Audiencia estando", tipo="real-audiencia")
 m("M-UT08-209", "UT08", "P08", "lugar", "las casas de su morada", "estando en las casas de su morada doy fe", tipo="edificio")
 m("M-UT08-210", "UT08", "P08", "persona", "Chacón", "Firma de Chacón", rol="firmante")
 
@@ -720,27 +723,30 @@ a("A-UT08-206", "UT08", "P08", E8, "fedatario", {"mencion": "M-UT08-207"},
   "ejerce-cargo", {"concepto": "fiscal-audiencia"}, "del consejo de su Majestad su fiscal en esta Real Audiencia")
 a("A-UT08-207", "UT08", "P08", E8, "fedatario", {"mencion": "M-UT08-207"},
   "se-hallaba", {"mencion": "M-UT08-209"}, "estando en las casas de su morada doy fe")
+a("A-UT08-224", "UT08", "P08", E8, "fedatario", {"mencion": "M-UT08-207"},
+  "ejerce-cargo", {"concepto": "consejero"}, "Don Luis Gomez del Rio del consejo de su Majestad",
+  nota="Título «del consejo de su Majestad»: concepto candidato cargo:consejero (datos/candidatos_tesauro.csv).")
 a("A-UT08-208", "UT08", "P08", E8, "fedatario", {"pieza": "P08"},
   "firmo", {"mencion": E8}, "doy fe Firma de Chacón",
   nota="El fedatario se identifica solo por la firma «Chacón»; la transcripción no da su cargo.")
 
 # ───────────── P09 · Reconocimiento y ratificación ante el teniente asesor · UT08 ─────────────
 m("M-UT08-211", "UT08", "P09", "lugar", "ciudad del Cuzco", "En la ciudad del Cuzco en trece días", tipo="ciudad")
-m("M-UT08-212", "UT08", "P09", "cosa", "Decreto marginal", "lo mando en el Decreto marginal")
+m("M-UT08-212", "UT08", "P09", "cosa", "Decreto marginal", "lo mando en el Decreto marginal", tipo="documento")
 m("M-UT08-213", "UT08", "P09", "persona", "Don Manuel Galeano", "El señor Don Manuel Galeano Teniente Asesor", rol="receptor")
 m("M-UT08-214", "UT08", "P09", "lugar", "este Govierno e intendencia", "Teniente Asesor de este Govierno e intendencia en virtud",
   tipo="intendencia")
-m("M-UT08-215", "UT08", "P09", "cosa", "dicho decreto", "conferida por dicho decreto mandó")
+m("M-UT08-215", "UT08", "P09", "cosa", "dicho decreto", "conferida por dicho decreto mandó", tipo="documento")
 m("M-UT08-216", "UT08", "P09", "persona", "Manuel Guancachoque", "comparecer ante su a Manuel Guancachoque yndio",
   rol="declarante")
 m("M-UT08-217", "UT08", "P09", "lugar", "Pueblo de Tinta", "yndio originario del Pueblo de Tinta de quien", tipo="pueblo")
 m("M-UT08-218", "UT08", "P09", "persona", "Doctor Don Manuel Valencia", "presencia del Doctor Don Manuel Valencia Abogado",
   rol="protector")
-m("M-UT08-219", "UT08", "P09", "lugar", "esta provincia", "de naturales de esta provincia e interpretes")
+m("M-UT08-219", "UT08", "P09", "lugar", "esta provincia", "de naturales de esta provincia e interpretes", tipo="provincia")
 m("M-UT08-220", "UT08", "P09", "grupo", "interpretes generales", "e interpretes generales por mi el presente", rol="interprete")
 m("M-UT08-221", "UT08", "P09", "persona", "Escribano mayor de Gobierno", "el presente Escribano mayor de Gobierno le recivio",
   rol="fedatario")
-m("M-UT08-222", "UT08", "P09", "cosa", "su escrito", "leído se le su escrito de folio dijo")
+m("M-UT08-222", "UT08", "P09", "cosa", "su escrito", "leído se le su escrito de folio dijo", tipo="documento")
 m("M-UT08-223", "UT08", "P09", "persona", "al que se lo hizo", "las instrucciones que comunico al que se lo hizo en cuyo")
 m("M-UT08-224", "UT08", "P09", "persona", "su Merced", "lo firmó con su Merced protector")
 m("M-UT08-225", "UT08", "P09", "persona", "protector", "con su Merced protector e interpretes de que")
@@ -767,6 +773,9 @@ a("A-UT08-212", "UT08", "P09", E9, "fedatario", {"mencion": G9},
 a("A-UT08-213", "UT08", "P09", E9, "fedatario", {"mencion": "M-UT08-218"},
   "ejerce-cargo", {"concepto": "protector-partidario"},
   "Doctor Don Manuel Valencia Abogado protector partidario de naturales de esta provincia")
+a("A-UT08-225", "UT08", "P09", E9, "fedatario", {"mencion": "M-UT08-218"},
+  "ejerce-cargo", {"concepto": "abogado"}, "Doctor Don Manuel Valencia Abogado protector partidario",
+  nota="«Abogado»: concepto candidato cargo:abogado (datos/candidatos_tesauro.csv).")
 a("A-UT08-214", "UT08", "P09", E9, "fedatario", {"mencion": E9},
   "ejerce-cargo", {"concepto": "escribano"}, "el presente Escribano mayor de Gobierno")
 a("A-UT08-215", "UT08", "P09", E9, "fedatario", {"mencion": G9},

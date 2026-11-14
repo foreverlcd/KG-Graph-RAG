@@ -13,7 +13,7 @@ from laad import fuente
 from laad import mapeo as M
 from laad.registros import cargar
 
-from ._fixtures import LOTES, PROCEDENCIA, RAIZ, REGISTROS, construir, dataset, union
+from ._fixtures import EXPEDIENTE_PILOTO, LOTES, PROCEDENCIA, RAIZ, REGISTROS, construir, dataset, union
 
 
 def _grafos(ds):
@@ -40,10 +40,11 @@ def test_id_duplicado_es_error(tmp_path):
     lineas = [l for l in REGISTROS.read_text(encoding="utf-8").splitlines() if l.strip()]
     ruta = tmp_path / "duplicado.jsonl"
     ruta.write_text("\n".join([lineas[0], lineas[0]]) + "\n", encoding="utf-8")
-    lote = cargar([ruta])
-    assert any("id duplicado" in e for e in lote.errores), lote.errores
-    with pytest.raises(ValueError):
-        M.construir(lote, PROCEDENCIA)
+    with fuente.usando_expediente(EXPEDIENTE_PILOTO):
+        lote = cargar([ruta])
+        assert any("id duplicado" in e for e in lote.errores), lote.errores
+        with pytest.raises(ValueError):
+            M.construir(lote, PROCEDENCIA)
 
 
 def test_verificar_citas_100():
@@ -67,9 +68,13 @@ def test_iris_validas():
 CLASES_MENCION = (M.PICOM.PersonObservation, M.ROAR.Observation, M.ROAR.LocationObservation)
 
 
+def _expediente_de(tramo_iri) -> str:
+    """Expediente de un tramo: id/<exp>/transcripcion/<sha>/<tramo>."""
+    return str(tramo_iri)[len(str(M.ID)):].split("/")[0]
+
+
 def test_selector_de_posicion_reproduce_la_cita():
     g = union()
-    texto_tramo = {t.id: t.texto for t in fuente.tramos()}
     menciones = sorted({m for c in CLASES_MENCION for m in g.subjects(RDF.type, c)})
     assert menciones
     errores = []
@@ -79,7 +84,9 @@ def test_selector_de_posicion_reproduce_la_cita():
             errores.append(f"{m}: {len(anotaciones)} anotaciones")
             continue
         tgt = g.value(anotaciones[0], M.OA.hasTarget)
-        tramo = str(g.value(g.value(tgt, M.OA.hasSource), RDFS.label))
+        fuente_tramo = g.value(tgt, M.OA.hasSource)
+        tramo = str(g.value(fuente_tramo, RDFS.label))
+        texto_tramo = {t.id: t.texto for t in fuente.tramos(_expediente_de(fuente_tramo))}
         sels = list(g.objects(tgt, M.OA.hasSelector))
         qs = [s for s in sels if (s, RDF.type, M.OA.TextQuoteSelector) in g]
         ps = [s for s in sels if (s, RDF.type, M.OA.TextPositionSelector) in g]
@@ -99,8 +106,9 @@ def test_selector_prefijo_exacto_sufijo_reconstruye_el_tramo():
     g = union()
     revisadas = 0
     for tgt in g.subjects(RDF.type, M.OA.SpecificResource):
-        tramo_id = str(g.value(tgt, M.OA.hasSource)).rsplit("/", 1)[-1]
-        texto = fuente.tramo(tramo_id).texto
+        fuente_tramo = g.value(tgt, M.OA.hasSource)
+        tramo_id = str(fuente_tramo).rsplit("/", 1)[-1]
+        texto = fuente.tramo(tramo_id, _expediente_de(fuente_tramo)).texto
         sels = list(g.objects(tgt, M.OA.hasSelector))
         qs = next(s for s in sels if (s, RDF.type, M.OA.TextQuoteSelector) in g)
         ps = next(s for s in sels if (s, RDF.type, M.OA.TextPositionSelector) in g)

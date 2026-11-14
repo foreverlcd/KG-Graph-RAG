@@ -1,17 +1,50 @@
-# Control: piezas cuyo orden físico contradice el orden de sus fechas normalizadas (capa 4, R-fechas-normalizadas),
-# o con año fuera del intervalo 1806–1807. Señala, no corrige (docs/01_materiales.md F1–F6).
+# Control: piezas cuyo orden físico contradice el orden de sus fechas normalizadas (capa 4, R-fechas-normalizadas-<exp>),
+# o con año fuera del intervalo plausible de su expediente. Señala, no corrige (docs/01_materiales.md F1–F6).
+# Parámetros opcionales: ?expediente (IRI del expediente) y el intervalo plausible, en años: ?desde, ?hasta (enteros;
+# vale dar uno solo) o ?margen.
+# El intervalo NO es una constante de la consulta. Si se dan ?desde u ?hasta, es ese. Si no, sale de los datos de
+# cada expediente: el año de la fecha normalizada de su carátula ± ?margen años (1 si no se indica: un expediente se
+# tramita en torno al año en que se forma). Una pieza de un expediente sin carátula fechada no se señala por el año.
+# GROUP BY: una fila por incoherencia (por pieza o par de piezas), aunque la pieza ocupe varios tramos de la
+# transcripción; las etiquetas ?p1 y ?p2 solo son únicas dentro de un expediente.
 SELECT ?p1 ?f1 ?p2 ?f2 ?motivo WHERE {
   #PARAMETROS
-  {
-    ?x rico:directlyPrecedesInSequence+ ?y .
-    ?ax crm:P94_has_created ?x ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 .
-    ?ay crm:P94_has_created ?y ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f2 .
-    ?x rdfs:label ?p1 . ?y rdfs:label ?p2 .
-    FILTER NOT EXISTS { ?x rico:hasDocumentaryFormType act:caratula }   # la carátula se forma después
-    FILTER (?f1 > ?f2) BIND ("orden físico contra fecha" AS ?motivo)
-  } UNION {
-    ?ax crm:P94_has_created ?x ; crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 . ?x rdfs:label ?p1 .
-    FILTER (YEAR(?f1) > 1807 || YEAR(?f1) < 1805) BIND ("año fuera del expediente" AS ?motivo)
+  #INCLUIR del_expediente
+  LATERAL { ?ax crm:P94_has_created ?pz . }
+  LATERAL { ?ax crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f1 . ?pz rdfs:label ?p1 . }
+  LATERAL {
+    { ?pz rico:directlyPrecedesInSequence+ ?y .
+      LATERAL { ?ay crm:P94_has_created ?y . }
+      LATERAL { ?ay crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?f2 . ?y rdfs:label ?p2 . }
+      BIND ("orden físico contra fecha" AS ?motivo) }
+    UNION
+    {
+      #SI NO desde hasta
+      # Fecha de la carátula del mismo expediente: la pieza de tipo carátula que comparte transcripción con ?pz.
+      ?pz rico:hasOrHadInstantiation ?parte_ .
+      LATERAL { ?parte_ rico:isOrWasComponentOf ?inst_ . }
+      LATERAL { ?otra_ rico:isOrWasComponentOf ?inst_ . }
+      LATERAL { ?car_ rico:hasOrHadInstantiation ?otra_ ; rico:hasDocumentaryFormType ?tipo_ . FILTER (?tipo_ = act:caratula) }
+      LATERAL { ?ac_ crm:P94_has_created ?car_ . }
+      LATERAL { ?ac_ crm:P4_has_time-span/crm:P82a_begin_of_the_begin ?fc_ . }
+      #FIN
+      BIND ("año fuera del expediente" AS ?motivo) }
   }
+  #SI NO margen
+  BIND (1 AS ?margen)
+  #FIN
+  #SI desde
+  BIND (YEAR(?f1) < ?desde AS ?antes_)
+  #FIN
+  #SI hasta
+  BIND (YEAR(?f1) > ?hasta AS ?despues_)
+  #FIN
+  #SI NO desde hasta
+  BIND (YEAR(?f1) < YEAR(?fc_) - ?margen AS ?antes_) BIND (YEAR(?f1) > YEAR(?fc_) + ?margen AS ?despues_)
+  #FIN
+  FILTER (IF(BOUND(?y),
+             ?f1 > ?f2 && NOT EXISTS { ?pz rico:hasDocumentaryFormType act:caratula },   # la carátula se forma después
+             COALESCE(?antes_, false) || COALESCE(?despues_, false)))
 }
+GROUP BY ?pz ?y ?p1 ?f1 ?p2 ?f2 ?motivo
 ORDER BY ?p1 ?p2

@@ -2,24 +2,61 @@
 
 Cada función devuelve una Respuesta compuesta SOLO con filas de consultas con nombre (consultas/*.rq).
 Las PC que requieren anotación aún no hecha devuelven forma "PENDIENTE" con el motivo: nunca se improvisa.
+
+Las 20 preguntas son sobre el expediente PILOTO. El grafo consultado es el corpus entero, así que toda consulta de
+las capas 1–3 se restringe a él con el parámetro ?expediente, y toda IRI del piloto sale de EXPEDIENTE_PILOTO por
+las funciones de abajo (ninguna cadena con el identificador en el resto del módulo).
 """
 from __future__ import annotations
 
-from .consulta import ID, TES, atributo, consultar, evento, persona
+from . import consulta, fuente
+from .consulta import atributo, consultar, evento, persona
 from .responder import Respuesta, _quien, _unicas, disputa, forma_de, pronunciamientos, reconstrucciones_de
 
-PIEZA = ID + "cc-14-18/pieza/"
+EXPEDIENTE_PILOTO = "cc-14-18"
+
+
+def _expediente() -> str:
+    """IRI archivística del expediente piloto (valor del parámetro ?expediente)."""
+    return consulta.expediente(EXPEDIENTE_PILOTO)
+
+
+def _mencion(mid: str) -> str:
+    return consulta.mencion(EXPEDIENTE_PILOTO, mid)
+
+
+def _afirmacion(aid: str) -> str:
+    return consulta.afirmacion(EXPEDIENTE_PILOTO, aid)
+
+
+def _ref(clase: str, local: str) -> str:
+    """Cómo lista consultas/reconstrucciones.rq un registro del piloto: «<exp>/mencion/<id>»."""
+    return f"{EXPEDIENTE_PILOTO}/{clase}/{local}"
+
+
+def _signatura() -> str:
+    """Signatura del piloto en el catálogo del ARC (de su manifiesto)."""
+    return fuente.manifiesto(EXPEDIENTE_PILOTO)["signatura_catalogo"]
+
+
+def _consultar(nombre: str, **kw) -> list[dict]:
+    """Consulta de las capas 1–3 restringida al expediente piloto."""
+    return consultar(nombre, expediente=_expediente(), **kw)
 
 
 def _afirm(**kw) -> list[dict]:
-    return _unicas(consultar("afirmaciones", **kw))
+    return _unicas(_consultar("afirmaciones", **kw))
+
+
+def _disputa(entidad: str, atr: str, valor_label: str | None = None) -> tuple[str, list[dict]]:
+    return disputa(entidad, atr, valor_label, expediente=_expediente())
 
 
 def pc01() -> Respuesta:
-    filas = consultar("piezas")
+    filas = _consultar("piezas")
     lineas = [f"  {f['pieza']} [{f['tipo']}] {f['titulo']} — fecha escrita: «{f['fecha']}»" if f["fecha"]
               else f"  {f['pieza']} [{f['tipo']}] {f['titulo']} — sin fecha escrita" for f in filas]
-    sec = consultar("control_secuencia")
+    sec = _consultar("control_secuencia")
     lineas += ["", "Control de secuencia (fechas normalizadas en capa 4 frente al orden físico):"]
     lineas += [f"  {s['p1']} ({s['f1']}) antes que {s['p2']} ({s['f2']}): {s['motivo']}" if s["p2"]
                else f"  {s['p1']} ({s['f1']}): {s['motivo']}" for s in sec]
@@ -29,7 +66,7 @@ def pc01() -> Respuesta:
 
 
 def pc05() -> Respuesta:
-    filas = consultar("menciones_de", filtroEntidad=persona("huancachoque"))
+    filas = _consultar("menciones_de", filtroEntidad=persona("huancachoque"))
     lineas = [f"  «{f['texto']}» — {f['tramo']}, pieza {f['pieza']} ({f['tipoAct']}), mención {f['mid']}" for f in filas]
     grafias = sorted({f["texto"] for f in filas})
     return Respuesta("¿Con qué grafías aparece el denunciante y dónde?", "D",
@@ -55,7 +92,7 @@ def pc08(slug: str = "cano") -> Respuesta:
 
 def pc09() -> Respuesta:
     ent = persona("chuquitapa")
-    res, filas = disputa(ent, "ejerce-cargo", "coronel (de Túpac Amaru)")
+    res, filas = _disputa(ent, "ejerce-cargo", "coronel (de Túpac Amaru)")
     extra = ["Afirmaciones relacionadas (no forman la disputa):"]
     for f in _afirm(filtroEntidad=ent, atributo=atributo("ejerce-cargo")):
         if f["valorLabel"] != "coronel (de Túpac Amaru)":
@@ -67,7 +104,7 @@ def pc09() -> Respuesta:
 
 def pc10() -> Respuesta:
     filas = _afirm(atributo=atributo("redacto"))
-    firmas = consultar("disputas_firma")
+    firmas = _consultar("disputas_firma")
     extra = [f"Disputa texto/afirmación: la pieza {f['pieza']} muestra la firma «{f['firmaEscrita']}» "
              f"({f['mencionFirma']}), y {f['negacion']} («{f['afirmante']}») lo niega: «{f['cita']}»" for f in firmas]
     piezas = sorted({f["sujetoLabel"] for f in filas})
@@ -84,7 +121,7 @@ def pc10() -> Respuesta:
 
 def pc11() -> Respuesta:
     ent = evento("prision")
-    res, filas = disputa(ent, "duracion")
+    res, filas = _disputa(ent, "duracion")
     return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas), res, filas, reconstrucciones_de(ent))
 
 
@@ -98,14 +135,14 @@ def pc12() -> Respuesta:
     ent = persona("huancachoque")
     # Solo las condiciones que deciden la matrícula (originario, forastero, tributario, reservado); «indio» a secas
     # no se pronuncia sobre ella.
-    fiscales = {f"https://w3id.org/laad/tesauro/condicion/{c}" for c in ("originario", "forastero", "tributario", "reservado")}
+    fiscales = {f"{consulta.TES}condicion/{c}" for c in ("originario", "forastero", "tributario", "reservado")}
     condicion = [f for f in _afirm(filtroEntidad=ent, atributo=atributo("tiene-condicion"))
                  if f["fuerza"] in ("resolutiva", "dictaminadora") and f["valor"] in fiscales
                  and f["fundamento"] != "resulta de lo actuado"]  # resumir lo actuado (la queja) no es pronunciarse
     ordenes = [f for f in _afirm(atributo=atributo("ordena"))
                if f["fuerza"] in ("resolutiva", "dictaminadora") and "matr" in f["valorLabel"].lower()]
     pertinentes = condicion + ordenes
-    desglose = [p for p in consultar("piezas") if p["tipo"] == "desglose y agregación"]
+    desglose = [p for p in _consultar("piezas") if p["tipo"] == "desglose y agregación"]
     extra = [f"Pieza {p['pieza']}: {p['titulo']} — fecha escrita «{p['fecha']}»" for p in desglose]
     extra.append("Advertencia: «no lo dice» vale en la medida en que la extracción de afirmaciones resolutivas sea "
                  "exhaustiva (exhaustividad medida contra el estándar de oro, docs/G_evaluacion.md).")
@@ -134,8 +171,8 @@ def pc13() -> Respuesta:
 
 def pc14() -> Respuesta:
     ent = evento("alboroto-carcel")
-    res, filas = disputa(ent, "fecha-del-hecho")
-    _, num = disputa(ent, "numero-de-participantes")
+    res, filas = _disputa(ent, "fecha-del-hecho")
+    _, num = _disputa(ent, "numero-de-participantes")
     return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas),
                      res, filas + num, reconstrucciones_de(ent))
 
@@ -149,8 +186,8 @@ def pc16() -> Respuesta:
 
 
 def pc19() -> Respuesta:
-    m = ID + "cc-14-18/mencion/M-UT12.a-005"
-    recs = [r for r in consultar("reconstrucciones") if "M-UT12.a-005" in r["menciones"]]
+    m = _mencion("M-UT12.a-005")
+    recs = [r for r in consultar("reconstrucciones") if _ref("mencion", "M-UT12.a-005") in r["menciones"].split()]
     return Respuesta("¿Son la misma persona «Mariano Casorla» (declarante) y «Martin Cazorla» (certificante)?", "R",
                      f"Hay {len(recs)} reconstrucciones en competencia; ninguna se impone en el grafo: "
                      + "; ".join(f"«{r['label']}» ({r['creencia']})" for r in recs) + ".", reconstrucciones=recs,
@@ -158,7 +195,7 @@ def pc19() -> Respuesta:
 
 
 def pc20(aid: str = "A-UT11-004") -> Respuesta:
-    x = ID + f"cc-14-18/afirmacion/{aid}"
+    x = _afirmacion(aid)
     filas = consultar("procedencia", x=x)
     lineas = [f"  grafo {f['grafo']} ({f['capa'].rsplit('/', 1)[1]}): actividad {f['actividad']}, agente {f['agente']} "
               f"({f['tipoAgente'].rsplit('#', 1)[1]}), plan «{f['plan']}», transcripción {f['sha']}, "
@@ -210,8 +247,8 @@ def pc15() -> Respuesta:
     """Cadena de autoridades: por pieza, tipo de actuación, fecha y data escritas, y quién actuó con qué papel
     procesal (capa 2, PC14 + P14.1), con la identidad reconstruida cuando la hay (capa 4). La circulación se lee de
     la data escrita de cada pieza, sin inferir traslados que el texto no dice."""
-    filas = consultar("participantes")
-    piezas = {f["pieza"]: f for f in consultar("piezas")}
+    filas = _consultar("participantes")
+    piezas = {f["pieza"]: f for f in _consultar("piezas")}
     por_pieza: dict[str, dict] = {}
     for f in filas:
         d = por_pieza.setdefault(f["pieza"], {"tipo": f["tipoAct"], "fecha": f["fecha"], "lugar": None, "roles": {}})
@@ -238,7 +275,7 @@ def pc15() -> Respuesta:
     return Respuesta("¿Qué autoridades actuaron, en qué actuación, en qué fecha, quién escribió y quién firmó cada una, "
                      "y en qué orden circuló el expediente?", "D",
                      f"{len(por_pieza)} de {len(piezas)} piezas con participantes anotados ({len(filas)} participaciones); "
-                     f"{len(sin_firma)} piezas sin firmante anotado.", filas, extra=lineas)
+                     f"{len(sin_firma)} piezas sin firmante anotado.", extra=lineas, participaciones=filas)
 
 
 AVISO_CATALOGO = ("Respuesta según el catálogo del ARC (afirmaciones de los catalogadores, no hechos del modelo), "
@@ -258,7 +295,7 @@ def _linea_ficha(f: dict) -> str:
 def pc03() -> Respuesta:
     """Según el catálogo: otros expedientes que mencionan a Chuquitapa, a Guancachoque o el pueblo de Tinta."""
     filas = _catalogo("PC03")
-    base = ID + "arc/expediente/cc-14-18"
+    base = str(_expediente())
     fichas = [f for f in filas if f["etiqueta"].startswith("Ficha") and f["expediente"] != base]
     personas = [f for f in fichas if any(n in f["texto"] for n in ("Chuquitapa", "Guancachoque"))]
     pueblo = [f for f in fichas if f["pueblo"] in (True, "true")]
@@ -270,7 +307,7 @@ def pc03() -> Respuesta:
               "(no consta que se refieran al pueblo):"] + [f"  {f['etiqueta']}" for f in otras_tinta]
     return Respuesta("¿Qué otros expedientes del Tomo I mencionan a Andrés Chuquitapa, a Manuel Guancachoque o al "
                      "pueblo de Tinta, según el catálogo?", "A",
-                     f"Según el catálogo, Chuquitapa y Guancachoque solo constan en CCc 14 (18) ({len(personas)} otras "
+                     f"Según el catálogo, Chuquitapa y Guancachoque solo constan en {_signatura()} ({len(personas)} otras "
                      f"fichas los nombran); {len(pueblo)} otras fichas nombran el «pueblo de Tinta» y {len(otras_tinta)} "
                      "más nombran Tinta en otro sentido.", extra=extra)
 
