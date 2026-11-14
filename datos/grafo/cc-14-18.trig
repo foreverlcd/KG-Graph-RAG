@@ -20,1036 +20,6 @@
 @prefix rst: <https://www.ica.org/standards/RiC/vocabularies/recordSetTypes#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/laad/grafo/cc-14-18/documento> {
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P00> a crm:E65_Creation ;
-        crm:P2_has_type act:caratula,
-            fza:informativa ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P00> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P01> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P3_has_note "Data (literal): En el pueblo de Tinta" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P01> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P02> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P3_has_note "Data (literal): doy mi certificación en Tinta" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P02> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P03> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P03> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P04> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P04> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P05> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P05> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P06> a crm:E65_Creation ;
-        crm:P2_has_type act:peticion,
-            fza:de-parte ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P06> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P07> a crm:E65_Creation ;
-        crm:P2_has_type act:vista-fiscal,
-            fza:dictaminadora ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P07> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P08> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P08> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P09> a crm:E65_Creation ;
-        crm:P2_has_type act:reconocimiento-y-ratificacion,
-            fza:testimonial ;
-        crm:P3_has_note "Data (literal): En la ciudad del Cuzco" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P09> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P10> a crm:E65_Creation ;
-        crm:P2_has_type act:auto,
-            fza:resolutiva ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P10> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P11> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P11> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P12> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P12> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P13> a crm:E65_Creation ;
-        crm:P2_has_type act:oficio,
-            fza:informativa ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P13> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P14> a crm:E65_Creation ;
-        crm:P2_has_type act:decreto,
-            fza:resolutiva ;
-        crm:P3_has_note "Data (literal): Sicuani Setiembre" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P14> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P15> a crm:E65_Creation ;
-        crm:P2_has_type act:desglose,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P15> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P16> a crm:E65_Creation ;
-        crm:P2_has_type act:auto-cabeza-de-proceso,
-            fza:resolutiva ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P16> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P17> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P17> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P18> a crm:E65_Creation ;
-        crm:P2_has_type act:declaracion-jurada,
-            fza:testimonial ;
-        crm:P3_has_note "Data (literal): En el pueblo de Tinta" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P18> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P19> a crm:E65_Creation ;
-        crm:P2_has_type act:declaracion-jurada,
-            fza:testimonial ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P19> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P20> a crm:E65_Creation ;
-        crm:P2_has_type act:declaracion-jurada,
-            fza:testimonial ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P20> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P21> a crm:E65_Creation ;
-        crm:P2_has_type act:declaracion-jurada,
-            fza:testimonial ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P21> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P22> a crm:E65_Creation ;
-        crm:P2_has_type act:oficio,
-            fza:informativa ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P22> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P23> a crm:E65_Creation ;
-        crm:P2_has_type act:informe,
-            fza:informativa ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P23> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P24> a crm:E65_Creation ;
-        crm:P2_has_type act:decreto,
-            fza:resolutiva ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P24> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P25> a crm:E65_Creation ;
-        crm:P2_has_type act:decreto,
-            fza:resolutiva ;
-        crm:P3_has_note "Data (literal): Sicuani Noviembre 8" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P25> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P26> a crm:E65_Creation ;
-        crm:P2_has_type act:decreto,
-            fza:resolutiva ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P26> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P27> a crm:E65_Creation ;
-        crm:P2_has_type act:informe,
-            fza:informativa ;
-        crm:P3_has_note "Data (literal): Siquani Noviembre 8" ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P27> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P28> a crm:E65_Creation ;
-        crm:P2_has_type act:auto,
-            fza:resolutiva ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P28> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P29> a crm:E65_Creation ;
-        crm:P2_has_type act:vista-fiscal,
-            fza:dictaminadora ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P29> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P30> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P30> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P31> a crm:E65_Creation ;
-        crm:P2_has_type act:notificacion,
-            fza:fedataria ;
-        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo> ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P31> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P32> a crm:E65_Creation ;
-        crm:P2_has_type act:certificacion,
-            fza:testimonial ;
-        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P32> .
-
-    <https://w3id.org/laad/id/arc/fondo/intendencia> a rico:RecordSet ;
-        rico:hasRecordSetType rst:Fonds ;
-        rico:includesOrIncluded <https://w3id.org/laad/id/arc/seccion/causas-criminales> ;
-        rico:title "Intendencia"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Agosto 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "en primero de agosto de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "agosto cinco de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "CUSCO AGOSTO 22 DE 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Cusco y Agosto 21 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "En el Cusco y Agosto veinte y tres de ochocientos seis" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "en trece días del mees de Agosto de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Agosto 27 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "En el Cuzco en veinte y siete días del mes de Agosto de mil ocho = Cientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "En dicho día mes y año" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Cusco y Agosto 28 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Setiembre. 17 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Tinta 23. de Septiembre de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Ynmediatamente" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "en veinti quatro dias del mes de setiembre de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Seguidamente" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "setiembre 24 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Noviembre 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Sicuani Noviembre 8 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Cuzco noviembre 18 de noviembre de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Siquani Noviembre 8 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Cusco y noviembre 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "Noviembre 20 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "en veinte y seis de noviembre de mil ochocientos seis" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo> a crm:E52_Time-Span ;
-        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo/expresion> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo/expresion> a crm:E41_Appellation ;
-        crm:P190_has_symbolic_content "veinte y tres de Diciembre de mil ochocientos 10 años" .
-
-    <https://w3id.org/laad/id/cc-14-18/original/extension> a rico:CarrierExtent ;
-        dct:source "ficha del catálogo del ARC (Causas Criminales, pp. 435-436 impresas; pp. 438-439 del PDF)"@es ;
-        rdfs:comment "Dato de la ficha del catálogo, contrastado y no asumido (discrepancia K5): la transcripción marca «[Folio 34 ]», incompatible con 19 folios correlativos."@es ;
-        rico:hasUnitOfMeasurement <https://w3id.org/laad/id/cc-14-18/original/extension/unidad> ;
-        rico:quantity 19.0 .
-
-    <https://w3id.org/laad/id/cc-14-18/original/extension/unidad> a rico:UnitOfMeasurement ;
-        rdfs:label "folio"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/original/folio/20> a rico:Instantiation ;
-        dct:type doc:folio ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
-        rico:title "folio 20" .
-
-    <https://w3id.org/laad/id/cc-14-18/original/folio/28> a rico:Instantiation ;
-        dct:type doc:folio ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
-        rico:title "folio 28" .
-
-    <https://w3id.org/laad/id/cc-14-18/original/folio/33> a rico:Instantiation ;
-        dct:type doc:folio ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
-        rico:title "folio 33" .
-
-    <https://w3id.org/laad/id/cc-14-18/original/folio/34> a rico:Instantiation ;
-        dct:type doc:folio ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
-        rico:title "folio 34" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> a rico:Date ;
-        rico:expressedDate "Agosto 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P01/fecha> a rico:Date ;
-        rico:expressedDate "en primero de agosto de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P02/fecha> a rico:Date ;
-        rico:expressedDate "agosto cinco de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P06/fecha> a rico:Date ;
-        rico:expressedDate "CUSCO AGOSTO 22 DE 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P07/fecha> a rico:Date ;
-        rico:expressedDate "Cusco y Agosto 21 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P08/fecha> a rico:Date ;
-        rico:expressedDate "En el Cusco y Agosto veinte y tres de ochocientos seis" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P09/fecha> a rico:Date ;
-        rico:expressedDate "en trece días del mees de Agosto de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P10/fecha> a rico:Date ;
-        rico:expressedDate "Agosto 27 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P11/fecha> a rico:Date ;
-        rico:expressedDate "En el Cuzco en veinte y siete días del mes de Agosto de mil ocho = Cientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P12/fecha> a rico:Date ;
-        rico:expressedDate "En dicho día mes y año" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P13/fecha> a rico:Date ;
-        rico:expressedDate "Cusco y Agosto 28 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P14/fecha> a rico:Date ;
-        rico:expressedDate "Setiembre. 17 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P15/fecha> a rico:Date ;
-        rico:expressedDate "Tinta 23. de Septiembre de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P18/fecha> a rico:Date ;
-        rico:expressedDate "Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P19/fecha> a rico:Date ;
-        rico:expressedDate "Ynmediatamente" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P20/fecha> a rico:Date ;
-        rico:expressedDate "en veinti quatro dias del mes de setiembre de mil ochocientos seis años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P21/fecha> a rico:Date ;
-        rico:expressedDate "Seguidamente" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P22/fecha> a rico:Date ;
-        rico:expressedDate "setiembre 24 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P23/fecha> a rico:Date ;
-        rico:expressedDate "Noviembre 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P25/fecha> a rico:Date ;
-        rico:expressedDate "Sicuani Noviembre 8 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P26/fecha> a rico:Date ;
-        rico:expressedDate "Cuzco noviembre 18 de noviembre de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P27/fecha> a rico:Date ;
-        rico:expressedDate "Siquani Noviembre 8 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P28/fecha> a rico:Date ;
-        rico:expressedDate "Cusco y noviembre 26 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P29/fecha> a rico:Date ;
-        rico:expressedDate "Noviembre 20 de 1806" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P30/fecha> a rico:Date ;
-        rico:expressedDate "en veinte y seis de noviembre de mil ochocientos seis" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P31/fecha> a rico:Date ;
-        rico:expressedDate "veinte y tres de Diciembre de mil ochocientos 10 años" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P32> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P32" ;
-        rdfs:comment "Documento ajeno al expediente capturado junto a él (docs/01_materiales.md)."@es ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
-        rico:title "Comienzo de una certificación notarial republicana ajena al expediente"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT00> a rico:Instantiation ;
-        rdfs:label "UT00" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT00 (líneas 1-8)" .
-
-    <https://w3id.org/laad/id/arc/legajo/cc-14> a rico:RecordSet ;
-        rico:hasRecordSetType doc:legajo ;
-        rico:includesOrIncluded <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/serie/cc-cusco> ;
-        rico:title "Legajo 14"@es .
-
-    <https://w3id.org/laad/id/arc/seccion/causas-criminales> a rico:RecordSet ;
-        rico:hasRecordSetType doc:seccion ;
-        rico:includesOrIncluded <https://w3id.org/laad/id/arc/serie/cc-cusco> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/fondo/intendencia> ;
-        rico:title "Causas Criminales"@es .
-
-    <https://w3id.org/laad/id/arc/serie/cc-cusco> a rico:RecordSet ;
-        rico:hasRecordSetType rst:Series ;
-        rico:includesOrIncluded <https://w3id.org/laad/id/arc/legajo/cc-14> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/seccion/causas-criminales> ;
-        rico:title "Cusco"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P00> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P00" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P01> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> ;
-        rico:hasDocumentaryFormType act:caratula ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT00> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Carátula del expediente"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> a rico:Instantiation ;
-        rdfs:label "UT01" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT01 (líneas 9-19)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> a rico:Instantiation ;
-        rdfs:label "UT03" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT03 (líneas 35-43)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> a rico:Instantiation ;
-        rdfs:label "UT04" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT04 (líneas 44-49)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05> a rico:Instantiation ;
-        rdfs:label "UT05" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT05 (líneas 50-56)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> a rico:Instantiation ;
-        rdfs:label "UT06" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT06 (líneas 57-64)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07> a rico:Instantiation ;
-        rdfs:label "UT07" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT07 (líneas 65-67)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b> a rico:Instantiation ;
-        rdfs:label "UT12.b" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/20> ;
-        rico:title "UT12.b (líneas 230-258)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a> a rico:Instantiation ;
-        rdfs:label "UT16.a" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT16.a (líneas 281-288)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> a rico:Instantiation ;
-        rdfs:label "UT16.b" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/28> ;
-        rico:title "UT16.b (líneas 289-291)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> a rico:Instantiation ;
-        rdfs:label "UT18" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT18 (líneas 313-320)" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P01> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P01" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P02> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P01/fecha> ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Certificación del sargento Isidro Cano"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P02> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P02" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P03> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P02/fecha> ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Certificación del sargento primero Santiago Cazorla"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P03> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P03" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P04> ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Certificación a nombre del teniente alguacil Juan Quiñones, firmada Juan Cazorla"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P04> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P04" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P05> ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Certificación a nombre del cabo primero Fernando Orue"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P05> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P05" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P06> ;
-        rico:hasDocumentaryFormType act:certificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Certificación a nombre del soldado granadero Martín Cazorla"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P06> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P06" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P07> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P06/fecha> ;
-        rico:hasDocumentaryFormType act:peticion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Escrito de Manuel Huancachoque al Fiscal Protector General de Naturales"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P07> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P07" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P08> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P07/fecha> ;
-        rico:hasDocumentaryFormType act:vista-fiscal ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Vista del fiscal al Presidente"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P08> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P08" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P09> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P08/fecha> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación del decreto al fiscal"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P09> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P09" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P10> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P09/fecha> ;
-        rico:hasDocumentaryFormType act:reconocimiento-y-ratificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Reconocimiento y ratificación del escrito por Huancachoque ante el teniente asesor"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P10> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P10" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P11> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P10/fecha> ;
-        rico:hasDocumentaryFormType act:auto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Auto del 27 de agosto que remite al subdelegado"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P11> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P11" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P12> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P11/fecha> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación del auto al fiscal"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P12> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P12" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P13> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P12/fecha> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación del auto a Huancachoque"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P13> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P13" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P14> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P13/fecha> ;
-        rico:hasDocumentaryFormType act:oficio ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Oficio del Presidente al subdelegado de Tinta"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P14> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P14" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P15> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P14/fecha> ;
-        rico:hasDocumentaryFormType act:decreto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Providencia del subdelegado en Sicuani: desglose y orden de información"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P15> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P15" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P16> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P15/fecha> ;
-        rico:hasDocumentaryFormType act:desglose ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Nota de desglose de las dos fojas de denuncia"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P16> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P16" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P17> ;
-        rico:hasDocumentaryFormType act:auto-cabeza-de-proceso ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Auto cabeza de la información y orden de retiro de Chuquitapa"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P17> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P17" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P18> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación a Chuquitapa"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P18> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P18" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P19> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P18/fecha> ;
-        rico:hasDocumentaryFormType act:declaracion-jurada ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Declaración jurada de Isidro Cano"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P19> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P19" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P20> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P19/fecha> ;
-        rico:hasDocumentaryFormType act:declaracion-jurada ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Declaración jurada sobre la certificación firmada Martín Cazorla (declarante mencionado como Mariano Casorla)"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P20> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P20" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P21> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P20/fecha> ;
-        rico:hasDocumentaryFormType act:declaracion-jurada ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Declaración jurada de Santiago Cazorla"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P21> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P21" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P22> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P21/fecha> ;
-        rico:hasDocumentaryFormType act:declaracion-jurada ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Declaración jurada de Fernando Orue"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P22> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P22" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P23> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P22/fecha> ;
-        rico:hasDocumentaryFormType act:oficio ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Oficio del subdelegado al cura interino pidiendo informe"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P23> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P23" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P24> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P23/fecha> ;
-        rico:hasDocumentaryFormType act:informe ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Informe del cura interino sobre la conducta de Huancachoque"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P24> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P24" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P25> ;
-        rico:hasDocumentaryFormType act:decreto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Decreto: se espera a Juan Cazorla para recibirle declaración"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P25> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P25" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P26> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P25/fecha> ;
-        rico:hasDocumentaryFormType act:decreto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Decreto de remisión de lo actuado al Presidente (fecha de data ambigua: puede cerrar P24)"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P26> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P26" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P27> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P26/fecha> ;
-        rico:hasDocumentaryFormType act:decreto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Decreto de vista al fiscal"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P27> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P27" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P28> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P27/fecha> ;
-        rico:hasDocumentaryFormType act:informe ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Informe del subdelegado Pedro de la Mata al Presidente"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P28> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P28" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P29> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P28/fecha> ;
-        rico:hasDocumentaryFormType act:auto ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Auto del 26 de noviembre (decreto marginal) de conformidad con el fiscal"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P29> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P29" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P30> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P29/fecha> ;
-        rico:hasDocumentaryFormType act:vista-fiscal ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19>,
-            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Vista del fiscal sobre el informe del subdelegado"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P30> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P30" ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P31> ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P30/fecha> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación del auto al fiscal"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P31> a crm:E31_Document,
-            rico:Record ;
-        rdfs:label "P31" ;
-        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P31/fecha> ;
-        rico:hasDocumentaryFormType act:notificacion ;
-        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
-        rico:title "Notificación del auto (persona notificada no expresa)"@es .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> a rico:Instantiation ;
-        rdfs:label "UT02" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT02 (líneas 20-34)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> a rico:Instantiation ;
-        rdfs:label "UT12.a" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT12.a (líneas 194-229)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> a rico:Instantiation ;
-        rdfs:label "UT13" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT13 (líneas 259-268)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> a rico:Instantiation ;
-        rdfs:label "UT14" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT14 (líneas 269-270)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> a rico:Instantiation ;
-        rdfs:label "UT15" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT15 (líneas 271-280)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> a rico:Instantiation ;
-        rdfs:label "UT19" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/33> ;
-        rico:title "UT19 (líneas 323-329)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> a rico:Instantiation ;
-        rdfs:label "UT08" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT08 (líneas 68-84)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> a rico:Instantiation ;
-        rdfs:label "UT10" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT10 (líneas 116-145)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> a rico:Instantiation ;
-        rdfs:label "UT11" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT11 (líneas 146-193)" .
-
-    <https://w3id.org/laad/id/cc-14-18/original> a rico:Instantiation ;
-        rdfs:comment "Expediente físico en el ARC; imágenes no disponibles en el proyecto."@es ;
-        rico:hasExtent <https://w3id.org/laad/id/cc-14-18/original/extension> ;
-        rico:isOrWasInstantiationOf <https://w3id.org/laad/id/arc/expediente/cc-14-18> .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> a rico:Instantiation ;
-        rdfs:label "UT09" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT09 (líneas 85-115)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> a rico:Instantiation ;
-        rdfs:label "UT17" ;
-        dct:type doc:tramo ;
-        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:title "UT17 (líneas 292-312)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> a rico:Instantiation ;
-        rdfs:label "UT20" ;
-        dct:type doc:tramo ;
-        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
-        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/34> ;
-        rico:title "UT20 (líneas 331-335)" .
-
-    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> a rico:Instantiation ;
-        dct:identifier "sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe" ;
-        dct:type doc:transcripcion-paleografica ;
-        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original> ;
-        rico:isOrWasInstantiationOf <https://w3id.org/laad/id/arc/expediente/cc-14-18> .
-
-    <https://w3id.org/laad/id/arc/expediente/cc-14-18> a rico:RecordSet ;
-        rico:hasRecordSetType rst:File ;
-        rico:includesOrIncluded <https://w3id.org/laad/id/cc-14-18/pieza/P00>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P01>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P02>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P03>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P04>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P05>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P06>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P07>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P08>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P09>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P10>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P11>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P12>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P13>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P14>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P15>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P16>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P17>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P18>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P19>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P20>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P21>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P22>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P23>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P24>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P25>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P26>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P27>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P28>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P29>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P30>,
-            <https://w3id.org/laad/id/cc-14-18/pieza/P31> ;
-        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/legajo/cc-14> ;
-        rico:title "Expediente 18"@es .
-}
-
 <https://w3id.org/laad/grafo/cc-14-18/texto/anotacion-manual-expediente-v1> {
     <https://w3id.org/laad/id/cc-14-18/actuacion/P01/participacion/M-UT01-001> a crm:PC14_carried_out_by ;
         crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/actuacion/P01> ;
@@ -2284,6 +1254,11 @@
     <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-220> a oa:Annotation ;
         oa:hasBody <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-220> ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-220/objetivo> ;
+        oa:motivatedBy oa:identifying .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221> a oa:Annotation ;
+        oa:hasBody <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-221> ;
+        oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/objetivo> ;
         oa:motivatedBy oa:identifying .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT07-001> a oa:Annotation ;
@@ -4210,6 +3185,14 @@
         oa:hasBody <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-818> ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT20-818/objetivo> ;
         oa:motivatedBy oa:identifying .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P14> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT10-524> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P24> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-003> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P26> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-812> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P32> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-816> .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT00-201/cita> a oa:TextQuoteSelector ;
         oa:exact "Expediente seguido por el indio Manuel Mancachoque" ;
@@ -6511,6 +5494,21 @@ A vuestro señor  pido y suplic""" .
     <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-220/posicion> a oa:TextPositionSelector ;
         oa:end "2180"^^xsd:nonNegativeInteger ;
         oa:start "2137"^^xsd:nonNegativeInteger .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/cita> a oa:TextQuoteSelector ;
+        oa:exact "y otros, decían que lo harian con hondas y piedras" ;
+        oa:prefix """
+a ser expelido del pueblo, """ ;
+        oa:suffix ": al fin me encerraron allí, y p" .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/objetivo> a oa:SpecificResource ;
+        oa:hasSelector <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/cita>,
+            <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/posicion> ;
+        oa:hasSource <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT06-221/posicion> a oa:TextPositionSelector ;
+        oa:end "78"^^xsd:nonNegativeInteger ;
+        oa:start "28"^^xsd:nonNegativeInteger .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/M-UT07-001/cita> a oa:TextQuoteSelector ;
         oa:exact "contra el Recaudador de Tributos Son Andres Chuquitapa" ;
@@ -12299,6 +11297,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT00-205> a roar:Observation ;
         rdfs:label "Real Hacienda" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT00-205/nombre> ;
+        crm:P2_has_type ent:real-hacienda ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P00> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT00-205/nombre> a crm:E41_Appellation ;
@@ -12358,6 +11357,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-202> a roar:Observation ;
         rdfs:label "regimiento de este partido" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-202/nombre> ;
+        crm:P2_has_type ent:regimiento ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P01> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-202/nombre> a crm:E41_Appellation ;
@@ -12562,6 +11562,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-201> a roar:Observation ;
         rdfs:label "regimiento de Tinta" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-201/nombre> ;
+        crm:P2_has_type ent:regimiento ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P02> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-201/nombre> a crm:E41_Appellation ;
@@ -12613,6 +11614,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-207> a roar:LocationObservation ;
         rdfs:label "las calles públicas" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-207/nombre> ;
+        crm:P2_has_type ent:calle ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P03> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-207/nombre> a crm:E41_Appellation ;
@@ -12705,6 +11707,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-218> a roar:Observation ;
         rdfs:label "Real Hacienda" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-218/nombre> ;
+        crm:P2_has_type ent:real-hacienda ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P03> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-218/nombre> a crm:E41_Appellation ;
@@ -13009,6 +12012,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-202> a roar:Observation ;
         rdfs:label "Real Hacienda" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-202/nombre> ;
+        crm:P2_has_type ent:real-hacienda ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P05> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-202/nombre> a crm:E41_Appellation ;
@@ -13083,6 +12087,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-211> a roar:Observation ;
         rdfs:label "Real Hacienda" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-211/nombre> ;
+        crm:P2_has_type ent:real-hacienda ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P05> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-211/nombre> a crm:E41_Appellation ;
@@ -13091,6 +12096,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-212> a roar:Observation ;
         rdfs:label "Real Hacienda" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-212/nombre> ;
+        crm:P2_has_type ent:real-hacienda ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P05> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-212/nombre> a crm:E41_Appellation ;
@@ -13201,6 +12207,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-208> a roar:Observation ;
         rdfs:label "Real Audiencia" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-208/nombre> ;
+        crm:P2_has_type ent:real-audiencia ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P06> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-208/nombre> a crm:E41_Appellation ;
@@ -13376,6 +12383,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-207> a roar:LocationObservation ;
         rdfs:label "aquella provincia" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-207/nombre> ;
+        crm:P2_has_type ent:provincia ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P06> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-207/nombre> a crm:E41_Appellation ;
@@ -13485,6 +12493,14 @@ El ciudadano Matias  Ugarte = """ ;
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-220/nombre> a crm:E41_Appellation ;
         crm:P190_has_symbolic_content "aquel" .
+
+    <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-221> a roar:Observation ;
+        rdfs:label "otros" ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-221/nombre> ;
+        roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P06> .
+
+    <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-221/nombre> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "otros" .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT07-001> a picom:PersonObservation ;
         rdfs:label "Son Andres Chuquitapa" ;
@@ -13675,6 +12691,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-208> a roar:Observation ;
         rdfs:label "Real Audiencia" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-208/nombre> ;
+        crm:P2_has_type ent:real-audiencia ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P08> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-208/nombre> a crm:E41_Appellation ;
@@ -13747,6 +12764,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-219> a roar:LocationObservation ;
         rdfs:label "esta provincia" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-219/nombre> ;
+        crm:P2_has_type ent:provincia ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P09> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-219/nombre> a crm:E41_Appellation ;
@@ -16273,6 +15291,7 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-817> a roar:LocationObservation ;
         rdfs:label "provincia de Urubamba" ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-817/nombre> ;
+        crm:P2_has_type ent:provincia ;
         roar:documentedIn <https://w3id.org/laad/id/cc-14-18/pieza/P32> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-817/nombre> a crm:E41_Appellation ;
@@ -16285,14 +15304,6 @@ El ciudadano Matias  Ugarte = """ ;
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-818/nombre> a crm:E41_Appellation ;
         crm:P190_has_symbolic_content "la señora" .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P14> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT10-524> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P24> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-003> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P26> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-812> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P32> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-816> .
 
     <https://w3id.org/laad/id/cc-14-18/actuacion/P02> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-004>,
             <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-005> .
@@ -16323,6 +15334,58 @@ El ciudadano Matias  Ugarte = """ ;
 
     <https://w3id.org/laad/id/cc-14-18/actuacion/P28> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-002>,
             <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-003> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P03> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-001>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-002>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-229> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P05> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-001>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-002>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-213> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P06> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-001>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-202>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-002> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P07> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT07-201>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT07-202>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-001> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P10> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-502>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-513>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-514> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P11> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-518>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-521> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P12> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-522>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-523>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-524> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P13> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-525>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-535>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-536> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P16> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT10-532>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT11-508>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT11-509> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P27> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-813>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT18-001>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT18-820> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P29> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-808>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-822>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-001> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P30> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-804>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-806>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-808> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P31> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-810>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-814>,
+            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-815> .
 
     <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-001> a picom:PersonObservation ;
         rdfs:label "Isidro Cano" ;
@@ -16851,58 +15914,6 @@ El ciudadano Matias  Ugarte = """ ;
         crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-816/nombre> ;
         prov:hadPrimarySource <https://w3id.org/laad/id/cc-14-18/pieza/P32> ;
         picom:hasRole rol:certificante .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P03> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-001>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-002>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT02-229> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P05> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-001>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-002>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-213> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P06> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-001>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-202>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-002> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P07> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT07-201>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT07-202>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-001> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P10> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-502>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-513>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-514> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P11> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-518>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-521> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P12> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-522>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-523>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-524> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P13> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-525>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-535>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-536> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P16> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT10-532>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT11-508>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT11-509> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P27> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT17-813>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT18-001>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT18-820> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P29> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-808>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT19-822>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-001> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P30> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-804>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-806>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-808> .
-
-    <https://w3id.org/laad/id/cc-14-18/actuacion/P31> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-810>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-814>,
-            <https://w3id.org/laad/id/cc-14-18/mencion/M-UT20-815> .
 
     <https://w3id.org/laad/id/cc-14-18/actuacion/P01> crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-001>,
             <https://w3id.org/laad/id/cc-14-18/mencion/M-UT01-002>,
@@ -18010,6 +17021,16 @@ El ciudadano Matias  Ugarte = """ ;
         crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-221> ;
         crm:P14.1_in_the_role_of rol:fedatario .
 
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-224/participacion/afirmante> a crm:PC14_carried_out_by ;
+        crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-224> ;
+        crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-210> ;
+        crm:P14.1_in_the_role_of rol:fedatario .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-225/participacion/afirmante> a crm:PC14_carried_out_by ;
+        crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-225> ;
+        crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-221> ;
+        crm:P14.1_in_the_role_of rol:fedatario .
+
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-501/participacion/afirmante> a crm:PC14_carried_out_by ;
         crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-501> ;
         crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-513> ;
@@ -18124,6 +17145,11 @@ El ciudadano Matias  Ugarte = """ ;
         crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-523> ;
         crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-535> ;
         crm:P14.1_in_the_role_of rol:resolutor .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-524/participacion/afirmante> a crm:PC14_carried_out_by ;
+        crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-524> ;
+        crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517> ;
+        crm:P14.1_in_the_role_of rol:fedatario .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT10-501/participacion/afirmante> a crm:PC14_carried_out_by ;
         crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT10-501> ;
@@ -18752,6 +17778,11 @@ El ciudadano Matias  Ugarte = """ ;
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-537/participacion/afirmante> a crm:PC14_carried_out_by ;
         crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-537> ;
+        crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT14-001> ;
+        crm:P14.1_in_the_role_of rol:declarante .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-538/participacion/afirmante> a crm:PC14_carried_out_by ;
+        crm:P01_has_domain <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-538> ;
         crm:P02_has_range <https://w3id.org/laad/id/cc-14-18/mencion/M-UT14-001> ;
         crm:P14.1_in_the_role_of rol:declarante .
 
@@ -20510,6 +19541,16 @@ El ciudadano Matias  Ugarte = """ ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-223/objetivo> ;
         oa:motivatedBy oa:describing .
 
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224> a oa:Annotation ;
+        oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-224> ;
+        oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/objetivo> ;
+        oa:motivatedBy oa:describing .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225> a oa:Annotation ;
+        oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-225> ;
+        oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/objetivo> ;
+        oa:motivatedBy oa:describing .
+
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-501> a oa:Annotation ;
         oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-501> ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-501/objetivo> ;
@@ -20623,6 +19664,11 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-523> a oa:Annotation ;
         oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-523> ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-523/objetivo> ;
+        oa:motivatedBy oa:describing .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524> a oa:Annotation ;
+        oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-524> ;
+        oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/objetivo> ;
         oa:motivatedBy oa:describing .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT10-501> a oa:Annotation ;
@@ -21253,6 +20299,11 @@ El ciudadano Matias  Ugarte = """ ;
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-537> a oa:Annotation ;
         oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-537> ;
         oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-537/objetivo> ;
+        oa:motivatedBy oa:describing .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538> a oa:Annotation ;
+        oa:hasBody <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-538> ;
+        oa:hasTarget <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/objetivo> ;
         oa:motivatedBy oa:describing .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT15-001> a oa:Annotation ;
@@ -22492,9 +21543,6 @@ El ciudadano Matias  Ugarte = """ ;
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-813/valor> a crm:E33_Linguistic_Object ;
         crm:P190_has_symbolic_content "exponerme a continuacion lo que separa y le conste" .
-
-    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-814/valor> a crm:E33_Linguistic_Object ;
-        crm:P190_has_symbolic_content "Oriundo de el" .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-817/valor> a crm:E33_Linguistic_Object ;
         crm:P190_has_symbolic_content "ausente" .
@@ -25742,6 +24790,34 @@ Firma Don Vale""" .
         oa:end "2035"^^xsd:nonNegativeInteger ;
         oa:start "1975"^^xsd:nonNegativeInteger .
 
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/cita> a oa:TextQuoteSelector ;
+        oa:exact "Don Luis Gomez del Rio del consejo de su Majestad" ;
+        oa:prefix "l Decreto que antecede al Señor " ;
+        oa:suffix " su fiscal en esta Real Audienci" .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/objetivo> a oa:SpecificResource ;
+        oa:hasSelector <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/cita>,
+            <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/posicion> ;
+        oa:hasSource <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-224/posicion> a oa:TextPositionSelector ;
+        oa:end "795"^^xsd:nonNegativeInteger ;
+        oa:start "746"^^xsd:nonNegativeInteger .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/cita> a oa:TextQuoteSelector ;
+        oa:exact "Doctor Don Manuel Valencia Abogado protector partidario" ;
+        oa:prefix "nta de quien como presencia del " ;
+        oa:suffix " de naturales de esta provincia " .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/objetivo> a oa:SpecificResource ;
+        oa:hasSelector <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/cita>,
+            <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/posicion> ;
+        oa:hasSource <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT08-225/posicion> a oa:TextPositionSelector ;
+        oa:end "1341"^^xsd:nonNegativeInteger ;
+        oa:start "1286"^^xsd:nonNegativeInteger .
+
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-501/cita> a oa:TextQuoteSelector ;
         oa:exact "en conformidad a lo expuesta y pedido por el Señor Fiscal" ;
         oa:prefix "lta de la diligencia antecede y " ;
@@ -26086,6 +25162,20 @@ Dios que a Vuestra Merced muc""" .
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-523/posicion> a oa:TextPositionSelector ;
         oa:end "2061"^^xsd:nonNegativeInteger ;
         oa:start "2007"^^xsd:nonNegativeInteger .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/cita> a oa:TextQuoteSelector ;
+        oa:exact "Don Luis Gonsalo del Rio del Concejo de su Majestad" ;
+        oa:prefix " el auto que antecede al -Señor " ;
+        oa:suffix " su único Fiscal en esta Real Au" .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/objetivo> a oa:SpecificResource ;
+        oa:hasSelector <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/cita>,
+            <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/posicion> ;
+        oa:hasSource <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT09-524/posicion> a oa:TextPositionSelector ;
+        oa:end "1462"^^xsd:nonNegativeInteger ;
+        oa:start "1410"^^xsd:nonNegativeInteger .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT10-501/cita> a oa:TextQuoteSelector ;
         oa:exact "con el Expediente en folio 10 que la acompaña" ;
@@ -27946,6 +27036,20 @@ dijo el que declara """ ;
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-537/posicion> a oa:TextPositionSelector ;
         oa:end "2626"^^xsd:nonNegativeInteger ;
         oa:start "2577"^^xsd:nonNegativeInteger .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/cita> a oa:TextQuoteSelector ;
+        oa:exact "el padre del que declara q era cobrador del departamento" ;
+        oa:prefix " contra el corregidor  y contra " ;
+        oa:suffix " en cuya noche le vaguear y malt" .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/objetivo> a oa:SpecificResource ;
+        oa:hasSelector <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/cita>,
+            <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/posicion> ;
+        oa:hasSource <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> .
+
+    <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT14-538/posicion> a oa:TextPositionSelector ;
+        oa:end "2248"^^xsd:nonNegativeInteger ;
+        oa:start "2192"^^xsd:nonNegativeInteger .
 
     <https://w3id.org/laad/id/cc-14-18/anotacion/A-UT15-001/cita> a oa:TextQuoteSelector ;
         oa:exact "la mujer de Chiquitas habla contra el que declara y su familia, lo que le encolerizo" ;
@@ -31041,13 +30145,13 @@ El ciudadano Matias  Ugarte = N""" .
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT04-201> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT04-201" ;
         crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-001> ;
-        crm:P141_assigned cargo:soldado ;
+        crm:P141_assigned cargo:granadero ;
         crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT04-001> ;
         crm:P177_assigned_property_of_type atr:ejerce-cargo ;
         crm:P2_has_type fza:testimonial,
             fun:no-indica,
             pol:afirma ;
-        crm:P3_has_note "«granadero» no tiene concepto propio en tes:cargos; se registra el cargo genérico soldado."@es ;
+        crm:P3_has_note "«soldado granadero»: concepto candidato cargo:granadero (más específico que soldado; datos/candidatos_tesauro.csv)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P05> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT04-202> a crm:E13_Attribute_Assignment ;
@@ -31636,14 +30740,14 @@ El ciudadano Matias  Ugarte = N""" .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT06-202> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT06-202" ;
-        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-maltrato> ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT06-221> ;
         crm:P141_assigned <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT06-202/valor> ;
         crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT05-001> ;
         crm:P177_assigned_property_of_type atr:dijo ;
         crm:P2_has_type fza:de-parte,
             fun:no-indica,
             pol:afirma ;
-        crm:P3_has_note "Amenaza referida de los agresores (sujeto plural sin mención); se ancla al hecho del maltrato."@es ;
+        crm:P3_has_note "Amenaza referida de los agresores: el sujeto es el plural escrito «otros» (M-UT06-221), como pide atr:dijo; no el hecho del maltrato."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P06> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT06-203> a crm:E13_Attribute_Assignment ;
@@ -32349,6 +31453,30 @@ El ciudadano Matias  Ugarte = N""" .
         crm:P3_has_note "«lo firmó con su Merced protector e interpretes» se reparte en un registro por firmante; el sujeto de «lo firmó» es el declarante Manuel Guancachoque."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P09> .
 
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-224> a crm:E13_Attribute_Assignment ;
+        rdfs:label "A-UT08-224" ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-207> ;
+        crm:P141_assigned cargo:consejero ;
+        crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-210> ;
+        crm:P177_assigned_property_of_type atr:ejerce-cargo ;
+        crm:P2_has_type fza:fedataria,
+            fun:no-indica,
+            pol:afirma ;
+        crm:P3_has_note "Título «del consejo de su Majestad»: concepto candidato cargo:consejero (datos/candidatos_tesauro.csv)."@es ;
+        crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P08> .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT08-225> a crm:E13_Attribute_Assignment ;
+        rdfs:label "A-UT08-225" ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-218> ;
+        crm:P141_assigned cargo:abogado ;
+        crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT08-221> ;
+        crm:P177_assigned_property_of_type atr:ejerce-cargo ;
+        crm:P2_has_type fza:testimonial,
+            fun:no-indica,
+            pol:afirma ;
+        crm:P3_has_note "«Abogado»: concepto candidato cargo:abogado (datos/candidatos_tesauro.csv)."@es ;
+        crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P09> .
+
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-501> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT09-501" ;
         crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-513> ;
@@ -32508,14 +31636,14 @@ El ciudadano Matias  Ugarte = N""" .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-515> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT09-515" ;
-        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517> ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/pieza/P11> ;
         crm:P141_assigned <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-521> ;
         crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517> ;
         crm:P177_assigned_property_of_type atr:firmo ;
         crm:P2_has_type fza:fedataria,
             fun:no-indica,
             pol:afirma ;
-        crm:P3_has_note "La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza la firma él."@es ;
+        crm:P3_has_note "La firma «Chacón» cierra la diligencia del escribano; se registra que la pieza (P11) la firma él."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P11> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-516> a crm:E13_Attribute_Assignment ;
@@ -32607,6 +31735,18 @@ El ciudadano Matias  Ugarte = N""" .
             fun:no-indica,
             pol:afirma ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P13> .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT09-524> a crm:E13_Attribute_Assignment ;
+        rdfs:label "A-UT09-524" ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-518> ;
+        crm:P141_assigned cargo:consejero ;
+        crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT09-517> ;
+        crm:P177_assigned_property_of_type atr:ejerce-cargo ;
+        crm:P2_has_type fza:fedataria,
+            fun:no-indica,
+            pol:afirma ;
+        crm:P3_has_note "Título «del Concejo de su Majestad»: concepto candidato cargo:consejero (datos/candidatos_tesauro.csv)."@es ;
+        crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P11> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT10-501> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT10-501" ;
@@ -32743,8 +31883,8 @@ El ciudadano Matias  Ugarte = N""" .
         crm:P2_has_type fza:resolutiva,
             fun:no-indica,
             pol:afirma,
-            rol:participante-en-hecho ;
-        crm:P3_has_note "La defraudación es el objeto del examen encargado, no un hecho que el subdelegado dé por probado. El tesauro no tiene un rol de «autor» de un fraude; se usa el rol genérico."@es ;
+            rol:autor-de-fraude ;
+        crm:P3_has_note "La defraudación es el objeto del examen encargado, no un hecho que el subdelegado dé por probado. Rol: concepto candidato rol:autor-de-fraude (datos/candidatos_tesauro.csv)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P14> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT10-513> a crm:E13_Attribute_Assignment ;
@@ -33353,8 +32493,8 @@ El ciudadano Matias  Ugarte = N""" .
             fza:testimonial,
             fun:oidas,
             pol:afirma,
-            rol:participante-en-hecho ;
-        crm:P3_has_note "Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. El tesauro no tiene rol de autor de un robo."@es ;
+            rol:autor-de-fraude ;
+        crm:P3_has_note "Discurso referido de Guancachoque: el cacique como autor del «robo» denunciado. Rol: concepto candidato rol:autor-de-fraude (datos/candidatos_tesauro.csv)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P19> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT12b-505> a crm:E13_Attribute_Assignment ;
@@ -34045,7 +33185,7 @@ El ciudadano Matias  Ugarte = N""" .
             fun:no-indica,
             pol:afirma,
             rol:victima ;
-        crm:P3_has_note "Cargo escrito «cobrador del departamento»: no hay concepto equivalente en tes:cargos; no se anota ejerce-cargo."@es ;
+        crm:P3_has_note "Cargo escrito «cobrador del departamento»: se anota aparte con el concepto candidato cargo:cobrador (A-UT14-538)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P21> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-534> a crm:E13_Attribute_Assignment ;
@@ -34093,6 +33233,18 @@ El ciudadano Matias  Ugarte = N""" .
         crm:P2_has_type fza:testimonial,
             fun:no-indica,
             pol:afirma ;
+        crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P21> .
+
+    <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT14-538> a crm:E13_Attribute_Assignment ;
+        rdfs:label "A-UT14-538" ;
+        crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT14-529> ;
+        crm:P141_assigned cargo:cobrador ;
+        crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT14-001> ;
+        crm:P177_assigned_property_of_type atr:ejerce-cargo ;
+        crm:P2_has_type fza:testimonial,
+            fun:no-indica,
+            pol:afirma ;
+        crm:P3_has_note "«cobrador del departamento»: concepto candidato cargo:cobrador; no se asimila a recaudador de tributos (datos/candidatos_tesauro.csv)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P21> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-001> a crm:E13_Attribute_Assignment ;
@@ -34271,13 +33423,14 @@ El ciudadano Matias  Ugarte = N""" .
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-814> a crm:E13_Attribute_Assignment ;
         rdfs:label "A-UT15-814" ;
         crm:P140_assigned_attribute_to <https://w3id.org/laad/id/cc-14-18/mencion/M-UT15-811> ;
-        crm:P141_assigned <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-814/valor> ;
+        crm:P141_assigned cond:oriundo ;
         crm:P14_carried_out_by <https://w3id.org/laad/id/cc-14-18/mencion/M-UT15-815> ;
         crm:P177_assigned_property_of_type atr:tiene-condicion ;
         crm:P2_has_type fza:informativa,
             fun:no-indica,
             pol:afirma ;
-        crm:P3_has_note "«Oriundo» (natural del pueblo) no equivale con seguridad a la condición fiscal «originario»; se deja literal."@es ;
+        crm:P3_has_note "valor literal: Oriundo de el",
+            "«Oriundo» (natural del pueblo) no equivale con seguridad a la condición fiscal «originario»: concepto candidato cond:oriundo (datos/candidatos_tesauro.csv)."@es ;
         crm:P9i_forms_part_of <https://w3id.org/laad/id/cc-14-18/actuacion/P22> .
 
     <https://w3id.org/laad/id/cc-14-18/afirmacion/A-UT15-815> a crm:E13_Attribute_Assignment ;
@@ -36006,11 +35159,17 @@ El ciudadano Matias  Ugarte = N""" .
     <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-alboroto> a crm:E89_Propositional_Object ;
         rdfs:label "H-p06-alboroto" .
 
+    <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-maltrato> a crm:E89_Propositional_Object ;
+        rdfs:label "H-p06-maltrato" .
+
     <https://w3id.org/laad/id/cc-14-18/hecho/H-p27-prision> a crm:E89_Propositional_Object ;
         rdfs:label "H-p27-prision" .
 
-    <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-maltrato> a crm:E89_Propositional_Object ;
-        rdfs:label "H-p06-maltrato" .
+    <https://w3id.org/laad/id/cc-14-18/pieza/P02> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p02-servicio> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P30> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p30-notificacion> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P31> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p31-notificacion> .
 
     <https://w3id.org/laad/id/cc-14-18/hecho/H-p01-alboroto> a crm:E89_Propositional_Object ;
         rdfs:label "H-p01-alboroto" .
@@ -36023,12 +35182,6 @@ El ciudadano Matias  Ugarte = N""" .
 
     <https://w3id.org/laad/id/cc-14-18/hecho/H-p03-alboroto> a crm:E89_Propositional_Object ;
         rdfs:label "H-p03-alboroto" .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P02> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p02-servicio> .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P30> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p30-notificacion> .
-
-    <https://w3id.org/laad/id/cc-14-18/pieza/P31> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p31-notificacion> .
 
     <https://w3id.org/laad/id/cc-14-18/pieza/P05> crm:P70_documents <https://w3id.org/laad/id/cc-14-18/hecho/H-p05-alboroto>,
             <https://w3id.org/laad/id/cc-14-18/hecho/H-p05-maltrato>,
@@ -36101,5 +35254,1035 @@ El ciudadano Matias  Ugarte = N""" .
             <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-ocultacion>,
             <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-prision>,
             <https://w3id.org/laad/id/cc-14-18/hecho/H-p06-queja> .
+}
+
+<https://w3id.org/laad/grafo/cc-14-18/documento> {
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P00> a crm:E65_Creation ;
+        crm:P2_has_type act:caratula,
+            fza:informativa ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P00> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P15> a crm:E65_Creation ;
+        crm:P2_has_type act:desglose,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P15> .
+
+    <https://w3id.org/laad/id/arc/fondo/intendencia> a rico:RecordSet ;
+        rico:hasRecordSetType rst:Fonds ;
+        rico:includesOrIncluded <https://w3id.org/laad/id/arc/seccion/causas-criminales> ;
+        rico:title "Intendencia"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P00/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Agosto 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "en primero de agosto de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "agosto cinco de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "CUSCO AGOSTO 22 DE 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Cusco y Agosto 21 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "En el Cusco y Agosto veinte y tres de ochocientos seis" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "en trece días del mees de Agosto de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Agosto 27 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "En el Cuzco en veinte y siete días del mes de Agosto de mil ocho = Cientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "En dicho día mes y año" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Cusco y Agosto 28 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Setiembre. 17 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P15/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Tinta 23. de Septiembre de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Ynmediatamente" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "en veinti quatro dias del mes de setiembre de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Seguidamente" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "setiembre 24 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Noviembre 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Sicuani Noviembre 8 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Cuzco noviembre 18 de noviembre de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Siquani Noviembre 8 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Cusco y noviembre 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "Noviembre 20 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "en veinte y seis de noviembre de mil ochocientos seis" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo> a crm:E52_Time-Span ;
+        crm:P1_is_identified_by <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo/expresion> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo/expresion> a crm:E41_Appellation ;
+        crm:P190_has_symbolic_content "veinte y tres de Diciembre de mil ochocientos 10 años" .
+
+    <https://w3id.org/laad/id/cc-14-18/original/extension> a rico:CarrierExtent ;
+        dct:source "ficha del catálogo del ARC (Causas Criminales, pp. 435-436 impresas; pp. 438-439 del PDF)"@es ;
+        rdfs:comment "Dato de la ficha del catálogo, contrastado y no asumido (discrepancia K5): la transcripción marca «[Folio 34 ]», incompatible con 19 folios correlativos."@es ;
+        rico:hasUnitOfMeasurement <https://w3id.org/laad/id/cc-14-18/original/extension/unidad> ;
+        rico:quantity 19.0 .
+
+    <https://w3id.org/laad/id/cc-14-18/original/extension/unidad> a rico:UnitOfMeasurement ;
+        rdfs:label "folio"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/original/folio/20> a rico:Instantiation ;
+        dct:type doc:folio ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
+        rico:title "folio 20" .
+
+    <https://w3id.org/laad/id/cc-14-18/original/folio/28> a rico:Instantiation ;
+        dct:type doc:folio ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
+        rico:title "folio 28" .
+
+    <https://w3id.org/laad/id/cc-14-18/original/folio/33> a rico:Instantiation ;
+        dct:type doc:folio ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
+        rico:title "folio 33" .
+
+    <https://w3id.org/laad/id/cc-14-18/original/folio/34> a rico:Instantiation ;
+        dct:type doc:folio ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/original> ;
+        rico:title "folio 34" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> a rico:Date ;
+        rico:expressedDate "Agosto 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P01/fecha> a rico:Date ;
+        rico:expressedDate "en primero de agosto de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P02/fecha> a rico:Date ;
+        rico:expressedDate "agosto cinco de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P06/fecha> a rico:Date ;
+        rico:expressedDate "CUSCO AGOSTO 22 DE 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P07/fecha> a rico:Date ;
+        rico:expressedDate "Cusco y Agosto 21 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P08/fecha> a rico:Date ;
+        rico:expressedDate "En el Cusco y Agosto veinte y tres de ochocientos seis" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P09/fecha> a rico:Date ;
+        rico:expressedDate "en trece días del mees de Agosto de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P10/fecha> a rico:Date ;
+        rico:expressedDate "Agosto 27 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P11/fecha> a rico:Date ;
+        rico:expressedDate "En el Cuzco en veinte y siete días del mes de Agosto de mil ocho = Cientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P12/fecha> a rico:Date ;
+        rico:expressedDate "En dicho día mes y año" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P13/fecha> a rico:Date ;
+        rico:expressedDate "Cusco y Agosto 28 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P14/fecha> a rico:Date ;
+        rico:expressedDate "Setiembre. 17 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P15/fecha> a rico:Date ;
+        rico:expressedDate "Tinta 23. de Septiembre de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P18/fecha> a rico:Date ;
+        rico:expressedDate "Veinte y tres dias del mes de Septiembre de mil ochocientos y seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P19/fecha> a rico:Date ;
+        rico:expressedDate "Ynmediatamente" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P20/fecha> a rico:Date ;
+        rico:expressedDate "en veinti quatro dias del mes de setiembre de mil ochocientos seis años" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P21/fecha> a rico:Date ;
+        rico:expressedDate "Seguidamente" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P22/fecha> a rico:Date ;
+        rico:expressedDate "setiembre 24 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P23/fecha> a rico:Date ;
+        rico:expressedDate "Noviembre 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P25/fecha> a rico:Date ;
+        rico:expressedDate "Sicuani Noviembre 8 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P26/fecha> a rico:Date ;
+        rico:expressedDate "Cuzco noviembre 18 de noviembre de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P27/fecha> a rico:Date ;
+        rico:expressedDate "Siquani Noviembre 8 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P28/fecha> a rico:Date ;
+        rico:expressedDate "Cusco y noviembre 26 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P29/fecha> a rico:Date ;
+        rico:expressedDate "Noviembre 20 de 1806" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P30/fecha> a rico:Date ;
+        rico:expressedDate "en veinte y seis de noviembre de mil ochocientos seis" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P31/fecha> a rico:Date ;
+        rico:expressedDate "veinte y tres de Diciembre de mil ochocientos 10 años" .
+
+    <https://w3id.org/laad/id/arc/legajo/cc-14> a rico:RecordSet ;
+        rico:hasRecordSetType doc:legajo ;
+        rico:includesOrIncluded <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/serie/cc-cusco> ;
+        rico:title "Legajo 14"@es .
+
+    <https://w3id.org/laad/id/arc/seccion/causas-criminales> a rico:RecordSet ;
+        rico:hasRecordSetType doc:seccion ;
+        rico:includesOrIncluded <https://w3id.org/laad/id/arc/serie/cc-cusco> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/fondo/intendencia> ;
+        rico:title "Causas Criminales"@es .
+
+    <https://w3id.org/laad/id/arc/serie/cc-cusco> a rico:RecordSet ;
+        rico:hasRecordSetType rst:Series ;
+        rico:includesOrIncluded <https://w3id.org/laad/id/arc/legajo/cc-14> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/seccion/causas-criminales> ;
+        rico:title "Cusco"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P26> a crm:E65_Creation ;
+        crm:P2_has_type act:decreto,
+            fza:resolutiva ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P26/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P26> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P32> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P32> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P32> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P32" ;
+        rdfs:comment "Documento ajeno al expediente capturado junto a él (docs/01_materiales.md)."@es ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
+        rico:title "Comienzo de una certificación notarial republicana ajena al expediente"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P12> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P12/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P12> .
+
+    <https://w3id.org/laad/id/cc-14-18/original> a rico:Instantiation ;
+        rdfs:comment "Expediente físico en el ARC; imágenes no disponibles en el proyecto."@es ;
+        rico:hasExtent <https://w3id.org/laad/id/cc-14-18/original/extension> ;
+        rico:isOrWasInstantiationOf <https://w3id.org/laad/id/arc/expediente/cc-14-18> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P26> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P26" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P27> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P26/fecha> ;
+        rico:hasDocumentaryFormType act:decreto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Decreto de vista al fiscal"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P17> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P17> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P25> a crm:E65_Creation ;
+        crm:P2_has_type act:decreto,
+            fza:resolutiva ;
+        crm:P3_has_note "Data (literal): Sicuani Noviembre 8" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P25/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P25> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P12> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P12" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P13> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P12/fecha> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación del auto a Huancachoque"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT00> a rico:Instantiation ;
+        rdfs:label "UT00" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT00 (líneas 1-8)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P08> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P08/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P08> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P00> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P00" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P01> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P00/fecha> ;
+        rico:hasDocumentaryFormType act:caratula ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT00> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Carátula del expediente"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P15> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P15" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P16> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P15/fecha> ;
+        rico:hasDocumentaryFormType act:desglose ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Nota de desglose de las dos fojas de denuncia"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P17> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P17" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P18> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación a Chuquitapa"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P02> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P3_has_note "Data (literal): doy mi certificación en Tinta" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P02/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P02> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P24> a crm:E65_Creation ;
+        crm:P2_has_type act:decreto,
+            fza:resolutiva ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P24> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P30> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P30/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P30> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P31> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P31/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P31> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P11> a crm:E65_Creation ;
+        crm:P2_has_type act:notificacion,
+            fza:fedataria ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P11/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P11> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P22> a crm:E65_Creation ;
+        crm:P2_has_type act:oficio,
+            fza:informativa ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P22/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P22> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P24> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P24" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P25> ;
+        rico:hasDocumentaryFormType act:decreto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Decreto: se espera a Juan Cazorla para recibirle declaración"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P11> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P11" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P12> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P11/fecha> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación del auto al fiscal"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P25> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P25" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P26> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P25/fecha> ;
+        rico:hasDocumentaryFormType act:decreto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Decreto de remisión de lo actuado al Presidente (fecha de data ambigua: puede cerrar P24)"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P13> a crm:E65_Creation ;
+        crm:P2_has_type act:oficio,
+            fza:informativa ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P13/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P13> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P16> a crm:E65_Creation ;
+        crm:P2_has_type act:auto-cabeza-de-proceso,
+            fza:resolutiva ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P16> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P08> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P08" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P09> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P08/fecha> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación del decreto al fiscal"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P22> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P22" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P23> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P22/fecha> ;
+        rico:hasDocumentaryFormType act:oficio ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Oficio del subdelegado al cura interino pidiendo informe"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P28> a crm:E65_Creation ;
+        crm:P2_has_type act:auto,
+            fza:resolutiva ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P28/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P28> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P02> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P02" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P03> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P02/fecha> ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Certificación del sargento primero Santiago Cazorla"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P28> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P28" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P29> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P28/fecha> ;
+        rico:hasDocumentaryFormType act:auto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Auto del 26 de noviembre (decreto marginal) de conformidad con el fiscal"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P30> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P30" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P31> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P30/fecha> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación del auto al fiscal"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P31> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P31" ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P31/fecha> ;
+        rico:hasDocumentaryFormType act:notificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Notificación del auto (persona notificada no expresa)"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P10> a crm:E65_Creation ;
+        crm:P2_has_type act:auto,
+            fza:resolutiva ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P10/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P10> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P13> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P13" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P14> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P13/fecha> ;
+        rico:hasDocumentaryFormType act:oficio ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Oficio del Presidente al subdelegado de Tinta"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P14> a crm:E65_Creation ;
+        crm:P2_has_type act:decreto,
+            fza:resolutiva ;
+        crm:P3_has_note "Data (literal): Sicuani Setiembre" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P14/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P14> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P10> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P10" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P11> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P10/fecha> ;
+        rico:hasDocumentaryFormType act:auto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Auto del 27 de agosto que remite al subdelegado"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P16> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P16" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P17> ;
+        rico:hasDocumentaryFormType act:auto-cabeza-de-proceso ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Auto cabeza de la información y orden de retiro de Chuquitapa"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P29> a crm:E65_Creation ;
+        crm:P2_has_type act:vista-fiscal,
+            fza:dictaminadora ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P29/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P29> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P20> a crm:E65_Creation ;
+        crm:P2_has_type act:declaracion-jurada,
+            fza:testimonial ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P20/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P20> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P05> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P05> .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> a rico:Instantiation ;
+        dct:identifier "sha256:bd945513f8e1d8c34dbdc980623bb5740e9077d35a802100f7464afb5dafaafe" ;
+        dct:type doc:transcripcion-paleografica ;
+        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original> ;
+        rico:isOrWasInstantiationOf <https://w3id.org/laad/id/arc/expediente/cc-14-18> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P29> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P29" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P30> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P29/fecha> ;
+        rico:hasDocumentaryFormType act:vista-fiscal ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Vista del fiscal sobre el informe del subdelegado"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P09> a crm:E65_Creation ;
+        crm:P2_has_type act:reconocimiento-y-ratificacion,
+            fza:testimonial ;
+        crm:P3_has_note "Data (literal): En la ciudad del Cuzco" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P09/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P09> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P19> a crm:E65_Creation ;
+        crm:P2_has_type act:declaracion-jurada,
+            fza:testimonial ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P19/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P19> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P05> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P05" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P06> ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Certificación a nombre del soldado granadero Martín Cazorla"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P18> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P18" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P19> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P18/fecha> ;
+        rico:hasDocumentaryFormType act:declaracion-jurada ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Declaración jurada de Isidro Cano"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P18> a crm:E65_Creation ;
+        crm:P2_has_type act:declaracion-jurada,
+            fza:testimonial ;
+        crm:P3_has_note "Data (literal): En el pueblo de Tinta" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P18/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P18> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P07> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P07" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P08> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P07/fecha> ;
+        rico:hasDocumentaryFormType act:vista-fiscal ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Vista del fiscal al Presidente"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P14> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P14" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P15> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P14/fecha> ;
+        rico:hasDocumentaryFormType act:decreto ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Providencia del subdelegado en Sicuani: desglose y orden de información"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> a rico:Instantiation ;
+        rdfs:label "UT12.a" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT12.a (líneas 194-229)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P07> a crm:E65_Creation ;
+        crm:P2_has_type act:vista-fiscal,
+            fza:dictaminadora ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P07/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P07> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P09> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P09" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P10> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P09/fecha> ;
+        rico:hasDocumentaryFormType act:reconocimiento-y-ratificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Reconocimiento y ratificación del escrito por Huancachoque ante el teniente asesor"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P19> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P19" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P20> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P19/fecha> ;
+        rico:hasDocumentaryFormType act:declaracion-jurada ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Declaración jurada sobre la certificación firmada Martín Cazorla (declarante mencionado como Mariano Casorla)"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P04> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P04> .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> a rico:Instantiation ;
+        rdfs:label "UT16.b" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/28> ;
+        rico:title "UT16.b (líneas 289-291)" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P20> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P20" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P21> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P20/fecha> ;
+        rico:hasDocumentaryFormType act:declaracion-jurada ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Declaración jurada de Santiago Cazorla"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> a rico:Instantiation ;
+        rdfs:label "UT13" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT13 (líneas 259-268)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a> a rico:Instantiation ;
+        rdfs:label "UT16.a" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT16.a (líneas 281-288)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> a rico:Instantiation ;
+        rdfs:label "UT20" ;
+        dct:type doc:tramo ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/34> ;
+        rico:title "UT20 (líneas 331-335)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P03> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P03> .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P23> a crm:E65_Creation ;
+        crm:P2_has_type act:informe,
+            fza:informativa ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P23/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P23> .
+
+    <https://w3id.org/laad/id/arc/expediente/cc-14-18> a rico:RecordSet ;
+        rico:hasRecordSetType rst:File ;
+        rico:includesOrIncluded <https://w3id.org/laad/id/cc-14-18/pieza/P00>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P01>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P02>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P03>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P04>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P05>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P06>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P07>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P08>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P09>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P10>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P11>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P12>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P13>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P14>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P15>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P16>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P17>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P18>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P19>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P20>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P21>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P22>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P23>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P24>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P25>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P26>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P27>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P28>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P29>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P30>,
+            <https://w3id.org/laad/id/cc-14-18/pieza/P31> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/legajo/cc-14> ;
+        rico:title "Expediente 18"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P23> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P23" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P24> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P23/fecha> ;
+        rico:hasDocumentaryFormType act:informe ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.b> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Informe del cura interino sobre la conducta de Huancachoque"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.b> a rico:Instantiation ;
+        rdfs:label "UT12.b" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT13> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/20> ;
+        rico:title "UT12.b (líneas 230-258)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> a rico:Instantiation ;
+        rdfs:label "UT04" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT04 (líneas 44-49)" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P03> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P03" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P04> ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Certificación a nombre del teniente alguacil Juan Quiñones, firmada Juan Cazorla"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07> a rico:Instantiation ;
+        rdfs:label "UT07" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT07 (líneas 65-67)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P01> a crm:E65_Creation ;
+        crm:P2_has_type act:certificacion,
+            fza:testimonial ;
+        crm:P3_has_note "Data (literal): En el pueblo de Tinta" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P01/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P01> .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P01> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P01" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P02> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P01/fecha> ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Certificación del sargento Isidro Cano"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> a rico:Instantiation ;
+        rdfs:label "UT15" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT16.a> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT15 (líneas 271-280)" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P04> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P04" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P05> ;
+        rico:hasDocumentaryFormType act:certificacion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Certificación a nombre del cabo primero Fernando Orue"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P21> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P21" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P22> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P21/fecha> ;
+        rico:hasDocumentaryFormType act:declaracion-jurada ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Declaración jurada de Fernando Orue"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P27> a crm:E65_Creation ;
+        crm:P2_has_type act:informe,
+            fza:informativa ;
+        crm:P3_has_note "Data (literal): Siquani Noviembre 8" ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P27/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P27> .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> a rico:Instantiation ;
+        rdfs:label "UT18" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT18 (líneas 313-320)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> a rico:Instantiation ;
+        rdfs:label "UT06" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT07> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT06 (líneas 57-64)" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P27> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P27" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P28> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P27/fecha> ;
+        rico:hasDocumentaryFormType act:informe ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Informe del subdelegado Pedro de la Mata al Presidente"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> a rico:Instantiation ;
+        rdfs:label "UT11" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT12.a> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT11 (líneas 146-193)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P21> a crm:E65_Creation ;
+        crm:P2_has_type act:declaracion-jurada,
+            fza:testimonial ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P21/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P21> .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> a rico:Instantiation ;
+        rdfs:label "UT03" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT04> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT03 (líneas 35-43)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT19> a rico:Instantiation ;
+        rdfs:label "UT19" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT20> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:isOrWasDerivedFromInstantiation <https://w3id.org/laad/id/cc-14-18/original/folio/33> ;
+        rico:title "UT19 (líneas 323-329)" .
+
+    <https://w3id.org/laad/id/cc-14-18/actuacion/P06> a crm:E65_Creation ;
+        crm:P2_has_type act:peticion,
+            fza:de-parte ;
+        crm:P4_has_time-span <https://w3id.org/laad/id/cc-14-18/actuacion/P06/tiempo> ;
+        crm:P94_has_created <https://w3id.org/laad/id/cc-14-18/pieza/P06> .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05> a rico:Instantiation ;
+        rdfs:label "UT05" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT05 (líneas 50-56)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> a rico:Instantiation ;
+        rdfs:label "UT10" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT11> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT10 (líneas 116-145)" .
+
+    <https://w3id.org/laad/id/cc-14-18/pieza/P06> a crm:E31_Document,
+            rico:Record ;
+        rdfs:label "P06" ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/pieza/P07> ;
+        rico:hasCreationDate <https://w3id.org/laad/id/cc-14-18/pieza/P06/fecha> ;
+        rico:hasDocumentaryFormType act:peticion ;
+        rico:hasOrHadInstantiation <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT05>,
+            <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT06> ;
+        rico:isOrWasIncludedIn <https://w3id.org/laad/id/arc/expediente/cc-14-18> ;
+        rico:title "Escrito de Manuel Huancachoque al Fiscal Protector General de Naturales"@es .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT08> a rico:Instantiation ;
+        rdfs:label "UT08" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT08 (líneas 68-84)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT09> a rico:Instantiation ;
+        rdfs:label "UT09" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT10> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT09 (líneas 85-115)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT01> a rico:Instantiation ;
+        rdfs:label "UT01" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT01 (líneas 9-19)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT17> a rico:Instantiation ;
+        rdfs:label "UT17" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT18> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT17 (líneas 292-312)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT02> a rico:Instantiation ;
+        rdfs:label "UT02" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT03> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT02 (líneas 20-34)" .
+
+    <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT14> a rico:Instantiation ;
+        rdfs:label "UT14" ;
+        dct:type doc:tramo ;
+        rico:directlyPrecedesInSequence <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1/UT15> ;
+        rico:isOrWasComponentOf <https://w3id.org/laad/id/cc-14-18/transcripcion/bd945513f8e1> ;
+        rico:title "UT14 (líneas 269-270)" .
 }
 
