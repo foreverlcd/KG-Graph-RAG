@@ -98,8 +98,14 @@ def disputa(entidad: str, atributo: str, valor_label: str | None = None,
     filas = _unicas(consultar("afirmaciones", filtroEntidad=entidad, atributo=atr_iri(atributo), **filtro))
     if valor_label:
         filas = [f for f in filas if f["valorLabel"] == valor_label]
+    return resumen_disputa(filas), filas
+
+
+def resumen_disputa(filas: list[dict]) -> str:
+    """Resumen calculado de las afirmaciones sobre una misma entidad y atributo: «X lo afirma, Y lo niega», o que no
+    hay ninguna. Lo usan disputa() y las herramientas del agente (laad.herramientas)."""
     if not filas:
-        return "El expediente no lo dice (no hay afirmaciones registradas sobre ello).", filas
+        return "El expediente no lo dice (no hay afirmaciones registradas sobre ello)."
     por_valor: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
     for f in filas:
         por_valor[f["valorLabel"]][f["pol"]].append(_quien(f))
@@ -118,7 +124,7 @@ def disputa(entidad: str, atributo: str, valor_label: str | None = None,
                 p += f"; lo niegan {'; '.join(pols['niega'])}"
             partes.append(p)
         res = "Está en disputa por valores incompatibles. " + " || ".join(partes)
-    return res, filas
+    return res
 
 
 def forma_de(filas: list[dict]) -> str:

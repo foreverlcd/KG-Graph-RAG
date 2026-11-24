@@ -6,7 +6,9 @@
 > * el **cargador con integridad** (`src/laad/registros.py`) y el **corpus de expedientes** (`src/laad/corpus.py`);
 > * el **mapeo determinista** (`src/laad/mapeo.py`);
 > * las **consultas con nombre** (`consultas/*.rq`, `src/laad/consulta.py`);
-> * el **compositor de respuestas** (`src/laad/responder.py`, `src/laad/preguntas.py`).
+> * el **compositor de respuestas** (`src/laad/responder.py`, `src/laad/preguntas.py`);
+> * el **núcleo del harness de consulta** (`src/laad/herramientas.py`, §4.2): buscador de nombres, herramientas para el
+>   agente y verificación posterior de citas, con su banco de pruebas de las 20 PC.
 >
 > **No está implementada** la conexión con el LLM, ni para extraer ni para conversar. Se especifica aquí, pero se deja
 > para la fase siguiente, tal como pide el encargo («antes de empezar con la conexión, prepara muy bien la ontología»).
@@ -122,16 +124,16 @@ anotar (`--solo-ver` no escribe nada). La guía completa está en `datos/expedie
 
 El agente conversacional **no genera SPARQL libre**.
 
-1. **Elige una consulta con nombre** de `consultas/` (`consulta.nombres()` las lista; entre ellas `afirmaciones`, `disputas`, `disputas_firma`, `reconstrucciones`, `menciones_de`, `piezas`, `participantes`, `cargos`, `catalogo`, `control_secuencia`, `procedencia` y `candidatos_en_uso`). Varias admiten el parámetro opcional `?expediente`.
-2. **Le pasa IRIs**, que `consulta._values` valida y convierte en un bloque `VALUES`.
-3. **Para resolver nombres de entidades**, por ejemplo «Chuquitapa», consulta el índice de etiquetas de las reconstrucciones y de las menciones, y devuelve candidatos. Esta parte está pendiente; hoy los slugs se pasan a mano.
+1. **Elige una herramienta** (`herramientas.HERRAMIENTAS`), y cada herramienta una o varias consultas con nombre de `consultas/` (`consulta.nombres()` las lista; entre ellas `afirmaciones`, `disputas`, `disputas_firma`, `reconstrucciones`, `menciones_de`, `piezas`, `participantes`, `cargos`, `catalogo`, `control_secuencia`, `procedencia`, `candidatos_en_uso`, `vocabulario` y los índices `indice_reconstrucciones` e `indice_menciones`). Varias admiten el parámetro opcional `?expediente`.
+2. **Le pasa ids de registro, no IRIs** (`R-…`, `<exp>:M-…`, `<exp>:A-…`, `<exp>:P…`). La herramienta comprueba que existen y los convierte en IRIs, que `consulta._values` valida otra vez y convierte en un bloque `VALUES`.
+3. **Para resolver nombres de entidades**, por ejemplo «Chuquitapa», llama a `buscar`, que consulta el índice de etiquetas de las reconstrucciones y de las menciones y devuelve candidatos (§4.2). Implementado.
 4. **Compone la respuesta** con `responder.Respuesta`, que garantiza:
    * Que se separen **AFIRMACIÓN** (capa 3) y **RECONSTRUCCIÓN** (capa 4).
    * Que cada afirmación lleve cita literal, tramo y folio. Si no hay folio, dice «folio no consta en la transcripción».
    * Que cada afirmación lleve afirmante (mención y reconstrucción), rol, actuación, fecha escrita, ante quién y quién firma. Si falta un dato, dice «no consta».
    * Que las resoluciones aparezcan con su **fuerza institucional**, nunca como hechos.
    * Que las respuestas «no lo dice» muestren la evidencia de lo que sí consta, con la advertencia sobre la exhaustividad.
-5. **El LLM conversacional** solo puede reformular las filas. Antes de mostrarla, se comprueba que toda cita entre comillas de su respuesta sea subcadena de una fila devuelta (verificación posterior, pendiente de implementar).
+5. **El LLM conversacional** solo puede reformular las filas. Antes de mostrarla, se comprueba que toda cita entre comillas de su respuesta sea subcadena de una fila devuelta (verificación posterior: `herramientas.verificar`, implementada; falta conectarla al LLM).
 
 Las respuestas completas a las 20 PC están en `docs/anexos/respuestas_pc.md`.
 
@@ -147,6 +149,41 @@ mismas filas. rdflib sigue siendo quien **construye, serializa y valida** el gra
 `scripts/servir.py` responde una consulta con nombre desde la línea de órdenes
 (`scripts/servir.py piezas expediente=cc-14-18`); no es un servidor HTTP. Con `--volcar` escribe un almacén
 persistente en disco y con `--almacen` lo consulta sin volver a cargar el corpus.
+
+### 4.2 Núcleo del harness de consulta (2026-11-24)
+
+Implementado, sin LLM ni dependencias nuevas (ADR-045):
+
+* **`buscar(nombre, clase, expediente)`** (`src/laad/herramientas.py`). Normaliza mayúsculas, tildes y las variantes
+  gráficas del corpus (`clave_grafica`: qu/c/k, c/s/z ante e/i, hu/gu + vocal, h muda, b/v, y/i/ll, e/i, o/u y letras
+  dobladas: Huancachoque, Guancachoque y Mancachoque; Chuquitapa, Chuquiitapa y Choquetapa; Casorla y Cazorla) y compara
+  con `difflib` cada palabra buscada con las palabras, y uniones de dos o tres palabras, de las etiquetas de la capa 4,
+  del id de cada reconstrucción y del texto literal de sus menciones. Exige que **cada** palabra significativa pase el
+  umbral (0,8); si ninguna etiqueta ni mención se parece, la lista es vacía. Devuelve las reconstrucciones (id, tipo,
+  etiqueta, creencia, número de menciones, rivales: las que comparten menciones, con su creencia) y las menciones
+  sueltas (id calificado, texto, pieza, tramo, cita). No elige: las hipótesis rivales salen todas.
+* **Herramientas** (`HERRAMIENTAS`, cada una con nombre, descripción para el LLM y JSON Schema): `buscar`,
+  `afirmaciones` (entidad, atributo, afirmante, pieza y filtros por valor, fuerza, fundamento y respuesta a otras
+  afirmaciones), `disputas`, `disputas_firma`, `menciones_de`, `reconstrucciones`, `cargos`, `piezas`,
+  `control_secuencia`, `participantes`, `procedencia`, `catalogo`, `identificadores_externos` y `vocabulario` (las
+  listas cerradas que aceptan los demás parámetros). `candidatos_en_uso` queda fuera: es trabajo del curador del
+  tesauro. `herramientas.usar(nombre, **parametros)` valida y ejecuta; un error es un `ErrorHerramienta` con un mensaje
+  que dice cómo corregir la llamada (id sin calificar, reconstrucción mal escrita con sugerencias, concepto fuera del
+  vocabulario…). Cada herramienta devuelve sus filas, la forma calculada y un texto compuesto con `responder`.
+* **`verificar(texto, filas)`**: las citas entre comillas («…», "…" o “…”) que no son subcadena, con los espacios
+  normalizados, de ningún valor de las filas, y los ids de afirmación citados que no aparecen en ellas.
+* **Uso a mano**: `scripts/preguntar.py buscar "Chuquitapa"`, `scripts/preguntar.py herramientas`,
+  `scripts/preguntar.py usar afirmaciones --entidad R-chuquitapa --atributo ejerce-cargo`.
+* **Banco de pruebas**: `datos/evaluacion/preguntas_harness.jsonl` redacta las 20 PC como las escribiría un historiador
+  y les da un plan de llamadas escrito a mano; `scripts/evaluar_harness.py` (lógica en `src/laad/evaluacion_harness.py`)
+  ejecuta cada plan y comprueba que alcanza lo esencial de `preguntas.pcNN()`: forma, afirmaciones, afirmantes,
+  reconstrucciones, participaciones, y todas las citas e ids de la respuesta de referencia. Las 20 se alcanzan
+  (2026-11-24). La forma la declara quien escribe el plan; el comprobador exige que una DISPUTA o un NC estén
+  respaldados por una herramienta que los calculó.
+
+**Pendiente:** la conexión con el LLM (bucle de herramientas, que escriba su propio plan y se mida con el mismo
+comprobador); verificar la respuesta redactada por el LLM antes de mostrarla; buscar en hechos narrados que ninguna
+reconstrucción agrupa; la PC08 del banco pregunta solo por Isidro Cano, como `preguntas.pc08`, no por cada testigo.
 
 ## 5. Rendimiento medido
 

@@ -1,0 +1,14 @@
+# Vocabulario cerrado del tesauro (y sus candidatos) para el agente: los conceptos de un esquema con su nombre local
+# (el que aceptan las herramientas, p. ej. «ejerce-cargo»), su etiqueta, su definición y si es candidato aún no
+# aprobado. Los conceptos retirados (owl:deprecated) no se listan.
+# Parámetro: ?esquema (IRI de un esquema del tesauro, p. ej. tes:atributos, tes:fuerzas, tes:cargos).
+SELECT ?concepto ?local ?etiqueta ?definicion ?candidato WHERE {
+  #PARAMETROS
+  ?concepto skos:inScheme ?esquema .
+  LATERAL { ?concepto skos:prefLabel ?etiqueta . }
+  LATERAL { OPTIONAL { ?concepto skos:definition ?definicion } }
+  FILTER NOT EXISTS { ?concepto <http://www.w3.org/2002/07/owl#deprecated> true }
+  BIND (REPLACE(STR(?concepto), "^.*/", "") AS ?local)
+  BIND (EXISTS { tes:candidatos skos:member ?concepto } AS ?candidato)
+}
+ORDER BY ?local

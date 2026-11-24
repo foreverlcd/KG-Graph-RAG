@@ -34,6 +34,9 @@ CASOS = [
     ("disputas", {}),
     ("disputas_firma", dict(expediente=E)),
     ("identificadores_externos", {}),
+    ("indice_menciones", {}),
+    ("indice_menciones", dict(expediente=E)),
+    ("indice_reconstrucciones", {}),
     ("menciones_de", dict(expediente=E, filtroEntidad=C.persona("huancachoque"))),
     ("participantes", dict(expediente=E)),
     ("piezas", {}),
@@ -42,6 +45,7 @@ CASOS = [
     ("procedencia", dict(x=C.mencion(EXPEDIENTE_PILOTO, "M-UT01-003"))),
     ("reconstrucciones", {}),
     ("reconstrucciones", dict(m=C.mencion(EXPEDIENTE_PILOTO, "M-UT01-003"))),
+    ("vocabulario", dict(esquema=C.TES + "atributos")),
 ]
 
 
