@@ -9,12 +9,31 @@ El LLM conversacional (fase posterior) solo puede reformular estas filas; no pue
 """
 from __future__ import annotations
 
+import csv
 from collections import defaultdict
 from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
 
 from .consulta import atributo as atr_iri, consultar
 
 NO_CONSTA = "no consta"
+ATRIBUTOS = Path(__file__).resolve().parents[2] / "datos" / "atributos.csv"
+
+
+@lru_cache(maxsize=None)
+def _cardinalidades() -> dict[str, str]:
+    with open(ATRIBUTOS, encoding="utf-8", newline="") as f:
+        return {r["atributo"]: (r.get("valores") or "uno").strip() for r in csv.DictReader(f)}
+
+
+def admite_varios(atributo: str | None) -> bool:
+    """True si el atributo admite varios valores a la vez (columna «valores» de datos/atributos.csv: «varios»):
+    una persona puede ser cacique y recaudador. Entonces solo es disputa afirmar y negar el MISMO valor. Un atributo
+    sin fila o sin columna cuenta como de un solo valor (lo más prudente: los valores distintos se señalan)."""
+    if not atributo:
+        return False
+    return _cardinalidades().get(atributo.rsplit("/", 1)[-1]) == "varios"
 
 
 def _folio(r: dict) -> str:
@@ -98,10 +117,10 @@ def disputa(entidad: str, atributo: str, valor_label: str | None = None,
     filas = _unicas(consultar("afirmaciones", filtroEntidad=entidad, atributo=atr_iri(atributo), **filtro))
     if valor_label:
         filas = [f for f in filas if f["valorLabel"] == valor_label]
-    return resumen_disputa(filas), filas
+    return resumen_disputa(filas, atributo), filas
 
 
-def resumen_disputa(filas: list[dict]) -> str:
+def resumen_disputa(filas: list[dict], atributo: str | None = None) -> str:
     """Resumen calculado de las afirmaciones sobre una misma entidad y atributo: «X lo afirma, Y lo niega», o que no
     hay ninguna. Lo usan disputa() y las herramientas del agente (laad.herramientas)."""
     if not filas:
@@ -109,6 +128,18 @@ def resumen_disputa(filas: list[dict]) -> str:
     por_valor: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
     for f in filas:
         por_valor[f["valorLabel"]][f["pol"]].append(_quien(f))
+    if len(por_valor) > 1 and admite_varios(atributo):
+        partes, en_disputa = [], []
+        for v, pols in sorted(por_valor.items()):
+            p = f"«{v}»: " + (f"lo afirman {'; '.join(pols['afirma'])}" if pols.get("afirma") else "nadie lo afirma")
+            if pols.get("niega"):
+                p += f"; lo niegan {'; '.join(pols['niega'])}"
+                if pols.get("afirma"):
+                    en_disputa.append(v)
+            partes.append(p)
+        cabeza = (f"Está en disputa {', '.join(f'«{v}»' for v in en_disputa)} (se afirma y se niega). " if en_disputa
+                  else "Sin disputa: el atributo admite varios valores a la vez y ninguno se afirma y se niega. ")
+        return cabeza + " || ".join(partes)
     if len(por_valor) == 1:
         (v, pols), = por_valor.items()
         if pols.get("afirma") and pols.get("niega"):
@@ -127,16 +158,16 @@ def resumen_disputa(filas: list[dict]) -> str:
     return res
 
 
-def forma_de(filas: list[dict]) -> str:
+def forma_de(filas: list[dict], atributo: str | None = None) -> str:
     """Forma de la respuesta CALCULADA a partir de las filas (no escrita a mano):
-    NC si no hay afirmaciones; DISPUTA si un mismo valor se afirma y se niega, o si hay valores distintos;
-    A si solo hay afirmaciones concordantes."""
+    NC si no hay afirmaciones; DISPUTA si un mismo valor se afirma y se niega, o si hay valores distintos y el
+    atributo admite un solo valor (admite_varios); A si solo hay afirmaciones concordantes."""
     if not filas:
         return "NC"
     por_valor: dict[str, set[str]] = defaultdict(set)
     for f in filas:
         por_valor[f["valorLabel"]].add(f["pol"])
-    if len(por_valor) > 1 or any(len(p) > 1 for p in por_valor.values()):
+    if (len(por_valor) > 1 and not admite_varios(atributo)) or any(len(p) > 1 for p in por_valor.values()):
         return "DISPUTA"
     return "A"
 

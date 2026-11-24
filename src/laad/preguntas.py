@@ -98,7 +98,7 @@ def pc09() -> Respuesta:
         if f["valorLabel"] != "coronel (de Túpac Amaru)":
             extra.append(f"  {f['aid']}: {_quien(f)} → {f['valorLabel']} ({f['pol']}) «{f['cita']}»")
     extra.append(pronunciamientos(filas))
-    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", forma_de(filas), res, filas,
+    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", forma_de(filas, "ejerce-cargo"), res, filas,
                      reconstrucciones_de(ent), extra)
 
 
@@ -122,7 +122,7 @@ def pc10() -> Respuesta:
 def pc11() -> Respuesta:
     ent = evento("prision")
     res, filas = _disputa(ent, "duracion")
-    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas), res, filas, reconstrucciones_de(ent))
+    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas, "duracion"), res, filas, reconstrucciones_de(ent))
 
 
 def _resolutivas() -> list[dict]:
@@ -173,7 +173,7 @@ def pc14() -> Respuesta:
     ent = evento("alboroto-carcel")
     res, filas = _disputa(ent, "fecha-del-hecho")
     _, num = _disputa(ent, "numero-de-participantes")
-    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas),
+    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas, "fecha-del-hecho"),
                      res, filas + num, reconstrucciones_de(ent))
 
 

@@ -420,9 +420,9 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
     if responden_a is not None:
         filas = [f for f in filas if f.get("respondeA") and (f["ref"].split(":")[0], f["respondeA"]) in respondidas]
     pares = entidad and atributo
-    forma = forma_de(filas) if pares else ("A" if filas else "NC")
+    forma = forma_de(filas, atributo) if pares else ("A" if filas else "NC")
     if pares:
-        resumen = resumen_disputa(filas) + " " + pronunciamientos(filas)
+        resumen = resumen_disputa(filas, atributo) + " " + pronunciamientos(filas)
     elif filas:
         resumen = f"{len(filas)} afirmaciones (capa 3): cada una es de quien la hace, no un hecho."
     else:
