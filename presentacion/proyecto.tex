@@ -1,4 +1,4 @@
-% Estado del proyecto LAAD, en detalle: qué es, por qué se decidió cada cosa, cómo está armada la ontología, cómo
+% Estado del proyecto (grafo de conocimiento y ontología OHAC), en detalle: qué es, por qué se decidió cada cosa, cómo está armada la ontología, cómo
 % funciona el harness, cómo se mide, qué preguntas clave responde y qué falta.
 % Compilar:  python scripts/cifras.py && python scripts/datos_presentacion.py && latexmk -pdf proyecto.tex
 % Ninguna cifra de los datos se escribe a mano: las generales salen de ../articulo/cifras.tex (scripts/cifras.py) y
@@ -48,11 +48,11 @@
     ymin=0, xtick=data, height=4.6cm, width=7cm, axis line style={tinta!50}},
 }
 
-\title{LAAD: estado del proyecto, en detalle}
+\title{Grafo de conocimiento de expedientes coloniales: estado del proyecto, en detalle}
 \subtitle{Grafo de conocimiento de un expediente judicial colonial del ARC Cusco y su agente de consulta:
 qué se decidió, por qué y cómo está hecho}
 \author{Jhon Jesus Quispe Machaca \and Ian Logan Will Quispe Ventura}
-\institute{Universidad Nacional de San Antonio Abad del Cusco}
+\institute{Laboratorio LAAD · Universidad Nacional de San Antonio Abad del Cusco}
 \date{Repaso completo · \today}
 
 \begin{document}
@@ -90,7 +90,7 @@ qué se decidió, por qué y cómo está hecho}
 % =====================================================================
 \section{El problema y las preguntas clave}
 
-\begin{frame}{Qué es LAAD}
+\begin{frame}{Qué estamos construyendo}
 Un \alert{grafo de conocimiento} de expedientes judiciales coloniales del Fondo Intendencia (Archivo Regional del
 Cusco), y un \alert{agente} que responde preguntas sobre él sin inventar.
 \begin{itemize}
@@ -174,7 +174,7 @@ ontologías \enquote{declaradas}. Se auditó línea a línea (\ttt{docs/A\_diagn
 \end{itemize}
 \end{columns}
 \medskip
-\textbf{Lección que guía todo LAAD:} el modelo de lenguaje propone; \alert{nunca} decide identidades, verdades, folios
+\textbf{Lección que guía todo el proyecto:} el modelo de lenguaje propone; \alert{nunca} decide identidades, verdades, folios
 ni tipos de acto.
 \end{frame}
 
@@ -182,7 +182,7 @@ ni tipos de acto.
 \scriptsize
 \begin{tabular}{@{}p{3.3cm}p{5.3cm}p{4.6cm}@{}}
 \toprule
-Fallo del prototipo & Decisión en LAAD & Control que lo impide \\
+Fallo del prototipo & Decisión ahora & Control que lo impide \\
 \midrule
 Rol como tipo de persona & Rol SKOS en \ttt{P14.1\_in\_the\_role\_of} de una PC14 & SHACL \ttt{ParticipacionForma} \\
 Predicados ad hoc & Atributos SKOS en \ttt{P177}; la contradicción se calcula & \ttt{test\_terminos\_existen.py} \\
@@ -362,7 +362,7 @@ un marco de agentes de terceros (LangChain y similares) — oculta el bucle que 
 \small
 \textbf{Agente propio, independiente del proveedor (ADR-047)}
 \begin{itemize}\footnotesize
-\item El bucle, las instrucciones versionadas (\ttt{prompts/}) y la verificación viven en LAAD; cada proveedor es un
+\item El bucle, las instrucciones versionadas (\ttt{prompts/}) y la verificación viven en nuestro código; cada proveedor es un
       adaptador pequeño (\ttt{iniciar}, \ttt{enviar}, \ttt{devolver}).
 \item Descartado: dejar que el SDK ejecute las herramientas solo (\emph{automatic function calling}): la verificación y
       el registro de errores quedarían fuera del agente.
@@ -1069,7 +1069,7 @@ dice. Cada capa del harness está para impedir eso.}
 
 \medskip
 \begin{itemize}\footnotesize
-\item El bucle, las instrucciones (\ttt{prompts/agente\_consulta\_v2.md}) y la verificación viven en LAAD; cada proveedor
+\item El bucle, las instrucciones (\ttt{prompts/agente\_consulta\_v2.md}) y la verificación viven en nuestro código; cada proveedor
       es un adaptador pequeño (\ttt{src/laad/proveedores/}). Cambiar de modelo es escribir un adaptador.
 \item Los nombres escritos se resuelven con \ttt{buscar}: normaliza las variantes del corpus (qu/c/k, c/s/z, hu/gu, h
       muda, b/v, y/i/ll, e/i, o/u, letras dobladas) y compara con \ttt{difflib}; devuelve \alert{todos} los candidatos.
