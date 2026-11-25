@@ -41,6 +41,8 @@ def test_pc08_mismo_testigo_agosto_y_septiembre():
     r = P.pc08("cano")
     tipos = {f["tipoAct"] for f in r.afirmaciones}
     assert tipos == {"certificación", "declaración jurada"}
+    # forma calculada (decisión del validador, 2026-11-24): afirma coronel en agosto y lo niega en septiembre
+    assert r.forma == "DISPUTA" and "coronel" in r.resumen
 
 
 def test_pc09_cano_afirma_y_niega_coronel():
@@ -76,6 +78,7 @@ def test_pc14_al_menos_cinco_horas():
 
 def test_pc16_resolucion_es_afirmacion_no_hecho():
     r = P.pc16()
+    assert {f["pieza"] for f in r.afirmaciones} == {"P28", "P29"}       # auto final y vista fiscal (2026-11-24)
     assert r.afirmaciones and {f["fuerza"] for f in r.afirmaciones} <= {"dictaminadora", "resolutiva"}
     assert any(f["atrLabel"].startswith("veracidad") and f["valorLabel"] == "menos conforme a la verdad"
                for f in r.afirmaciones)
@@ -101,7 +104,9 @@ def test_todas_las_respuestas_con_afirmaciones_llevan_cita_y_tramo():
 
 def test_pc02_autorreferencias_de_foliacion():
     r = P.pc02()
-    assert {(f["sujetoLabel"], f["valorLabel"]) for f in r.afirmaciones} >= {("P05", "De folio 4"), ("P03", "a folios 2")}
+    # acotada a la remisión que nombra la pregunta (decisión del validador, 2026-11-24)
+    assert {(f["sujetoLabel"], f["valorLabel"]) for f in r.afirmaciones} == {("P05", "De folio 4")}
+    assert any("Martin Cazorla" in l for l in r.extra)
 
 
 def test_pc07_lugares_con_hgis():

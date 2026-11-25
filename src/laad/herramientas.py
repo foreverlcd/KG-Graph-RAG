@@ -27,7 +27,7 @@ from typing import Callable
 
 from . import consulta, fuente
 from .consulta import consultar
-from .responder import (NO_CONSTA, Respuesta, _unicas, forma_de, linea_reconstruccion, pronunciamientos,
+from .responder import (NO_CONSTA, Respuesta, _unicas, forma_de, grupos_en_disputa, linea_reconstruccion, pronunciamientos,
                         resumen_disputa)
 
 
@@ -499,17 +499,12 @@ def _dominio(entidad: str, atributo: str) -> None:
 
 
 def _disputas_en(filas: list[dict], por_sujeto: bool) -> list[str]:
-    """Disputas entre las filas, agrupadas por atributo (y por sujeto si la consulta no fijó la entidad): el mismo
-    cálculo que forma_de, para que el modelo no tenga que deducirlas al leer muchas afirmaciones."""
-    grupos: dict[tuple, list[dict]] = {}
-    for f in filas:
-        grupos.setdefault((f.get("sujeto") if por_sujeto else None, f["atributo"]), []).append(f)
+    """Disputas entre las filas (responder.grupos_en_disputa), descritas para el modelo: así no tiene que deducirlas
+    al leer muchas afirmaciones."""
     out = []
-    for (sujeto, atr), g in grupos.items():
-        local = atr.rsplit("/", 1)[-1]
-        if forma_de(g, local) == "DISPUTA":
-            quien = g[0].get("sujetoLabel") or (_ref_calificada(sujeto.split("/id/", 1)[1]) if sujeto else "")
-            out.append(f"{g[0]['atrLabel']}{f' de {quien}' if quien else ''}: {resumen_disputa(g, local)}")
+    for (sujeto, atr), g in grupos_en_disputa(filas, por_sujeto):
+        quien = g[0].get("sujetoLabel") or (_ref_calificada(sujeto.split("/id/", 1)[1]) if sujeto else "")
+        out.append(f"{g[0]['atrLabel']}{f' de {quien}' if quien else ''}: {resumen_disputa(g, atr.rsplit('/', 1)[-1])}")
     return out
 
 

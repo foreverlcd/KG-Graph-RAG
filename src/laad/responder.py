@@ -172,6 +172,16 @@ def forma_de(filas: list[dict], atributo: str | None = None) -> str:
     return "A"
 
 
+def grupos_en_disputa(filas: list[dict], por_sujeto: bool = True) -> list[tuple[tuple, list[dict]]]:
+    """Grupos de afirmaciones en disputa, por atributo y (si `por_sujeto`) por sujeto: el cálculo de forma_de
+    aplicado a cada grupo. Lo usan la herramienta `afirmaciones` (laad.herramientas) y las referencias que
+    reúnen afirmaciones de varios sujetos (PC08)."""
+    grupos: dict[tuple, list[dict]] = {}
+    for f in filas:
+        grupos.setdefault((f.get("sujeto") if por_sujeto else None, f["atributo"]), []).append(f)
+    return [(k, g) for k, g in grupos.items() if forma_de(g, k[1].rsplit("/", 1)[-1]) == "DISPUTA"]
+
+
 def pronunciamientos(filas: list[dict]) -> str:
     """Frase calculada: qué actuaciones dictaminadoras o resolutivas se pronuncian sobre el punto."""
     autoridad = [f for f in filas if f["fuerza"] in ("resolutiva", "dictaminadora")]
