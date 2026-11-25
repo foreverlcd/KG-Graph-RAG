@@ -432,14 +432,14 @@ que no son de persona carecen de tipo de entidad.
 \begin{columns}[T]
 \column{0.55\textwidth}
 \small
-\ttt{python scripts/visor.py} genera \ttt{visor/datos.js}; se abre \ttt{visor/index.html} en el navegador (necesita
-conexión para la biblioteca de la red).
+\ttt{python scripts/visor.py} escribe un único \ttt{visor/index.html} con los datos dentro, al estilo de Neo4j
+Browser, en 2D o 3D.
 \begin{itemize}
-\item \textbf{Nodos}: reconstrucciones (color por clase, borde por creencia), piezas, menciones sin identidad única.
-\item \textbf{Aristas}: \enquote{afirma sobre} (rojo si niega, ámbar si está en disputa), hipótesis rivales
-      (discontinua), valor.
-\item \textbf{Ficha}: al pulsar un nodo, sus menciones y todas sus afirmaciones con cita, pieza, tramo y fuerza.
-\item Búsqueda por nombre, grafía o id; filtro por pieza; \enquote{solo disputas}.
+\item \textbf{Etiquetas}: Persona, Lugar, Grupo, Cosa, Hecho, Cargo, Pieza, Mención; borde según la creencia.
+\item \textbf{Relaciones con tipo}: \ttt{AFIRMA}, \ttt{NIEGA} (rojo), \ttt{TIENE\_VALOR}, \ttt{HIPOTESIS\_DE},
+      \ttt{INTERVIENE\_EN}, rotuladas con el atributo; ámbar si hay disputa.
+\item \textbf{Inspector}: propiedades, relaciones por tipo y todas las afirmaciones con cita, pieza, tramo y fuerza.
+\item Explorar el vecindario de un nodo (doble clic lo amplía); búsqueda por nombre, grafía o id.
 \end{itemize}
 \column{0.42\textwidth}
 \begin{block}{La misma regla que el harness}
