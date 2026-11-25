@@ -25,6 +25,11 @@ Un único archivo HTML, al estilo de Neo4j Browser, para explorar quién afirma 
 
 Para explicar el modelo con el mismo archivo, sin diapositivas:
 
+* **Tres niveles**: una sola afirmación real (A-UT11-004, Cano niega que Chuquitapa fuera coronel) dibujada en tres
+  franjas: arriba la ontología (las clases de los estándares), en medio los datos del expediente y abajo los conceptos
+  del tesauro. Se construye en tres pasos (datos → + ontología → + tesauro). Las aristas se definen en `scripts/visor.py`
+  (`EJ_NODOS`, `EJ_ARISTAS`) y se comprueban al generar: si una no está en el grafo ni en `ontologia/tesauro.ttl`, el
+  visor no se genera. Es SVG propio y no necesita internet.
 * **Ontología**: las cifras del perfil (`datos/cifras.json`), una tarjeta por capa (pregunta que responde, estándar,
   clases y propiedades con su significado al pasar el ratón, grafo nombrado y reglas SHACL) y, a la derecha, un
   **ejemplo real**: las tripletas tal como están en el grafo, agrupadas por el grafo nombrado (la capa) en que viven,

@@ -166,6 +166,26 @@ table.tri .expl { display: block; font: 0.72rem var(--f-body); color: var(--mute
   .lienzo { height: 65vh; }
   .izq { border-right: 0; border-bottom: 1px solid var(--line); }
 }
+
+/* ── tres niveles ── */
+.niv-analogia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 14px; max-width: 1100px; }
+.niv-analogia > div { background: var(--panel, #fff); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 8px; padding: 10px 12px; }
+.niv-analogia b { display: block; color: var(--c); margin-bottom: 2px; }
+.niv-pasos { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.niv-svg { width: 100%; max-width: 1320px; height: auto; display: block; background: var(--panel, #fff); border: 1px solid var(--line); border-radius: 10px; }
+.niv-svg .banda-t { font: 600 12px/1 inherit; letter-spacing: .06em; text-transform: uppercase; }
+.niv-svg .nodo rect { stroke-width: 1.6; }
+.niv-svg .nodo .t { font-size: 13px; font-weight: 600; fill: var(--ink); }
+.niv-svg .nodo .s { font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--muted, #666); }
+.niv-svg .nodo.clic { cursor: pointer; }
+.niv-svg .nodo.clic:hover rect { stroke-width: 3; }
+.niv-svg path.e { fill: none; stroke-width: 1.7; }
+.niv-svg path.e-tipo { stroke-dasharray: 5 4; stroke-width: 1.3; }
+.niv-svg .rot { font-size: 11px; paint-order: stroke; stroke: var(--panel, #fff); stroke-width: 4px; stroke-linejoin: round; }
+.niv-svg g.arista:hover path.e { stroke-width: 3.2; }
+.niv-svg .oculto { display: none; }
+.niv-frase { max-width: 1100px; margin: 12px 0; padding: 10px 14px; border-radius: 8px; background: var(--soft); font-size: 15px; }
+@media (max-width: 1000px) { .niv-analogia { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -175,6 +195,7 @@ table.tri .expl { display: block; font: 0.72rem var(--f-body); color: var(--mute
     <span class="sub">Huancachoque contra el cacique Chuquitapa · Tinta, 1806</span>
     <div class="grupo-bot pestanas" role="tablist" aria-label="Sección">
       <button type="button" id="t-grafo" role="tab" aria-pressed="true">Grafo</button>
+      <button type="button" id="t-niv" role="tab" aria-pressed="false">Tres niveles</button>
       <button type="button" id="t-onto" role="tab" aria-pressed="false">Ontología</button>
       <button type="button" id="t-tes" role="tab" aria-pressed="false">Tesauro</button>
     </div>
@@ -221,6 +242,7 @@ table.tri .expl { display: block; font: 0.72rem var(--f-body); color: var(--mute
 
     <aside class="der" id="inspector" aria-live="polite"></aside>
   </div>
+  <section class="pagina" id="pag-niv" hidden></section>
   <section class="pagina" id="pag-onto" hidden></section>
   <section class="pagina" id="pag-tes" hidden></section>
 </div>
@@ -909,13 +931,91 @@ table.tri .expl { display: block; font: 0.72rem var(--f-body); color: var(--mute
   });
   dibujarTes();
 
+  // ── página Tres niveles: ontología (molde), grafo (datos) y tesauro (vocabulario) con una sola afirmación ──
+  const pagNiv = document.getElementById("pag-niv");
+  const EJ = G.ejemplo || { nodos: [], aristas: [] };
+  const NIV = { onto: { c: "#6B5BA8", n: "Ontología · el molde (clases y propiedades de estándares)" },
+                datos: { c: "#3E6FA8", n: "Grafo · los datos del expediente de Tinta" },
+                tes: { c: "#3F7F4F", n: "Tesauro · el vocabulario controlado (conceptos SKOS)" } };
+  const BANDAS = { onto: [30, 150], datos: [185, 445], tes: [500, 680] };
+  const ENODO = Object.fromEntries(EJ.nodos.map(n => [n.id, n]));
+  const W = 216, H = 50;
+  const borde = (n, hacia) => { const dx = hacia[0] - n.x, dy = hacia[1] - n.y; const k = Math.min((W / 2 + 4) / Math.abs(dx || 1e-9), (H / 2 + 4) / Math.abs(dy || 1e-9)); return [n.x + dx * k, n.y + dy * k]; };
+  const tipoArista = a => a.p === "rdf:type" ? "tipo" : ENODO[a.s].nivel === "tes" ? "int" : ENODO[a.o].nivel === "tes" ? "tes" : "dat";
+  const PASO_DE = { dat: 1, tipo: 2, tes: 3, int: 3 };
+  const COLOR_AR = { dat: NIV.datos.c, tipo: NIV.onto.c, tes: NIV.tes.c, int: NIV.tes.c };
+  const pasoNodo = n => n.nivel === "datos" ? 1 : n.nivel === "onto" ? 2 : 3;
+  const svgNiv = () => {
+    const marcas = Object.entries(COLOR_AR).map(([k, c]) => `<marker id="fl-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`).join("");
+    const bandas = Object.entries(BANDAS).map(([k, [y0, y1]]) => `<g class="banda" data-paso="${k === "datos" ? 1 : k === "onto" ? 2 : 3}">
+        <rect x="8" y="${y0}" width="1304" height="${y1 - y0}" rx="10" fill="${NIV[k].c}" fill-opacity=".07" stroke="${NIV[k].c}" stroke-opacity=".35"/>
+        <text class="banda-t" x="22" y="${y0 + 18}" fill="${NIV[k].c}">${esc(NIV[k].n)}</text></g>`).join("");
+    const aristas = EJ.aristas.map(a => {
+      const s = ENODO[a.s], o = ENODO[a.o], k = tipoArista(a);
+      const mx = (s.x + o.x) / 2, my = (s.y + o.y) / 2, L = Math.hypot(o.x - s.x, o.y - s.y) || 1;
+      const cx = mx + (-(o.y - s.y) / L) * a.curva, cy = my + ((o.x - s.x) / L) * a.curva;
+      const p0 = borde(s, [cx, cy]), p1 = borde(o, [cx, cy]);
+      const q = a.pos ?? .5, lx = (1 - q) ** 2 * p0[0] + 2 * q * (1 - q) * cx + q * q * p1[0], ly = (1 - q) ** 2 * p0[1] + 2 * q * (1 - q) * cy + q * q * p1[1];
+      const fuente = a.fuente.startsWith("g:") ? `grafo nombrado ${a.fuente}` : a.fuente;
+      return `<g class="arista" data-paso="${PASO_DE[k]}"><title>${esc(`${a.s}  ${a.p}  ${a.o}\n${ex(a.p) || ""}\n(en ${fuente})`)}</title>
+        <path class="e e-${k}" d="M${p0[0]},${p0[1]} Q${cx},${cy} ${p1[0]},${p1[1]}" stroke="${COLOR_AR[k]}" marker-end="url(#fl-${k})"/>
+        <text class="rot" x="${lx}" y="${ly + 4}" text-anchor="middle" fill="${COLOR_AR[k]}">${esc(a.rotulo)}</text></g>`;
+    }).join("");
+    // una sola flecha agregada: cada concepto del tesauro «es un» skos:Concept
+    const sc = ENODO["skos:Concept"];
+    const agregada = sc ? `<g class="arista" data-paso="3"><title>Cada concepto del tesauro tiene rdf:type skos:Concept (comprobado en ontologia/tesauro.ttl)</title>
+        <path class="e e-tipo" d="M${sc.x},${BANDAS.tes[0]} L${sc.x},${sc.y + H / 2 + 4}" stroke="${COLOR_AR.tipo}" marker-end="url(#fl-tipo)"/>
+        <text class="rot" x="${sc.x}" y="${(BANDAS.tes[0] + sc.y) / 2 + 60}" text-anchor="middle" fill="${COLOR_AR.tipo}">es un (todos)</text></g>` : "";
+    const nodos = EJ.nodos.map(n => { const c = NIV[n.nivel].c, clic = n.clave ? "clic" : "";
+      return `<g class="nodo ${clic}" data-paso="${pasoNodo(n)}" ${n.clave ? `data-${n.nivel === "tes" ? "concepto" : "rdf"}="${esc(n.clave)}" tabindex="0" role="button"` : ""}>
+        <title>${esc(n.id + (ex(n.id) ? " — " + ex(n.id) : "") + (n.clave ? "\n(clic: " + (n.nivel === "tes" ? "ver en el tesauro" : "ver sus tripletas") + ")" : ""))}</title>
+        <rect x="${n.x - W / 2}" y="${n.y - H / 2}" width="${W}" height="${H}" rx="${n.nivel === "onto" ? 4 : n.nivel === "tes" ? 24 : 10}" fill="var(--panel, #fff)" stroke="${c}"/>
+        <text class="t" x="${n.x}" y="${n.y - 3}" text-anchor="middle">${esc(n.titulo)}</text>
+        <text class="s" x="${n.x}" y="${n.y + 14}" text-anchor="middle">${esc(n.sub)}</text></g>`; }).join("");
+    return `<svg class="niv-svg" viewBox="0 0 1320 690" role="img" aria-label="Una afirmación en tres niveles: ontología, grafo y tesauro">
+      <defs>${marcas}</defs>${bandas}${aristas}${agregada}${nodos}</svg>`;
+  };
+  const TEXTO_PASO = {
+    1: "<b>1 · Los datos.</b> Cajas concretas del expediente, cada una con su identificador: la actuación P18, la mención «Ysidro Cano», la afirmación A-UT11-004, la mención «Chuquitapa» y la persona reconstruida que la reúne. Las flechas dicen quién lo dice, sobre quién y en qué actuación.",
+    2: "<b>2 · + La ontología.</b> Arriba, el molde: qué <i>tipos</i> de cosas existen. Cada caja de datos «es un» tipo (flecha discontinua): A-UT11-004 es una <i>Afirmación</i> (crm:E13), las dos menciones son <i>Mención de persona</i>. La ontología también fija qué flechas puede tener cada tipo (P14, P140, P9i…). No cambia de un expediente a otro, y no la inventamos: son estándares.",
+    3: "<b>3 · + El tesauro.</b> Abajo, las palabras permitidas para rellenar ciertos valores: tipo de acto, rol, polaridad, fuerza, qué se afirma y el cargo. No son tipos de cosas sino <i>valores</i>; por eso cada concepto «es un» skos:Concept (flecha de la derecha). Y tienen su propia red: «coronel» está dentro de «cargo en las fuerzas de 1780», y «declaración jurada» da fuerza testimonial.",
+  };
+  let pasoNiv = 3;
+  pagNiv.innerHTML = `
+    <h2>Una afirmación en tres niveles</h2>
+    <p class="lead">Ontología, grafo y tesauro, con una sola afirmación real: <b>Ysidro Cano niega que Chuquitapa fuera coronel</b> (A-UT11-004).
+      Cada flecha está comprobada contra el grafo o el tesauro; pasa el ratón para ver la tripleta, y haz clic en una caja para ir a sus tripletas o a su concepto.</p>
+    <div class="niv-analogia">
+      <div style="--c:${NIV.onto.c}"><b>Ontología = el formulario</b>Qué campos tiene una afirmación: quién, sobre quién, qué atributo, qué valor, polaridad, fuerza…</div>
+      <div style="--c:${NIV.tes.c}"><b>Tesauro = las opciones de la lista desplegable</b>Qué se puede poner en algunos campos: polaridad = {afirma, niega}; fuerza = {testimonial, resolutiva…}; cargo = {cacique, coronel…}.</div>
+      <div style="--c:${NIV.datos.c}"><b>Grafo = el formulario rellenado</b>Esta afirmación: quien dice = «Ysidro Cano», polaridad = niega, valor = coronel.</div>
+    </div>
+    <div class="niv-pasos" role="group" aria-label="Paso">${[1, 2, 3].map(i => `<button type="button" data-paso-btn="${i}" aria-pressed="${i === pasoNiv}">${["1 · Datos", "2 · + Ontología", "3 · + Tesauro"][i - 1]}</button>`).join("")}</div>
+    ${svgNiv()}
+    <div class="niv-frase" id="niv-texto"></div>
+    <div class="niv-frase">La ontología dice que una afirmación <b>tiene</b> una polaridad; el tesauro dice <b>cuáles</b> polaridades existen
+      (afirma, niega); el grafo dice que <b>esta</b> afirmación <b>niega</b>.</div>`;
+  const pintarPaso = i => {
+    pasoNiv = i;
+    pagNiv.querySelectorAll("[data-paso]").forEach(el => el.classList.toggle("oculto", +el.dataset.paso > i));
+    pagNiv.querySelectorAll("[data-paso-btn]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.pasoBtn === i)));
+    document.getElementById("niv-texto").innerHTML = TEXTO_PASO[i];
+  };
+  pagNiv.addEventListener("click", ev => {
+    const b = ev.target.closest("[data-paso-btn]"); if (b) { pintarPaso(+b.dataset.pasoBtn); return; }
+    const r = ev.target.closest("[data-rdf]"); if (r) { verRDF(r.dataset.rdf); return; }
+    const cc = ev.target.closest("[data-concepto]"); if (cc) verConcepto(cc.dataset.concepto);
+  });
+  pagNiv.addEventListener("keydown", ev => { if (ev.key !== "Enter") return; const n = ev.target.closest("[data-rdf],[data-concepto]"); if (n) n.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
+  pintarPaso(3);
+
   // ── pestañas ──
   const mesa = document.querySelector(".mesa");
-  const pestanas = { grafo: document.getElementById("t-grafo"), onto: document.getElementById("t-onto"), tes: document.getElementById("t-tes") };
+  const pestanas = { grafo: document.getElementById("t-grafo"), niv: document.getElementById("t-niv"), onto: document.getElementById("t-onto"), tes: document.getElementById("t-tes") };
   const soloGrafo = ["v2d", "v3d", "b-vecindario", "b-todo", "b-encuadrar"].map(id => document.getElementById(id)).concat([document.querySelector(".busca")]);
   function irA(p) {
     Object.entries(pestanas).forEach(([k, b]) => b.setAttribute("aria-pressed", String(k === p)));
-    mesa.hidden = p !== "grafo"; pagOnto.hidden = p !== "onto"; pagTes.hidden = p !== "tes";
+    mesa.hidden = p !== "grafo"; pagNiv.hidden = p !== "niv"; pagOnto.hidden = p !== "onto"; pagTes.hidden = p !== "tes";
     soloGrafo.forEach(el => el.style.visibility = p === "grafo" ? "" : "hidden");
     if (p === "grafo") { vista === "2d" ? grafo2d.resumeAnimation() : grafo3d && grafo3d.resumeAnimation(); setTimeout(ajustar, 0); }
     else { grafo2d.pauseAnimation(); grafo3d && grafo3d.pauseAnimation(); }

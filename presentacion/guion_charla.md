@@ -153,6 +153,10 @@ grafías, quién afirma qué de él y, en ámbar, lo que está en disputa.
 El visor tiene tres pestañas: **Grafo**, **Ontología** y **Tesauro**. Recorrido de unos 10 minutos, en el mismo orden
 que las diapositivas:
 
+0. **Tres niveles (2 min), si hay que aclarar ontología frente a tesauro.** Pulsar los pasos 1, 2 y 3. La analogía:
+   la ontología es el formulario (qué campos tiene una afirmación), el tesauro son las opciones de la lista desplegable
+   (qué se puede poner en algunos campos) y el grafo es el formulario rellenado. Frase de cierre (está en la página): «la
+   ontología dice que una afirmación tiene una polaridad; el tesauro dice cuáles existen; el grafo dice que esta niega».
 1. **Ontología, arriba (1 min).** Leer la frase inicial y las cifras: 0 términos propios, 12 esquemas, 50 reglas,
    33 806 tripletas. «Esto es lo que estamos construyendo».
 2. **Las cinco tarjetas de capa (2 min).** Pulsar cada una de arriba abajo y decir solo su pregunta: ¿qué papel es?,
