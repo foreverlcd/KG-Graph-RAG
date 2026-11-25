@@ -28,3 +28,11 @@ los informes de `datos/evaluacion/`:
     python scripts/cifras.py && python scripts/datos_presentacion.py && (cd presentacion && latexmk -pdf proyecto.tex)
 
 A diferencia de `main.tex`, esta presentación recoge resultados que el artículo aún no incluye (el harness).
+
+## Charla de avances (`avances.tex`)
+
+Unos 10 minutos con los docentes del proyecto, centrada en la ontología OHAC, el tesauro y cómo se construye y usa el
+grafo. El guion de cada diapositiva, lo que hay que saber explicar y las preguntas probables están en
+`guion_charla.md`. La captura del visor (`figuras/visor.png`) se tomó de `visor/index.html`.
+
+    python scripts/cifras.py && python scripts/datos_presentacion.py && (cd presentacion && latexmk -pdf avances.tex)
