@@ -14,8 +14,13 @@ Diapositivas en Beamer (tema Metropolis, 16:9). Compilar: `latexmk -pdf main.tex
 
 ## Presentación de estado del proyecto (`proyecto.tex`)
 
-Repaso completo para el equipo: qué es LAAD, materiales y restricciones, cronología, modelo, construcción del grafo,
-cifras con gráficos, validación, consulta y escala, el harness de consulta y sus resultados, problemas abiertos,
+Repaso completo y detallado para el equipo: qué es LAAD y qué preguntas clave responde; diagnóstico del prototipo
+(matriz fallo → decisión → control); principios y por qué; decisiones tecnológicas con sus alternativas descartadas
+(RDF frente a Neo4j, cada estándar, informe H1, pila de software, agente propio y Gemini); la ontología capa por capa
+con TriG real (la negación de Cano, las hipótesis sobre el declarante de P19); fuerza institucional, tesauro,
+formas SHACL, análisis de carencias, defectos D1–D7 y límites L1–L10; construcción del grafo y por qué el modelo de
+lenguaje rellena un esquema plano; cifras con gráficos y visor; validación, consulta y escala; diseño del harness y
+recorrido real de la PC09; las 20 PC; resultados y coste; preguntas frecuentes respondidas; problemas, propuestas,
 pendientes, uso y glosario. Las cifras generales salen de `../articulo/cifras.tex`; las distribuciones y los
 resultados del harness, de `datos_proyecto.tex`, que genera `scripts/datos_presentacion.py` a partir del grafo y de
 los informes de `datos/evaluacion/`:
