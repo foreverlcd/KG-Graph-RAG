@@ -5,6 +5,9 @@ Un único archivo HTML, al estilo de Neo4j Browser, para explorar quién afirma 
     python scripts/visor.py        # lee el grafo construido y escribe visor/index.html desde visor/plantilla.html
     # abrir visor/index.html en el navegador (los datos van dentro; las bibliotecas del grafo se cargan de jsDelivr)
 
+Publicado en GitHub Pages: <https://foreverlcd.github.io/KG-Graph-RAG/visor/> (se actualiza con cada push a `main`;
+incluye las citas literales del expediente, igual que el repositorio, que es público).
+
 `plantilla.html` es la página; `index.html` es la plantilla con los datos incrustados (generado: no editar a mano).
 
 ## Qué muestra
