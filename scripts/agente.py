@@ -35,11 +35,11 @@ def _mostrar(r: AG.RespuestaAgente, traza: bool) -> None:
         print("traza completa:\n  " + "\n  ".join(r.traza))
 
 
-def _banco(prov, pcs: list[str], pausa: float, max_pasos: int) -> int:
+def _banco(prov, pcs: list[str], pausa: float, max_pasos: int, sufijo: str = "") -> int:
     from laad.evaluacion_harness import Ejecucion, cargar, cobertura, comprobar
     from laad.preguntas import PREGUNTAS
     lineas = [x for x in cargar() if not pcs or x["pc"] in pcs]
-    salida = RAIZ / "datos" / "evaluacion" / f"agente_{prov.nombre}_{prov.modelo}_{AG.PROMPT.stem}.jsonl"
+    salida = RAIZ / "datos" / "evaluacion" / f"agente_{prov.nombre}_{prov.modelo}_{AG.PROMPT.stem}{sufijo and '_' + sufijo}.jsonl"
     alcanzadas = forma_ok = verificadas = 0
     with salida.open("w", encoding="utf-8") as f:
         for i, linea in enumerate(lineas):
@@ -96,13 +96,14 @@ def main() -> int:
     ap.add_argument("--banco", action="store_true")
     ap.add_argument("--pc", action="append", default=[])
     ap.add_argument("--pausa", type=float, default=10.0, help="segundos entre preguntas del banco")
+    ap.add_argument("--sufijo", default="", help="sufijo del informe del banco (p. ej. r2 para una repetición)")
     a = ap.parse_args()
     for env in filter(None, [a.env, RAIZ / ".env"]):
         if pathlib.Path(env).exists():
             proveedores.cargar_env(env)
     prov = proveedores.crear(a.proveedor, a.modelo)
     if a.banco:
-        return _banco(prov, a.pc, a.pausa, a.max_pasos)
+        return _banco(prov, a.pc, a.pausa, a.max_pasos, a.sufijo)
     if not a.pregunta:
         ap.error("falta la pregunta (o --banco)")
     r = AG.preguntar(a.pregunta, prov, max_pasos=a.max_pasos)

@@ -25,10 +25,15 @@ Cómo trabajar:
   con otros atributos cercanos; si la pregunta compara dos momentos o dos personas, consulta ambos.
 - Herramienta adecuada para cada tipo de pregunta:
   · qué piezas hay, su orden, tipo y fecha → `piezas` y `control_secuencia`;
-  · quién actúa, escribe o firma cada pieza, cadena de autoridades → `participantes`;
+  · quién actúa en cada pieza con el papel que consta en la propia pieza (firmante, escribano, receptor…),
+    cadena de autoridades → `participantes`;
   · grafías de un nombre y dónde aparece → `buscar` y `menciones_de`;
   · qué dice alguien, qué se afirma o se resuelve → `afirmaciones` (por entidad, afirmante, pieza o atributo);
-  · quién redactó o firmó algo → `afirmaciones` con el atributo correspondiente y `disputas_firma`;
+  · quién redactó o firmó algo SEGÚN LO QUE AFIRMAN OTROS (testigos, autoridades) → `afirmaciones` con el
+    atributo `redacto` o `autenticidad-firma` (sin entidad: así salen todas las piezas y sus disputas) y
+    `disputas_firma`;
+  · remisiones del expediente a sus propias fojas («la certificación de folio 4», «en folio 10») →
+    `afirmaciones` con el atributo `folio-de-pieza`. Un número de folio NO es un id de pieza: «folio 4» no es P04;
   · si algo está en disputa → `afirmaciones` y `disputas`;
   · cargos con su vigencia → `cargos`;
   · identidades dudosas, lugares, si dos menciones son la misma persona → `reconstrucciones` (con `mencion` para

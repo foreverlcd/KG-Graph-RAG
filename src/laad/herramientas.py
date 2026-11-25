@@ -701,7 +701,9 @@ def participantes(expediente: str | None = None, pieza: str | None = None) -> Re
         lineas.append(f"  {local}: no consta ningún participante anotado.")
     return _resultado("participantes", dict(expediente=expediente, pieza=pieza), "D" if filas else "NC",
                       f"{len({(f['pieza'], f['rol'], f['mid']) for f in filas})} participaciones en "
-                      f"{len(por_pieza)} piezas (una mención con varias identidades propuestas lleva todas).", filas,
+                      f"{len(por_pieza)} piezas (una mención con varias identidades propuestas lleva todas). Son los papeles "
+                      "que constan en la propia pieza; lo que otros afirman sobre quién la redactó o firmó está en "
+                      "afirmaciones (atributos redacto y autenticidad-firma).", filas,
                       extra=lineas)
 
 
