@@ -454,13 +454,15 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
         filas = [f for f in filas if f["fundamento"] not in excluidos]
     if responden_a is not None:
         filas = [f for f in filas if f.get("respondeA") and (f["ref"].split(":")[0], f["respondeA"]) in respondidas]
+    _identidad_del_valor(filas)
+    calc = [{**f, "valorLabel": f.get("valorReconstruccion") or f["valorLabel"]} for f in filas]
     pares = entidad and atributo
-    forma = forma_de(filas, atributo) if pares else ("A" if filas else "NC")
+    forma = forma_de(calc, atributo) if pares else ("A" if filas else "NC")
     if pares:
-        resumen = resumen_disputa(filas, atributo) + " " + pronunciamientos(filas)
+        resumen = resumen_disputa(calc, atributo) + " " + pronunciamientos(filas)
     elif filas:
         resumen = f"{len(filas)} afirmaciones (capa 3): cada una es de quien la hace, no un hecho."
-        enfrentadas = _disputas_en(filas, por_sujeto=not entidad)
+        enfrentadas = _disputas_en(calc, por_sujeto=not entidad)
         if enfrentadas:
             forma = "DISPUTA"
             resumen += (f" HAY {len(enfrentadas)} DISPUTA(S) ENTRE ESTAS AFIRMACIONES (calculadas, no resueltas): "
@@ -475,6 +477,27 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
                                            excluir_fundamento=excluir_fundamento, responden_a=responden_a,
                                            expediente=expediente),
                       forma, resumen, filas, afirmaciones=filas)
+
+
+@lru_cache(maxsize=1)
+def _reconstrucciones_de_mencion() -> dict[str, list[str]]:
+    """Mención calificada (<exp>:M-…) → reconstrucciones que la agrupan."""
+    out: dict[str, list[str]] = {}
+    for rid, r in indice_reconstrucciones().items():
+        for m in r.get("menciones", []):
+            out.setdefault(m, []).append(rid)
+    return out
+
+
+def _identidad_del_valor(filas: list[dict]) -> None:
+    """Si el valor de una afirmación es una mención que agrupa UNA sola reconstrucción, anota su id en
+    «valorReconstruccion»: así las disputas comparan personas y no grafías («Guancachoque» y «Manuel Guancoichoque»
+    son R-huancachoque). Si la mención está en reconstrucciones rivales no se unifica: sería elegir una hipótesis."""
+    for f in filas:
+        if "/mencion/" in f.get("valor", ""):
+            rids = _reconstrucciones_de_mencion().get(_ref_calificada(f["valor"].split("/id/", 1)[1]), [])
+            if len(rids) == 1:
+                f["valorReconstruccion"] = rids[0]
 
 
 def _dominio(entidad: str, atributo: str) -> None:
@@ -554,6 +577,9 @@ def menciones_de(entidad: str, expediente: str | None = None) -> Resultado:
                       reconstrucciones=recs, extra=lineas)
 
 
+LISTA_COMPACTA = 8
+
+
 def reconstrucciones(entidad: str | None = None, mencion: str | None = None, clase: str | None = None,
                      creencia: list[str] | None = None) -> Resultado:
     """Reconstrucciones (capa 4) con autor, fecha, creencia, argumento y de qué derivan. Con `mencion`, todas las
@@ -580,11 +606,23 @@ def reconstrucciones(entidad: str | None = None, mencion: str | None = None, cla
             raise ErrorHerramienta(f"reconstrucciones: creencia {', '.join(malas)} no válida; valores: "
                                    f"{', '.join(sorted(validas))}")
         filas = [f for f in filas if f["creencia"] in creencia]
-    return _resultado("reconstrucciones", dict(entidad=entidad, mencion=mencion, clase=clase, creencia=creencia),
-                      "R" if filas else "NC",
-                      f"{len(filas)} reconstrucciones (hipótesis del investigador, con su creencia; ninguna se "
-                      "impone a otra)." if filas else "Ninguna reconstrucción con esos filtros.", filas,
-                      reconstrucciones=filas)
+    resumen = (f"{len(filas)} reconstrucciones (hipótesis del investigador, con su creencia; ninguna se impone a "
+               "otra)." if filas else "Ninguna reconstrucción con esos filtros.")
+    rivales_de = {f["id"]: rivales(f["id"]) for f in filas if f["id"]}
+    for f in filas:
+        f["rivales"] = "; ".join(f"{r['id']} ({r['creencia']})" for r in rivales_de.get(f["id"], []))
+    params_r = dict(entidad=entidad, mencion=mencion, clase=clase, creencia=creencia)
+    if len(filas) > LISTA_COMPACTA:
+        # lista larga: una línea por reconstrucción; el detalle (argumento, menciones) se pide con entidad=<id>
+        lineas = [f"  {f['id']} [{f['clase']}] «{f['label']}» — creencia: {f['creencia']}; autor: {f['autor']}"
+                  + (f"; RIVALES (comparten menciones): {f['rivales']}" if f["rivales"] else "")
+                  + (f"\n      argumento (comienzo): {' '.join(f['argumento'].split())[:220]}…" if f.get("argumento") else "")
+                  for f in filas]
+        return _resultado("reconstrucciones", params_r, "R", resumen + " Lista compacta: para el argumento y las "
+                          "menciones de una, llama a reconstrucciones con entidad=<id>.", filas, extra=lineas)
+    lineas = [f"  RIVALES de {f['id']} (comparten menciones): {f['rivales']}" for f in filas if f["rivales"]]
+    return _resultado("reconstrucciones", params_r, "R" if filas else "NC", resumen, filas,
+                      reconstrucciones=filas, extra=lineas)
 
 
 def cargos(titular: str | None = None) -> Resultado:
@@ -639,11 +677,31 @@ def participantes(expediente: str | None = None, pieza: str | None = None) -> Re
     filas = consultar("participantes", **params)
     if pieza:
         filas = [f for f in filas if f["pieza"] == local]
-    lineas = [f"  {f['pieza']} [{f['tipoAct']}] fecha escrita «{f['fecha'] or 'no consta'}»; data "
-              f"«{f['lugar'] or 'no consta'}» — {f['rol']}: «{f['texto']}»"
-              + (f" [{f['persona']}]" if f["persona"] else "") + f" ({f['mid']}, {f['tramo']})" for f in filas]
+    por_pieza: dict[str, dict] = {}
+    for f in filas:
+        d = por_pieza.setdefault(f["pieza"], {"cab": f, "roles": {}})
+        clave = (f["rol"], f["mid"])
+        d["roles"].setdefault(clave, {"f": f, "personas": []})
+        if f["persona"] and f["persona"] not in d["roles"][clave]["personas"]:
+            d["roles"][clave]["personas"].append(f["persona"])
+    lineas = []
+    for pz, d in por_pieza.items():
+        c = d["cab"]
+        lineas.append(f"  {pz} [{c['tipoAct']}] fecha escrita «{c['fecha'] or 'no consta'}»; data «{c['lugar'] or 'no consta'}»")
+        for (rol, mid), x in d["roles"].items():
+            ident = (" [" + " | ".join(x["personas"]) + (" — hipótesis rivales" if len(x["personas"]) > 1 else "")
+                     + "]") if x["personas"] else ""
+            lineas.append(f"      {rol}: «{x['f']['texto']}»{ident} ({mid}, {x['f']['tramo']})")
+    if not pieza and expediente:
+        vacias = [p["pieza"] for p in consultar("piezas", expediente=_expediente_iri(expediente))
+                  if p["pieza"] not in por_pieza]
+        if vacias:
+            lineas.append(f"  Piezas sin ningún participante anotado (no consta): {', '.join(vacias)}")
+    elif pieza and not filas:
+        lineas.append(f"  {local}: no consta ningún participante anotado.")
     return _resultado("participantes", dict(expediente=expediente, pieza=pieza), "D" if filas else "NC",
-                      f"{len(filas)} participaciones en {len({f['pieza'] for f in filas})} piezas.", filas,
+                      f"{len({(f['pieza'], f['rol'], f['mid']) for f in filas})} participaciones en "
+                      f"{len(por_pieza)} piezas (una mención con varias identidades propuestas lleva todas).", filas,
                       extra=lineas)
 
 
@@ -654,6 +712,7 @@ def procedencia(registro: str) -> Resultado:
     lineas = [f"  grafo {f['grafo']} ({f['capa'].rsplit('/', 1)[1]}): actividad {f['actividad']}, agente {f['agente']} "
               f"({f['tipoAgente'].rsplit('#', 1)[1]}), plan «{f['plan']}», transcripción {f['sha']}, "
               f"fecha {f['fecha']}, validación humana: {f['validador'] or 'NO REGISTRADA'}" for f in filas]
+    lineas = list(dict.fromkeys(lineas))                 # una fila por cada camino del grafo; se dicen una vez
     return _resultado("procedencia", dict(registro=registro), "P" if filas else "NC",
                       "Procedencia del dato (PROV-O), no del testimonio de 1806.", filas, extra=lineas)
 

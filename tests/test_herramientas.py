@@ -220,3 +220,41 @@ def test_el_comprobador_rechaza_una_eleccion_que_buscar_no_devolvio():
     linea = _linea("PC11")
     plan = [dict(p, elegir="R-cano") if p["herramienta"] == "buscar" else p for p in linea["plan"]]
     assert any("no está entre los candidatos" in f for f in E.evaluar_linea({**linea, "plan": plan})["fallos"])
+
+
+# ───────────────────────── mejoras tras el banco con modelos (2026-11-24) ─────────────────────────
+
+def test_afirmaciones_sin_entidad_calcula_las_disputas_y_compara_personas_no_grafias():
+    r = H.usar("afirmaciones", atributo="redacto", expediente=EXP)
+    assert r.forma == "DISPUTA" and "DISPUTA(S) ENTRE ESTAS AFIRMACIONES" in r.resumen
+    # «Guancachoque» y «Manuel Guancoichoque» son menciones de R-huancachoque: no son valores distintos
+    assert "«Guancachoque»: lo afirman" not in r.resumen and "«R-huancachoque»" in r.resumen
+    assert H.verificar(r.texto, r.filas) == {"citas": [], "ids": []}
+
+
+def test_un_atributo_de_hecho_pedido_a_una_persona_es_un_error_que_propone_el_hecho():
+    with pytest.raises(H.ErrorHerramienta, match="se dice de hecho") as e:
+        H.usar("afirmaciones", entidad="R-huancachoque", atributo="duracion")
+    assert "R-prision" in str(e.value)
+
+
+def test_participantes_no_repite_menciones_y_dice_las_piezas_sin_participantes():
+    r = H.usar("participantes", expediente=EXP)
+    p03 = [l for l in r.texto.splitlines() if "«don Juan Quiñones»" in l and "certificante" in l]
+    assert len(p03) == 1 and "hipótesis rivales" in p03[0]
+    assert any(l.strip().startswith("Piezas sin ningún participante") for l in r.texto.splitlines())
+
+
+def test_procedencia_sin_lineas_repetidas():
+    r = H.usar("procedencia", registro="cc-14-18:A-UT11-004")
+    lineas = [l for l in r.texto.splitlines() if l.strip().startswith("grafo ")]
+    assert len(lineas) == len(set(lineas)) == 1
+
+
+def test_reconstrucciones_muestra_las_rivales_y_compacta_las_listas_largas():
+    r = H.usar("reconstrucciones", clase="persona", creencia=["posible", "indeterminado", "improbable"])
+    assert len(r.filas) > H.LISTA_COMPACTA and "Lista compacta" in r.resumen
+    assert any("RIVALES" in l for l in r.texto.splitlines())
+    assert H.verificar(r.texto, r.filas) == {"citas": [], "ids": []}
+    r = H.usar("reconstrucciones", mencion="cc-14-18:M-UT12.a-005")
+    assert len(r.filas) <= H.LISTA_COMPACTA and "RECONSTRUCCIÓN" in r.texto
