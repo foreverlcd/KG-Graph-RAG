@@ -35,3 +35,28 @@ def test_las_menciones_con_hipotesis_rivales_no_se_fusionan():
     for n in rivales:
         hip = {r["target"] for r in g["relaciones"] if r["source"] == n["id"] and r["tipo"] == "HIPOTESIS_DE"}
         assert hip == set(n["rivales"])
+
+
+def test_ontologia_y_tesauro_salen_del_grafo_real():
+    g = _datos()
+    rdf = g["rdf"]
+    # las tripletas de la afirmación de Cano viven en el grafo nombrado de la capa 3, con la polaridad «niega»
+    filas = rdf["r"]["A-UT11-004"]
+    capa3 = [(rdf["grafos"][gi], po) for gi, s, po in filas if s.endswith("/afirmacion/A-UT11-004")]
+    assert capa3 and all("/afirmaciones/" in grafo for grafo, _ in capa3)
+    assert ["crm:P2_has_type", "pol:niega"] in capa3[0][1]
+    assert ["rdf:type", "crm:E13_Attribute_Assignment"] in capa3[0][1]
+    # la reconstrucción separa proposición y argumento en dos grafos de la capa 4
+    grafos_r = {rdf["grafos"][gi] for gi, _, _ in rdf["r"]["R-chuquitapa"]}
+    assert {"g:reconstruccion/R-chuquitapa", "g:argumentacion/R-chuquitapa"} <= grafos_r
+    assert "_procedencia" in rdf["r"]
+    # el tesauro: 12 esquemas; 164 aprobados + 26 candidatos (las mismas cifras que docs/cifras.md)
+    tes = g["tesauro"]
+    conceptos = [c for e in tes for c in e["conceptos"]]
+    assert len(tes) == 12 and len(conceptos) == 190
+    assert sum(c["candidato"] for c in conceptos) == g["cifras"]["candidatos"] == 26
+    cano = {c["id"]: c for c in conceptos}
+    assert cano["pol:niega"]["usos"] == g["cifras"]["negaciones"]
+    assert any(r.startswith("fza:") for c in conceptos if c["id"].startswith("act:") for r in c["relacionado"])
+    # las reglas SHACL con nombre, cada una con su explicación
+    assert len(g["formas"]) == 18 and all(f["id"].startswith("ohac:") and f["explica"] for f in g["formas"])

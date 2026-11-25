@@ -95,6 +95,7 @@ ohac:ObservacionForma a sh:NodeShape ;
     sh:property [ sh:path owl:sameAs ; sh:maxCount 0 ] .
 
 ohac:ApelacionForma a sh:NodeShape ;
+    rdfs:comment "La denominación (capa 2) guarda exactamente un contenido textual: el nombre tal como está escrito, sin normalizar."@es ;
     sh:targetClass crm:E41_Appellation ;
     sh:property [ sh:path crm:P190_has_symbolic_content ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
 
@@ -105,6 +106,7 @@ ohac:AnotacionForma a sh:NodeShape ;
     sh:property [ sh:path oa:hasTarget ; sh:minCount 1 ; sh:maxCount 1 ; sh:node ohac:ObjetivoForma ] .
 
 ohac:ObjetivoForma a sh:NodeShape ;
+    rdfs:comment "El objetivo de una anotación apunta a exactamente un tramo de la transcripción y lleva dos selectores: la cita exacta (TextQuoteSelector) y su posición en caracteres (TextPositionSelector)."@es ;
     sh:property [ sh:path oa:hasSource ; sh:minCount 1 ; sh:maxCount 1 ; sh:class rico:Instantiation ] ;
     sh:property [ sh:path oa:hasSelector ; sh:qualifiedValueShape [ sh:class oa:TextQuoteSelector ;
                     sh:property [ sh:path oa:exact ; sh:minCount 1 ; sh:maxCount 1 ] ] ;
@@ -199,6 +201,7 @@ ohac:AfirmacionForma a sh:NodeShape ;
             FILTER (?objeto != ?marca) }""" ] .
 
 ohac:ValorLiteralForma a sh:NodeShape ;
+    rdfs:comment "Un valor afirmado que es texto libre guarda exactamente un contenido textual."@es ;
     sh:targetClass crm:E33_Linguistic_Object ;
     sh:property [ sh:path crm:P190_has_symbolic_content ; sh:minCount 1 ; sh:maxCount 1 ] .
 
@@ -259,6 +262,7 @@ ohac:CargoForma a sh:NodeShape ;
     sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I5_Inference_Making ] .
 
 ohac:InferenciaForma a sh:NodeShape ;
+    rdfs:comment "Toda reconstrucción tiene un razonamiento con autor (un agente), una fecha, un argumento escrito (nota) y una única creencia como conclusión; sus premisas solo pueden ser afirmaciones."@es ;
     sh:targetClass crminf:I5_Inference_Making ;
     sh:property [ sh:path crm:P14_carried_out_by ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Agent ] ;
     sh:property [ sh:path crminf:J2_concluded_that ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I2_Belief ] ;
@@ -267,6 +271,7 @@ ohac:InferenciaForma a sh:NodeShape ;
     sh:property [ sh:path crm:P17_was_motivated_by ; sh:class crm:E13_Attribute_Assignment ] .
 
 ohac:CreenciaForma a sh:NodeShape ;
+    rdfs:comment "La creencia (capa 4) se refiere a exactamente un conjunto de proposiciones (el grafo de la reconstrucción) y tiene un único grado: verdadero, probable, posible, improbable, falso o indeterminado."@es ;
     sh:targetClass crminf:I2_Belief ;
     sh:property [ sh:path crminf:J4_that ; sh:minCount 1 ; sh:maxCount 1 ; sh:class crminf:I4_Proposition_Set ] ;
     sh:property [ sh:path crminf:J5_holds_to_be ; sh:minCount 1 ; sh:maxCount 1 ;
