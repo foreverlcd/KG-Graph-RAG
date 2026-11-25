@@ -305,12 +305,84 @@ def formas() -> list:
     return out
 
 
+# ── Ejemplo en tres niveles: ontología (el molde), grafo (los datos) y tesauro (el vocabulario) ──
+# Una sola afirmación (Cano niega que Chuquitapa fuera coronel) con todo lo que toca. Cada arista se comprueba contra el
+# grafo (datos/grafo/*.nq) o contra el tesauro (ontologia/tesauro.ttl): si no existe, el visor no se genera.
+EJ_NODOS = [
+    # nivel, id compacto, x, y, título, subtítulo, clave para «ver en RDF» o para el tesauro
+    ("onto", "crm:E65_Creation", 130, 95, "Actuación procesal", "crm:E65_Creation", None),
+    ("onto", "picom:PersonObservation", 420, 95, "Mención de persona", "picom:PersonObservation", None),
+    ("onto", "crm:E13_Attribute_Assignment", 720, 95, "Afirmación", "crm:E13_Attribute_Assignment", None),
+    ("onto", "picom:PersonReconstruction", 980, 95, "Persona reconstruida", "picom:PersonReconstruction", None),
+    ("onto", "skos:Concept", 1205, 95, "Concepto", "skos:Concept", None),
+    ("datos", "id:cc-14-18/actuacion/P18", 130, 340, "Actuación P18", "id:…/actuacion/P18", "P18"),
+    ("datos", "id:cc-14-18/mencion/M-UT11-001", 400, 340, "«Ysidro Cano»", "id:…/mencion/M-UT11-001", "M-UT11-001"),
+    ("datos", "id:cc-14-18/afirmacion/A-UT11-004", 720, 340, "Afirmación A-UT11-004", "id:…/afirmacion/A-UT11-004", "A-UT11-004"),
+    ("datos", "id:cc-14-18/mencion/M-UT01-004", 1040, 395, "«Chuquitapa»", "id:…/mencion/M-UT01-004", "M-UT01-004"),
+    ("datos", "id:persona/chuquitapa", 1040, 245, "Andrés Chuquitapa", "id:persona/chuquitapa", "R-chuquitapa"),
+    ("tes", "act:declaracion-jurada", 130, 560, "declaración jurada", "act:declaracion-jurada", "act:declaracion-jurada"),
+    ("tes", "fza:testimonial", 480, 560, "testimonial", "fza:testimonial", "fza:testimonial"),
+    ("tes", "rol:declarante", 330, 640, "declarante", "rol:declarante", "rol:declarante"),
+    ("tes", "pol:niega", 660, 640, "niega", "pol:niega", "pol:niega"),
+    ("tes", "atr:ejerce-cargo", 800, 560, "ejerce o ejerció un cargo", "atr:ejerce-cargo", "atr:ejerce-cargo"),
+    ("tes", "cargo:coronel-rebelde", 1080, 640, "coronel (de Túpac Amaru)", "cargo:coronel-rebelde", "cargo:coronel-rebelde"),
+    ("tes", "cargo:cargo-rebelde-1780", 1205, 560, "cargo en las fuerzas de 1780", "cargo:cargo-rebelde-1780", "cargo:cargo-rebelde-1780"),
+]
+EJ_ARISTAS = [
+    # sujeto, predicado, objeto, rótulo corto, curvatura, posición del rótulo (0 = sujeto, 1 = objeto)
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P14_carried_out_by", "id:cc-14-18/mencion/M-UT11-001", "P14 · quién", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P140_assigned_attribute_to", "id:cc-14-18/mencion/M-UT01-004", "P140 · sobre quién", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P9i_forms_part_of", "id:cc-14-18/actuacion/P18", "P9i · en qué actuación", -110, .8),
+    ("id:persona/chuquitapa", "prov:wasDerivedFrom", "id:cc-14-18/mencion/M-UT01-004", "reúne esta mención", 0, .5),
+    ("id:cc-14-18/actuacion/P18", "rdf:type", "crm:E65_Creation", "es un", 0, .5),
+    ("id:cc-14-18/mencion/M-UT11-001", "rdf:type", "picom:PersonObservation", "es un", 0, .5),
+    ("id:cc-14-18/mencion/M-UT01-004", "rdf:type", "picom:PersonObservation", "es un", 0, .3),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "rdf:type", "crm:E13_Attribute_Assignment", "es un", 0, .5),
+    ("id:persona/chuquitapa", "rdf:type", "picom:PersonReconstruction", "es un", 0, .5),
+    ("id:cc-14-18/actuacion/P18", "crm:P2_has_type", "act:declaracion-jurada", "P2 · tipo de acto", 0, .5),
+    ("id:cc-14-18/mencion/M-UT11-001", "picom:hasRole", "rol:declarante", "rol", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P2_has_type", "fza:testimonial", "P2 · fuerza", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P2_has_type", "pol:niega", "P2 · polaridad", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P177_assigned_property_of_type", "atr:ejerce-cargo", "P177 · qué afirma", 0, .5),
+    ("id:cc-14-18/afirmacion/A-UT11-004", "crm:P141_assigned", "cargo:coronel-rebelde", "P141 · el valor", 0, .5),
+    ("act:declaracion-jurada", "skos:related", "fza:testimonial", "da la fuerza", 0, .5),
+    ("cargo:coronel-rebelde", "skos:broader", "cargo:cargo-rebelde-1780", "dentro de", 0, .5),
+]
+
+
+def ejemplo(quads) -> dict:
+    from rdflib import Graph
+    tes = Graph()
+    tes.parse(RAIZ / "ontologia" / "tesauro.ttl", format="turtle")
+    en_datos = {}
+    for s, p, o, g in quads:
+        en_datos.setdefault((_c(s), _c(p), _c(o)), _c(g))
+    en_tes = {(_c(s), _c(p), _c(o)) for s, p, o in tes}
+    ids = {n[1] for n in EJ_NODOS}
+    aristas = []
+    for s, p, o, rot, curva, pos in EJ_ARISTAS:
+        assert s in ids and o in ids, (s, o)
+        if (s, p, o) in en_datos:
+            fuente = en_datos[(s, p, o)]
+        elif (s, p, o) in en_tes:
+            fuente = "ontologia/tesauro.ttl"
+        else:
+            raise SystemExit(f"El ejemplo dibuja una arista que no está en el grafo ni en el tesauro: {s} {p} {o}")
+        aristas.append({"s": s, "p": p, "o": o, "rotulo": rot, "curva": curva, "pos": pos, "fuente": fuente})
+    # todos los conceptos dibujados son skos:Concept (una sola flecha agregada en el dibujo)
+    for n in EJ_NODOS:
+        if n[0] == "tes" and (n[1], "rdf:type", "skos:Concept") not in en_tes:
+            raise SystemExit(f"{n[1]} no es un skos:Concept del tesauro")
+    return {"nodos": [dict(zip(("nivel", "id", "x", "y", "titulo", "sub", "clave"), n)) for n in EJ_NODOS], "aristas": aristas}
+
+
 def main() -> int:
     d = datos()
     quads = _quads()
     d["rdf"] = rdf_por_recurso(quads)
     d["tesauro"] = tesauro(quads)
     d["formas"] = formas()
+    d["ejemplo"] = ejemplo(quads)
     d["cifras"] = json.loads((RAIZ / "datos" / "cifras.json").read_text(encoding="utf-8"))
     plantilla = PLANTILLA.read_text(encoding="utf-8")
     if plantilla.count(MARCA) != 1:

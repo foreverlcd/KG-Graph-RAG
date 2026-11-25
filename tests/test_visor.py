@@ -60,3 +60,19 @@ def test_ontologia_y_tesauro_salen_del_grafo_real():
     assert any(r.startswith("fza:") for c in conceptos if c["id"].startswith("act:") for r in c["relacionado"])
     # las reglas SHACL con nombre, cada una con su explicación
     assert len(g["formas"]) == 18 and all(f["id"].startswith("ohac:") and f["explica"] for f in g["formas"])
+
+
+def test_ejemplo_en_tres_niveles_solo_dibuja_tripletas_que_existen():
+    # visor.py ya aborta si una arista no está en el grafo ni en el tesauro; aquí se fija el reparto por niveles
+    ej = _datos()["ejemplo"]
+    nivel = {n["id"]: n["nivel"] for n in ej["nodos"]}
+    assert {"onto", "datos", "tes"} == set(nivel.values())
+    por_fuente = {a["fuente"].startswith("g:") for a in ej["aristas"]}
+    assert por_fuente == {True, False}                         # unas del grafo, otras del tesauro
+    for a in ej["aristas"]:
+        if a["p"] == "rdf:type":                                 # «es un»: de los datos a la ontología
+            assert nivel[a["s"]] == "datos" and nivel[a["o"]] == "onto"
+        if nivel[a["s"]] == "tes":                               # la red propia del tesauro (SKOS) vive en tesauro.ttl
+            assert a["p"].startswith("skos:") and a["fuente"] == "ontologia/tesauro.ttl"
+    niega = [a for a in ej["aristas"] if a["o"] == "pol:niega"][0]
+    assert niega["s"].endswith("A-UT11-004") and "/afirmaciones/" in niega["fuente"]
