@@ -49,7 +49,9 @@ FORMA: <D | A | DISPUTA | NC | R | P>
 Elige la forma por lo que pregunta el investigador y por la forma que calcularon las herramientas (cada resultado
 empieza con «RESPUESTA (X)»):
 - DISPUTA: alguna herramienta calculó DISPUTA sobre lo preguntado (algo se afirma y se niega, o valores
-  incompatibles). Si ninguna la calculó, no declares DISPUTA.
+  incompatibles). Si ninguna la calculó, no declares DISPUTA. Si la pregunta es de otra forma (por ejemplo,
+  pide los cargos o las identidades, que son R) y solo un punto secundario está en disputa, declara la forma
+  de la pregunta y menciona la disputa en el texto.
 - NC: lo preguntado no consta: alguna consulta pertinente no devolvió nada. Muestra lo relacionado que sí consta.
 - D: dato documental sobre el propio expediente: qué piezas hay, su orden, quién actúa o firma cada una, qué
   grafías y en qué tramos aparece un nombre.

@@ -430,6 +430,8 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
         params["pieza_iri"] = _iri(*_separar(pieza, ("pieza",), "pieza"))
     if atributo:
         params["atributo"] = _concepto(atributo, "atributos", "atributo")["concepto"]
+        if entidad:
+            _dominio(entidad, params["atributo"].rsplit("/", 1)[-1])
     if expediente:
         params["expediente"] = _expediente_iri(expediente)
     fuerzas = [_concepto(x, "fuerzas", "fuerza")["etiqueta"] for x in fuerza or []]
@@ -458,6 +460,11 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
         resumen = resumen_disputa(filas, atributo) + " " + pronunciamientos(filas)
     elif filas:
         resumen = f"{len(filas)} afirmaciones (capa 3): cada una es de quien la hace, no un hecho."
+        enfrentadas = _disputas_en(filas, por_sujeto=not entidad)
+        if enfrentadas:
+            forma = "DISPUTA"
+            resumen += (f" HAY {len(enfrentadas)} DISPUTA(S) ENTRE ESTAS AFIRMACIONES (calculadas, no resueltas): "
+                        + " || ".join(enfrentadas))
     else:
         resumen = "El expediente no lo dice (no hay afirmaciones registradas con esos filtros)."
     if not filas:
@@ -468,6 +475,42 @@ def afirmaciones(entidad: str | None = None, atributo: str | None = None, afirma
                                            excluir_fundamento=excluir_fundamento, responden_a=responden_a,
                                            expediente=expediente),
                       forma, resumen, filas, afirmaciones=filas)
+
+
+def _dominio(entidad: str, atributo: str) -> None:
+    """Error corregible si el atributo no se dice de la clase de la reconstrucción (dominio de datos/atributos.csv):
+    p. ej. la duración se dice de un hecho, no de una persona. Propone los hechos cuya etiqueta nombra a la entidad."""
+    from .esquema import dominio_rango
+    clase_ref = _separar(entidad, ("reconstruccion", "mencion", "pieza"), "entidad")[0]
+    if clase_ref != "reconstruccion":
+        return
+    rec = indice_reconstrucciones().get(entidad, {})
+    clase, admitidos = rec.get("clase"), dominio_rango().get(atributo, (frozenset(), frozenset()))[0]
+    if not clase or not admitidos or clase in admitidos or clase not in ("persona", "grupo", "cosa", "hecho"):
+        return
+    nombre = set(_claves(rec.get("label", "").split(",")[0]))
+    hechos = [r for r, x in indice_reconstrucciones().items()
+              if x.get("clase") in admitidos and nombre & set(_claves(x.get("label", "")))]
+    sugerencia = (" Reconstrucciones de esa clase que nombran a la entidad: "
+                  + "; ".join(f"{r} ({indice_reconstrucciones()[r]['label'][:80]})" for r in hechos[:8])
+                  if hechos else " Busca el hecho con `buscar` (p. ej. el nombre del hecho y de la persona).")
+    raise ErrorHerramienta(f"el atributo «{atributo}» se dice de {' o '.join(sorted(admitidos))}, no de {clase} "
+                           f"({entidad}): consulta el atributo sobre esa entidad, no sobre la persona.{sugerencia}")
+
+
+def _disputas_en(filas: list[dict], por_sujeto: bool) -> list[str]:
+    """Disputas entre las filas, agrupadas por atributo (y por sujeto si la consulta no fijó la entidad): el mismo
+    cálculo que forma_de, para que el modelo no tenga que deducirlas al leer muchas afirmaciones."""
+    grupos: dict[tuple, list[dict]] = {}
+    for f in filas:
+        grupos.setdefault((f.get("sujeto") if por_sujeto else None, f["atributo"]), []).append(f)
+    out = []
+    for (sujeto, atr), g in grupos.items():
+        local = atr.rsplit("/", 1)[-1]
+        if forma_de(g, local) == "DISPUTA":
+            quien = g[0].get("sujetoLabel") or (_ref_calificada(sujeto.split("/id/", 1)[1]) if sujeto else "")
+            out.append(f"{g[0]['atrLabel']}{f' de {quien}' if quien else ''}: {resumen_disputa(g, local)}")
+    return out
 
 
 def disputas(entidad: str | None = None, atributo: str | None = None) -> Resultado:

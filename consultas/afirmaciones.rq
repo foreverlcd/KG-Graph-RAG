@@ -16,7 +16,7 @@ SELECT ?a ?aid ?afirmante
        ?rolAf ?pieza ?tipoAct ?fecha
        (GROUP_CONCAT(DISTINCT COALESCE(?recL, ""); separator=" / ") AS ?ante)
        (GROUP_CONCAT(DISTINCT COALESCE(?fL, ""); separator=" / ") AS ?firmantes)
-       ?sujetoLabel ?atributo ?atrLabel ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
+       ?sujeto ?sujetoLabel ?atributo ?atrLabel ?valor ?valorLabel ?pol ?fundamento ?fuerza ?cita ?tramo ?folio ?nota ?eliptico
        (GROUP_CONCAT(DISTINCT COALESCE(?rdL, ""); separator=" / ") AS ?redactorDoc)
        ?redaccionDisputada ?respondeA ?segun
 WHERE {
