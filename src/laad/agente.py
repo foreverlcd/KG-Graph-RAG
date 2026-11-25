@@ -25,7 +25,7 @@ from . import herramientas as H
 from .evaluacion_harness import Ejecucion
 
 RAIZ = Path(__file__).resolve().parents[2]
-PROMPT = RAIZ / "prompts" / "agente_consulta_v1.md"
+PROMPT = RAIZ / "prompts" / "agente_consulta_v2.md"
 FORMAS = ("D", "A", "DISPUTA", "NC", "R", "P")
 _FORMA = re.compile(r"^\s*FORMA:\s*(D|A|DISPUTA|NC|R|P)\s*$", re.M)
 

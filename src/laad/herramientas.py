@@ -27,7 +27,7 @@ from typing import Callable
 
 from . import consulta, fuente
 from .consulta import consultar
-from .responder import (Respuesta, _unicas, forma_de, linea_reconstruccion, pronunciamientos,
+from .responder import (NO_CONSTA, Respuesta, _unicas, forma_de, linea_reconstruccion, pronunciamientos,
                         resumen_disputa)
 
 
@@ -54,10 +54,43 @@ def cabecera(nombre: str, params: dict) -> str:
     return f"{nombre}({'; '.join(partes)})"
 
 
+def _afirmaciones_agrupadas(filas: list[dict]) -> list[str]:
+    """Las afirmaciones agrupadas por pieza y afirmante: la ficha de la pieza (fecha, ante, redacta, firma) y la del
+    afirmante se escriben una vez por grupo, no en cada afirmación. Mismos datos que responder.linea_afirmacion con
+    un tercio del texto: lo lee el modelo, y cada carácter se paga en tokens y en cuota."""
+    grupos: dict[tuple, list[dict]] = {}
+    for r in filas:
+        clave = (r.get("pieza"), r.get("tipoAct"), r.get("fecha"), r.get("ante"), r.get("redactorDoc"),
+                 r.get("redaccionDisputada"), r.get("firmantes"), r.get("afirmante"), r.get("rolAf"),
+                 r.get("afirmanteR"))
+        grupos.setdefault(clave, []).append(r)
+    out = ["— Lo que se afirma en el expediente (capa 3) —"]
+    for (pieza, tipo, fecha, ante, redacta, disputada, firma, af, rol, afr), rs in grupos.items():
+        redacta = redacta or NO_CONSTA
+        if disputada == "true":
+            redacta += " (DISPUTADO: ver atributo «redactó la pieza»)"
+        fecha = f"fecha escrita «{fecha}»" if fecha else "sin fecha escrita"
+        out.append(f"PIEZA {pieza} ({tipo}), {fecha}; ante: {ante or NO_CONSTA}; redacta: {redacta}; "
+                   f"firma la pieza: {firma or NO_CONSTA}")
+        out.append(f"  Afirmante: «{af}» ({rol})" + (f" [= {afr}, según reconstrucción]" if afr else ""))
+        for r in rs:
+            pol = "" if r["pol"] == "afirma" else " [NIEGA]"
+            eliptico = " (sujeto elíptico resuelto por el anotador)" if r.get("eliptico") == "true" else ""
+            rel = (f"; responde a {r['respondeA']}" if r.get("respondeA") else "") + \
+                  (f"; según lo que le dijo «{r['segun']}» (discurso referido)" if r.get("segun") else "")
+            folio = r["folio"] if r.get("folio") else "folio no consta"
+            out.append(f"  AFIRMACIÓN {r['aid']}{pol}: {r['atrLabel']} → {r['valorLabel']}{eliptico} «{r['cita']}» "
+                       f"[{r['tramo']}, {folio}; fundamento: {r['fundamento']}; fuerza institucional: "
+                       f"{r['fuerza']}{rel}]")
+    return out + [""]
+
+
 def _resultado(nombre: str, params: dict, forma: str, resumen: str, filas: list[dict], *,
                afirmaciones: list[dict] = (), reconstrucciones: list[dict] = (), extra: list[str] = ()) -> Resultado:
-    texto = Respuesta(nombre, forma, resumen, list(afirmaciones), list(reconstrucciones), list(extra)).texto()
-    texto = f"HERRAMIENTA: {nombre}\n" + texto.split("\n", 1)[1]        # en vez de la línea «PREGUNTA: …»
+    texto = Respuesta(nombre, forma, resumen, [], list(reconstrucciones), list(extra)).texto()
+    cabeza, resto = texto.split("\n", 2)[1], texto.split("\n", 2)[2]   # sin la línea «PREGUNTA: …»
+    bloque = "\n".join(_afirmaciones_agrupadas(list(afirmaciones))) + "\n" if afirmaciones else ""
+    texto = f"HERRAMIENTA: {nombre}\n{cabeza}\n\n{bloque}{resto.lstrip(chr(10))}".rstrip() + "\n"
     return Resultado(nombre, {k: v for k, v in params.items() if v is not None}, forma, resumen, filas, texto)
 
 
@@ -780,6 +813,16 @@ def valores(filas) -> list[str]:
     return out
 
 
+def citas(texto: str) -> list[str]:
+    """Las citas entre comillas de un texto («…», "…" o “…”), con los espacios normalizados, sin repetir ni las exentas."""
+    out = []
+    for m in _CITA.finditer(texto):
+        c = _espacios(next(g for g in m.groups() if g is not None))
+        if c and c.lower() not in EXENTAS and c not in out:
+            out.append(c)
+    return out
+
+
 def verificar(texto: str, filas) -> dict[str, list[str]]:
     """Lo que la respuesta `texto` cita y las filas no respaldan:
     * «citas»: las citas entre comillas («…», "…" o “…”) que no son subcadena, con los espacios normalizados, de
@@ -787,11 +830,7 @@ def verificar(texto: str, filas) -> dict[str, list[str]]:
     * «ids»: los ids de afirmación (A-…, solos o calificados) citados en el texto que no aparecen en las filas.
     Las dos listas vacías = respuesta verificada."""
     vals = [_espacios(v) for v in valores(filas)]
-    citas = []
-    for m in _CITA.finditer(texto):
-        c = _espacios(next(g for g in m.groups() if g is not None))
-        if c and c.lower() not in EXENTAS and not any(c in v for v in vals) and c not in citas:
-            citas.append(c)
+    faltan = [c for c in citas(texto) if not any(c in v for v in vals)]
     presentes = {i for v in vals for i in _ID_AFIRMACION.findall(v)}
     unidos = "\n".join(vals)
     ids = []
@@ -805,4 +844,4 @@ def verificar(texto: str, filas) -> dict[str, list[str]]:
             ok = aid in presentes
         if not ok and completo not in ids:
             ids.append(completo)
-    return {"citas": citas, "ids": ids}
+    return {"citas": faltan, "ids": ids}

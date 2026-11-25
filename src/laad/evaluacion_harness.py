@@ -187,3 +187,24 @@ def evaluar_linea(linea: dict) -> dict:
 
 def evaluar(ruta: Path = BANCO) -> list[dict]:
     return [evaluar_linea(x) for x in cargar(ruta)]
+
+
+def _fraccion(alcanzados: int, total: int) -> float | None:
+    return round(alcanzados / total, 2) if total else None
+
+
+def cobertura(referencia: Respuesta, ej: Ejecucion) -> dict[str, float | None]:
+    """Qué fracción de la respuesta de referencia alcanzó una ejecución: afirmaciones (por IRI), reconstrucciones
+    (por etiqueta) y citas literales. Distingue una respuesta incompleta de una errónea; `comprobar` sigue siendo
+    el criterio de «alcanzada» (todo o nada). None: la referencia no tiene elementos de ese tipo."""
+    filas = ej.filas
+    obtenidas = {f["a"] for f in filas if "a" in f and "aid" in f}
+    ref_a = {f["a"] for f in referencia.afirmaciones}
+    etiquetas = {f.get("label") or f.get("etiqueta") for f in filas}
+    ref_r = {r["label"] for r in referencia.reconstrucciones}
+    texto_ref = _sin_pregunta(referencia.texto())
+    citas = H.citas(texto_ref)
+    fallan = set(H.verificar(texto_ref, filas)["citas"])
+    return {"afirmaciones": _fraccion(len(ref_a & obtenidas), len(ref_a)),
+            "reconstrucciones": _fraccion(len(ref_r & etiquetas), len(ref_r)),
+            "citas": _fraccion(len(set(citas) - fallan), len(set(citas)))}
