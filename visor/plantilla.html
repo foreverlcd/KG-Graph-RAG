@@ -103,6 +103,58 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
 .tip b { font-weight: 600; }
 .tip i { display: block; margin-top: 4px; }
 
+/* pestañas Ontología y Tesauro */
+.pestanas button { font-weight: 500; }
+.pagina { overflow: auto; min-height: 0; padding: 18px 22px 40px; }
+.pagina[hidden], .mesa[hidden] { display: none; }
+.pagina h2 { font-size: 1.15rem; margin: 0 0 4px; }
+.pagina h3 { font-size: 0.95rem; margin: 22px 0 8px; }
+.pagina p.lead { color: var(--muted); margin: 0 0 14px; max-width: 980px; }
+.cifras { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
+.cifras div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 0.8rem; color: var(--muted); }
+.cifras b { display: block; font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.onto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; align-items: start; }
+.capas { display: grid; gap: 8px; }
+.capa { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--c); border-radius: 8px; padding: 10px 12px; cursor: pointer; }
+.capa.activa { outline: 2px solid var(--accent); }
+.capa .tit { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 600; }
+.capa .preg { color: var(--muted); font-size: 0.82rem; font-weight: 400; }
+.capa .det { font-size: 0.82rem; margin-top: 6px; display: grid; gap: 4px; }
+.capa .det .k { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.term { font: 0.74rem var(--f-mono); background: var(--soft); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; margin: 0 2px 2px 0; display: inline-block; cursor: help; }
+.ejemplo { position: sticky; top: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; max-height: calc(100vh - 120px); overflow: auto; }
+.ejemplo .botones { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+.bloque-g { margin-top: 10px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.bloque-g .gcab { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; padding: 5px 8px; background: var(--soft); font-size: 0.78rem; }
+.bloque-g .gcab .capa-et { font-weight: 600; color: #fff; padding: 0 7px; border-radius: 999px; font-size: 0.72rem; }
+.suj { padding: 6px 8px 2px; font: 500 0.78rem var(--f-mono); border-top: 1px solid var(--line); word-break: break-all; }
+.suj:first-of-type { border-top: 0; }
+table.tri { width: 100%; border-collapse: collapse; font: 0.76rem var(--f-mono); margin-bottom: 4px; }
+table.tri td { padding: 2px 8px; vertical-align: top; word-break: break-word; }
+table.tri td.p { width: 42%; color: var(--accent); white-space: nowrap; }
+table.tri td.p span { cursor: help; border-bottom: 1px dotted currentColor; }
+table.tri td.o .lit { color: var(--ink); font-family: var(--f-body); font-style: italic; }
+table.tri .expl { display: block; font: 0.72rem var(--f-body); color: var(--muted); white-space: normal; }
+.salto { color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0; font: inherit; }
+.tes { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 18px; align-items: start; }
+.esquemas { display: grid; gap: 4px; position: sticky; top: 0; }
+.esquemas button { text-align: left; display: flex; justify-content: space-between; gap: 8px; }
+.esquemas button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.concepto { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; margin-bottom: 8px; font-size: 0.86rem; }
+.concepto.resaltado { outline: 2px solid var(--disp); }
+.concepto .cab { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.concepto .et { font-weight: 600; }
+.concepto .meta { font-size: 0.76rem; color: var(--muted); margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.badge { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding: 0 6px; border-radius: 999px; border: 1px solid; }
+.badge.cand { color: var(--disp); } .badge.trab { color: var(--muted); } .badge.ret { color: var(--neg); }
+.tabla-simple { border-collapse: collapse; font-size: 0.82rem; width: 100%; max-width: 980px; }
+.tabla-simple td, .tabla-simple th { border-top: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+.tabla-simple th { color: var(--muted); font-weight: 500; font-size: 0.76rem; }
+.principios { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 8px; max-width: 1200px; }
+.principios div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 0.83rem; }
+.principios b { display: block; margin-bottom: 2px; }
+@media (max-width: 1000px) { .onto, .tes { grid-template-columns: minmax(0, 1fr); } .ejemplo, .esquemas { position: static; max-height: none; } }
+
 @media (max-width: 1150px) {
   .mesa { grid-template-columns: 230px minmax(0, 1fr); grid-template-rows: minmax(460px, 1fr) auto; }
   .der { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
@@ -121,6 +173,11 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
   <header class="barra">
     <h1>Grafo CC 14-18</h1>
     <span class="sub">Huancachoque contra el cacique Chuquitapa · Tinta, 1806</span>
+    <div class="grupo-bot pestanas" role="tablist" aria-label="Sección">
+      <button type="button" id="t-grafo" role="tab" aria-pressed="true">Grafo</button>
+      <button type="button" id="t-onto" role="tab" aria-pressed="false">Ontología</button>
+      <button type="button" id="t-tes" role="tab" aria-pressed="false">Tesauro</button>
+    </div>
     <div class="busca">
       <input type="search" id="buscar" list="sugerencias" placeholder="Buscar: Chuquitapa, Cano, P18, A-UT11-004…" autocomplete="off" aria-label="Buscar en el grafo">
       <datalist id="sugerencias"></datalist>
@@ -164,6 +221,8 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
 
     <aside class="der" id="inspector" aria-live="polite"></aside>
   </div>
+  <section class="pagina" id="pag-onto" hidden></section>
+  <section class="pagina" id="pag-tes" hidden></section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/force-graph@1.51.4/dist/force-graph.min.js"></script>
@@ -173,11 +232,19 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
   "use strict";
   const G = window.GRAFO;
   const insp = document.getElementById("inspector");
-  if (!G || typeof ForceGraph === "undefined") {
-    insp.innerHTML = '<p class="vacio">No hay datos o no se pudo cargar la biblioteca del grafo. Ejecuta ' +
-      '<code>python scripts/visor.py</code> y abre <code>visor/index.html</code> con conexión a internet.</p>';
+  if (!G) {
+    insp.innerHTML = '<p class="vacio">No hay datos. Ejecuta <code>python scripts/visor.py</code> y abre <code>visor/index.html</code>.</p>';
     return;
   }
+  // Sin internet no carga la biblioteca de dibujo: el dibujo queda vacío (con un aviso), pero el inspector, la
+  // búsqueda y las pestañas Ontología y Tesauro siguen funcionando. El sustituto acepta cualquier llamada y no hace nada.
+  const SIN_RED = typeof window.ForceGraph === "undefined";
+  const Grafo2D = SIN_RED ? (() => { const inerte = new Proxy(function () {}, {
+      get: (_, k) => k === Symbol.toPrimitive ? () => 0 : inerte, apply: () => inerte }); return () => () => inerte; })()
+    : window.ForceGraph;
+  if (SIN_RED) document.getElementById("vista2d").innerHTML =
+    '<p class="vacio" style="padding:24px">Sin conexión no se puede dibujar el grafo (la biblioteca se carga de internet). ' +
+    'Las pestañas <b>Ontología</b> y <b>Tesauro</b> funcionan igual.</p>';
 
   // ── vocabulario visual ──
   const COLOR = { Persona: "#4C8EDA", Lugar: "#8DCC93", Grupo: "#DA7194", Cosa: "#D9C8AE", Hecho: "#F79767",
@@ -275,7 +342,7 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
 
   // ── 2D ──
   const cont2d = document.getElementById("vista2d");
-  const grafo2d = ForceGraph()(cont2d)
+  const grafo2d = Grafo2D()(cont2d)
     .backgroundColor(T["--lienzo"])
     .nodeId("id")
     .nodeVal(n => radio(NODO[n.id]) ** 2 / 16)
@@ -466,7 +533,7 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
   const tarjeta = aid => {
     const a = AF[aid];
     return `<div class="af${a.niega ? " neg" : ""}${a.disputa ? " disp" : ""}">
-      <div class="cab"><span class="id">${esc(a.aid)}</span><span>${esc(a.pieza)} · ${esc(a.tipoAct || "")}</span>
+      <div class="cab"><span class="id">${esc(a.aid)}</span><button type="button" class="salto" data-rdf="${esc(a.aid)}" title="Ver sus tripletas reales en la pestaña Ontología">ver en RDF</button><span>${esc(a.pieza)} · ${esc(a.tipoAct || "")}</span>
         ${a.fecha ? `<span>${esc(a.fecha)}</span>` : ""}${a.niega ? '<span class="marca neg">niega</span>' : ""}${a.disputa ? '<span class="marca disp">en disputa</span>' : ""}</div>
       <div>${ir(a.afirmanteNodo, a.afirmante)} <span class="vacio">(${esc(a.rol || "")})</span> sobre
         ${a.sujetoNodo ? ir(a.sujetoNodo, a.sujeto) : esc(a.sujeto)}: <b>${esc(a.atributo)}</b> → ${a.valorNodo ? ir(a.valorNodo, a.valor) : esc(a.valor)}</div>
@@ -488,7 +555,10 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
     const relsDe = G.relaciones.filter(r => r.source === id || r.target === id);
     const porTipo = {};
     relsDe.forEach(r => (porTipo[r.tipo] ||= []).push(r));
-    let html = `${pill(n)} <span class="id">${esc(n.id)}</span><div class="insp-titulo">${esc(n.nombre)}</div>`;
+    const claveRdf = (G.rdf && G.rdf.r[id]) ? id : (n.mid && G.rdf && G.rdf.r[n.mid]) ? n.mid : null;
+    let html = `${pill(n)} <span class="id">${esc(n.id)}</span>` +
+      (claveRdf ? ` <button type="button" class="salto" data-rdf="${esc(claveRdf)}" title="Tripletas reales en la pestaña Ontología">ver en RDF (${/^R-/.test(claveRdf) ? "capa 4" : /^M-/.test(claveRdf) ? "capa 2" : "capa 1"})</button>` : "") +
+      `<div class="insp-titulo">${esc(n.nombre)}</div>`;
     html += props([
       ["creencia", n.creencia && esc(n.creencia)], ["tipo de acto", n.tipoActo && esc(n.tipoActo)], ["título", n.titulo && esc(n.titulo)],
       ["fecha", n.fecha && esc(n.fecha)], ["documento ajeno", n.ajena ? "sí" : null], ["mención", n.mid && esc(n.mid)],
@@ -603,6 +673,258 @@ table.props td:first-child { color: var(--muted); width: 34%; font-family: var(-
   new ResizeObserver(ajustar).observe(document.getElementById("lienzo"));
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     leerTokens(); grafo2d.backgroundColor(T["--lienzo"]); grafo3d && grafo3d.backgroundColor(T["--lienzo"]);
+  });
+
+  // ══ Ontología y tesauro ════════════════════════════════════════════════════════════════════════════════
+  const RDF = G.rdf || { grafos: [], r: {} };
+  const TES = G.tesauro || [];
+  const CIF = G.cifras || {};
+  const CONCEPTO = {};
+  TES.forEach(e => e.conceptos.forEach(c => CONCEPTO[c.id] = { ...c, esquema: e.id }));
+
+  // qué significa cada término de los estándares, en palabras simples
+  const EXPLICA = {
+    "rdf:type": "es un / es de la clase", "rdfs:label": "etiqueta legible",
+    "crm:E13_Attribute_Assignment": "CIDOC CRM: alguien atribuye a algo un valor → una AFIRMACIÓN",
+    "crm:P14_carried_out_by": "quién la hace (el afirmante: una mención)", "crm:P9i_forms_part_of": "en qué actuación procesal se hizo",
+    "crm:P140_assigned_attribute_to": "sobre qué o quién (el sujeto)", "crm:P177_assigned_property_of_type": "qué se afirma (atributo del tesauro)",
+    "crm:P141_assigned": "el valor afirmado", "crm:P2_has_type": "tipo: polaridad, fundamento, fuerza, marcas del anotador",
+    "crm:P17_was_motivated_by": "responde a / se apoya en (otra afirmación)", "crm:P3_has_note": "nota del anotador o argumento",
+    "crm:PC14_carried_out_by": "nodo que califica una participación con un rol (CRM no pone atributos en las aristas)",
+    "crm:P01_has_domain": "de qué afirmación o actuación", "crm:P02_has_range": "qué mención participa", "crm:P14.1_in_the_role_of": "con qué rol (del tesauro)",
+    "crm:E65_Creation": "CIDOC CRM: acto de creación → la ACTUACIÓN procesal que produjo la pieza", "crm:P94_has_created": "creó la pieza",
+    "crm:E31_Document": "CIDOC CRM: documento", "crm:P4_has_time-span": "cuándo", "crm:E52_Time-Span": "intervalo de tiempo",
+    "crm:P82a_begin_of_the_begin": "inicio", "crm:P82b_end_of_the_end": "fin", "crm:P1_is_identified_by": "se identifica por (nombre tal como está escrito)",
+    "crm:E41_Appellation": "denominación: el nombre escrito", "crm:P190_has_symbolic_content": "contenido textual exacto",
+    "crm:P70_documents": "documenta (un hecho narrado)", "crm:E89_Propositional_Object": "hecho narrado en una pieza",
+    "crm:E21_Person": "CIDOC CRM: persona (solo en la capa 4)", "crm:P48_has_preferred_identifier": "identificador externo (HGIS)",
+    "picom:PersonObservation": "PiCo: una persona TAL COMO CONSTA en la fuente (una mención)", "picom:PersonReconstruction": "PiCo: persona reconstruida a partir de menciones",
+    "roar:Observation": "ROAR: mención de algo que no es persona", "roar:LocationObservation": "ROAR: mención de un lugar", "roar:documentedIn": "documentado en (la pieza)",
+    "prov:hadPrimarySource": "fuente primaria (la pieza)", "prov:wasDerivedFrom": "derivado de (las menciones o afirmaciones)",
+    "oa:Annotation": "Web Annotation: el ancla de la cita en el texto", "oa:hasBody": "lo que se ancla (la afirmación o la mención)", "oa:hasTarget": "dónde se ancla",
+    "oa:SpecificResource": "un fragmento concreto del texto", "oa:hasSource": "el tramo de la transcripción", "oa:hasSelector": "cómo encontrar el fragmento",
+    "oa:TextQuoteSelector": "selector por cita exacta", "oa:exact": "la cita literal", "oa:prefix": "texto justo antes", "oa:suffix": "texto justo después",
+    "oa:TextPositionSelector": "selector por posición", "oa:start": "carácter inicial", "oa:end": "carácter final", "oa:motivatedBy": "para qué se anota",
+    "rico:Record": "RiC-O: documento de archivo (la pieza)", "rico:RecordSet": "RiC-O: agrupación (fondo, sección, serie, legajo, expediente)",
+    "rico:Instantiation": "RiC-O: soporte o versión (tramo de la transcripción, folio)", "rico:hasOrHadInstantiation": "tiene la instanciación",
+    "rico:isOrWasIncludedIn": "está incluida en", "rico:hasDocumentaryFormType": "tipo documental (del tesauro)", "rico:title": "título",
+    "rico:expressedDate": "fecha tal como está escrita", "rico:directlyPrecedesInSequence": "precede en el orden físico",
+    "crminf:I5_Inference_Making": "CRMinf: un razonamiento (quién, cuándo, con qué premisas)", "crminf:J2_concluded_that": "concluyó que",
+    "crminf:I2_Belief": "CRMinf: una creencia", "crminf:J4_that": "sobre la proposición (el grafo de la reconstrucción)", "crminf:J5_holds_to_be": "la tiene por (grado de creencia)",
+    "crminf:I4_Proposition_Set": "CRMinf: conjunto de proposiciones (el grafo de la reconstrucción)",
+    "prov:Entity": "PROV: un dato (aquí, un grafo)", "prov:Activity": "PROV: un proceso", "prov:wasGeneratedBy": "producido por el proceso",
+    "prov:wasAttributedTo": "atribuido a (autor o agente)", "prov:generatedAtTime": "cuándo se produjo", "prov:used": "usó (la transcripción)",
+    "prov:wasAssociatedWith": "con qué agente", "prov:qualifiedAssociation": "asociación detallada", "prov:agent": "agente", "prov:hadPlan": "plan (prompt o guía)",
+    "prov:endedAtTime": "terminó", "dct:type": "tipo (capa)", "dct:conformsTo": "el valor pertenece a este esquema del tesauro",
+  };
+  const ex = t => EXPLICA[t] || (CONCEPTO[t] ? `concepto del tesauro: ${CONCEPTO[t].etiqueta}` : "");
+
+  // capas según el grafo nombrado
+  const CAPAS = [
+    { re: /\/documento$/, n: "1 · Documento", c: "#7C8794" }, { re: /\/texto\//, n: "2 · Mención", c: "#C2668C" },
+    { re: /\/afirmaciones\//, n: "3 · Afirmación", c: "#3E6FA8" }, { re: /^g:reconstruccion\//, n: "4 · Reconstrucción (proposición)", c: "#B5651D" },
+    { re: /^g:argumentacion\//, n: "4 · Reconstrucción (argumento y creencia)", c: "#8A4A12" }, { re: /procedencia$/, n: "P · Procedencia", c: "#3F7F4F" },
+  ];
+  const capaDe = g => CAPAS.find(c => c.re.test(g)) || { n: "otro", c: "#888" };
+
+  // un objeto enlazable: otro recurso con tripletas, un concepto del tesauro o un nodo del grafo
+  const claveDe = t => { const m = t.match(/\/(?:afirmacion|mencion|actuacion|pieza)\/([^/]+)$/) || t.match(/^g:(?:reconstruccion|argumentacion)\/(R-.+)$/); return m ? m[1] : null; };
+  const objeto = o => {
+    if (o.startsWith('"')) return `<span class="lit">${esc(o)}</span>`;
+    if (CONCEPTO[o]) return `<button type="button" class="salto" data-concepto="${esc(o)}">${esc(o)}</button> <span class="expl">${esc(CONCEPTO[o].etiqueta)}</span>`;
+    const k = claveDe(o);
+    if (k && RDF.r[k]) return `<button type="button" class="salto" data-rdf="${esc(k)}">${esc(o)}</button>`;
+    return esc(o) + (EXPLICA[o] ? `<span class="expl">${esc(EXPLICA[o])}</span>` : "");
+  };
+  const titulos = {};
+  const tituloDe = k => {
+    if (k === "_procedencia") return "Procedencia del lote anotado";
+    if (AF[k]) return `Afirmación ${k}: ${AF[k].afirmante} sobre ${AF[k].sujeto} — ${AF[k].atributo}${AF[k].niega ? " (niega)" : ""}`;
+    if (NODO[k]) return `${NODO[k].etiqueta} ${k}: ${NODO[k].nombre}`;
+    return k;
+  };
+  const tripletas = k => {
+    const filas = RDF.r[k]; if (!filas) return '<p class="vacio">Sin tripletas para este recurso.</p>';
+    const porG = {};
+    filas.forEach(([gi, s, po]) => (porG[gi] ||= []).push([s, po]));
+    return Object.entries(porG).map(([gi, subs]) => {
+      const g = RDF.grafos[gi], cp = capaDe(g);
+      return `<div class="bloque-g"><div class="gcab"><span class="capa-et" style="background:${cp.c}">${esc(cp.n)}</span><span class="id">grafo nombrado ${esc(g)}</span></div>` +
+        subs.map(([s, po]) => `<div class="suj">${esc(s)}</div><table class="tri">` + po.map(([p, o]) =>
+          `<tr><td class="p"><span title="${esc(ex(p))}">${esc(p)}</span>${EXPLICA[p] ? `<span class="expl">${esc(EXPLICA[p])}</span>` : ""}</td><td class="o">${objeto(o)}</td></tr>`).join("") + "</table>").join("") + "</div>";
+    }).join("");
+  };
+
+  // ── página Ontología ──
+  const pagOnto = document.getElementById("pag-onto");
+  const term = t => `<span class="term" title="${esc(ex(t))}">${esc(t)}</span>`;
+  const CAPAS_ONTO = [
+    { id: "c1", n: "1 · Documento", c: "#7C8794", preg: "¿qué papel es?", est: "RiC-O 1.1 (ICA) + CIDOC CRM",
+      clases: ["rico:RecordSet", "rico:Record", "crm:E31_Document", "rico:Instantiation", "crm:E65_Creation"],
+      props: ["rico:isOrWasIncludedIn", "rico:hasOrHadInstantiation", "crm:P94_has_created", "crm:P2_has_type", "rico:expressedDate"],
+      grafo: "g:cc-14-18/documento", regla: "PiezaForma, ActuacionForma, FechaEscritaForma",
+      idea: "La pieza (el papel) y la actuación (el acto procesal que la creó) son nodos distintos. La fecha se guarda tal como está escrita; el tipo de actuación lo cura una persona y de él sale la fuerza.",
+      ej: [["P18", "Actuación y pieza P18 (declaración jurada)"]] },
+    { id: "c2", n: "2 · Mención", c: "#C2668C", preg: "¿qué está escrito, y dónde?", est: "PiCo 1.1 / ROAR 0.1 + Web Annotation",
+      clases: ["picom:PersonObservation", "roar:Observation", "crm:E41_Appellation", "oa:Annotation", "oa:TextQuoteSelector"],
+      props: ["crm:P1_is_identified_by", "prov:hadPrimarySource", "oa:hasTarget", "oa:exact"],
+      grafo: "g:cc-14-18/texto/<lote>", regla: "ObservacionForma, AnotacionForma, ObjetivoForma",
+      idea: "Cada aparición escrita de un nombre es un nodo propio, sin corregir ni fusionar. No es una persona: es una persona tal como consta. Su cita está anclada al tramo con cita exacta y posición.",
+      ej: [["M-UT11-001", "Mención «Isidro Cano» (UT11)"], ["M-UT01-004", "Mención «Andres Chuquitapa» (UT01)"]] },
+    { id: "c3", n: "3 · Afirmación", c: "#3E6FA8", preg: "¿quién dijo qué de quién, y con qué fuerza?", est: "CIDOC CRM 7.1.3 (E13, patrón STAR) + Web Annotation",
+      clases: ["crm:E13_Attribute_Assignment", "crm:PC14_carried_out_by", "oa:Annotation"],
+      props: ["crm:P14_carried_out_by", "crm:P9i_forms_part_of", "crm:P140_assigned_attribute_to", "crm:P177_assigned_property_of_type", "crm:P141_assigned", "crm:P2_has_type", "crm:P17_was_motivated_by", "crm:P14.1_in_the_role_of"],
+      grafo: "g:cc-14-18/afirmaciones/<lote>", regla: "AfirmacionForma (sin valor de verdad), ParticipacionForma, una forma por atributo",
+      idea: "Nada dice si lo afirmado es verdad: dice quién lo afirmó, en qué actuación, sobre quién, qué atributo, qué valor, si afirma o niega, con qué fundamento y fuerza, y a qué responde. Las disputas se calculan comparando afirmaciones.",
+      ej: [["A-UT11-004", "Cano NIEGA que fuera coronel (sept.)"], ["A-UT01-001", "Cano AFIRMA que fue coronel (agosto)"]] },
+    { id: "c4", n: "4 · Reconstrucción", c: "#B5651D", preg: "¿qué propone el investigador, y con qué creencia?", est: "CRMinf 1.2.1 + PiCo/ROAR + CIDOC CRM",
+      clases: ["picom:PersonReconstruction", "crm:E21_Person", "crminf:I5_Inference_Making", "crminf:I2_Belief"],
+      props: ["prov:wasDerivedFrom", "crm:P17_was_motivated_by", "crm:P3_has_note", "crminf:J2_concluded_that", "crminf:J5_holds_to_be"],
+      grafo: "g:reconstruccion/R-x + g:argumentacion/R-x", regla: "ReconstruccionForma, InferenciaForma, CreenciaForma",
+      idea: "Que varias menciones sean una persona, un lugar o un hecho es una hipótesis: con autor, fecha, premisas, argumento y creencia. Va en dos grafos: lo propuesto y, aparte, el argumento y la creencia sobre ello. Las rivales conviven.",
+      ej: [["R-chuquitapa", "Andrés Chuquitapa (probable)"], ["R-declarante-p19-es-martin", "Casorla = Cazorla (probable)"], ["R-declarante-p19-es-mariano", "Casorla ≠ Cazorla (improbable)"]] },
+    { id: "cp", n: "P · Procedencia", c: "#3F7F4F", preg: "¿de dónde sale este dato y quién lo validó?", est: "PROV-O (W3C)",
+      clases: ["prov:Entity", "prov:Activity"], props: ["prov:wasGeneratedBy", "prov:used", "prov:wasAttributedTo", "prov:hadPlan"],
+      grafo: "g:procedencia", regla: "LoteConProcedenciaForma",
+      idea: "PROV-O describe el DATO (qué transcripción, qué proceso, qué modelo, cuándo), nunca quién dijo algo en 1806. Hoy no hay ninguna validación humana registrada, y el grafo lo dice.",
+      ej: [["_procedencia", "Procedencia del lote anotado"]] },
+  ];
+  const fuerzas = (TES.find(e => e.id === "tes:actuaciones")?.conceptos || []).filter(c => c.relacionado.some(r => r.startsWith("fza:")));
+  pagOnto.innerHTML = `
+    <h2>La ontología OHAC</h2>
+    <p class="lead">Un <b>perfil de aplicación</b>: no inventa clases ni propiedades (${CIF.terminos_propios ?? 0} términos propios); combina
+      estándares reconocidos y pone lo andino y lo procesal en un tesauro. El expediente se describe en <b>cuatro capas</b> más la
+      procedencia, cada una en su propio <b>grafo nombrado</b>. En las capas 1–3 no hay verdadero ni falso.</p>
+    <div class="cifras">
+      ${[["clases usadas", CIF.clases], ["propiedades usadas", CIF.propiedades], ["esquemas del tesauro", CIF.esquemas], ["conceptos", CIF.conceptos],
+         ["formas SHACL", CIF.formas], ["alineaciones externas", CIF.alineaciones], ["grafos nombrados", CIF.grafos], ["tripletas", CIF.tripletas?.toLocaleString("es")]]
+        .map(([k, v]) => `<div><b>${esc(v ?? "—")}</b>${esc(k)}</div>`).join("")}
+    </div>
+    <div class="onto">
+      <div class="capas">${CAPAS_ONTO.map(c => `
+        <div class="capa" data-capa="${c.id}" style="--c:${c.c}" tabindex="0" role="button">
+          <div class="tit"><span>${esc(c.n)}</span><span class="preg">${esc(c.preg)}</span></div>
+          <div class="det">
+            <div>${esc(c.idea)}</div>
+            <div><span class="k">Estándar</span> ${esc(c.est)}</div>
+            <div><span class="k">Clases</span> ${c.clases.map(term).join("")}</div>
+            <div><span class="k">Propiedades</span> ${c.props.map(term).join("")}</div>
+            <div><span class="k">Grafo nombrado</span> <span class="id">${esc(c.grafo)}</span> · <span class="k">Reglas</span> ${esc(c.regla)}</div>
+          </div>
+        </div>`).join("")}
+      </div>
+      <div class="ejemplo" id="ejemplo"></div>
+    </div>
+    <h3>La fuerza la da el tipo de actuación (tesauro)</h3>
+    <table class="tabla-simple"><tr><th>Tipo de actuación</th><th>Fuerza</th><th>Usos en el grafo</th></tr>
+      ${fuerzas.map(c => `<tr><td><button type="button" class="salto" data-concepto="${esc(c.id)}">${esc(c.etiqueta)}</button></td>
+        <td>${c.relacionado.filter(r => r.startsWith("fza:")).map(r => esc(CONCEPTO[r]?.etiqueta || r)).join(", ")}</td><td>${c.usos}</td></tr>`).join("")}
+    </table>
+    <h3>Principios</h3>
+    <div class="principios">
+      <div><b>Cuatro capas separadas</b>Papel, texto, afirmación y reconstrucción en grafos distintos: cada una tiene otro productor y otra fiabilidad.</div>
+      <div><b>Sin verdad en las capas 1–3</b>Una resolución obliga en el proceso, pero no hace verdadero lo resuelto: también es una afirmación.</div>
+      <div><b>Ninguna fusión de menciones</b>«No hay tal hombre en el pueblo de Tinta»: unir grafías es una hipótesis, no un dato.</div>
+      <div><b>Lo andino y lo procesal, en el tesauro</b>Cargos, condiciones, ayllus y tipos de acto son conceptos SKOS, no clases: crecen sin romper el modelo.</div>
+      <div><b>Solo términos de los estándares</b>Cualquiera que conozca CIDOC CRM o RiC-O lee el grafo sin nuestra documentación.</div>
+      <div><b>PROV-O solo para el dato</b>Quién lo dijo en 1806 es contenido (CRM); qué modelo lo extrajo en 2026 es procedencia (PROV).</div>
+      <div><b>Determinismo</b>Del registro al grafo, una función pura: mismos datos, mismo grafo, mismos identificadores.</div>
+    </div>
+    <h3>Reglas SHACL con nombre (${(G.formas || []).length}; más una por atributo: ${CIF.formas ?? "—"} en total)</h3>
+    <table class="tabla-simple"><tr><th>Regla</th><th>Se aplica a</th><th>Qué exige</th></tr>
+      ${(G.formas || []).map(f => `<tr><td class="id">${esc(f.id)}${f.severidad === "aviso" ? ' <span class="badge cand">aviso</span>' : ""}</td><td class="id">${esc(f.objetivo || "—")}</td><td>${esc(f.explica || "")}</td></tr>`).join("")}
+    </table>`;
+  const ejemplo = document.getElementById("ejemplo");
+  const verCapa = (id, clave) => {
+    const c = CAPAS_ONTO.find(x => x.id === id) || CAPAS_ONTO[2];
+    pagOnto.querySelectorAll(".capa").forEach(el => el.classList.toggle("activa", el.dataset.capa === c.id));
+    const k = clave || c.ej[0][0];
+    ejemplo.innerHTML = `<div class="id">Ejemplo real · ${esc(c.n)}</div><div class="insp-titulo">${esc(tituloDe(k))}</div>
+      <div class="botones">${c.ej.map(([kk, t]) => `<button type="button" data-rdf="${esc(kk)}" aria-pressed="${kk === k}">${esc(t)}</button>`).join("")}</div>
+      <p class="nota">Tripletas tal como están en el grafo, agrupadas por el grafo nombrado (la capa) en que viven. Pasa el ratón por
+        una propiedad para ver qué significa; los enlaces llevan al recurso o al concepto del tesauro.</p>${tripletas(k)}`;
+    ejemplo.scrollTop = 0;
+  };
+  const verRDF = k => {
+    const c = k === "_procedencia" ? "cp" : AF[k] ? "c3" : /^M-/.test(k) ? "c2" : /^R-/.test(k) ? "c4" : /^P\d/.test(k) ? "c1" : "c3";
+    const capa = CAPAS_ONTO.find(x => x.id === c);
+    if (!capa.ej.some(([kk]) => kk === k)) capa.ej = [...capa.ej.filter(([kk]) => !kk.startsWith("+")), [k, tituloDe(k).split(":")[0]]];
+    irA("onto"); verCapa(c, k);
+  };
+  pagOnto.addEventListener("click", ev => {
+    const r = ev.target.closest("[data-rdf]"); if (r) { verRDF(r.dataset.rdf); return; }
+    const cc = ev.target.closest("[data-concepto]"); if (cc) { verConcepto(cc.dataset.concepto); return; }
+    const capa = ev.target.closest(".capa"); if (capa) verCapa(capa.dataset.capa);
+  });
+  pagOnto.addEventListener("keydown", ev => { const capa = ev.target.closest(".capa"); if (capa && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); verCapa(capa.dataset.capa); } });
+  verCapa("c3");
+
+  // ── página Tesauro ──
+  const pagTes = document.getElementById("pag-tes");
+  let esquemaSel = "tes:actuaciones", filtroTes = "";
+  const enlaceExt = u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\/(www\.)?/, "").replace("wikidata.org/entity/", "wikidata:").replace("vocab.getty.edu/aat/", "AAT:"))}</a>`;
+  const fichaConcepto = c => `<div class="concepto" id="c-${esc(c.id)}">
+      <div class="cab"><span class="et">${esc(c.etiqueta)}</span><span class="id">${esc(c.id)}</span>
+        ${c.candidato ? '<span class="badge cand">candidato</span>' : ""}${c.trabajo ? '<span class="badge trab">definición de trabajo</span>' : ""}${c.retirado ? '<span class="badge ret">retirado</span>' : ""}</div>
+      ${c.definicion ? `<div>${esc(c.definicion)}</div>` : ""}
+      ${c.alcance ? `<div class="vacio">${esc(c.alcance)}</div>` : ""}
+      <div class="meta">
+        <span>usos en el grafo: <b>${c.usos}</b></span>
+        ${c.padre ? `<span>dentro de: <button type="button" class="salto" data-concepto="${esc(c.padre)}">${esc(CONCEPTO[c.padre]?.etiqueta || c.padre)}</button></span>` : ""}
+        ${c.relacionado.length ? `<span>relacionado: ${c.relacionado.map(r => `<button type="button" class="salto" data-concepto="${esc(r)}">${esc(CONCEPTO[r]?.etiqueta || r)}</button>`).join(", ")}</span>` : ""}
+        ${c.ocultas.length ? `<span>grafías en el texto: ${c.ocultas.map(esc).join(", ")}</span>` : ""}
+        ${c.fuente ? `<span>fuente: ${esc(c.fuente)}</span>` : ""}
+        ${c.alineaciones.length ? `<span>cercano a: ${c.alineaciones.map(enlaceExt).join(", ")}</span>` : ""}
+      </div></div>`;
+  const dibujarTes = () => {
+    const e = TES.find(x => x.id === esquemaSel) || TES[0];
+    const q = sinTildes(filtroTes);
+    const lista = q ? TES.flatMap(x => x.conceptos).filter(c => sinTildes(`${c.etiqueta} ${c.id} ${c.definicion || ""} ${c.ocultas.join(" ")}`).includes(q))
+      : e.conceptos.slice().sort((a, b) => b.usos - a.usos || a.etiqueta.localeCompare(b.etiqueta, "es"));
+    pagTes.innerHTML = `
+      <h2>El tesauro</h2>
+      <p class="lead">Lo andino y lo procesal como <b>datos</b> (SKOS), no como clases: ${CIF.esquemas ?? TES.length} esquemas y ${CIF.conceptos ?? "—"} conceptos
+        aprobados, más ${CIF.candidatos ?? "—"} candidatos que un curador debe aprobar o rechazar. ${CIF.definiciones_de_trabajo ?? "—"} definiciones son
+        «de trabajo» (sin fuente). Los enlaces externos son solo «cercanos», nunca «iguales». Los usos cuentan cuántas veces aparece cada concepto en el grafo.</p>
+      <div class="tes">
+        <div class="esquemas">
+          <input type="search" id="tes-filtro" placeholder="Buscar en todo el tesauro…" value="${esc(filtroTes)}" style="font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--soft);color:var(--ink);margin-bottom:6px">
+          ${TES.map(x => `<button type="button" data-esquema="${esc(x.id)}" aria-pressed="${!q && x.id === e.id}"><span>${esc(x.etiqueta)}</span><span class="n">${x.conceptos.length}</span></button>`).join("")}
+        </div>
+        <div><h3 style="margin-top:0">${q ? `Resultados para «${esc(filtroTes)}» (${lista.length})` : `${esc(e.etiqueta)} <span class="id">${esc(e.id)}</span>`}</h3>
+          ${lista.map(fichaConcepto).join("") || '<p class="vacio">Nada coincide.</p>'}</div>
+      </div>`;
+    const f = document.getElementById("tes-filtro");
+    f.addEventListener("input", () => { filtroTes = f.value; const pos = f.selectionStart; dibujarTes(); const nf = document.getElementById("tes-filtro"); nf.focus(); nf.setSelectionRange(pos, pos); });
+  };
+  const verConcepto = id => {
+    const c = CONCEPTO[id]; if (!c) return;
+    esquemaSel = c.esquema; filtroTes = ""; irA("tes"); dibujarTes();
+    const el = document.getElementById("c-" + id);
+    if (el) { el.classList.add("resaltado"); el.scrollIntoView({ block: "center" }); }
+  };
+  pagTes.addEventListener("click", ev => {
+    const b = ev.target.closest("[data-esquema]"); if (b) { esquemaSel = b.dataset.esquema; filtroTes = ""; dibujarTes(); pagTes.scrollTop = 0; return; }
+    const cc = ev.target.closest("[data-concepto]"); if (cc) verConcepto(cc.dataset.concepto);
+  });
+  dibujarTes();
+
+  // ── pestañas ──
+  const mesa = document.querySelector(".mesa");
+  const pestanas = { grafo: document.getElementById("t-grafo"), onto: document.getElementById("t-onto"), tes: document.getElementById("t-tes") };
+  const soloGrafo = ["v2d", "v3d", "b-vecindario", "b-todo", "b-encuadrar"].map(id => document.getElementById(id)).concat([document.querySelector(".busca")]);
+  function irA(p) {
+    Object.entries(pestanas).forEach(([k, b]) => b.setAttribute("aria-pressed", String(k === p)));
+    mesa.hidden = p !== "grafo"; pagOnto.hidden = p !== "onto"; pagTes.hidden = p !== "tes";
+    soloGrafo.forEach(el => el.style.visibility = p === "grafo" ? "" : "hidden");
+    if (p === "grafo") { vista === "2d" ? grafo2d.resumeAnimation() : grafo3d && grafo3d.resumeAnimation(); setTimeout(ajustar, 0); }
+    else { grafo2d.pauseAnimation(); grafo3d && grafo3d.pauseAnimation(); }
+  }
+  Object.entries(pestanas).forEach(([k, b]) => b.addEventListener("click", () => irA(k)));
+
+  // desde el inspector del grafo: «ver en la ontología» (tripletas reales) y conceptos del tesauro
+  insp.addEventListener("click", ev => {
+    const r = ev.target.closest("[data-rdf]"); if (r) { ev.stopPropagation(); verRDF(r.dataset.rdf); }
   });
 
   // ── estado inicial: el cacique, centro de la disputa ──

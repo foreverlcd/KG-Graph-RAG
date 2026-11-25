@@ -21,6 +21,23 @@ Un único archivo HTML, al estilo de Neo4j Browser, para explorar quién afirma 
 * **Inspector** (derecha): propiedades, relaciones agrupadas por tipo, grafías en el texto y todas las afirmaciones
   con cita literal, pieza, tramo, fuerza y fundamento.
 
+## Pestañas Ontología y Tesauro
+
+Para explicar el modelo con el mismo archivo, sin diapositivas:
+
+* **Ontología**: las cifras del perfil (`datos/cifras.json`), una tarjeta por capa (pregunta que responde, estándar,
+  clases y propiedades con su significado al pasar el ratón, grafo nombrado y reglas SHACL) y, a la derecha, un
+  **ejemplo real**: las tripletas tal como están en el grafo, agrupadas por el grafo nombrado (la capa) en que viven,
+  con cada propiedad explicada en castellano. Los enlaces saltan a otro recurso (mención, afirmación, reconstrucción) o
+  al concepto del tesauro. Debajo: la tabla de fuerza por tipo de actuación, los principios y las reglas SHACL con nombre.
+* **Tesauro**: los 12 esquemas SKOS con sus conceptos (definición, fuente, «definición de trabajo», candidato, grafías
+  en el texto, concepto padre, alineaciones externas y cuántas veces se usa en el grafo) y un buscador.
+* Desde el grafo, **ver en RDF** (en cada afirmación del inspector y en reconstrucciones y menciones) abre sus
+  tripletas reales en la pestaña Ontología.
+
+Las tripletas salen de `datos/grafo/*.nq`; el tesauro, del grafo (incluidos los usos); las reglas, de
+`ontologia/formas.ttl`.
+
 ## Cómo se usa
 
 * Las etiquetas y los tipos de relación de la izquierda son filtros: pulsarlos los oculta o muestra.

@@ -178,8 +178,140 @@ def datos() -> dict:
             "nDisputa": len(en_disputa)}
 
 
+# ── ontología: tripletas reales por capa, tesauro y formas SHACL ──────────────────────────────────────────────
+
+PREFIJOS = [  # del más largo al más corto, para que gane el prefijo más específico
+    ("https://w3id.org/laad/tesauro/actuacion/", "act:"), ("https://w3id.org/laad/tesauro/anotacion/", "anot:"),
+    ("https://w3id.org/laad/tesauro/atributo/", "atr:"), ("https://w3id.org/laad/tesauro/cargo/", "cargo:"),
+    ("https://w3id.org/laad/tesauro/condicion/", "cond:"), ("https://w3id.org/laad/tesauro/documento/", "doc:"),
+    ("https://w3id.org/laad/tesauro/entidad/", "ent:"), ("https://w3id.org/laad/tesauro/fundamento/", "fun:"),
+    ("https://w3id.org/laad/tesauro/fuerza/", "fza:"), ("https://w3id.org/laad/tesauro/polaridad/", "pol:"),
+    ("https://w3id.org/laad/tesauro/rol/", "rol:"), ("https://w3id.org/laad/tesauro/creencia/", "cre:"),
+    ("https://w3id.org/laad/tesauro/", "tes:"), ("https://w3id.org/laad/grafo/", "g:"),
+    ("https://w3id.org/laad/id/", "id:"), ("http://www.cidoc-crm.org/extensions/crminf/", "crminf:"),
+    ("http://www.cidoc-crm.org/cidoc-crm/", "crm:"), ("https://www.ica.org/standards/RiC/ontology#", "rico:"),
+    ("http://www.w3.org/ns/oa#", "oa:"), ("http://www.w3.org/ns/prov#", "prov:"), ("http://purl.org/dc/terms/", "dct:"),
+    ("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:"), ("http://www.w3.org/2000/01/rdf-schema#", "rdfs:"),
+    ("http://www.w3.org/2001/XMLSchema#", "xsd:"), ("http://www.w3.org/2004/02/skos/core#", "skos:"),
+    ("https://personsincontext.org/model#", "picom:"), ("https://w3id.org/roar#", "roar:"),
+    ("http://www.w3.org/2002/07/owl#", "owl:"),
+]
+
+
+def _c(t) -> str:
+    """Término RDF compacto: prefijo:local para IRIs, "texto" para literales."""
+    from rdflib import Literal
+    if isinstance(t, Literal):
+        s = str(t)
+        return '"' + (s if len(s) <= 400 else s[:399] + "…") + '"' + (f"@{t.language}" if t.language else "")
+    s = str(t)
+    for largo, corto in PREFIJOS:
+        if s.startswith(largo):
+            return corto + s[len(largo):]
+    return "<" + s + ">"
+
+
+def _quads():
+    from rdflib import Dataset
+    ds = Dataset()
+    for f in sorted((RAIZ / "datos" / "grafo").glob("*.nq")):
+        ds.parse(f, format="nquads")
+    return [(s, p, o, g) for s, p, o, g in ds.quads((None, None, None, None)) if g is not None]
+
+
+def rdf_por_recurso(quads) -> dict:
+    """Tripletas reales agrupadas por recurso, con el grafo nombrado (la capa) en que viven: afirmación (E13 +
+    participación PC14 + anotación), mención (+ su anotación), actuación y pieza, reconstrucción (sus dos grafos) y,
+    en «_procedencia», el PROV-O del lote anotado. Formato compacto: {grafos: [...], r: {clave: [[i_grafo, sujeto,
+    [[predicado, objeto], …]], …]}}."""
+    import re
+    patron = re.compile(r"https://w3id\.org/laad/id/[^/]+/(afirmacion|anotacion|mencion|actuacion|pieza)/([^/]+)")
+    prov = ("cc-14-18/afirmaciones/anotacion-manual", "cc-14-18/texto/anotacion-manual",
+            "actividad/cc-14-18/anotacion-manual", "agente/claude-opus", "transcripcion/bd945513f8e1")
+    grafos, idx, crudo = [], {}, {}
+    for s, p, o, g in quads:
+        gs = str(g.identifier if hasattr(g, "identifier") else g)
+        clave = None
+        m = patron.match(str(s))
+        if m:
+            clave = m.group(2)
+        elif "/grafo/reconstruccion/" in gs or "/grafo/argumentacion/" in gs:
+            clave = gs.rsplit("/", 1)[-1]
+        elif gs.endswith("/grafo/procedencia") and any(x in str(s) for x in prov):
+            clave = "_procedencia"
+        if not clave:
+            continue
+        gc = _c(g.identifier if hasattr(g, "identifier") else g)
+        if gc not in idx:
+            idx[gc] = len(grafos); grafos.append(gc)
+        crudo.setdefault(clave, {}).setdefault((idx[gc], _c(s)), []).append([_c(p), _c(o)])
+    r = {}
+    for clave, por_suj in crudo.items():
+        filas = []
+        for (gi, suj), po in sorted(por_suj.items(), key=lambda x: (x[0][0], x[0][1])):
+            po.sort(key=lambda x: (x[0] != "rdf:type", x[0], x[1]))
+            filas.append([gi, suj, po])
+        r[clave] = filas
+    return {"grafos": grafos, "r": r}
+
+
+def tesauro(quads) -> list:
+    from rdflib import Graph, Namespace, RDF, URIRef
+    from rdflib.namespace import OWL, SKOS
+    t = Graph()
+    for f in ("tesauro.ttl", "candidatos.ttl", "alineaciones.ttl"):
+        t.parse(RAIZ / "ontologia" / f, format="turtle")
+    TES = Namespace("https://w3id.org/laad/tesauro/")
+    candidatos = set(t.objects(TES.candidatos, SKOS.member))
+    usos: dict = {}
+    for _, _, o, _ in quads:
+        if isinstance(o, URIRef) and str(o).startswith(str(TES)):
+            usos[o] = usos.get(o, 0) + 1
+    es = lambda x: next((str(v) for v in t.objects(x[0], x[1]) if getattr(v, "language", None) in ("es", None)), None)
+    esquemas = []
+    for sch in sorted(t.subjects(RDF.type, SKOS.ConceptScheme), key=str):
+        if sch == TES.candidatos:
+            continue
+        conceptos = []
+        for c in sorted(set(t.subjects(SKOS.inScheme, sch)) | set(t.subjects(SKOS.topConceptOf, sch)), key=str):
+            nota = es((c, SKOS.editorialNote)) or ""
+            conceptos.append({
+                "id": _c(c), "etiqueta": es((c, SKOS.prefLabel)) or _c(c),
+                "definicion": es((c, SKOS.definition)), "alcance": es((c, SKOS.scopeNote)) or es((c, SKOS.historyNote)),
+                "ocultas": sorted(str(v) for v in t.objects(c, SKOS.hiddenLabel)),
+                "fuente": nota.replace("Fuente de la definición: ", "") if nota.startswith("Fuente") else None,
+                "trabajo": nota.startswith("Definición de trabajo"),
+                "candidato": c in candidatos, "retirado": (c, OWL.deprecated, None) in t,
+                "padre": _c(next(iter(t.objects(c, SKOS.broader)))) if (c, SKOS.broader, None) in t else None,
+                "relacionado": sorted(_c(v) for v in t.objects(c, SKOS.related)),
+                "alineaciones": sorted(str(v) for p in (SKOS.closeMatch, SKOS.relatedMatch) for v in t.objects(c, p)),
+                "usos": usos.get(c, 0)})
+        esquemas.append({"id": _c(sch), "etiqueta": es((sch, SKOS.prefLabel)) or _c(sch), "conceptos": conceptos})
+    return esquemas
+
+
+def formas() -> list:
+    from rdflib import Graph, RDF, RDFS, Namespace
+    SH = Namespace("http://www.w3.org/ns/shacl#")
+    g = Graph()
+    g.parse(RAIZ / "ontologia" / "formas.ttl", format="turtle")
+    out = []
+    for f in sorted(g.subjects(RDF.type, SH.NodeShape), key=str):
+        objetivo = next(iter(g.objects(f, SH.targetClass)), None)
+        out.append({"id": _c(f).replace("<https://w3id.org/laad/ohac#", "ohac:").rstrip(">"),
+                    "objetivo": _c(objetivo) if objetivo is not None else None,
+                    "explica": str(next(iter(g.objects(f, RDFS.comment)), "")) or None,
+                    "severidad": "aviso" if str(next(iter(g.objects(f, SH.severity)), "")).endswith("Warning") else "error"})
+    return out
+
+
 def main() -> int:
     d = datos()
+    quads = _quads()
+    d["rdf"] = rdf_por_recurso(quads)
+    d["tesauro"] = tesauro(quads)
+    d["formas"] = formas()
+    d["cifras"] = json.loads((RAIZ / "datos" / "cifras.json").read_text(encoding="utf-8"))
     plantilla = PLANTILLA.read_text(encoding="utf-8")
     if plantilla.count(MARCA) != 1:
         raise SystemExit(f"{PLANTILLA.name} debe contener una sola vez la marca {MARCA}")

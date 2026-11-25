@@ -147,3 +147,27 @@ estamos fijando».
 Abrir `visor/index.html` en el navegador (necesita internet: carga la biblioteca de dibujo desde un CDN; probarlo
 antes en la sala, y si no hay red usar la captura de la diapositiva 10) y escribir «Chuquitapa» en el buscador. Se ven sus 45
 grafías, quién afirma qué de él y, en ámbar, lo que está en disputa.
+
+## 5. Si se presenta solo con el visor (sin diapositivas)
+
+El visor tiene tres pestañas: **Grafo**, **Ontología** y **Tesauro**. Recorrido de unos 10 minutos, en el mismo orden
+que las diapositivas:
+
+1. **Ontología, arriba (1 min).** Leer la frase inicial y las cifras: 0 términos propios, 12 esquemas, 50 reglas,
+   33 806 tripletas. «Esto es lo que estamos construyendo».
+2. **Las cinco tarjetas de capa (2 min).** Pulsar cada una de arriba abajo y decir solo su pregunta: ¿qué papel es?,
+   ¿qué está escrito?, ¿quién dijo qué de quién?, ¿qué propone el investigador? y ¿de dónde sale el dato? Pasar el
+   ratón por una clase muestra qué significa.
+3. **El ejemplo de Cano (2 min).** En la tarjeta 3, «Cano NIEGA que fuera coronel»: a la derecha salen sus tripletas
+   reales en el compartimento azul «3 · Afirmación». Señalar `crm:P2_has_type → pol:niega` y `crm:P17 → A-UT01-001`
+   (lo que él mismo afirmó en agosto). Pulsar el enlace de la mención para bajar a la capa 2, y en la tarjeta 4 abrir
+   «Andrés Chuquitapa»: dos compartimentos, la proposición y, aparte, el argumento y la creencia «probable».
+4. **Fuerza y principios (1 min).** Bajar a la tabla de fuerza (sale del tipo de actuación) y a los principios.
+5. **Tesauro (2 min).** Abrir «Cargos, oficios y grados»: definición, fuente, «definición de trabajo», «cercano a»
+   (AAT, Wikidata) y cuántas veces se usa. Buscar «ordinaria» para mostrar la decisión de «India Ordinaria» y
+   preguntarles su opinión.
+6. **Grafo (2 min).** Volver a la pestaña Grafo, buscar «Chuquitapa» y mostrar las disputas en ámbar. En una
+   afirmación del inspector, «ver en RDF» devuelve a sus tripletas: lo que se ve en el dibujo está en el grafo.
+
+Sin internet solo falta el dibujo de la pestaña Grafo (la biblioteca se carga de un CDN): la búsqueda, el inspector,
+«ver en RDF» y las pestañas Ontología y Tesauro funcionan igual. Comprobado con la red bloqueada.
