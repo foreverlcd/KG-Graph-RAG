@@ -23,7 +23,8 @@ EVAL = RAIZ / "datos" / "evaluacion"
 PREFIJO = "agente_gemini_gemini-3.5-flash-lite_agente_consulta_"
 # ejecuciones del banco del agente, en orden; etiqueta corta para los gráficos
 EJECUCIONES = [("v1", "v1"), ("v2_herramientas1", "h1"), ("v2_herramientas2", "h2"),
-               ("v2_r1", "r1"), ("v2_r2", "r2"), ("v2_r3", "r3")]
+               ("v2_r1", "r1"), ("v2_r2", "r2"), ("v2_r3", "r3"),
+               ("v2_r4", "r4"), ("v2_r5", "r5"), ("v2_r6", "r6")]
 
 
 def _macro(nombre: str, valor) -> str:
@@ -101,6 +102,18 @@ def main() -> int:
             v = -1 if pc not in m else int(m[pc]["esencial"])
             celdas.append(f"({i},{j}) [{v}]")   # x = PC, y = ejecución
     out.append(_macro("matrizEsencial", " ".join(celdas)))
+    out.append(_macro("maxEjecucion", len(medidas) - 1))
+    # PC siempre bien, siempre mal y variables en lo esencial, desde h1 (instrucciones v2), solo donde se midieron
+    desde = [m for et, m in medidas if et != "v1"]
+    siempre_bien, siempre_mal, variables = [], [], []
+    for pc in pcs:
+        v = [int(m[pc]["esencial"]) for m in desde if pc in m]
+        if not v:
+            continue
+        (siempre_bien if all(v) else siempre_mal if not any(v) else variables).append(pc[2:])
+    out.append(_macro("pcSiempreBien", ", ".join(siempre_bien) or "ninguna"))
+    out.append(_macro("pcSiempreMal", ", ".join(siempre_mal) or "ninguna"))
+    out.append(_macro("pcVariables", ", ".join(variables) or "ninguna"))
 
     # ── intermediario (Claude con las mismas herramientas), medido hoy contra las referencias vigentes ──
     from laad.evaluacion_harness import evaluar_respuesta

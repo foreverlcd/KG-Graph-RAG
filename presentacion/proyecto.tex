@@ -125,7 +125,7 @@ El fiscal concluye que las quejas son \cita{menos conforme a la verdad}; el auto
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Las preguntas clave que esta presentación responde}
+\begin{frame}[shrink=11]{Las preguntas clave que esta presentación responde}
 \small
 \begin{tabular}{@{}p{7.6cm}p{5.6cm}@{}}
 \toprule
@@ -148,7 +148,7 @@ Pregunta & Dónde se responde \\
 % =====================================================================
 \section{Por qué se rehízo: diagnóstico del prototipo}
 
-\begin{frame}{El prototipo anterior}
+\begin{frame}[shrink=15]{El prototipo anterior}
 \small
 \ttt{../Grafo-Conocimiento-Cusco}: grafo de propiedades (Neo4j) poblado por un modelo de lenguaje, con cinco
 ontologías \enquote{declaradas}. Se auditó línea a línea (\ttt{docs/A\_diagnostico.md}) antes de diseñar nada.
@@ -204,7 +204,7 @@ Evaluación circular & 20 PC escritas \alert{antes} de modelar & \ttt{test\_preg
 % =====================================================================
 \section{Requisitos, materiales y principios}
 
-\begin{frame}{Con qué se trabaja}
+\begin{frame}[shrink=10]{Con qué se trabaja}
 \begin{columns}[T]
 \column{0.5\textwidth}
 \textbf{Materiales}
@@ -305,7 +305,7 @@ SHACL & Perfil OHAC & Norma W3C de validación; cada regla tiene prueba negativa
 \end{tabular}
 \end{frame}
 
-\begin{frame}{Alternativas evaluadas y descartadas (informe H1, 2026)}
+\begin{frame}[shrink=6]{Alternativas evaluadas y descartadas (informe H1, 2026)}
 \scriptsize
 \begin{tabular}{@{}p{3.4cm}p{9.8cm}@{}}
 \toprule
@@ -333,7 +333,7 @@ Ontologías jurídicas & Modelan el derecho vigente, no el expediente colonial c
 Aucará} (instancias andinas de mención), HGIS de las Indias y WHG para lugares.
 \end{frame}
 
-\begin{frame}{La pila de software y por qué cada pieza}
+\begin{frame}[shrink=11]{La pila de software y por qué cada pieza}
 \scriptsize
 \begin{tabular}{@{}p{2.5cm}p{3.6cm}p{7.1cm}@{}}
 \toprule
@@ -405,7 +405,7 @@ cambiarse sin tocar nada más.}
 \alert{calculan}.
 \end{frame}
 
-\begin{frame}{Grafos nombrados e identificadores}
+\begin{frame}[shrink=7]{Grafos nombrados e identificadores}
 \scriptsize
 \begin{tabular}{@{}p{4.1cm}p{0.6cm}p{5.4cm}p{2.9cm}@{}}
 \toprule
@@ -432,7 +432,7 @@ Grafo & Capa & Contenido & Lo produce \\
 probable el grafo R} sin que la creencia forme parte de lo creído.}
 \end{frame}
 
-\begin{frame}{Capa 1 — el documento (RiC-O 1.1 + CRM)}
+\begin{frame}[shrink=4]{Capa 1 — el documento (RiC-O 1.1 + CRM)}
 \footnotesize
 \begin{tabular}{@{}p{4.6cm}p{8.6cm}@{}}
 \toprule
@@ -475,7 +475,7 @@ Si la mención fuera una persona, el grafo afirmaría su existencia. Como observ
 escrito ahí.}
 \end{frame}
 
-\begin{frame}{Capa 3 — una afirmación es un E13: las facetas}
+\begin{frame}[shrink=8]{Capa 3 — una afirmación es un E13: las facetas}
 \scriptsize
 \begin{tabular}{@{}p{3.3cm}p{9.9cm}@{}}
 \toprule
@@ -541,7 +541,7 @@ anot:A-UT11-004 a oa:Annotation ;
 \end{columns}
 \end{frame}
 
-\begin{frame}{Fuerza institucional: un dato del tesauro, no un valor de verdad}
+\begin{frame}[shrink=5]{Fuerza institucional: un dato del tesauro, no un valor de verdad}
 \small
 La fuerza la pone el \alert{tipo de actuación}, no el anotador: \ttt{act:x skos:related fza:y}, solo en conceptos hoja.
 
@@ -621,7 +621,7 @@ que distingue un grafo auditable de uno que solo parece correcto.}
 % =====================================================================
 \section{Tesauro, formas SHACL y carencias}
 
-\begin{frame}{El tesauro: \cifraEsquemas{} esquemas, \cifraConceptos{} conceptos}
+\begin{frame}[shrink=15]{El tesauro: \cifraEsquemas{} esquemas, \cifraConceptos{} conceptos}
 \scriptsize
 \begin{tabular}{@{}p{2.7cm}p{1.2cm}p{9.2cm}@{}}
 \toprule
@@ -667,7 +667,7 @@ en Wikidata la etiqueta \enquote{ayllu} está en \emph{familia} y en \emph{comun
 sin control, cada lote inventa términos. Los candidatos hacen visible lo nuevo y lo dejan al curador.}
 \end{frame}
 
-\begin{frame}{Formas SHACL: el perfil se hace cumplir (\cifraFormas{} formas)}
+\begin{frame}[shrink=7]{Formas SHACL: el perfil se hace cumplir (\cifraFormas{} formas)}
 \scriptsize
 \begin{tabular}{@{}p{4.4cm}p{8.8cm}@{}}
 \toprule
@@ -692,7 +692,7 @@ Una forma por atributo & dominio y rango de \ttt{datos/atributos.csv} \\
 rechazadas (\ttt{tests/test\_formas\_negativas.py}).
 \end{frame}
 
-\begin{frame}{Análisis de carencias: por qué OHAC tiene \cifraTerminosPropios{} términos propios}
+\begin{frame}[shrink=16]{Análisis de carencias: por qué OHAC tiene \cifraTerminosPropios{} términos propios}
 \scriptsize
 \begin{tabular}{@{}p{4.3cm}p{2.5cm}p{4.3cm}p{1.6cm}@{}}
 \toprule
@@ -764,7 +764,7 @@ L10 & Escala & consultas de corpus (disputas: 29\,s con 100 expedientes) habrá 
 % =====================================================================
 \section{Cómo se construye el grafo}
 
-\begin{frame}{De la transcripción al grafo}
+\begin{frame}[shrink=7]{De la transcripción al grafo}
 \centering
 \begin{tikzpicture}[node distance=5mm and 4mm, every node/.style={font=\scriptsize}]
 \node[caja=tinta!5, text width=1.9cm] (t) {Transcripción\\y manifiesto\\del expediente};
@@ -1026,7 +1026,7 @@ I5 Negación en P2 & documentada (L5); SHACL exige polaridad \\
 % =====================================================================
 \section{El harness: diseño y recorrido de una pregunta}
 
-\begin{frame}{Por qué herramientas con nombre y no SPARQL generado}
+\begin{frame}[shrink=9]{Por qué herramientas con nombre y no SPARQL generado}
 \small
 \begin{tabular}{@{}p{4.4cm}p{8.8cm}@{}}
 \toprule
@@ -1050,7 +1050,7 @@ hace el código: consultas, disputas, cardinalidad, forma de referencia y verifi
 dice. Cada capa del harness está para impedir eso.}
 \end{frame}
 
-\begin{frame}{Arquitectura del harness}
+\begin{frame}[shrink=6]{Arquitectura del harness}
 \centering
 \begin{tikzpicture}[node distance=5mm and 7mm, every node/.style={font=\scriptsize}]
 \node[caja=tinta!5, text width=2.1cm] (q) {Pregunta en\\lenguaje natural};
@@ -1257,7 +1257,7 @@ Con ello, en la evaluación del artículo el criterio \enquote{disputa o no cons
 \end{tabular}
 
 \medskip
-\footnotesize v1: instrucciones v1. h1, h2: instrucciones v2 y herramientas mejoradas. r1--r3: tres repeticiones de la
+\footnotesize v1: instrucciones v1. h1, h2: instrucciones v2 y herramientas mejoradas. r1 en adelante: repeticiones de la
 misma configuración (r3 se cortó en PC15 por la cuota diaria).
 \end{columns}
 \end{frame}
@@ -1293,9 +1293,9 @@ Gemini 3.5 Flash-Lite, media de \nEjecucionesLlenas{} repeticiones completas:
 \begin{frame}{Qué preguntas resuelve, ejecución a ejecución}
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=14.5cm, height=5.2cm, xmin=-0.5, xmax=19.5, ymin=-0.5, ymax=5.5, y dir=reverse,
+\begin{axis}[width=14.5cm, height=5.2cm, xmin=-0.5, xmax=19.5, ymin=-0.5, ymax=\maxEjecucion.5, y dir=reverse,
   xtick={0,...,19}, xticklabels={01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20},
-  ytick={0,...,5}, yticklabels/.expanded={\rotulosAgente}, tick label style={font=\scriptsize}, xlabel={\scriptsize PC},
+  ytick={0,...,\maxEjecucion}, yticklabels/.expanded={\rotulosAgente}, tick label style={font=\scriptsize}, xlabel={\scriptsize PC},
   axis line style={draw=none}, tick style={draw=none}, colormap={estado}{color(0)=(gris) color(1)=(rojo!55) color(2)=(verde!75)},
   point meta min=-1, point meta max=1]
 \addplot[scatter, only marks, mark=square*, mark size=9.5pt, point meta=explicit, scatter/use mapped color={draw=white, fill=mapped color}]
@@ -1303,8 +1303,8 @@ Gemini 3.5 Flash-Lite, media de \nEjecucionesLlenas{} repeticiones completas:
 \end{axis}
 \end{tikzpicture}
 
-\footnotesize Verde: lo esencial correcto. Rojo: no. Gris: sin medir. Siempre bien desde h1: PC01, 03, 04, 05, 09, 14, 15, 19.
-Siempre mal: PC02, 06, 07, 13, 16. Variables: PC08, 10, 11, 12, 17, 18, 20.
+\footnotesize Verde: lo esencial correcto. Rojo: no. Gris: sin medir. Siempre bien desde h1: PC\pcSiempreBien.
+Siempre mal: PC\pcSiempreMal. Variables: PC\pcVariables.
 \end{frame}
 
 \begin{frame}{Cuánto cuesta}
@@ -1388,7 +1388,7 @@ cada grafo; la forma DISPUTA y NC se calculan.
 \end{columns}
 \end{frame}
 
-\begin{frame}{Otras preguntas frecuentes}
+\begin{frame}[shrink=13]{Otras preguntas frecuentes}
 \footnotesize
 \begin{tabular}{@{}p{4.3cm}p{8.9cm}@{}}
 \toprule
@@ -1569,7 +1569,7 @@ Tramo (UT) & unidad de la transcripción que se cita; reemplaza al folio \\
 
 \begin{frame}[standout]
 Estado: el grafo está completo y validado para un expediente.\\[4pt]
-El agente acierta lo esencial en 11 de 20 preguntas;\\ las herramientas permiten 20 de 20.\\[4pt]
+El agente acierta lo esencial en \mediaEsencial{} de 20 preguntas;\\ las herramientas permiten 20 de 20.\\[4pt]
 \alert{Siguiente: citar por id y listas completas.}
 \end{frame}
 
