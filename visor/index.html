@@ -1,0 +1,368 @@
+<title>Grafo CC 14-18</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mesa de archivo: barra de filtros a la izquierda, la red al centro, la ficha de lo seleccionado a la derecha.
+   Tinta verde-azulada del expediente y ocre del lacre; rojo solo para negaciones, ámbar solo para disputas. */
+:root {
+  --bg: #F2F5F5; --panel: #FFFFFF; --ink: #1D2B2E; --muted: #58696C; --line: #D3DCDD; --soft: #E7EDED;
+  --accent: #2E6F73; --ocre: #A85A17; --neg: #B3261E; --disp: #B97A06;
+  --c-persona: #2E6F73; --c-lugar: #5B8A3A; --c-grupo: #7A5AA6; --c-cosa: #8A7060; --c-evento: #C0631C;
+  --c-cargo: #2F5FA8; --c-pieza: #6B7A7D; --c-mencion: #A8B4B6; --c-hecho: #D99A5B;
+  --edge: #9AA9AB;
+  --f-display: "Literata", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111A1C; --panel: #172225; --ink: #E2EBEB; --muted: #93A4A7; --line: #2A3A3D; --soft: #1E2B2E;
+  --accent: #6FB6B8; --ocre: #E09A5A; --neg: #F0736A; --disp: #E8B43C;
+  --c-persona: #6FB6B8; --c-lugar: #93C26F; --c-grupo: #B49AE0; --c-cosa: #C4AA98; --c-evento: #EE9050;
+  --c-cargo: #7FA6E8; --c-pieza: #9AA9AC; --c-mencion: #5E6E71; --c-hecho: #E8B888; --edge: #4E6164;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111A1C; --panel: #172225; --ink: #E2EBEB; --muted: #93A4A7; --line: #2A3A3D; --soft: #1E2B2E;
+  --accent: #6FB6B8; --ocre: #E09A5A; --neg: #F0736A; --disp: #E8B43C;
+  --c-persona: #6FB6B8; --c-lugar: #93C26F; --c-grupo: #B49AE0; --c-cosa: #C4AA98; --c-evento: #EE9050;
+  --c-cargo: #7FA6E8; --c-pieza: #9AA9AC; --c-mencion: #5E6E71; --c-hecho: #E8B888; --edge: #4E6164;
+  color-scheme: dark }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.5 var(--f-body); }
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px; gap: 12px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; }
+h1 { font: 600 1.45rem/1.2 var(--f-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 0.85rem; }
+.cifras { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.85rem; color: var(--muted);
+  font-variant-numeric: tabular-nums; margin-left: auto; }
+.cifras b { color: var(--ink); font-weight: 600; }
+
+.mesa { display: grid; grid-template-columns: 230px minmax(0, 1fr) 380px; gap: 12px; min-height: 0; }
+aside, .ficha { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; min-height: 0;
+  overflow: auto; padding: 14px; }
+.lienzo { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  min-height: 0; overflow: hidden; }
+#red { position: absolute; inset: 0; }
+.cargando { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted);
+  font-size: 0.9rem; pointer-events: none; }
+
+.grupo { display: grid; gap: 6px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+.grupo:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.rotulo { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+input[type="search"], select { width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
+input:focus-visible, select:focus-visible, button:focus-visible, label:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+label.chk { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.88rem; }
+label.chk input { accent-color: var(--accent); margin: 0; }
+.punto { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.cuenta { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.linea { width: 22px; height: 0; flex: none; border-top: 2px solid var(--edge); }
+.linea.neg { border-color: var(--neg); }
+.linea.disp { border-color: var(--disp); border-top-width: 3px; }
+.linea.hip { border-top-style: dashed; border-color: var(--ocre); }
+.linea.val { border-top-style: dotted; }
+.nota { color: var(--muted); font-size: 0.8rem; margin: 0; }
+button { font: inherit; color: var(--ink); background: var(--soft); border: 1px solid var(--line);
+  border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+
+.ficha h2 { font: 600 1.12rem/1.3 var(--f-display); margin: 4px 0 8px; text-wrap: balance; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chip { font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
+  padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.chip.neg { color: var(--neg); border-color: var(--neg); }
+.chip.disp { color: var(--disp); border-color: var(--disp); }
+.chip.cre { color: var(--accent); border-color: var(--accent); }
+.id { font: 500 0.78rem var(--f-mono); color: var(--muted); }
+.ficha h3 { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  margin: 16px 0 6px; font-weight: 600; }
+.af { border-top: 1px solid var(--line); padding: 8px 0; display: grid; gap: 3px; }
+.af:first-of-type { border-top: 0; }
+.af .cab { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; font-size: 0.8rem; color: var(--muted); }
+.af .que { font-size: 0.9rem; }
+.af .que b { font-weight: 600; }
+.af blockquote { margin: 0; padding-left: 10px; border-left: 2px solid var(--line); font-style: italic;
+  color: var(--ink); font-size: 0.88rem; }
+.af.neg blockquote { border-left-color: var(--neg); }
+.af.disp blockquote { border-left-color: var(--disp); }
+.enlace { color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; background: none;
+  border: 0; padding: 0; font: inherit; }
+ul.mens { margin: 0; padding-left: 18px; font-size: 0.86rem; }
+ul.mens li { margin-bottom: 4px; }
+.vacio { color: var(--muted); }
+
+@media (max-width: 1100px) {
+  .mesa { grid-template-columns: 210px minmax(0, 1fr); grid-template-rows: minmax(420px, 1fr) auto; }
+  .ficha { grid-column: 1 / -1; max-height: none; }
+}
+@media (max-width: 700px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .mesa { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .lienzo { height: 62vh; }
+  aside, .ficha { overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app">
+  <header>
+    <h1>Grafo CC 14-18</h1>
+    <span class="sub">Huancachoque contra el cacique Chuquitapa · Tinta, 1806 · quién afirma qué sobre quién</span>
+    <div class="cifras" id="cifras"></div>
+  </header>
+
+  <div class="mesa">
+    <aside>
+      <div class="grupo">
+        <span class="rotulo">Buscar</span>
+        <input type="search" id="buscar" list="nombres" placeholder="Chuquitapa, Cano, P18, A-UT11-004…" autocomplete="off">
+        <datalist id="nombres"></datalist>
+        <p class="nota">Enter para ir al nodo. Busca en etiquetas, menciones e ids.</p>
+      </div>
+      <div class="grupo">
+        <span class="rotulo">Pieza</span>
+        <select id="pieza"><option value="">Todas las piezas</option></select>
+      </div>
+      <div class="grupo" id="clases"><span class="rotulo">Qué se muestra</span></div>
+      <div class="grupo">
+        <span class="rotulo">Aristas</span>
+        <label class="chk"><input type="checkbox" id="e-afirma" checked><span class="linea"></span>afirma sobre</label>
+        <label class="chk"><input type="checkbox" id="e-valor"><span class="linea val"></span>valor (entidad)</label>
+        <label class="chk"><input type="checkbox" id="e-hip" checked><span class="linea hip"></span>hipótesis rivales</label>
+        <label class="chk"><input type="checkbox" id="solo-disp"><span class="linea disp"></span>solo disputas</label>
+        <p class="nota"><span class="linea neg" style="display:inline-block;vertical-align:middle"></span> contiene una negación</p>
+      </div>
+      <div class="grupo">
+        <span class="rotulo">Creencia (capa 4)</span>
+        <p class="nota">Borde grueso: verdadero. Normal: probable. Discontinuo: posible o menos. Es la creencia de quien
+          propuso la reconstrucción, no un hecho.</p>
+        <button type="button" id="encuadrar">Encuadrar todo</button>
+      </div>
+    </aside>
+
+    <div class="lienzo">
+      <div id="red" role="img" aria-label="Red de afirmaciones del expediente"></div>
+      <div class="cargando" id="cargando">Colocando 254 nodos…</div>
+    </div>
+
+    <section class="ficha" id="ficha" aria-live="polite"></section>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="datos.js"></script>
+<script>
+(() => {
+  const G = window.GRAFO;
+  const ficha = document.getElementById("ficha");
+  if (!G || !window.vis) {
+    ficha.innerHTML = '<p class="vacio">No se pudieron cargar los datos o la biblioteca de la red. Regenera ' +
+      '<code>visor/datos.js</code> con <code>python scripts/visor.py</code> y abre la página con conexión.</p>';
+    document.getElementById("cargando").hidden = true;
+    return;
+  }
+  const NOMBRE_CLASE = { persona: "Personas", lugar: "Lugares", grupo: "Grupos", cosa: "Cosas", evento: "Hechos reconstruidos",
+    "ejercicio-cargo": "Ejercicios de cargo", pieza: "Piezas", mencion: "Menciones sin identidad única", hecho: "Hechos narrados sueltos" };
+  const VAR_CLASE = { persona: "--c-persona", lugar: "--c-lugar", grupo: "--c-grupo", cosa: "--c-cosa", evento: "--c-evento",
+    "ejercicio-cargo": "--c-cargo", pieza: "--c-pieza", mencion: "--c-mencion", hecho: "--c-hecho" };
+  const claseVis = n => n.tipo === "mencion" ? "mencion" : n.tipo === "hecho" ? "hecho" : n.clase;
+  const porId = Object.fromEntries(G.nodos.map(n => [n.id, n]));
+  const AF = G.afirmaciones;
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const corto = (s, n = 30) => s.length > n ? s.slice(0, n - 1) + "…" : s;
+
+  // grado: número de afirmaciones en que participa
+  const grado = {};
+  G.aristas.forEach(e => { grado[e.de] = (grado[e.de] || 0) + e.n; grado[e.a] = (grado[e.a] || 0) + e.n; });
+
+  const nDisp = Object.values(AF).filter(a => a.disputa).length;
+  const nNeg = Object.values(AF).filter(a => a.niega).length;
+  const nR = G.nodos.filter(n => n.tipo === "reconstruccion").length;
+  document.getElementById("cifras").innerHTML =
+    `<span><b>${nR}</b> reconstrucciones</span><span><b>${Object.keys(AF).length}</b> afirmaciones</span>` +
+    `<span><b>${nNeg}</b> negaciones</span><span><b>${nDisp}</b> en disputa (calculada)</span>` +
+    `<span>datos del ${esc(G.generado)}</span>`;
+
+  // ── filtros por clase ──
+  const cuentaClase = {};
+  G.nodos.forEach(n => { const c = claseVis(n); cuentaClase[c] = (cuentaClase[c] || 0) + 1; });
+  const clasesBox = document.getElementById("clases");
+  const visibles = new Set(Object.keys(NOMBRE_CLASE).filter(c => c !== "pieza"));
+  Object.keys(NOMBRE_CLASE).forEach(c => {
+    if (!cuentaClase[c]) return;
+    const l = document.createElement("label");
+    l.className = "chk";
+    l.innerHTML = `<input type="checkbox" id="c-${c}" ${visibles.has(c) ? "checked" : ""}>` +
+      `<span class="punto" style="background:var(${VAR_CLASE[c]})"></span>${NOMBRE_CLASE[c]}<span class="cuenta">${cuentaClase[c]}</span>`;
+    l.querySelector("input").addEventListener("change", ev => { ev.target.checked ? visibles.add(c) : visibles.delete(c); refiltrar(); });
+    clasesBox.appendChild(l);
+  });
+
+  // ── colores desde los tokens del tema ──
+  let T = {};
+  const leerTokens = () => {
+    const cs = getComputedStyle(document.documentElement);
+    const v = k => cs.getPropertyValue(k).trim();
+    T = { ink: v("--ink"), muted: v("--muted"), panel: v("--panel"), edge: v("--edge"), neg: v("--neg"), disp: v("--disp"),
+      ocre: v("--ocre"), accent: v("--accent"), bg: v("--bg") };
+    Object.entries(VAR_CLASE).forEach(([c, k]) => T[c] = v(k));
+  };
+  leerTokens();
+
+  const estiloNodo = n => {
+    const c = claseVis(n), col = T[c];
+    const base = { id: n.id, label: corto(n.label.replace(/^«|»$/g, "")), title: undefined, value: Math.max(1, grado[n.id] || 1),
+      color: { background: col, border: col, highlight: { background: col, border: T.ink }, hover: { background: col, border: T.ink } },
+      font: { color: T.ink, face: "IBM Plex Sans", strokeWidth: 3, strokeColor: T.panel }, borderWidth: 1.5,
+      shapeProperties: { borderDashes: false } };
+    if (n.tipo === "pieza") Object.assign(base, { shape: "box", label: n.id, value: undefined, margin: 6,
+      color: { ...base.color, background: T.panel, border: col }, font: { ...base.font, size: 13, face: "IBM Plex Mono" } });
+    else if (n.tipo === "mencion") Object.assign(base, { shape: "diamond", size: 7, value: undefined });
+    else if (n.tipo === "hecho") Object.assign(base, { shape: "triangle", size: 9, value: undefined });
+    else {
+      base.shape = "dot";
+      if (n.creencia === "verdadero") { base.borderWidth = 4; base.color.border = T.ink; }
+      if (["posible", "improbable", "indeterminado"].includes(n.creencia)) { base.shapeProperties.borderDashes = [3, 3]; base.color.background = T.panel; base.borderWidth = 2.5; }
+    }
+    return base;
+  };
+  const estiloArista = (e, i) => {
+    const col = e.tipo === "hipotesis" ? T.ocre : e.disputa ? T.disp : e.niega ? T.neg : T.edge;
+    return { id: i, from: e.de, to: e.a, tipo: e.tipo,
+      arrows: e.tipo === "afirma" ? { to: { enabled: true, scaleFactor: 0.45 } } : undefined,
+      dashes: e.tipo === "hipotesis" ? [6, 4] : e.tipo === "valor" ? [2, 4] : false,
+      width: e.tipo === "afirma" ? Math.min(1 + Math.log2(e.n) , 5) + (e.disputa ? 1 : 0) : 1,
+      color: { color: col, highlight: e.disputa ? T.disp : T.accent, hover: T.accent, opacity: e.tipo === "afirma" && !e.disputa && !e.niega ? 0.55 : 0.95 },
+      smooth: { type: "continuous", roundness: 0.2 } };
+  };
+
+  const nodos = new vis.DataSet(G.nodos.map(estiloNodo));
+  const aristas = new vis.DataSet(G.aristas.map(estiloArista));
+  const chk = id => document.getElementById(id).checked;
+  const vistaNodos = new vis.DataView(nodos, { filter: n => visibles.has(claseVis(porId[n.id])) });
+  const vistaAristas = new vis.DataView(aristas, { filter: a => {
+    const e = G.aristas[a.id];
+    if (e.tipo === "afirma" && !chk("e-afirma")) return false;
+    if (e.tipo === "valor" && !chk("e-valor")) return false;
+    if (e.tipo === "hipotesis" && !chk("e-hip")) return false;
+    if (chk("solo-disp") && e.tipo !== "hipotesis" && !e.disputa) return false;
+    return true;
+  } });
+  const refiltrar = () => { vistaNodos.refresh(); vistaAristas.refresh(); };
+  ["e-afirma", "e-valor", "e-hip", "solo-disp"].forEach(id => document.getElementById(id).addEventListener("change", refiltrar));
+
+  const red = new vis.Network(document.getElementById("red"), { nodes: vistaNodos, edges: vistaAristas }, {
+    nodes: { scaling: { min: 6, max: 30, label: { enabled: true, min: 10, max: 18, drawThreshold: 7, maxVisible: 22 } } },
+    physics: { solver: "forceAtlas2Based", forceAtlas2Based: { gravitationalConstant: -60, springLength: 90, avoidOverlap: 0.4 },
+      stabilization: { iterations: 400, updateInterval: 50 } },
+    interaction: { hover: true, tooltipDelay: 200, navigationButtons: false, keyboard: false, multiselect: false },
+  });
+  // la simulación se detiene al estabilizarse: no deja la CPU trabajando
+  red.once("stabilizationIterationsDone", () => {
+    red.setOptions({ physics: false });
+    document.getElementById("cargando").hidden = true;
+    red.fit({ animation: false });
+  });
+
+  // ── tema: recolorear si cambia ──
+  const recolorear = () => { leerTokens(); nodos.update(G.nodos.map(estiloNodo)); aristas.update(G.aristas.map(estiloArista)); };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", recolorear);
+  new MutationObserver(recolorear).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // ── ficha ──
+  const nombreNodo = id => id && porId[id] ? porId[id].label : null;
+  const botonNodo = (id, texto) => id && porId[id] ? `<button type="button" class="enlace" data-ir="${esc(id)}">${esc(texto ?? porId[id].label)}</button>` : esc(texto ?? "");
+  const tarjeta = aid => {
+    const a = AF[aid];
+    const valor = a.valorNodo ? botonNodo(a.valorNodo, a.valor) : esc(a.valor);
+    return `<div class="af${a.niega ? " neg" : ""}${a.disputa ? " disp" : ""}">
+      <div class="cab"><span class="id">${esc(a.aid)}</span><span>${esc(a.pieza)} · ${esc(a.tipoAct || "")}</span>
+        ${a.fecha ? `<span>${esc(a.fecha)}</span>` : ""}${a.niega ? '<span class="chip neg">niega</span>' : ""}
+        ${a.disputa ? '<span class="chip disp">en disputa</span>' : ""}</div>
+      <div class="que">${botonNodo(a.afirmanteNodo, a.afirmante)} <span class="vacio">(${esc(a.rol || "")})</span>:
+        ${a.sujetoNodo ? botonNodo(a.sujetoNodo, a.sujeto) : esc(a.sujeto)} — <b>${esc(a.atributo)}</b> → ${valor}</div>
+      <blockquote>«${esc(a.cita)}»</blockquote>
+      <div class="cab"><span>tramo ${esc(a.tramo)}${a.folio ? ", " + esc(a.folio) : ""}</span><span>fuerza ${esc(a.fuerza)}</span>
+        ${a.fundamento && a.fundamento !== "no lo indica" ? `<span>${esc(a.fundamento)}</span>` : ""}
+        ${a.respondeA ? `<span>responde a ${esc(a.respondeA)}</span>` : ""}</div></div>`;
+  };
+  const listaAf = ids => {
+    const u = [...new Set(ids)].sort((x, y) => (AF[x].pieza + x).localeCompare(AF[y].pieza + y, "es", { numeric: true }));
+    const disp = u.filter(i => AF[i].disputa);
+    return (disp.length ? `<p class="nota">${disp.length} de ${u.length} afirmaciones están en una disputa calculada.</p>` : "") +
+      (u.length ? u.map(tarjeta).join("") : '<p class="vacio">Ninguna afirmación.</p>');
+  };
+  const mostrarNodo = id => {
+    const n = porId[id]; if (!n) return;
+    const chips = [`<span class="chip">${esc(NOMBRE_CLASE[claseVis(n)] || n.clase)}</span>`];
+    if (n.creencia) chips.push(`<span class="chip cre">creencia: ${esc(n.creencia)}</span>`);
+    if (n.ajena) chips.push('<span class="chip">documento ajeno</span>');
+    let html = `<span class="id">${esc(n.id)}</span><h2>${esc(n.label)}</h2><div class="chips">${chips.join("")}</div>`;
+    if (n.tipo === "pieza") html += `<p>${esc(n.titulo)}${n.fecha ? ` · ${esc(n.fecha)}` : ""}</p>`;
+    if (n.rivales && n.rivales.length) html += `<h3>Hipótesis que la reclaman</h3><ul class="mens">${n.rivales.map(r => `<li>${botonNodo(r)}</li>`).join("")}</ul>` +
+      (n.rivales.length > 1 ? '<p class="nota">Son lecturas rivales: el visor no elige entre ellas.</p>' : "");
+    if (n.cita) html += `<h3>Cita</h3><blockquote class="af" style="font-style:italic">«${esc(n.cita)}» (${esc(n.pieza)})</blockquote>`;
+    if (n.menciones && n.menciones.length) html += `<h3>${n.menciones.length} menciones en el texto</h3><ul class="mens">` +
+      n.menciones.map(m => `<li><b>${esc(m.texto)}</b> <span class="id">${esc(m.mid)} · ${esc(m.pieza)}</span></li>`).join("") + "</ul>";
+    html += `<h3>Afirmaciones (${new Set(n.afirmaciones).size})</h3>` + listaAf(n.afirmaciones);
+    ficha.innerHTML = html; ficha.scrollTop = 0;
+  };
+  const mostrarArista = i => {
+    const e = G.aristas[i];
+    const tit = e.tipo === "hipotesis" ? "Hipótesis de identidad" : e.tipo === "valor" ? "Valor de una afirmación" : "Afirma sobre";
+    ficha.innerHTML = `<span class="id">${esc(tit)}</span><h2>${botonNodo(e.de)} → ${botonNodo(e.a)}</h2>` +
+      (e.tipo === "hipotesis" ? '<p>La mención de la izquierda pertenece a esta reconstrucción en al menos una hipótesis. Si hay varias, son rivales.</p>' : listaAf(e.afirmaciones));
+    ficha.scrollTop = 0;
+  };
+  ficha.addEventListener("click", ev => { const b = ev.target.closest("[data-ir]"); if (b) ir(b.dataset.ir); });
+
+  const ir = id => {
+    const n = porId[id]; if (!n) return;
+    const c = claseVis(n);
+    if (!visibles.has(c)) { visibles.add(c); const box = document.getElementById("c-" + c); if (box) box.checked = true; refiltrar(); }
+    red.selectNodes([id]); red.focus(id, { scale: 1.1, animation: matchMedia("(prefers-reduced-motion: reduce)").matches ? false : { duration: 500 } });
+    mostrarNodo(id);
+  };
+  red.on("click", p => { if (p.nodes.length) mostrarNodo(p.nodes[0]); else if (p.edges.length) mostrarArista(p.edges[0]); });
+
+  // ── buscar ──
+  const indice = [];
+  G.nodos.forEach(n => {
+    indice.push([n.label.toLowerCase(), n.id]); indice.push([n.id.toLowerCase(), n.id]);
+    (n.menciones || []).forEach(m => indice.push([m.texto.toLowerCase(), n.id]));
+  });
+  const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+  document.getElementById("nombres").innerHTML = G.nodos.filter(n => n.tipo !== "mencion")
+    .map(n => `<option value="${esc(n.label)}"></option>`).join("");
+  document.getElementById("buscar").addEventListener("keydown", ev => {
+    if (ev.key !== "Enter") return;
+    const q = sinTildes(ev.target.value.trim().toLowerCase()); if (!q) return;
+    if (AF[ev.target.value.trim()]) { const a = AF[ev.target.value.trim()]; ir(a.sujetoNodo || a.afirmanteNodo);
+      ficha.innerHTML = `<span class="id">Afirmación</span><h2>${esc(a.aid)}</h2>` + tarjeta(a.aid); return; }
+    const hit = indice.find(([t]) => sinTildes(t) === q) || indice.find(([t]) => sinTildes(t).includes(q));
+    if (hit) ir(hit[1]); else ficha.innerHTML = `<p class="vacio">Nada coincide con «${esc(ev.target.value)}». Prueba otra grafía: el texto conserva las del siglo XIX (Guancachoque, Casorla).</p>`;
+  });
+
+  // ── pieza ──
+  const sel = document.getElementById("pieza");
+  G.nodos.filter(n => n.tipo === "pieza").sort((a, b) => a.id.localeCompare(b.id, "es", { numeric: true }))
+    .forEach(n => sel.insertAdjacentHTML("beforeend", `<option value="${esc(n.id)}">${esc(n.label)}</option>`));
+  sel.addEventListener("change", () => {
+    const p = sel.value; if (!p) { red.unselectAll(); return; }
+    const ids = Object.values(AF).filter(a => a.pieza === p);
+    const ns = [...new Set(ids.flatMap(a => [a.afirmanteNodo, a.sujetoNodo]).filter(x => x && vistaNodos.get(x)))];
+    red.selectNodes(ns); if (ns.length) red.fit({ nodes: ns, animation: { duration: 500 } });
+    mostrarNodo(p);
+  });
+  document.getElementById("encuadrar").addEventListener("click", () => red.fit({ animation: { duration: 400 } }));
+
+  // estado inicial: el cacique, centro de la disputa
+  mostrarNodo(porId["R-chuquitapa"] ? "R-chuquitapa" : G.nodos[0].id);
+  red.once("stabilizationIterationsDone", () => { if (porId["R-chuquitapa"]) red.selectNodes(["R-chuquitapa"]); });
+})();
+</script>

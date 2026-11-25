@@ -1,0 +1,824 @@
+% Estado del proyecto LAAD de principio a fin: qué es, qué se hizo, cómo funciona, cómo se mide y qué falta.
+% Compilar:  python scripts/cifras.py && python scripts/datos_presentacion.py && latexmk -pdf proyecto.tex
+% Ninguna cifra se escribe a mano: las generales salen de ../articulo/cifras.tex (scripts/cifras.py) y las
+% distribuciones y los resultados del harness de datos_proyecto.tex (scripts/datos_presentacion.py).
+\documentclass[aspectratio=169,10pt]{beamer}
+\usetheme{metropolis}
+\metroset{block=fill,numbering=fraction,progressbar=frametitle,sectionpage=progressbar}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands,es-tabla,es-nodecimaldot]{babel}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc,babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{csquotes}
+\input{../articulo/cifras.tex}
+\input{datos_proyecto.tex}
+
+\definecolor{tinta}{HTML}{23373B}
+\definecolor{ocre}{HTML}{B5651D}
+\definecolor{verde}{HTML}{3F7F4F}
+\definecolor{rojo}{HTML}{B3261E}
+\definecolor{ambar}{HTML}{C48A10}
+\definecolor{gris}{HTML}{C9D1D2}
+\setbeamercolor{alerted text}{fg=ocre}
+\setbeamercolor{progress bar}{fg=ocre}
+\newcommand{\cita}[1]{«\textit{#1}»}
+\newcommand{\ttt}[1]{\texttt{\small #1}}
+\newcommand{\cifra}[1]{\textbf{\alert{#1}}}
+\newcommand{\si}{\textcolor{verde}{\checkmark}}
+\newcommand{\no}{\textcolor{rojo}{$\times$}}
+\newcommand{\aun}{\textcolor{ambar}{$\circ$}}
+\tikzset{
+  caja/.style={draw=tinta!60, fill=#1, rounded corners=3pt, align=center, font=\footnotesize, inner sep=4pt},
+  caja/.default=white,
+  flecha/.style={-{Stealth[length=2mm]}, thick, tinta!70},
+  capa/.style={draw=tinta!60, fill=#1, rounded corners=3pt, minimum height=0.75cm, align=left, text width=12.8cm,
+    font=\footnotesize},
+}
+\pgfplotsset{
+  barras/.style={ybar, bar width=10pt, axis lines*=left, ymajorgrids, grid style={gris!60}, enlarge x limits=0.12,
+    nodes near coords, every node near coord/.append style={font=\scriptsize}, tick label style={font=\scriptsize},
+    ymin=0, xtick=data, height=4.6cm, width=7cm, axis line style={tinta!50}},
+}
+
+\title{LAAD: estado del proyecto}
+\subtitle{Grafo de conocimiento de un expediente judicial colonial del ARC Cusco y su agente de consulta}
+\author{Jhon Jesus Quispe Machaca \and Ian Logan Will Quispe Ventura}
+\institute{Universidad Nacional de San Antonio Abad del Cusco}
+\date{Repaso completo · \today}
+
+\begin{document}
+\maketitle
+
+\begin{frame}{Qué contiene esta presentación}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{enumerate}
+\item El problema y el expediente
+\item Materiales y restricciones
+\item Cronología de lo hecho
+\item El modelo: cuatro capas
+\item Cómo se construye el grafo
+\item El grafo en cifras
+\end{enumerate}
+\column{0.48\textwidth}
+\begin{enumerate}\setcounter{enumi}{6}
+\item Cómo se valida
+\item Consulta y escala
+\item El harness: agente de consulta
+\item Resultados del harness
+\item Problemas abiertos y propuestas
+\item Pendientes, uso y glosario
+\end{enumerate}
+\end{columns}
+\medskip
+\footnotesize Toda cifra de estas diapositivas sale de los datos mediante un guion; ninguna se escribió a mano.
+\end{frame}
+
+% =====================================================================
+\section{El problema y el expediente}
+
+\begin{frame}{Qué es LAAD}
+Un \alert{grafo de conocimiento} de expedientes judiciales coloniales del Fondo Intendencia (Archivo Regional del
+Cusco), y un \alert{agente} que responde preguntas sobre él sin inventar.
+\begin{itemize}
+\item \textbf{Piloto:} Causa criminal, Leg.~14, Exp.~18 (Tinta, 1806). Manuel Huancachoque, indio, se queja del
+      cacique recaudador Andrés Chuquitapa: lo acusa de haber sido coronel de Túpac Amaru y de abusos.
+\item \textbf{Producto 1, el grafo:} RDF con estándares (RiC-O, CIDOC CRM, CRMinf, PiCo, ROAR, PROV-O, SKOS),
+      perfil de aplicación \alert{OHAC}, sin términos propios.
+\item \textbf{Producto 2, el harness:} herramientas con nombre sobre el grafo y un modelo de lenguaje que las usa;
+      cada cita de la respuesta se comprueba contra lo que devolvieron.
+\item \textbf{Producto 3, el artículo:} sobre la ontología (borrador en \ttt{articulo/}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Un expediente no registra hechos}
+Registra lo que \alert{alguien afirmó}, ante quién, en qué actuación y con qué fuerza procesal.
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Agosto: certificación de Isidro Cano}
+Chuquitapa fue \cita{complice y coronel} de Túpac Amaru.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Septiembre: declaración jurada del mismo Cano}
+\cita{Comisionado por este y no coronel}. Otro testigo niega haber firmado; un tercero no sabe escribir.
+\end{block}
+\end{columns}
+\medskip
+El fiscal concluye que las quejas son \cita{menos conforme a la verdad}. ¿Quién tiene razón?
+\alert{El grafo no lo decide}: guarda las voces y calcula dónde chocan.
+\end{frame}
+
+\begin{frame}{Por qué se rehízo: el prototipo anterior}
+El primer intento (\ttt{../Grafo-Conocimiento-Cusco}, grafo de propiedades en Neo4j poblado por un modelo de lenguaje)
+cometió tres errores de fondo:
+\begin{enumerate}
+\item Cada afirmación se volvió una tripleta \alert{sobre el mundo} (\enquote{Chuquitapa ES coronel}).
+\item La resolución del tribunal se tomó como \alert{valor de verdad}.
+\item Todas las grafías de un nombre se \alert{fusionaron} en una persona.
+\end{enumerate}
+Resultado: la frase del fiscal quedó atribuida a ocho declarantes, entre ellos el propio denunciante; la relación
+\ttt{CONTRADICE} tenía 0 instancias.
+
+\medskip
+\textbf{Lección que guía todo LAAD:} el modelo de lenguaje propone; nunca decide identidades, verdades ni folios.
+\end{frame}
+
+% =====================================================================
+\section{Materiales y restricciones}
+
+\begin{frame}{Con qué se trabaja}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Materiales}
+\begin{itemize}\small
+\item Transcripción del expediente (\ttt{corpus/}), identificada por su \ttt{sha256}.
+\item Catálogo impreso del ARC (fichas e índices): capa C.
+\item Especificaciones de los estándares copiadas en \ttt{vendor/} (49 archivos verificados).
+\end{itemize}
+\textbf{Hallazgos}
+\begin{itemize}\small
+\item La transcripción no marca recto ni vuelto; solo hay 4 marcas de folio (20, 28, 33, 34).
+\item El \enquote{corpus modernizado} corrige en silencio (1809 → 1805, Mara → Mata): \alert{excluido}.
+\item El final de UT20 es un documento republicano ajeno (P32).
+\end{itemize}
+\column{0.48\textwidth}
+\textbf{Restricciones fijadas por el equipo}
+\begin{itemize}\small
+\item Sin imágenes de folios: el folio y el lado quedan \enquote{no consta}.
+\item Un único validador humano (el autor); no hay acuerdo entre anotadores.
+\item La unidad citable es el \alert{tramo} (UT00–UT20), no el folio.
+\item Única normalización de citas: colapsar espacios. \enquote{Huancachoque} por \enquote{Guancachoque} se
+      rechaza.
+\item El portátil se calienta: nada de procesos en paralelo.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Cronología de lo hecho}
+
+\begin{frame}{Del 12 al 24 de noviembre de 2026}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm, every node/.style={font=\scriptsize}]
+\draw[thick, tinta!60] (0,0) -- (8.3,0);
+\draw[tinta!40, dashed, thick] (8.3,0) -- node[above, tinta!70] {pausa} (11.7,0);
+\draw[thick, tinta!60] (11.7,0) -- (13.4,0);
+\foreach \x/\d in {1.5/12 nov, 4.9/13 nov, 8.3/14 nov, 11.7/24 nov} {
+  \fill[ocre] (\x,0) circle (3pt); \node[above=3pt] at (\x,0) {\textbf{\d}};
+}
+\foreach \x/\c/\t in {
+  1.5/tinta!5/{Fuentes e índice; preguntas de competencia; diagnóstico del prototipo; modelo de 4 capas; revisiones 1 y 2; alineaciones; borrador del artículo},
+  4.9/tinta!5/{Expediente completo anotado por agentes; tesauro 164/164 definido; capa 4 auditada; catálogo; 20/20 PC},
+  8.3/tinta!5/{Varios expedientes; tesauro que crece; Oxigraph; cifras de una sola fuente; conectividad (35 $\to$ 118 reconstrucciones); presentación},
+  11.7/ocre!12/{\textbf{Harness}: 14 herramientas, verificador, banco de 20 PC; cardinalidad; agente independiente del proveedor; Gemini; 6 bancos; decisiones del validador}} {
+  \node[caja=\c, text width=2.9cm, minimum height=2.6cm, anchor=north] at (\x,-0.35) {\t};
+}
+\end{tikzpicture}
+
+\medskip
+\footnotesize Cada entregable vive en una rama git integrada en \ttt{main} con \ttt{merge --no-ff} (13 integraciones); el
+harness está en \ttt{harness/consulta}, aún sin integrar. Detalle: \ttt{docs/bitacora.md} y \ttt{docs/decisiones/README.md}
+(47 decisiones).
+\end{frame}
+
+% =====================================================================
+\section{El modelo}
+
+\begin{frame}{Cuatro capas, cada una en sus grafos nombrados}
+\centering
+\begin{tikzpicture}[node distance=1.4mm]
+\node[capa=ocre!12] (c4) {\textbf{4 · Reconstrucciones} — identidades y hechos \emph{propuestos}, con autor, fecha, argumento y
+  creencia; las hipótesis rivales coexisten (CRMinf, PiCo, ROAR)};
+\node[capa=tinta!10, below=of c4] (c3) {\textbf{3 · Afirmaciones atribuidas} — quién afirma, sobre quién, qué atributo, qué valor,
+  polaridad y fuerza (CIDOC CRM E13)};
+\node[capa=tinta!6, below=of c3] (c2) {\textbf{2 · Menciones} — cada aparición escrita de un nombre, sin fusionar, con su cita literal
+  (PiCo, ROAR, Web Annotation)};
+\node[capa=tinta!3, below=of c2] (c1) {\textbf{1 · Documento} — expediente, piezas, actuaciones, tramos (RiC-O, CIDOC CRM)};
+\node[capa=white, below=of c1] (p) {\textbf{P · Procedencia} — qué proceso, qué agente, qué versión de la transcripción (PROV-O);
+  \textbf{C · Catálogo} — fichas del ARC como dato a contrastar};
+\end{tikzpicture}
+
+\smallskip
+\footnotesize Sin valores de verdad en las capas 1--3. Solo la capa 4 tiene creencias. Las disputas no se guardan: se
+\alert{calculan}.
+\end{frame}
+
+\begin{frame}{Cero términos propios: un perfil, no una ontología nueva}
+OHAC declara \cifra{\cifraTerminosPropios} clases y propiedades. Se compone de:
+\begin{itemize}
+\item importaciones con versión fijada: RiC-O 1.1, CIDOC CRM 7.1.3, CRMinf 1.2.1, PiCo, ROAR, PROV-O, SKOS,
+      Web Annotation;
+\item un \alert{tesauro SKOS} de \cifra{\cifraEsquemas} esquemas y \cifra{\cifraConceptos} conceptos definidos
+      (cargos, condiciones, tipos de actuación, roles, \cifra{\cifraAtributos} atributos, polaridad, fuerza…);
+\item \cifra{\cifraFormas} \alert{formas SHACL} que hacen cumplir el perfil;
+\item \cifra{\cifraAlineaciones} alineaciones externas, solo \ttt{closeMatch} o \ttt{relatedMatch}.
+\end{itemize}
+\medskip
+Lo andino y lo procesal son \alert{datos}, no clases: el ayllu es un grupo, no un lugar; \cita{India Ordinaria} no se
+iguala a \emph{originaria}. El tesauro crece con \alert{candidatos} (\cifra{\cifraCandidatos} hoy, con aviso SHACL) y
+lleva versión semántica (0.2.0).
+\end{frame}
+
+\begin{frame}{Una afirmación en el grafo: la negación de Cano}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Quién afirma (\ttt{P14}) & mención «Isidro Cano», declarante \\
+En qué actuación (\ttt{P9i}) & declaración jurada de septiembre (pieza P18) \\
+Sobre quién (\ttt{P140}) & mención «Andres Chuquitapa» (sujeto elíptico, marcado) \\
+Qué atributo (\ttt{P177}) & \emph{ejerce-cargo} \\
+Qué valor (\ttt{P141}) & \emph{coronel rebelde} \\
+Polaridad y fuerza (\ttt{P2}) & \alert{niega} · testimonial \\
+Responde a (\ttt{P17}) & la afirmación de agosto (A-UT01-001) \\
+Cita literal & \cita{Comisionado por este y no coronel} (tramo UT11) \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Ningún nodo dice si Chuquitapa fue coronel. La pregunta se responde como \alert{disputa}: quién lo afirma, quién lo
+niega y qué autoridad se pronunció (ninguna).
+\end{frame}
+
+\begin{frame}{Identidades: hipótesis con autor y creencia}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\small
+Las menciones no se fusionan. Una \alert{reconstrucción} de la capa 4 propone que varias menciones son la misma
+persona, lugar o hecho, con:
+\begin{itemize}
+\item autor (hoy, un modelo de lenguaje) y fecha;
+\item argumento escrito;
+\item creencia: verdadero, probable, posible, improbable;
+\item \alert{rivales}: lecturas incompatibles que comparten menciones.
+\end{itemize}
+Ejemplo: el \enquote{Mariano Casorla} que declara en P19, ¿es el granadero \enquote{Martin Cazorla}? Hay tres hipótesis y
+el grafo guarda las tres.
+\column{0.43\textwidth}
+\begin{tikzpicture}[node distance=6mm and 4mm, every node/.style={font=\scriptsize}]
+\node[caja=tinta!5] (m1) {«Martin Cazorla»\\P05};
+\node[caja=tinta!5, right=of m1] (m2) {«Mariano Casorla»\\P19};
+\node[caja=ocre!15, below=12mm of m1] (ra) {Hipótesis A\\misma persona\\\textit{probable}};
+\node[caja=ocre!15, below=12mm of m2] (rb) {Hipótesis B\\otra persona\\\textit{improbable}};
+\draw[flecha] (m1) -- (ra); \draw[flecha] (m2) -- (ra); \draw[flecha] (m2) -- (rb);
+\draw[ocre, dashed, thick] (ra) -- node[below, font=\tiny] {rivales} (rb);
+\end{tikzpicture}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Disputas calculadas y cardinalidad}
+Una consulta compara las afirmaciones de un mismo sujeto y atributo:
+\begin{itemize}
+\item \textbf{se afirma y se niega} el mismo valor: disputa (coronel / no coronel);
+\item \textbf{valores distintos}: disputa \emph{solo} si el atributo admite un valor (decisión 046, tabla aprobada por el
+      validador): edad, fecha, duración, número de participantes, quién redactó… son \enquote{uno}; cargo, condición,
+      parentesco… son \enquote{varios} (cacique y recaudador no se contradicen);
+\item \textbf{identidad}: dos grafías comparan como iguales solo si pertenecen a una misma reconstrucción única; las
+      menciones de reconstrucciones rivales nunca se unifican.
+\end{itemize}
+\medskip
+La forma de cada respuesta también se calcula: \textbf{D} documental, \textbf{A} afirmaciones concordantes,
+\textbf{DISPUTA}, \textbf{NC} no consta, \textbf{R} reconstrucción, \textbf{P} procedencia.
+\end{frame}
+
+% =====================================================================
+\section{Cómo se construye el grafo}
+
+\begin{frame}{De la transcripción al grafo}
+\centering
+\begin{tikzpicture}[node distance=5mm and 4mm, every node/.style={font=\scriptsize}]
+\node[caja=tinta!5, text width=1.9cm] (t) {Transcripción\\y manifiesto\\del expediente};
+\node[caja=ocre!12, text width=1.9cm, right=of t] (a) {Agentes LLM anotan\\\alert{registros planos}\\con cita obligatoria};
+\node[caja=tinta!5, text width=1.9cm, right=of a] (v) {Validación del lote\\cita = subcadena\\ids, vocabulario};
+\node[caja=tinta!5, text width=1.9cm, right=of v] (m) {Mapeo determinista\\(código, sin LLM)};
+\node[caja=tinta!12, text width=1.9cm, right=of m] (g) {Grafo\\TriG + N-Quads};
+\draw[flecha] (t) -- (a); \draw[flecha] (a) -- (v); \draw[flecha] (v) -- (m); \draw[flecha] (m) -- (g);
+\node[caja=white, text width=2.2cm, below=16mm of g] (s) {SHACL\\(formas OHAC)};
+\node[caja=white, text width=2.2cm, left=of s] (r) {Razonador\\OWL 2 RL};
+\node[caja=white, text width=2.2cm, left=of r] (c) {\ttt{cifras.py}\\artículo, docs};
+\node[caja=ocre!12, text width=2.4cm, left=of c] (p) {Propuestas de la\\capa 4 (agentes)\\+ auditoría};
+\draw[flecha] (g) -- (s); \draw[flecha] (s) -- (r); \draw[flecha] (r) -- (c);
+\draw[flecha] (p) |- (m);
+\end{tikzpicture}
+
+\medskip
+\begin{itemize}\small
+\item El modelo de lenguaje solo rellena un esquema plano y cerrado; \alert{el paso al grafo es código}.
+\item Las piezas y su tipo de actuación los cura una persona (\ttt{datos/piezas.jsonl}).
+\item Construir: \ttt{python scripts/construir.py}; un expediente nuevo: \ttt{scripts/nuevo\_expediente.py}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pensado para un fondo, no para un expediente}
+\begin{itemize}
+\item Cada expediente se declara en un \alert{manifiesto}: signatura, piezas, lotes, formato de transcripción.
+\item Las capas 1--3 viven en grafos del expediente (\ttt{g:<exp>/documento}, \ttt{g:<exp>/afirmaciones/…}).
+\item La capa 4 es común: una reconstrucción puede unir menciones de \alert{expedientes distintos}.
+\item Las consultas se restringen a un expediente o recorren el corpus.
+\end{itemize}
+\medskip
+Hoy hay \cifra{\cifraExpedientes} expediente real; la generalización se probó con expedientes sintéticos (un pleito
+civil no necesitó términos nuevos). El segundo expediente real (CO Cusco L70 E15, sorteado a ciegas) espera su
+transcripción.
+\end{frame}
+
+% =====================================================================
+\section{El grafo en cifras}
+
+\begin{frame}{Tamaño del piloto}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}
+\item \cifra{\cifraPiezas} piezas del expediente
+\item \cifra{\cifraMenciones} menciones (\cifra{\cifraPersonas} de persona)
+\item \cifra{\cifraAfirmaciones} afirmaciones (\cifra{\cifraNegaciones} negaciones)
+\item \cifra{\cifraCitas} citas literales, todas subcadena exacta
+\item \cifra{\cifraReconstrucciones} reconstrucciones
+\item \cifra{\cifraCatalogoRegistros} fichas e índices del catálogo
+\end{itemize}
+\column{0.5\textwidth}
+\begin{itemize}
+\item \cifra{\cifraTripletas} tripletas en \cifra{\cifraGrafos} grafos nombrados
+\item \cifra{\cifraClases} clases y \cifra{\cifraPropiedades} propiedades, todas de estándares
+\item \cifra{\cifraConceptos} conceptos del tesauro (\cifra{\cifraDefinicionesDeTrabajo} con definición de trabajo)
+\item \cifra{\cifraPreguntas} preguntas de competencia
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{La capa 3: quién habla y con qué fuerza}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{tikzpicture}
+\begin{axis}[xbar, bar width=8pt, xmin=0, ytick={0,...,5}, yticklabels/.expanded={\rotulosFuerza},
+  height=5.2cm, width=6.4cm, enlarge y limits=0.12, enlarge x limits={upper,value=0.18}, xmajorgrids,
+  grid style={gris!60}, y dir=reverse, title={\footnotesize Afirmaciones por fuerza institucional}, axis lines*=left,
+  tick label style={font=\scriptsize}, nodes near coords, every node near coord/.append style={font=\scriptsize},
+  axis line style={tinta!50}]
+\addplot[fill=tinta!70, draw=none] coordinates {\serieFuerzaX};
+\end{axis}
+\end{tikzpicture}
+\column{0.5\textwidth}
+\small
+\begin{itemize}
+\item La mayoría son \alert{testimonios}: lo que declaran testigos y certificantes.
+\item Las \alert{resolutivas} (autos, decretos) también son afirmaciones, no hechos: una orden no implica su
+      cumplimiento.
+\item \cifra{\datoNiega} de las \cifra{\cifraAfirmaciones} afirmaciones son negaciones, y
+      \cifra{\cifraNegacionesConRespuesta} de ellas apuntan explícitamente a lo que niegan.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Afirmaciones a lo largo del expediente}
+\centering
+\begin{tikzpicture}
+\begin{axis}[barras, bar width=7pt, width=14cm, height=5cm, xticklabels/.expanded={\rotulosPiezas},
+  x tick label style={rotate=60, font=\tiny}, enlarge x limits=0.03, nodes near coords={},
+  title={\footnotesize Afirmaciones por pieza (\nPiezasConAfirmaciones{} piezas con alguna)}]
+\addplot[fill=ocre!80, draw=none] coordinates {\seriePiezas};
+\end{axis}
+\end{tikzpicture}
+
+\footnotesize Concentran más voces P06 (escrito de Huancachoque), P21 (declaración de Orue) y P27 (informe del subdelegado Mata);
+las piezas que faltan no contienen afirmaciones (trámite o documento ajeno).
+\end{frame}
+
+\begin{frame}{La capa 4: qué se ha reconstruido y con qué creencia}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{tikzpicture}
+\begin{axis}[barras, xticklabels/.expanded={\rotulosClases}, title={\footnotesize Reconstrucciones por clase}, width=6.6cm]
+\addplot[fill=tinta!70, draw=none] coordinates {\serieClases};
+\end{axis}
+\end{tikzpicture}
+\column{0.5\textwidth}
+\begin{tikzpicture}
+\begin{axis}[barras, xticklabels/.expanded={\rotulosCreencia}, x tick label style={rotate=25, font=\tiny},
+  title={\footnotesize Creencia declarada}, width=6.6cm]
+\addplot[fill=ocre!80, draw=none] coordinates {\serieCreencia};
+\end{axis}
+\end{tikzpicture}
+\end{columns}
+\footnotesize La creencia es la de quien propuso la reconstrucción (un modelo de lenguaje), no un hecho.
+\cifra{\cifraReconstruccionesSinAuditar} de \cifra{\cifraReconstrucciones} no han pasado la auditoría del segundo modelo y
+\alert{ninguna tiene validación humana}.
+\end{frame}
+
+\begin{frame}{Conectividad: qué parte del texto está enlazada}
+\centering
+\begin{tikzpicture}
+\begin{axis}[xbar, bar width=9pt, xmin=0, xmax=100, width=11cm, height=4.4cm, axis lines*=left, xmajorgrids,
+  grid style={gris!60}, ytick={0,1,2,3}, yticklabels={menciones, menciones de persona, hechos narrados, menciones no persona con tipo},
+  y dir=reverse, enlarge y limits=0.2, tick label style={font=\scriptsize}, xlabel={\scriptsize \% enlazado},
+  nodes near coords={\pgfmathprintnumber[fixed,precision=0]{\pgfplotspointmeta}\,\%}, every node near coord/.append style={font=\scriptsize}]
+\addplot[fill=tinta!70, draw=none] coordinates {
+  ({100*\cifraMencionesEnlazadas/\cifraMenciones},0) ({100*\cifraPersonasEnlazadas/\cifraPersonas},1)
+  ({100*\cifraHechosEnlazados/\cifraHechosNarrados},2)
+  ({100*(\cifraEntidadesNoPersona-\cifraEntidadesSinTipo)/\cifraEntidadesNoPersona},3)};
+\end{axis}
+\end{tikzpicture}
+
+\footnotesize \cifraMencionesEnlazadas{} de \cifraMenciones{} menciones pertenecen a alguna reconstrucción;
+\cifraHechosEnlazados{} de \cifraHechosNarrados{} hechos narrados están reconstruidos; \cifraEntidadesSinTipo{} menciones
+que no son de persona carecen de tipo de entidad.
+\end{frame}
+
+\begin{frame}{Ver el grafo: el visor}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\small
+\ttt{python scripts/visor.py} genera \ttt{visor/datos.js}; se abre \ttt{visor/index.html} en el navegador (necesita
+conexión para la biblioteca de la red).
+\begin{itemize}
+\item \textbf{Nodos}: reconstrucciones (color por clase, borde por creencia), piezas, menciones sin identidad única.
+\item \textbf{Aristas}: \enquote{afirma sobre} (rojo si niega, ámbar si está en disputa), hipótesis rivales
+      (discontinua), valor.
+\item \textbf{Ficha}: al pulsar un nodo, sus menciones y todas sus afirmaciones con cita, pieza, tramo y fuerza.
+\item Búsqueda por nombre, grafía o id; filtro por pieza; \enquote{solo disputas}.
+\end{itemize}
+\column{0.42\textwidth}
+\begin{block}{La misma regla que el harness}
+Una mención se dibuja como su reconstrucción solo si pertenece a \alert{una}. Si pertenece a varias, queda como nodo
+propio unido a cada hipótesis: el visor no elige.
+\end{block}
+\end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Cómo se valida}
+
+\begin{frame}{Evaluación sin anotadores externos}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Criterio & Resultado \\
+\midrule
+Citas que son subcadena exacta del tramo & \cifraCitas/\cifraCitas \\
+Violaciones SHACL del grafo & 0 \\
+Mutaciones del grafo que SHACL rechaza (pruebas negativas) & \cifraMutacionesDeclaradas/\cifraMutacionesDeclaradas \\
+Inconsistencias bajo OWL 2 RL (\cifraRazonadorCierre{} tripletas tras el cierre) & \cifraRazonadorInconsistencias \\
+Términos nuevos para un pleito civil sintético & 0 \\
+Preguntas de competencia respondidas por consultas con nombre & \cifraPreguntas/\cifraPreguntas \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Las 20 preguntas se escribieron \alert{antes} de modelar (\ttt{docs/B\_preguntas\_competencia.md}); cada una es una
+prueba automática. Hay 21 archivos de pruebas en \ttt{tests/} (la suite completa tarda de 7 a 28 minutos).
+\end{frame}
+
+\begin{frame}{Lo que los estándares no esperaban}
+Siete defectos hallados al validar y razonar con datos reales; no se corrigen en origen, se evitan o se miden:
+\begin{itemize}\small
+\item \textbf{D1} ROAR: un dominio global vuelve inconsistente el patrón de PiCo (\cifraDUnoEspurias{} tipificaciones
+      espurias).
+\item \textbf{D6} CRMinf 1.2.1: toda E13 es una argumentación \enquote{honesta}; cada testimonio hereda una
+      \alert{presunción de sinceridad} (\cifraDSeisAfirmaciones{} afirmaciones, \cifraDSeisNegaciones{} negaciones).
+\item \textbf{D7} CRM + PiCo: toda mención que afirma se infiere actor.
+\item D2--D5: prefijos de PiCo, relaciones temporales heredadas, creencias literales, folios en RiC-O.
+\end{itemize}
+\medskip
+\textbf{Revisiones}: dos revisiones \enquote{independientes} del modelo y del artículo, hechas por otras instancias del
+modelo de lenguaje sin acceso a la justificación del autor; 3 hallazgos críticos y 8 importantes, atendidos.
+\end{frame}
+
+% =====================================================================
+\section{Consulta y escala}
+
+\begin{frame}{Consulta y escala}
+\begin{itemize}
+\item \cifra{16} consultas SPARQL con nombre en \ttt{consultas/}; el agente nunca escribe SPARQL.
+\item Motor: \alert{Oxigraph} (rdflib queda como alternativa y una prueba exige las mismas filas en ambos).
+      Una consulta de afirmaciones pasó de unos 15\,s a centésimas.
+\item Escala, con el piloto replicado hasta 1\,000 veces: carga y espacio lineales; las consultas restringidas a un
+      expediente tardan lo mismo con 1 que con 100; las que recorren el corpus (disputas) crecen con él.
+\end{itemize}
+\medskip
+\footnotesize Mediciones con réplicas del piloto, no con el archivo real: indican cómo crece el coste
+(\ttt{datos/grafo/escala.md}).
+\end{frame}
+
+% =====================================================================
+\section{El harness: agente de consulta}
+
+\begin{frame}{Arquitectura del harness}
+\centering
+\begin{tikzpicture}[node distance=5mm and 7mm, every node/.style={font=\scriptsize}]
+\node[caja=tinta!5, text width=2.1cm] (q) {Pregunta en\\lenguaje natural};
+\node[caja=ocre!15, text width=2.5cm, right=of q] (llm) {\textbf{Modelo de lenguaje}\\(proveedor intercambiable:\\hoy Gemini)};
+\node[caja=tinta!10, text width=2.6cm, right=of llm] (h) {\textbf{14 herramientas}\\con nombre, JSON Schema\\e ids validados};
+\node[caja=tinta!5, text width=2.2cm, right=of h] (k) {Consultas con nombre\\sobre Oxigraph};
+\draw[flecha] (q) -- (llm); \draw[flecha, transform canvas={yshift=2mm}] (llm) -- node[above, font=\tiny] {llamada} (h);
+\draw[flecha, transform canvas={yshift=-2mm}] (h) -- node[below, font=\tiny] {filas + texto} (llm);
+\draw[flecha] (h) -- (k);
+\node[caja=verde!12, text width=3.4cm, below=10mm of llm] (v) {\textbf{Verificador}: cada «cita» debe ser subcadena de
+  una fila devuelta; cada id de afirmación, estar en ellas};
+\node[caja=white, text width=2.6cm, right=of v] (r) {Respuesta + \ttt{FORMA:}\\verificada o\\NO VERIFICADA};
+\draw[flecha] (llm) -- node[left, font=\tiny] {respuesta} (v); \draw[flecha] (v) -- (r);
+\draw[flecha, dashed] (v.west) -| node[pos=0.25, below, font=\tiny] {1 corrección} ($(q.south)+(0.4,0)$) -- ($(llm.south west)+(0.2,0)$);
+\end{tikzpicture}
+
+\medskip
+\begin{itemize}\footnotesize
+\item El bucle, las instrucciones (\ttt{prompts/agente\_consulta\_v2.md}) y la verificación viven en LAAD; cada proveedor
+      es un adaptador pequeño (\ttt{src/laad/proveedores/}). Cambiar de modelo es escribir un adaptador.
+\item Los nombres escritos se resuelven con \ttt{buscar} (variantes gráficas: qu/c, hu/gu, b/v, y/i…), que devuelve
+      \alert{todos} los candidatos con su creencia y sus rivales.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Las 14 herramientas}
+\scriptsize
+\begin{tabular}{@{}lp{10.2cm}@{}}
+\toprule
+\ttt{buscar} & nombre escrito con cualquier grafía → ids de reconstrucciones y menciones \\
+\ttt{afirmaciones} & quién dijo qué, con cita, tramo, rol y fuerza; calcula disputas y comprueba el dominio \\
+\ttt{disputas} & disputas calculadas en el corpus para una entidad o un atributo \\
+\ttt{disputas\_firma} & firmas que constan en el texto y que alguien niega haber puesto \\
+\ttt{menciones\_de} & todas las grafías que agrupa una reconstrucción \\
+\ttt{reconstrucciones} & hipótesis de la capa 4 con autor, creencia, argumento y rivales \\
+\ttt{cargos} & ejercicios de cargo con vigencia \\
+\ttt{piezas} · \ttt{control\_secuencia} & piezas en orden físico; piezas cuyo orden contradice sus fechas \\
+\ttt{participantes} & quién actúa en cada pieza y con qué papel procesal \\
+\ttt{procedencia} & transcripción (sha256), actividad, agente y validación de un dato \\
+\ttt{catalogo} & fichas del catálogo del ARC pertinentes (todo es \enquote{según el catálogo}) \\
+\ttt{identificadores\_externos} & lugares y grupos con identificador HGIS o WHG \\
+\ttt{vocabulario} & lista cerrada de conceptos de un esquema del tesauro \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Uso a mano, sin modelo: \ttt{python scripts/preguntar.py afirmaciones --entidad R-chuquitapa}.
+\end{frame}
+
+\begin{frame}{Cómo se mide: el banco de 20 preguntas}
+\begin{itemize}\small
+\item Cada PC tiene una \alert{referencia} calculada (\ttt{laad.preguntas}) y una forma esperada (D, A, DISPUTA, NC, R, P).
+\item \textbf{Completa}: la respuesta trae todas las afirmaciones, afirmantes, reconstrucciones, citas e ids de la
+      referencia, con la forma correcta y verificada. Es exigente: todo o nada.
+\item \textbf{Esencial}: como completa, pero perdona citas e ids \alert{periféricos} (frases secundarias de la referencia).
+\item \textbf{Forma} correcta y respuesta \textbf{verificada} (sin citas inventadas).
+\item Los errores de herramienta que el agente corrige solo son \enquote{avisos}, no fallos.
+\end{itemize}
+\medskip
+\small
+Tres niveles medidos con el mismo comprobador:
+\begin{enumerate}\small
+\item planes escritos a mano (techo de las herramientas): \cifra{20/20};
+\item un intermediario Claude que solo usa \ttt{preguntar.py} (techo práctico con un modelo fuerte);
+\item el agente real con Gemini 3.5 Flash-Lite (nivel gratuito).
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Decisiones del validador sobre las referencias (24-nov)}
+\small
+\begin{tabular}{@{}llp{8.2cm}@{}}
+\toprule
+PC & Decisión & Efecto \\
+\midrule
+PC02 & aprobada & la remisión \enquote{De folio 4} se responde con la afirmación de folio y los firmantes de la pieza \\
+PC08 & forma \textbf{DISPUTA} & Cano se contradice (coronel; fecha del hecho); antes era A \\
+PC13 & rechazada & se mantiene la referencia amplia: el fallo del agente es esperado \\
+PC16 & P28 + P29 & la resolución son las 26 afirmaciones de esas dos piezas \\
+\bottomrule
+\end{tabular}
+
+\medskip
+Con ello, en la evaluación del artículo el criterio \enquote{disputa o no consta} pasa de 6/6 a \alert{7/7} (PC08 se suma).
+\end{frame}
+
+% =====================================================================
+\section{Resultados del harness}
+
+\begin{frame}{Evolución del agente (Gemini 3.5 Flash-Lite)}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{tikzpicture}
+\begin{axis}[width=8.4cm, height=5.6cm, xtick=data, xticklabels/.expanded={\rotulosAgente}, ymin=0, ymax=20.5,
+  ytick={0,5,10,15,20}, ymajorgrids, grid style={gris!60}, axis lines*=left, tick label style={font=\scriptsize},
+  legend style={font=\tiny, at={(0.5,-0.18)}, anchor=north, legend columns=4, draw=none}, ylabel={\scriptsize PC de 20},
+  mark size=1.8pt]
+\addplot[thick, verde, mark=*] coordinates {\serieAgenteVerificada};
+\addplot[thick, tinta, mark=square*] coordinates {\serieAgenteForma};
+\addplot[thick, ocre, mark=triangle*] coordinates {\serieAgenteEsencial};
+\addplot[thick, rojo, mark=diamond*] coordinates {\serieAgenteCompleta};
+\legend{verificadas, forma correcta, esencial, completas}
+\end{axis}
+\end{tikzpicture}
+\column{0.42\textwidth}
+\scriptsize
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+& PC & compl. & esenc. & forma & verif. & tokens \\
+\midrule
+\tablaAgente
+\bottomrule
+\end{tabular}
+
+\medskip
+\footnotesize v1: instrucciones v1. h1, h2: instrucciones v2 y herramientas mejoradas. r1--r3: tres repeticiones de la
+misma configuración (r3 se cortó en PC15 por la cuota diaria).
+\end{columns}
+\end{frame}
+
+\begin{frame}{Media de las repeticiones y techo}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\begin{tikzpicture}
+\begin{axis}[ybar=1pt, bar width=8pt, width=8cm, height=5.4cm, ymin=0, ymax=21, axis lines*=left, ymajorgrids,
+  grid style={gris!60}, xtick={0,1,2,3}, xticklabels={completa, esencial, forma, verificada}, enlarge x limits=0.18,
+  tick label style={font=\scriptsize}, legend style={font=\tiny, at={(0.5,-0.15)}, anchor=north, legend columns=3,
+  draw=none}, area legend, nodes near coords, every node near coord/.append style={font=\tiny}]
+\addplot[fill=tinta!25, draw=none] coordinates {(0,20) (1,20) (2,20) (3,20)};
+\addplot[fill=ocre!70, draw=none] coordinates {(0,\interCompleta) (1,\interEsencial) (2,\interForma) (3,\interVerificada)};
+\addplot[fill=tinta!80, draw=none] coordinates {(0,\numCompleta) (1,\numEsencial) (2,\numForma) (3,\numVerificada)};
+\legend{planes a mano, intermediario Claude, Gemini lite (media)}
+\end{axis}
+\end{tikzpicture}
+\column{0.43\textwidth}
+\small
+Gemini 3.5 Flash-Lite, media de \nEjecucionesLlenas{} repeticiones completas:
+\begin{itemize}\footnotesize
+\item completas \cifra{\mediaCompleta} ± \desvCompleta
+\item esencial \cifra{\mediaEsencial} ± \desvEsencial
+\item forma \cifra{\mediaForma} ± \desvForma
+\item verificadas \cifra{\mediaVerificada} ± \desvVerificada
+\end{itemize}
+\footnotesize La dispersión es pequeña: dos o tres repeticiones bastan. El intermediario Claude es una cota superior
+(medido hoy con las referencias vigentes); vio los diagnósticos, así que está algo \alert{contaminado}.
+\end{columns}
+\end{frame}
+
+\begin{frame}{Qué preguntas resuelve, ejecución a ejecución}
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=14.5cm, height=5.2cm, xmin=-0.5, xmax=19.5, ymin=-0.5, ymax=5.5, y dir=reverse,
+  xtick={0,...,19}, xticklabels={01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20},
+  ytick={0,...,5}, yticklabels/.expanded={\rotulosAgente}, tick label style={font=\scriptsize}, xlabel={\scriptsize PC},
+  axis line style={draw=none}, tick style={draw=none}, colormap={estado}{color(0)=(gris) color(1)=(rojo!55) color(2)=(verde!75)},
+  point meta min=-1, point meta max=1]
+\addplot[scatter, only marks, mark=square*, mark size=9.5pt, point meta=explicit, scatter/use mapped color={draw=white, fill=mapped color}]
+  coordinates {\matrizEsencial};
+\end{axis}
+\end{tikzpicture}
+
+\footnotesize Verde: lo esencial correcto. Rojo: no. Gris: sin medir. Siempre bien desde h1: PC01, 03, 04, 05, 09, 14, 15, 19.
+Siempre mal: PC02, 06, 07, 13, 16. Variables: PC08, 10, 11, 12, 17, 18, 20.
+\end{frame}
+
+\begin{frame}{Cuánto cuesta}
+\begin{itemize}
+\item Unos \alert{30\,000 tokens por pregunta}: cada turno reenvía todo el historial (instrucciones, herramientas y filas).
+\item Nivel gratuito de Google AI Studio, por modelo y día (se renueva a medianoche del Pacífico):
+  \begin{itemize}\small
+  \item \textbf{gemini-3.6-flash}: 20 peticiones/día, menos de un banco; inservible para medir;
+  \item \textbf{gemini-3.5-flash-lite}: unas 500 peticiones/día, de 4 a 5 bancos.
+  \end{itemize}
+\item Un banco tarda unos 15 minutos (red, no CPU: el portátil se mantiene a 43--55\,°C).
+\item \alert{Privacidad}: en el nivel gratuito Google puede usar lo enviado (preguntas y texto del expediente, que es
+      público) para mejorar sus productos. Nunca se envían datos personales; la clave vive en un \ttt{.env} ignorado
+      por git.
+\end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Problemas abiertos y propuestas}
+
+\begin{frame}{Por qué fallan las que fallan}
+\scriptsize
+\begin{tabular}{@{}lp{3.9cm}p{4.2cm}l@{}}
+\toprule
+PC & Qué pasa & Causa & Estado \\
+\midrule
+PC02 & 0\,\% de las afirmaciones & lee \enquote{folio 4} como la pieza P04 & \aun{} corregido, sin medir \\
+PC10 & forma D en vez de DISPUTA; faltan 15 afirmaciones & usa \ttt{participantes} en vez de \ttt{afirmaciones(redacto)} & \aun{} corregido, sin medir \\
+PC08 & todo encontrado, respuesta \alert{no verificada} & el modelo lite retoca o une citas; el verificador lo rechaza & \no \\
+PC16 & 15\,\% de las afirmaciones & no sabe que la resolución está en P28/P29: busca por persona & \no \\
+PC07 & 18\,\% de los lugares & lista larga: demasiadas llamadas & \no \\
+PC06 & faltan 7 de 19 reconstrucciones & lista larga; se le escapan las rivales & \no \\
+PC12, PC17 & a veces, forma equivocada & confunde \enquote{un punto disputado} con \enquote{respuesta en disputa} & \aun{} parcial \\
+PC13 & NC sobre una referencia amplia & decisión del validador & esperado \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\footnotesize PC03, 04, 09, 11 y 14 están bien en lo esencial: solo les faltan citas secundarias de la referencia. Por eso
+\enquote{esencial} describe mejor el agente que \enquote{completa}.
+\end{frame}
+
+\begin{frame}{Qué se propone, por orden de rendimiento esperado}
+\begin{enumerate}\small
+\item \textbf{Medir PC02 y PC10} con la cuota renovada (dos repeticiones nuevas). Si salen, \enquote{esencial} sube a unas 13.
+\item \textbf{Citar por id}: el modelo escribe \ttt{[A-UT11-004]} y el sistema inserta la cita literal del grafo. Las
+      citas inventadas dejan de ser posibles \alert{por construcción}. Resuelve PC08.
+\item \textbf{Listas completas en una llamada}: todas las reconstrucciones de una clase, compactas, con identificador HGIS
+      y rivales; y piezas con su tipo de acto para ir a la resolución. Para PC06, PC07, PC16.
+\item \textbf{Avisar del desacuerdo de forma} en la vuelta de corrección, sin imponerla. Para PC12, PC17.
+\item \textbf{Informar \enquote{esencial} como cifra principal}, con PC13 aparte.
+\item Menor: \ttt{buscar} mezcla clases, \ttt{catalogo} devuelve demasiado, \ttt{valor} busca por subcadena.
+\end{enumerate}
+\medskip
+\small
+\alert{El límite está en las herramientas más que en el modelo}: Claude, con las mismas herramientas, se queda en
+\interEsencial{} de 20 en lo esencial. Por eso 2 y 3 van antes que cambiar de modelo.
+\end{frame}
+
+% =====================================================================
+\section{Pendientes, uso y glosario}
+
+\begin{frame}{Qué falta}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Producto (prioridad)}
+\begin{itemize}\footnotesize
+\item Harness: puntos 1--5 de la diapositiva anterior.
+\item Integrar \ttt{harness/consulta} en \ttt{main} cuando el resultado sea bueno.
+\item Documentar el harness de principio a fin (bitácora, D §4.2, decisiones, artículo, preguntas de competencia).
+\end{itemize}
+\textbf{Validación humana (solo el autor)}
+\begin{itemize}\footnotesize
+\item Muestra de unas 15 afirmaciones por registro.
+\item \cifraCandidatos{} conceptos candidatos por aprobar o rechazar.
+\item \cifraDefinicionesDeTrabajo{} definiciones de trabajo sin fuente.
+\item \cifraReconstruccionesSinAuditar{} reconstrucciones sin auditar.
+\end{itemize}
+\column{0.48\textwidth}
+\textbf{Datos}
+\begin{itemize}\footnotesize
+\item Segundo expediente real: falta su transcripción.
+\item Renombrar el lote \ttt{anotacion-manual-expediente-v1} (lo anotaron agentes, no a mano).
+\item Problemas de anotación de la capa 3 ya listados (\ttt{hechos\_observaciones.md}).
+\end{itemize}
+\textbf{Aparcado por decisión del equipo}
+\begin{itemize}\footnotesize
+\item Licencia, DOI (Zenodo), w3id, declaración de uso de IA.
+\item Sede del artículo (ESWC 2027, Resources Track) y recorte a su extensión.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Límites que hay que decir siempre}
+\begin{itemize}
+\item Un solo expediente real ($n=1$).
+\item Anotaciones y reconstrucciones propuestas por modelos de lenguaje; un único validador humano, sin acuerdo
+      entre anotadores; las \enquote{revisiones independientes} fueron otras instancias del modelo.
+\item Sin imágenes: el folio y el lado de cada tramo no constan, salvo cuatro marcas del texto.
+\item OWL 2 RL es incompleto: la ausencia de inconsistencias es necesaria, no suficiente.
+\item El harness se mide con un banco de 20 preguntas escritas por los autores: sirve para comparar versiones, no
+      para afirmar qué tan bien responde a cualquier usuario.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cómo se usa}
+\scriptsize
+\begin{tabular}{@{}lp{10.4cm}@{}}
+\toprule
+Construir el grafo & \ttt{python scripts/construir.py} \\
+Cifras & \ttt{scripts/cifras.py}, \ttt{scripts/datos\_presentacion.py} \\
+Ver el grafo & \ttt{python scripts/visor.py}, luego abrir \ttt{visor/index.html} \\
+Consultar a mano & \ttt{python scripts/preguntar.py buscar --nombre Chuquitapa} \\
+Preguntar al agente & \ttt{python scripts/agente.py --env <archivo .env> "pregunta"} \\
+Banco del agente & \ttt{python scripts/agente.py --banco --sufijo r4} \\
+Comparar bancos & \ttt{python scripts/comparar\_bancos.py datos/evaluacion/agente\_*.jsonl} \\
+Planes a mano & \ttt{python scripts/evaluar\_harness.py} \\
+Pruebas & \ttt{pytest tests/test\_herramientas.py} (la suite completa, solo al final) \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\textbf{Mapa}: \ttt{ontologia/} perfil y tesauro · \ttt{datos/} registros, grafo, evaluación · \ttt{consultas/} SPARQL ·
+\ttt{src/laad/} código · \ttt{prompts/} instrucciones del agente · \ttt{docs/} documentación (índice:
+\ttt{docs/00\_indice.md}) · \ttt{articulo/} · \ttt{presentacion/} · \ttt{visor/}.
+\end{frame}
+
+\begin{frame}{Glosario mínimo}
+\footnotesize
+\begin{tabular}{@{}lp{10.6cm}@{}}
+\toprule
+RDF, TriG, N-Quads & formato de grafo en tripletas; TriG y N-Quads admiten \alert{grafos nombrados} (uno por capa y expediente) \\
+E13 (CIDOC CRM) & \enquote{asignación de atributo}: alguien atribuye a algo un valor; base de la capa 3 \\
+PiCo, ROAR & modelos de personas \emph{tal como constan} en las fuentes, y su reconstrucción \\
+CRMinf & creencias e inferencias: la capa 4 dice quién cree qué y con qué grado \\
+SKOS, tesauro & vocabulario controlado de conceptos (cargos, roles, atributos…) \\
+SHACL, forma & reglas que el grafo debe cumplir; una violación es un error, un aviso no \\
+OWL 2 RL & razonador que detecta contradicciones lógicas entre los estándares y los datos \\
+SPARQL, Oxigraph & lenguaje de consulta de grafos RDF y el motor que lo ejecuta \\
+PC & pregunta de competencia: lo que el grafo debe poder responder \\
+Harness & herramientas + modelo de lenguaje + verificador + banco de medición \\
+Tramo (UT) & unidad de la transcripción que se cita; reemplaza al folio \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}[standout]
+Estado: el grafo está completo y validado para un expediente.\\[4pt]
+El agente acierta lo esencial en 11 de 20 preguntas;\\ las herramientas permiten 20 de 20.\\[4pt]
+\alert{Siguiente: citar por id y listas completas.}
+\end{frame}
+
+\end{document}

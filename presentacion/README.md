@@ -11,3 +11,15 @@ Diapositivas en Beamer (tema Metropolis, 16:9). Compilar: `latexmk -pdf main.tex
 * **Contenido.** Sigue las secciones del artículo (`articulo/main.tex`). Todo cambio del modelo que toque el artículo
   debe reflejarse aquí en la misma rama; una diapositiva por idea.
 * **Lo que no va aquí.** Declaraciones que el artículo no sostiene, ni cifras de mediciones no versionadas.
+
+## Presentación de estado del proyecto (`proyecto.tex`)
+
+Repaso completo para el equipo: qué es LAAD, materiales y restricciones, cronología, modelo, construcción del grafo,
+cifras con gráficos, validación, consulta y escala, el harness de consulta y sus resultados, problemas abiertos,
+pendientes, uso y glosario. Las cifras generales salen de `../articulo/cifras.tex`; las distribuciones y los
+resultados del harness, de `datos_proyecto.tex`, que genera `scripts/datos_presentacion.py` a partir del grafo y de
+los informes de `datos/evaluacion/`:
+
+    python scripts/cifras.py && python scripts/datos_presentacion.py && (cd presentacion && latexmk -pdf proyecto.tex)
+
+A diferencia de `main.tex`, esta presentación recoge resultados que el artículo aún no incluye (el harness).
