@@ -11,7 +11,8 @@ from __future__ import annotations
 
 from . import consulta, fuente
 from .consulta import atributo, consultar, evento, persona
-from .responder import Respuesta, _quien, _unicas, disputa, forma_de, pronunciamientos, reconstrucciones_de
+from .responder import (Respuesta, _quien, _unicas, disputa, forma_de, grupos_en_disputa, pronunciamientos,
+                        reconstrucciones_de)
 
 EXPEDIENTE_PILOTO = "cc-14-18"
 
@@ -83,12 +84,18 @@ def pc06() -> Respuesta:
 
 
 def pc08(slug: str = "cano") -> Respuesta:
+    """Lo que afirmó el testigo en cada pieza. La forma se calcula: DISPUTA si afirma y luego niega lo mismo del
+    mismo sujeto (grupos_en_disputa); el validador fijó el 2026-11-24 que la forma de esta pregunta es la disputa,
+    porque lo que se pregunta es qué cambió entre agosto y septiembre."""
     filas = sorted(_afirm(filtroAfirmante=persona(slug)), key=lambda f: (f["pieza"], f["aid"]))
     tipos = sorted({f["tipoAct"] for f in filas})
-    return Respuesta(f"¿Qué afirmó {slug} en su certificación de agosto y qué en su declaración de septiembre?", "A",
-                     f"{len(filas)} afirmaciones en {', '.join(tipos)}.", filas,
+    enfrentadas = grupos_en_disputa(filas)
+    resumen = f"{len(filas)} afirmaciones en {', '.join(tipos)}."
+    if enfrentadas:
+        resumen += " Se contradice en: " + "; ".join(f"{g[0]['atrLabel']} → «{g[0]['valorLabel']}»" for _, g in enfrentadas)
+    return Respuesta(f"¿Qué afirmó {slug} en su certificación de agosto y qué en su declaración de septiembre?",
+                     "DISPUTA" if enfrentadas else ("A" if filas else "NC"), resumen, filas,
                      reconstrucciones_de(persona(slug)))
-
 
 def pc09() -> Respuesta:
     ent = persona("chuquitapa")
@@ -98,7 +105,7 @@ def pc09() -> Respuesta:
         if f["valorLabel"] != "coronel (de Túpac Amaru)":
             extra.append(f"  {f['aid']}: {_quien(f)} → {f['valorLabel']} ({f['pol']}) «{f['cita']}»")
     extra.append(pronunciamientos(filas))
-    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", forma_de(filas), res, filas,
+    return Respuesta("¿Fue Andrés Chuquitapa coronel de Túpac Amaru en la rebelión?", forma_de(filas, "ejerce-cargo"), res, filas,
                      reconstrucciones_de(ent), extra)
 
 
@@ -122,7 +129,7 @@ def pc10() -> Respuesta:
 def pc11() -> Respuesta:
     ent = evento("prision")
     res, filas = _disputa(ent, "duracion")
-    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas), res, filas, reconstrucciones_de(ent))
+    return Respuesta("¿Cuánto tiempo estuvo preso Huancachoque?", forma_de(filas, "duracion"), res, filas, reconstrucciones_de(ent))
 
 
 def _resolutivas() -> list[dict]:
@@ -173,17 +180,20 @@ def pc14() -> Respuesta:
     ent = evento("alboroto-carcel")
     res, filas = _disputa(ent, "fecha-del-hecho")
     _, num = _disputa(ent, "numero-de-participantes")
-    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas),
+    return Respuesta("¿A qué hora fue el alboroto ante la cárcel y cuántos indios participaron?", forma_de(filas, "fecha-del-hecho"),
                      res, filas + num, reconstrucciones_de(ent))
 
 
 def pc16() -> Respuesta:
-    filas = _resolutivas()
+    """La resolución final sobre la queja (auto P28, Cusco 26-XI-1806) y la vista fiscal en que se apoya
+    expresamente (P29, «se conforma con»). Acotada por decisión del validador (2026-11-24): antes reunía todas las
+    afirmaciones resolutivas y dictaminadoras del expediente. El informe del subdelegado (P27), en que se apoya a su
+    vez la vista fiscal, se menciona pero no forma parte de la referencia."""
+    filas = [f for f in _resolutivas() if f["pieza"] in ("P28", "P29")]
     return Respuesta("¿Qué resolvió la autoridad sobre la queja y en qué se apoyó?", "A",
                      "Son afirmaciones con fuerza dictaminadora o resolutiva, no hechos: el fiscal califica las quejas "
                      "de «menos conforme a la verdad» y el auto se conforma con la vista fiscal; ambas se apoyan en el "
                      "informe del subdelegado (parte en la prisión del denunciante).", filas)
-
 
 def pc19() -> Respuesta:
     m = _mencion("M-UT12.a-005")
@@ -205,12 +215,23 @@ def pc20(aid: str = "A-UT11-004") -> Respuesta:
 
 
 def pc02() -> Respuesta:
-    filas = _afirm(atributo=atributo("folio-de-pieza"))
-    return Respuesta("¿Qué pieza es la «certificación De folio 4» y dónde está?", "D",
+    """La remisión que nombra la pregunta («la certificación De folio 4», declaración del 23 de septiembre): qué pieza
+    es, dónde está y quién la firma. Acotada a esa remisión por decisión del validador (2026-11-24); antes reunía
+    todas las remisiones a folios del expediente, más de lo que pregunta."""
+    filas = [f for f in _afirm(atributo=atributo("folio-de-pieza"))
+             if " ".join(f["valorLabel"].lower().split()) == "de folio 4"]
+    piezas = sorted({f["sujetoLabel"] for f in filas})
+    firmas = []
+    for f in _consultar("participantes"):
+        if f["pieza"] in piezas and f["rol"].startswith("firmante"):
+            linea = f"  {f['pieza']}: firma «{f['texto']}»" + (f" [{f['persona']}]" if f["persona"] else "")
+            if linea not in firmas:
+                firmas.append(linea)
+    return Respuesta("¿Qué pieza es la «certificación De folio 4», dónde está y quién la firma?", "D",
                      "El expediente se refiere a sus propias fojas; esa foliación es una afirmación del documento, no "
                      "una marca del transcriptor. " + "; ".join(f"{f['sujetoLabel']} → «{f['valorLabel']}»" for f in filas)
-                     + ". En la transcripción esas piezas no tienen marca de folio (folio no consta).", filas)
-
+                     + ". En la transcripción esa pieza no tiene marca de folio (folio no consta).", filas,
+                     extra=["Firmantes anotados en la pieza:"] + (firmas or ["  no consta"]))
 
 def pc07() -> Respuesta:
     recs = [r for r in consultar("reconstrucciones")

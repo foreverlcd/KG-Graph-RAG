@@ -561,8 +561,9 @@ PC de disputa o \emph{no consta} cuya forma calculada es la esperada & 6/6 & 6/6
 Cada PC es una consulta SPARQL con nombre y una prueba que comprueba propiedades de su respuesta frente a las
 respuestas provisionales registradas antes de modelar: quién afirma y quién niega, qué tramos y piezas aparecen, que
 no falte ninguna de las horas en disputa. No es, por tanto, una comparación exhaustiva con una respuesta experta. La
-forma de la respuesta no se escribe a mano: una disputa es un mismo valor afirmado y negado, o valores incompatibles
-sobre el mismo sujeto y atributo; un \emph{no consta} es la ausencia de afirmaciones pertinentes; y el silencio de la
+forma de la respuesta no se escribe a mano: una disputa es un mismo valor afirmado y negado, o valores distintos
+sobre el mismo sujeto y un atributo que admite un solo valor (la cardinalidad de cada atributo es un dato del
+perfil: un cacique puede ser también recaudador); un \emph{no consta} es la ausencia de afirmaciones pertinentes; y el silencio de la
 autoridad se calcula por la fuerza de las actuaciones. Por ejemplo, la PC13 responde \emph{no consta} porque consta
 una orden resolutiva y ninguna afirmación que responda a ella: una orden no implica su cumplimiento. Para la PC09, el
 grafo devuelve que Cano, en su certificación de agosto, y Orue, en su certificación y en su declaración, afirman que
@@ -584,8 +585,8 @@ forma esperada. Esta práctica reveló una forma que aprobaba en vacío porque s
 \paragraph{Razonamiento y revisiones.}
 El cierre OWL~2~RL de la unión de datos, perfil y estándares (\cifraRazonadorTripletas{} tripletas; \cifraRazonadorCierre{} tras el cierre) no produce
 inconsistencias; fue el razonador el que detectó el defecto D1, al inferir una instancia de dos clases disjuntas de
-ROAR. Dos revisores independientes, sin acceso a la documentación de diseño, examinaron el código, los datos y los
-estándares, uno antes y otro después de redactar este artículo. Señalaron, entre otros, que los cargos con vigencia
+ROAR. Dos instancias independientes del modelo de lenguaje, sin acceso a la documentación de diseño, examinaron el
+código, los datos y los estándares, una antes y otra después de redactar este artículo; no son revisores humanos. Señalaron, entre otros, que los cargos con vigencia
 no estaban implementados, que el código suponía un único expediente, que tres respuestas de PC tenían su forma escrita
 a mano y que las relaciones de discurso dependían de una convención no validada. Todo se corrigió o se documentó como
 límite antes de esta versión.

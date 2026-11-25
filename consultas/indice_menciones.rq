@@ -1,0 +1,22 @@
+# Índice de la capa 2 para el buscador de nombres (laad.herramientas.buscar): cada mención con su texto tal como está
+# escrito, su clase (persona, lugar, o «grupo o cosa»: el grafo no distingue estas dos), la pieza, el tramo, la cita y
+# las reconstrucciones de capa 4 que la agrupan (?reconstrucciones: ids «R-…»; vacía si la mención está suelta).
+# Parámetro opcional: ?expediente (IRI del expediente). ?exp es el identificador del expediente de cada mención.
+SELECT ?mid ?exp ?texto ?clase ?pieza ?tramo ?cita
+       (GROUP_CONCAT(DISTINCT COALESCE(?rid, ""); separator=" ") AS ?reconstrucciones)
+WHERE {
+  #PARAMETROS
+  #INCLUIR del_expediente
+  LATERAL { ?m (prov:hadPrimarySource|roar:documentedIn) ?pz . }
+  LATERAL { ?m a ?tipo_ . FILTER (?tipo_ IN (picom:PersonObservation, roar:LocationObservation, roar:Observation)) }
+  LATERAL { ?m rdfs:label ?texto . ?pz rdfs:label ?pieza . ?an oa:hasBody ?m ; oa:hasTarget ?tg . }
+  LATERAL { ?tg oa:hasSource/rdfs:label ?tramo ; oa:hasSelector/oa:exact ?cita . }
+  LATERAL { OPTIONAL { ?r prov:wasDerivedFrom ?m ; prov:wasGeneratedBy ?inf .
+                       BIND (STRAFTER(STR(?inf), "/inferencia/") AS ?rid) } }
+  BIND (STRAFTER(STR(?m), "/mencion/") AS ?mid)
+  BIND (STRBEFORE(STRAFTER(STR(?m), STR(id:)), "/mencion/") AS ?exp)
+  BIND (IF(?tipo_ = picom:PersonObservation, "persona", IF(?tipo_ = roar:LocationObservation, "lugar", "grupo o cosa"))
+        AS ?clase)
+}
+GROUP BY ?m ?mid ?exp ?texto ?clase ?pieza ?tramo ?cita
+ORDER BY ?exp ?mid

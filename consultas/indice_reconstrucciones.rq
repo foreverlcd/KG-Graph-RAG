@@ -1,0 +1,17 @@
+# Índice de la capa 4 para el buscador de nombres (laad.herramientas.buscar): cada reconstrucción con su id de registro
+# («R-…», el de datos/reconstrucciones.jsonl, leído de la IRI de su inferencia), su clase (segmento de la IRI de la
+# entidad: persona, lugar, grupo, cosa, evento, ejercicio-cargo), su etiqueta, la creencia del investigador y de qué
+# deriva (?derivaDe: «<expediente>/mencion/<id>», …/hecho/…, …/afirmacion/…, como ?menciones en reconstrucciones.rq).
+# Sin parámetros. Se parte de las inferencias (una por reconstrucción), no del corpus.
+SELECT ?entidad ?rid ?clase ?label ?creencia (GROUP_CONCAT(DISTINCT COALESCE(?ref, ""); separator=" ") AS ?derivaDe)
+WHERE {
+  #PARAMETROS
+  ?inf a crminf:I5_Inference_Making .
+  LATERAL { ?entidad prov:wasGeneratedBy ?inf ; rdfs:label ?label . }
+  LATERAL { ?inf crminf:J2_concluded_that/crminf:J5_holds_to_be ?creencia . }
+  LATERAL { OPTIONAL { ?entidad prov:wasDerivedFrom ?o . BIND (REPLACE(STR(?o), "^.*/([^/]+/[^/]+/[^/]+)$", "$1") AS ?ref) } }
+  BIND (STRAFTER(STR(?inf), "/inferencia/") AS ?rid)
+  BIND (STRBEFORE(STRAFTER(STR(?entidad), STR(id:)), "/") AS ?clase)
+}
+GROUP BY ?entidad ?rid ?clase ?label ?creencia
+ORDER BY ?rid

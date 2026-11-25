@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grafo CC 14-18</title>
+<!-- Plantilla del visor. scripts/visor.py la copia a index.html con los datos del grafo incrustados. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Disposición tipo Neo4j Browser: barra superior, leyenda/filtros a la izquierda, lienzo al centro,
+   inspector de propiedades a la derecha. Colores de etiqueta en la gama de Neo4j; rojo = niega, ámbar = disputa. */
+:root {
+  --bg: #EEF0F3; --panel: #FFFFFF; --lienzo: #F7F8FA; --ink: #1F2A30; --muted: #5F6B73; --line: #D6DBE0;
+  --soft: #F0F2F5; --accent: #2F7FD6; --sel: #6AC6FF; --neg: #D93F3F; --disp: #E09B14;
+  --r-afirma: #9AA3AD; --r-valor: #5E93CF; --r-hip: #C07F22; --r-pieza: #C3C9D0;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #0F1317; --panel: #171C21; --lienzo: #12171C; --ink: #E3E8EC; --muted: #96A2AB; --line: #2A3239;
+  --soft: #1E252B; --accent: #6AB0F5; --sel: #6AC6FF; --neg: #F06262; --disp: #F2B53A;
+  --r-afirma: #5E6A74; --r-valor: #6EA4E0; --r-hip: #D9973A; --r-pieza: #3A444C;
+  color-scheme: dark; } }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-body); }
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+.barra { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 16px;
+  background: var(--panel); border-bottom: 1px solid var(--line); }
+.barra h1 { font-size: 1.05rem; font-weight: 600; margin: 0; }
+.barra .sub { color: var(--muted); font-size: 0.82rem; }
+.busca { position: relative; flex: 1 1 260px; max-width: 420px; margin-left: auto; }
+.busca input { width: 100%; font: inherit; color: var(--ink); background: var(--soft); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 10px; }
+.grupo-bot { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.grupo-bot button { border: 0; border-radius: 0; border-right: 1px solid var(--line); }
+.grupo-bot button:last-child { border-right: 0; }
+button { font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--soft); border: 1px solid var(--line);
+  border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+button:hover { background: var(--line); }
+button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.mesa { display: grid; grid-template-columns: 250px minmax(0, 1fr) 390px; min-height: 0; }
+.izq, .der { background: var(--panel); overflow: auto; min-height: 0; padding: 14px; }
+.izq { border-right: 1px solid var(--line); }
+.der { border-left: 1px solid var(--line); }
+.lienzo { position: relative; background: var(--lienzo); min-height: 0; overflow: hidden; }
+.lienzo > div.vista { position: absolute; inset: 0; }
+.estado { position: absolute; left: 12px; bottom: 10px; font-size: 0.78rem; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; pointer-events: none; }
+.aviso3d { position: absolute; right: 12px; bottom: 10px; font-size: 0.78rem; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+
+h2.sec { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px;
+  font-weight: 600; }
+h2.sec:first-child { margin-top: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 500; padding: 3px 10px;
+  border-radius: 999px; border: 1px solid transparent; cursor: pointer; user-select: none; color: #1F2A30; }
+.chip .n { font-variant-numeric: tabular-nums; opacity: 0.75; font-weight: 400; }
+.chip.off { opacity: 0.35; text-decoration: line-through; }
+.chip.rel { background: var(--soft); color: var(--ink); border-color: var(--line); border-radius: 4px;
+  font-family: var(--f-mono); font-size: 0.74rem; }
+.chip.rel .ln { width: 18px; height: 0; border-top: 2px solid; }
+.ley { display: grid; gap: 6px; font-size: 0.8rem; color: var(--muted); }
+.ley div { display: flex; align-items: center; gap: 8px; }
+.ley svg { flex: none; }
+.ayuda { font-size: 0.8rem; color: var(--muted); margin: 0; padding-left: 16px; }
+.ayuda li { margin-bottom: 3px; }
+label.chk { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; cursor: pointer; margin-bottom: 4px; }
+label.chk input { accent-color: var(--accent); margin: 0; }
+
+.pill { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; color: #1F2A30; }
+.insp-titulo { font-size: 1.05rem; font-weight: 600; margin: 8px 0 4px; line-height: 1.3; }
+.id { font: 0.78rem var(--f-mono); color: var(--muted); }
+table.props { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-top: 6px; }
+table.props td { border-top: 1px solid var(--line); padding: 5px 4px; vertical-align: top; }
+table.props td:first-child { color: var(--muted); width: 34%; font-family: var(--f-mono); font-size: 0.76rem; }
+.rel-lista { display: grid; gap: 4px; font-size: 0.83rem; }
+.rel-lista .fila { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: baseline; }
+.rel-lista .fila .det { min-width: 0; }
+.tipo { font: 500 0.7rem var(--f-mono); padding: 1px 6px; border-radius: 3px; background: var(--soft);
+  border: 1px solid var(--line); }
+.tipo.NIEGA { color: var(--neg); border-color: var(--neg); }
+.tipo.disp { color: var(--disp); border-color: var(--disp); }
+.af { border-top: 1px solid var(--line); padding: 8px 0; display: grid; gap: 3px; font-size: 0.85rem; }
+.af .cab { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 0.76rem; color: var(--muted); align-items: baseline; }
+.af blockquote { margin: 0; padding-left: 10px; border-left: 3px solid var(--line); font-style: italic; }
+.af.neg blockquote { border-left-color: var(--neg); }
+.af.disp blockquote { border-left-color: var(--disp); }
+.marca { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 0 6px;
+  border-radius: 999px; border: 1px solid; }
+.marca.neg { color: var(--neg); } .marca.disp { color: var(--disp); }
+.enlace { color: var(--accent); cursor: pointer; background: none; border: 0; padding: 0; font: inherit; text-align: left;
+  text-decoration: underline; text-underline-offset: 2px; }
+.vacio { color: var(--muted); }
+.nota { font-size: 0.78rem; color: var(--muted); margin: 6px 0 0; }
+.tip { font: 12px/1.4 var(--f-body); max-width: 340px; }
+.tip b { font-weight: 600; }
+.tip i { display: block; margin-top: 4px; }
+
+@media (max-width: 1150px) {
+  .mesa { grid-template-columns: 230px minmax(0, 1fr); grid-template-rows: minmax(460px, 1fr) auto; }
+  .der { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 720px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .mesa { grid-template-columns: minmax(0, 1fr); }
+  .lienzo { height: 65vh; }
+  .izq { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="barra">
+    <h1>Grafo CC 14-18</h1>
+    <span class="sub">Huancachoque contra el cacique Chuquitapa · Tinta, 1806</span>
+    <div class="busca">
+      <input type="search" id="buscar" list="sugerencias" placeholder="Buscar: Chuquitapa, Cano, P18, A-UT11-004…" autocomplete="off" aria-label="Buscar en el grafo">
+      <datalist id="sugerencias"></datalist>
+    </div>
+    <div class="grupo-bot" role="group" aria-label="Vista">
+      <button type="button" id="v2d" aria-pressed="true">2D</button>
+      <button type="button" id="v3d" aria-pressed="false">3D</button>
+    </div>
+    <button type="button" id="b-vecindario" title="Mostrar solo el nodo seleccionado y sus vecinos (doble clic en un vecino lo expande)">Explorar vecindario</button>
+    <button type="button" id="b-todo">Mostrar todo</button>
+    <button type="button" id="b-encuadrar">Encuadrar</button>
+  </header>
+
+  <div class="mesa">
+    <aside class="izq">
+      <h2 class="sec">Etiquetas de nodo</h2>
+      <div class="chips" id="chips-nodos"></div>
+      <h2 class="sec">Tipos de relación</h2>
+      <div class="chips" id="chips-rels"></div>
+      <h2 class="sec">Filtros</h2>
+      <label class="chk"><input type="checkbox" id="f-disputa"> Solo relaciones en disputa</label>
+      <label class="chk"><input type="checkbox" id="f-aislados" checked> Ocultar nodos sin relaciones visibles</label>
+      <label class="chk"><input type="checkbox" id="f-rotulos" checked> Rótulos en las relaciones</label>
+      <h2 class="sec">Cómo leerlo</h2>
+      <div class="ley" id="leyenda"></div>
+      <h2 class="sec">Cómo se usa</h2>
+      <ul class="ayuda">
+        <li>Clic en un nodo o relación: sus propiedades y citas a la derecha.</li>
+        <li>Pasar el ratón: resalta sus vecinos y muestra un resumen.</li>
+        <li>Doble clic en un nodo: explora su vecindario; otro doble clic lo amplía.</li>
+        <li>Arrastrar un nodo lo deja fijo; rueda para acercar.</li>
+      </ul>
+    </aside>
+
+    <main class="lienzo" id="lienzo">
+      <div class="vista" id="vista2d" role="img" aria-label="Grafo en dos dimensiones"></div>
+      <div class="vista" id="vista3d" hidden role="img" aria-label="Grafo en tres dimensiones"></div>
+      <div class="estado" id="estado"></div>
+      <div class="aviso3d" id="aviso3d" hidden>3D: los nombres aparecen al pasar el ratón · arrastrar para girar</div>
+    </main>
+
+    <aside class="der" id="inspector" aria-live="polite"></aside>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/force-graph@1.51.4/dist/force-graph.min.js"></script>
+<script>window.GRAFO = /*DATOS_DEL_GRAFO*/null;</script>
+<script>
+(() => {
+  "use strict";
+  const G = window.GRAFO;
+  const insp = document.getElementById("inspector");
+  if (!G || typeof ForceGraph === "undefined") {
+    insp.innerHTML = '<p class="vacio">No hay datos o no se pudo cargar la biblioteca del grafo. Ejecuta ' +
+      '<code>python scripts/visor.py</code> y abre <code>visor/index.html</code> con conexión a internet.</p>';
+    return;
+  }
+
+  // ── vocabulario visual ──
+  const COLOR = { Persona: "#4C8EDA", Lugar: "#8DCC93", Grupo: "#DA7194", Cosa: "#D9C8AE", Hecho: "#F79767",
+    Cargo: "#FFC454", Pieza: "#A5ABB6", "Mención": "#ECB5C9", HechoNarrado: "#F7C59F" };
+  const DESC_ETIQ = { Persona: "persona reconstruida", Lugar: "lugar reconstruido", Grupo: "grupo (ayllu, compañía…)",
+    Cosa: "documento u objeto", Hecho: "hecho reconstruido", Cargo: "ejercicio de un cargo", Pieza: "pieza del expediente",
+    "Mención": "mención sin identidad única (hipótesis rivales o sin reconstruir)", HechoNarrado: "hecho narrado sin reconstrucción única" };
+  const RELS = {
+    AFIRMA: { desc: "afirmante → sujeto: lo que dice de él", var: "--r-afirma", dash: null },
+    NIEGA: { desc: "afirmante → sujeto: lo que niega de él", var: "--neg", dash: null },
+    TIENE_VALOR: { desc: "sujeto → valor de una afirmación (otra entidad)", var: "--r-valor", dash: [2, 3] },
+    HIPOTESIS_DE: { desc: "mención → reconstrucción que la reclama; varias = rivales", var: "--r-hip", dash: [6, 4] },
+    INTERVIENE_EN: { desc: "afirmante → pieza en que habla, con su papel", var: "--r-pieza", dash: [1, 3] },
+  };
+  let T = {};
+  const leerTokens = () => {
+    const cs = getComputedStyle(document.documentElement);
+    ["--ink", "--muted", "--lienzo", "--panel", "--neg", "--disp", "--sel", "--accent", "--r-afirma", "--r-valor", "--r-hip", "--r-pieza"]
+      .forEach(k => T[k] = cs.getPropertyValue(k).trim());
+  };
+  leerTokens();
+  const colorRel = r => r.disputa && (r.tipo === "AFIRMA" || r.tipo === "NIEGA" || r.tipo === "TIENE_VALOR") ? T["--disp"] : T[RELS[r.tipo].var];
+
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const corto = (s, n) => s.length > n ? s.slice(0, n - 1) + "…" : s;
+  const nombreCorto = n => n.etiqueta === "Pieza" ? n.id : corto(n.nombre.replace(/^«|»$/g, "").split(/[,(]/)[0].trim(), 26);
+  const AF = G.afirmaciones;
+  const NODO = Object.fromEntries(G.nodos.map(n => [n.id, n]));
+  const radio = n => n.etiqueta === "Pieza" ? 7 : Math.min(22, 5 + Math.sqrt(n.grado || 0) * 1.7);
+
+  // ── estado ──
+  const ocultasEtiq = new Set(["Pieza"]);
+  const ocultasRel = new Set(["INTERVIENE_EN"]);
+  let ego = null;                 // null = todo; Set de ids visibles en modo vecindario
+  let seleccion = null, hover = null, vista = "2d";
+  const chk = id => document.getElementById(id).checked;
+
+  // adyacencia completa (para el vecindario)
+  const vecinos = {};
+  G.relaciones.forEach(r => {
+    (vecinos[r.source] ||= new Set()).add(r.target);
+    (vecinos[r.target] ||= new Set()).add(r.source);
+  });
+
+  const relVisible = r => !ocultasRel.has(r.tipo) && !ocultasEtiq.has(NODO[r.source].etiqueta) && !ocultasEtiq.has(NODO[r.target].etiqueta)
+    && (!chk("f-disputa") || r.disputa || r.tipo === "HIPOTESIS_DE")
+    && (!ego || (ego.has(r.source) && ego.has(r.target)));
+
+  // curvatura para relaciones paralelas entre el mismo par de nodos
+  const asignarCurvas = rels => {
+    const grupos = {};
+    rels.forEach(r => { const k = [r.source, r.target].sort().join("|"); (grupos[k] ||= []).push(r); });
+    Object.values(grupos).forEach(g => g.forEach((r, i) => {
+      const dir = r.source < r.target ? 1 : -1;
+      r.curva = g.length === 1 ? 0 : dir * (i - (g.length - 1) / 2) * Math.min(0.3, 0.9 / g.length);
+    }));
+  };
+
+  const datosVisibles = () => {
+    const rels = G.relaciones.filter(relVisible);
+    const usados = new Set(rels.flatMap(r => [r.source, r.target]));
+    const nodos = G.nodos.filter(n => !ocultasEtiq.has(n.etiqueta) && (!ego || ego.has(n.id))
+      && (!chk("f-aislados") || usados.has(n.id) || (ego && ego.has(n.id))));
+    const ids = new Set(nodos.map(n => n.id));
+    const rs = rels.filter(r => ids.has(r.source) && ids.has(r.target)).map(r => ({ ...r }));
+    asignarCurvas(rs);
+    return { nodes: nodos.map(n => ({ id: n.id })), links: rs };
+  };
+
+  // conserva posiciones entre filtrados
+  const pos = {};
+  const conPos = d => {
+    d.nodes.forEach(n => { const p = pos[n.id]; if (p) Object.assign(n, p); });
+    return d;
+  };
+
+  // ── resaltado ──
+  let foco = new Set(), focoRel = new Set();
+  const calcularFoco = () => {
+    const c = hover || seleccion;
+    foco = new Set(); focoRel = new Set();
+    if (!c) return;
+    if (c.nodo) {
+      foco.add(c.nodo);
+      grafo2d && grafo2d.graphData().links.forEach(l => {
+        const s = l.source.id ?? l.source, t = l.target.id ?? l.target;
+        if (s === c.nodo || t === c.nodo) { foco.add(s); foco.add(t); focoRel.add(l.id); }
+      });
+    } else if (c.rel != null) {
+      const r = G.relaciones[c.rel]; focoRel.add(c.rel); foco.add(r.source); foco.add(r.target);
+    }
+  };
+  const atenuado = id => (hover || seleccion) && !foco.has(id);
+
+  // ── 2D ──
+  const cont2d = document.getElementById("vista2d");
+  const grafo2d = ForceGraph()(cont2d)
+    .backgroundColor(T["--lienzo"])
+    .nodeId("id")
+    .nodeVal(n => radio(NODO[n.id]) ** 2 / 16)
+    .nodeRelSize(4)
+    .nodeLabel(n => tipNodo(NODO[n.id]))
+    .nodeCanvasObject((n, ctx, k) => dibujarNodo(n, ctx, k))
+    .nodePointerAreaPaint((n, color, ctx) => { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(n.x, n.y, radio(NODO[n.id]) + 2, 0, 2 * Math.PI); ctx.fill(); })
+    .linkSource("source").linkTarget("target")
+    .linkColor(l => { const c = colorRel(l); return atenuado(l.source.id ?? l.source) && !focoRel.has(l.id) ? c + "22" : c; })
+    .linkWidth(l => (focoRel.has(l.id) ? 1.2 : 0) + (l.tipo === "AFIRMA" || l.tipo === "NIEGA" ? 0.8 + Math.log2(l.n + 1) * 0.7 : 0.8) + (l.disputa ? 0.8 : 0))
+    .linkLineDash(l => RELS[l.tipo].dash)
+    .linkCurvature(l => l.curva || 0)
+    .linkDirectionalArrowLength(l => l.tipo === "HIPOTESIS_DE" ? 0 : 5)
+    .linkDirectionalArrowRelPos(1)
+    .linkDirectionalArrowColor(l => colorRel(l))
+    .linkLabel(l => tipRel(l))
+    .linkCanvasObjectMode(() => "after")
+    .linkCanvasObject((l, ctx, k) => rotuloRel(l, ctx, k))
+    .cooldownTicks(260)
+    .d3VelocityDecay(0.35)
+    .onNodeHover(n => { hover = n ? { nodo: n.id } : null; cont2d.style.cursor = n ? "pointer" : null; calcularFoco(); })
+    .onLinkHover(l => { hover = l ? { rel: l.id } : null; calcularFoco(); })
+    .onNodeClick(n => clicNodo(n.id))
+    .onLinkClick(l => { seleccion = { rel: l.id }; calcularFoco(); mostrarRel(l.id); })
+    .onBackgroundClick(() => { seleccion = null; calcularFoco(); })
+    .onNodeDragEnd(n => { n.fx = n.x; n.fy = n.y; })
+    .onEngineStop(() => grafo2d.graphData().nodes.forEach(n => pos[n.id] = { x: n.x, y: n.y }));
+  grafo2d.d3Force("charge").strength(-140);
+  grafo2d.d3Force("link").distance(l => l.tipo === "HIPOTESIS_DE" ? 40 : 75);
+
+  function dibujarNodo(n, ctx, k) {
+    const d = NODO[n.id], r = radio(d), col = COLOR[d.etiqueta] || "#ccc";
+    const alfa = atenuado(n.id) ? 0.18 : 1;
+    ctx.globalAlpha = alfa;
+    const tenue = ["posible", "improbable", "indeterminado"].includes(d.creencia);
+    if (seleccion && seleccion.nodo === n.id) {
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 4, 0, 2 * Math.PI); ctx.fillStyle = T["--sel"] + "88"; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, 2 * Math.PI);
+    ctx.fillStyle = tenue ? col + "66" : col; ctx.fill();
+    ctx.lineWidth = d.creencia === "verdadero" ? 2.4 : 1;
+    ctx.setLineDash(tenue ? [2.5, 2] : []);
+    ctx.strokeStyle = d.creencia === "verdadero" ? T["--ink"] : (tenue ? col : "rgba(0,0,0,0.25)");
+    ctx.stroke(); ctx.setLineDash([]);
+    // nombre: dentro si cabe, debajo si se acerca o está resaltado
+    const texto = nombreCorto(d);
+    const dentro = r * k > 26;
+    const mostrar = dentro || k > 1.6 || foco.has(n.id) || (d.grado > 40 && k > 0.7);
+    if (mostrar) {
+      const fs = Math.max(10 / k, dentro ? Math.min(r * 0.42, 5.5) : 3.2);
+      ctx.font = `${dentro ? 500 : 400} ${fs}px "IBM Plex Sans", sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = dentro ? "middle" : "top";
+      if (dentro) { ctx.fillStyle = "#1F2A30"; ctx.fillText(corto(texto, Math.max(4, Math.floor(r * 2.2 / fs))), n.x, n.y); }
+      else {
+        ctx.lineWidth = 3 / k; ctx.strokeStyle = T["--lienzo"]; ctx.strokeText(texto, n.x, n.y + r + 2 / k);
+        ctx.fillStyle = T["--ink"]; ctx.fillText(texto, n.x, n.y + r + 2 / k);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function rotuloRel(l, ctx, k) {
+    if (!chk("f-rotulos")) return;
+    const enFoco = hover && focoRel.has(l.id);
+    if (!enFoco && k < 2.2) return;
+    const s = l.source, t = l.target;
+    if (typeof s !== "object" || typeof t !== "object") return;
+    let x = (s.x + t.x) / 2, y = (s.y + t.y) / 2;
+    if (l.__controlPoints) { const [cx, cy] = l.__controlPoints; x = 0.25 * s.x + 0.5 * cx + 0.25 * t.x; y = 0.25 * s.y + 0.5 * cy + 0.25 * t.y; }
+    let ang = Math.atan2(t.y - s.y, t.x - s.x);
+    if (ang > Math.PI / 2 || ang < -Math.PI / 2) ang += Math.PI;
+    const txt = rotuloCorto(l);
+    const fs = Math.max(9 / k, 2.4);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    ctx.font = `500 ${fs}px "IBM Plex Mono", monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const w = ctx.measureText(txt).width + fs;
+    ctx.fillStyle = T["--lienzo"]; ctx.fillRect(-w / 2, -fs * 0.7, w, fs * 1.4);
+    ctx.fillStyle = colorRel(l); ctx.fillText(txt, 0, 0);
+    ctx.restore();
+  }
+  const rotuloCorto = l => l.tipo === "HIPOTESIS_DE" ? "HIPÓTESIS DE" : l.tipo === "INTERVIENE_EN" ? `INTERVIENE (${l.rotulo})`
+    : `${l.tipo === "TIENE_VALOR" ? "VALOR" : l.tipo} ${l.rotulo}${l.n > 1 ? " ×" + l.n : ""}`;
+
+  // ── 3D (se carga solo si se pide) ──
+  let grafo3d = null;
+  const cont3d = document.getElementById("vista3d");
+  const cargar3d = () => new Promise((ok, mal) => {
+    if (typeof ForceGraph3D !== "undefined") return ok();
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/3d-force-graph@1.80.0/dist/3d-force-graph.min.js";
+    s.onload = ok; s.onerror = mal; document.head.appendChild(s);
+  });
+  const crear3d = () => {
+    grafo3d = ForceGraph3D()(cont3d)
+      .backgroundColor(T["--lienzo"])
+      .nodeColor(n => hover && !foco.has(n.id) ? "#8888884D" : COLOR[NODO[n.id].etiqueta])
+      .showNavInfo(false)
+      .nodeVal(n => radio(NODO[n.id]) ** 2 / 10)
+      .nodeOpacity(0.95)
+      .nodeLabel(n => tipNodo(NODO[n.id]))
+      .linkColor(l => colorRel(l))
+      .linkOpacity(0.55)
+      .linkWidth(l => l.disputa ? 1.4 : (focoRel.has(l.id) ? 1.2 : 0.4))
+      .linkCurvature(l => l.curva || 0)
+      .linkDirectionalArrowLength(l => l.tipo === "HIPOTESIS_DE" ? 0 : 3.5)
+      .linkDirectionalArrowRelPos(1)
+      .linkLabel(l => tipRel(l))
+      .cooldownTicks(200)
+      .onNodeHover(n => { hover = n ? { nodo: n.id } : null; calcularFoco3d(); })
+      .onNodeClick(n => { clicNodo(n.id); acercar3d(n); })
+      .onLinkClick(l => { seleccion = { rel: l.id }; mostrarRel(l.id); });
+  };
+  const calcularFoco3d = () => {
+    const c = hover || seleccion; foco = new Set(); focoRel = new Set();
+    if (c && c.nodo && grafo3d) {
+      foco.add(c.nodo);
+      grafo3d.graphData().links.forEach(l => { const s = l.source.id ?? l.source, t = l.target.id ?? l.target;
+        if (s === c.nodo || t === c.nodo) { foco.add(s); foco.add(t); focoRel.add(l.id); } });
+    }
+    grafo3d && grafo3d.nodeColor(grafo3d.nodeColor()).linkWidth(grafo3d.linkWidth());
+  };
+  const acercar3d = n => {
+    const d = 90, r = 1 + d / Math.hypot(n.x || 1, n.y || 1, n.z || 1);
+    grafo3d.cameraPosition({ x: n.x * r, y: n.y * r, z: n.z * r }, n, 900);
+  };
+
+  // ── refresco ──
+  const estado = document.getElementById("estado");
+  const refrescar = () => {
+    const d = datosVisibles();
+    estado.textContent = `${d.nodes.length} nodos · ${d.links.length} relaciones` + (ego ? " · vecindario" : "");
+    if (vista === "2d") grafo2d.graphData(conPos(d));
+    else if (grafo3d) grafo3d.graphData(d);
+  };
+
+  // ── leyenda y filtros ──
+  const cuentaEtiq = {}, cuentaRel = {};
+  G.nodos.forEach(n => cuentaEtiq[n.etiqueta] = (cuentaEtiq[n.etiqueta] || 0) + 1);
+  G.relaciones.forEach(r => cuentaRel[r.tipo] = (cuentaRel[r.tipo] || 0) + 1);
+  const chipsN = document.getElementById("chips-nodos");
+  Object.keys(COLOR).filter(e => cuentaEtiq[e]).forEach(e => {
+    const b = document.createElement("span");
+    b.className = "chip" + (ocultasEtiq.has(e) ? " off" : ""); b.style.background = COLOR[e];
+    b.tabIndex = 0; b.setAttribute("role", "button"); b.title = DESC_ETIQ[e];
+    b.innerHTML = `${esc(e)} <span class="n">${cuentaEtiq[e]}</span>`;
+    const alternar = () => { ocultasEtiq.has(e) ? ocultasEtiq.delete(e) : ocultasEtiq.add(e); b.classList.toggle("off"); refrescar(); };
+    b.addEventListener("click", alternar); b.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); alternar(); } });
+    chipsN.appendChild(b);
+  });
+  const chipsR = document.getElementById("chips-rels");
+  Object.keys(RELS).forEach(t => {
+    const b = document.createElement("span");
+    b.className = "chip rel" + (ocultasRel.has(t) ? " off" : ""); b.tabIndex = 0; b.setAttribute("role", "button"); b.title = RELS[t].desc;
+    b.innerHTML = `<span class="ln" style="border-top-color:var(${RELS[t].var});border-top-style:${RELS[t].dash ? "dashed" : "solid"}"></span>${t} <span class="n">${cuentaRel[t] || 0}</span>`;
+    const alternar = () => { ocultasRel.has(t) ? ocultasRel.delete(t) : ocultasRel.add(t); b.classList.toggle("off"); refrescar(); };
+    b.addEventListener("click", alternar); b.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); alternar(); } });
+    chipsR.appendChild(b);
+  });
+  ["f-disputa", "f-aislados"].forEach(id => document.getElementById(id).addEventListener("change", refrescar));
+  document.getElementById("f-rotulos").addEventListener("change", () => grafo2d.linkWidth(grafo2d.linkWidth()));
+
+  const circ = (fill, stroke, w, dash) => `<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="${fill}" stroke="${stroke}" stroke-width="${w}" ${dash ? 'stroke-dasharray="2.5 2"' : ""}/></svg>`;
+  const lin = (color, dash, w = 2) => `<svg width="28" height="10" viewBox="0 0 28 10"><line x1="1" y1="5" x2="27" y2="5" stroke="${color}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ""}/></svg>`;
+  document.getElementById("leyenda").innerHTML = [
+    `<div>${circ("#4C8EDA", "currentColor", 2.4)} creencia «verdadero» (borde oscuro)</div>`,
+    `<div>${circ("#4C8EDA", "rgba(0,0,0,.25)", 1)} creencia «probable»</div>`,
+    `<div>${circ("#4C8EDA66", "#4C8EDA", 1.4, true)} «posible» o menos (relleno pálido)</div>`,
+    `<div>${lin("var(--neg)")} la relación contiene una negación</div>`,
+    `<div>${lin("var(--disp)", null, 3)} en disputa calculada</div>`,
+    `<div>${lin("var(--r-hip)", "6 4")} hipótesis de identidad (rivales)</div>`,
+    `<p class="nota">El tamaño del nodo crece con sus afirmaciones. La creencia es la de quien propuso la
+      reconstrucción (un modelo de lenguaje), no un hecho; el visor no elige entre hipótesis rivales.</p>`,
+  ].join("");
+
+  // ── fichas ──
+  const pill = n => `<span class="pill" style="background:${COLOR[n.etiqueta] || "#ccc"}">${esc(n.etiqueta)}</span>`;
+  const ir = (id, texto) => NODO[id] ? `<button type="button" class="enlace" data-ir="${esc(id)}">${esc(texto ?? NODO[id].nombre)}</button>` : esc(texto ?? id);
+  function tipNodo(n) {
+    return `<div class="tip"><b>${esc(n.nombre)}</b><br>${esc(n.etiqueta)}${n.creencia ? " · creencia " + esc(n.creencia) : ""}` +
+      ` · ${new Set(n.afirmaciones).size} afirmaciones</div>`;
+  }
+  function tipRel(l) {
+    const r = G.relaciones[l.id];
+    const ids = r.afirmaciones.slice(0, 2).map(i => `<i>«${esc(corto(AF[i].cita, 140))}» — ${esc(AF[i].afirmante)}, ${esc(AF[i].pieza)}</i>`).join("");
+    return `<div class="tip"><b>${esc(r.tipo)}</b>${r.rotulo ? " · " + esc(r.rotulo) : ""}${r.disputa ? " · <b>en disputa</b>" : ""}<br>` +
+      `${esc(NODO[r.source].nombre)} → ${esc(NODO[r.target].nombre)}${r.n ? `<br>${r.n} afirmación(es)` : ""}${ids}</div>`;
+  }
+  const tarjeta = aid => {
+    const a = AF[aid];
+    return `<div class="af${a.niega ? " neg" : ""}${a.disputa ? " disp" : ""}">
+      <div class="cab"><span class="id">${esc(a.aid)}</span><span>${esc(a.pieza)} · ${esc(a.tipoAct || "")}</span>
+        ${a.fecha ? `<span>${esc(a.fecha)}</span>` : ""}${a.niega ? '<span class="marca neg">niega</span>' : ""}${a.disputa ? '<span class="marca disp">en disputa</span>' : ""}</div>
+      <div>${ir(a.afirmanteNodo, a.afirmante)} <span class="vacio">(${esc(a.rol || "")})</span> sobre
+        ${a.sujetoNodo ? ir(a.sujetoNodo, a.sujeto) : esc(a.sujeto)}: <b>${esc(a.atributo)}</b> → ${a.valorNodo ? ir(a.valorNodo, a.valor) : esc(a.valor)}</div>
+      <blockquote>«${esc(a.cita)}»</blockquote>
+      <div class="cab"><span>tramo ${esc(a.tramo)}${a.folio ? ", " + esc(a.folio) : ""}</span><span>fuerza ${esc(a.fuerza)}</span>
+        ${a.fundamento && a.fundamento !== "no lo indica" ? `<span>${esc(a.fundamento)}</span>` : ""}
+        ${a.respondeA ? `<span>responde a ${esc(a.respondeA)}</span>` : ""}${a.eliptico ? "<span>sujeto elíptico</span>" : ""}</div></div>`;
+  };
+  const listaAf = ids => {
+    const u = [...new Set(ids)].sort((x, y) => (AF[x].pieza + x).localeCompare(AF[y].pieza + y, "es", { numeric: true }));
+    const nd = u.filter(i => AF[i].disputa).length;
+    return (nd ? `<p class="nota">${nd} de ${u.length} están en una disputa calculada.</p>` : "") +
+      (u.length ? u.map(tarjeta).join("") : '<p class="vacio">Ninguna.</p>');
+  };
+  const props = filas => `<table class="props">${filas.filter(([, v]) => v != null && v !== "").map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join("")}</table>`;
+
+  function mostrarNodo(id) {
+    const n = NODO[id]; if (!n) return;
+    const relsDe = G.relaciones.filter(r => r.source === id || r.target === id);
+    const porTipo = {};
+    relsDe.forEach(r => (porTipo[r.tipo] ||= []).push(r));
+    let html = `${pill(n)} <span class="id">${esc(n.id)}</span><div class="insp-titulo">${esc(n.nombre)}</div>`;
+    html += props([
+      ["creencia", n.creencia && esc(n.creencia)], ["tipo de acto", n.tipoActo && esc(n.tipoActo)], ["título", n.titulo && esc(n.titulo)],
+      ["fecha", n.fecha && esc(n.fecha)], ["documento ajeno", n.ajena ? "sí" : null], ["mención", n.mid && esc(n.mid)],
+      ["pieza", n.pieza && esc(n.pieza)], ["tramo", n.tramo && esc(n.tramo)], ["cita", n.cita && `<i>«${esc(n.cita)}»</i>`],
+      ["menciones", n.menciones && n.menciones.length ? String(n.menciones.length) : null],
+      ["afirmaciones", String(new Set(n.afirmaciones).size)],
+    ]);
+    if (n.rivales && n.rivales.length) html += `<h2 class="sec">Hipótesis que la reclaman</h2><div class="rel-lista">${n.rivales.map(r => `<div class="fila"><span class="tipo">HIPÓTESIS</span><span class="det">${ir(r)} <span class="vacio">(${esc(NODO[r]?.creencia || "")})</span></span></div>`).join("")}</div>` +
+      (n.rivales.length > 1 ? '<p class="nota">Lecturas rivales: el grafo guarda todas y no elige.</p>' : "");
+    if (relsDe.length) {
+      html += `<h2 class="sec">Relaciones (${relsDe.length})</h2><div class="rel-lista">`;
+      Object.entries(porTipo).forEach(([t, rs]) => rs.slice(0, 40).forEach(r => {
+        const sale = r.source === id, otro = sale ? r.target : r.source;
+        html += `<div class="fila"><span class="tipo ${t}${r.disputa ? " disp" : ""}">${sale ? "" : "← "}${t}${sale ? " →" : ""}</span>` +
+          `<span class="det">${r.rotulo ? `<span class="id">${esc(r.rotulo)}</span> · ` : ""}${ir(otro)}${r.n > 1 ? ` <span class="vacio">×${r.n}</span>` : ""}</span></div>`;
+      }));
+      html += "</div>";
+    }
+    if (n.menciones && n.menciones.length) html += `<h2 class="sec">Grafías en el texto (${n.menciones.length})</h2><div class="rel-lista">` +
+      n.menciones.map(m => `<div class="fila"><span class="id">${esc(m.pieza)}</span><span class="det"><b>${esc(m.texto)}</b> <span class="id">${esc(m.mid)} · ${esc(m.tramo)}</span></span></div>`).join("") + "</div>";
+    html += `<h2 class="sec">Afirmaciones (${new Set(n.afirmaciones).size})</h2>` + listaAf(n.afirmaciones);
+    insp.innerHTML = html; insp.scrollTop = 0;
+  }
+  function mostrarRel(i) {
+    const r = G.relaciones[i];
+    insp.innerHTML = `<span class="tipo ${r.tipo}${r.disputa ? " disp" : ""}">${esc(r.tipo)}</span> <span class="id">relación</span>` +
+      `<div class="insp-titulo">${ir(r.source)} → ${ir(r.target)}</div>` +
+      props([["tipo", esc(r.tipo)], ["atributo / papel", r.rotulo && esc(r.rotulo)], ["afirmaciones", r.n ? String(r.n) : null],
+        ["en disputa", r.disputa ? "sí (calculada)" : null], ["significado", esc(RELS[r.tipo].desc)]]) +
+      (r.tipo === "HIPOTESIS_DE" ? '<p class="nota">La mención pertenece a esta reconstrucción en al menos una hipótesis. Si hay varias, son rivales.</p>'
+        : `<h2 class="sec">Afirmaciones</h2>${listaAf(r.afirmaciones)}`);
+    insp.scrollTop = 0;
+  }
+  insp.addEventListener("click", ev => { const b = ev.target.closest("[data-ir]"); if (b) enfocar(b.dataset.ir); });
+
+  // ── selección, vecindario, búsqueda ──
+  let ultimoClic = { id: null, t: 0 };
+  function clicNodo(id) {
+    const ahora = Date.now();
+    const doble = ultimoClic.id === id && ahora - ultimoClic.t < 350;
+    ultimoClic = { id, t: ahora };
+    seleccion = { nodo: id }; calcularFoco(); mostrarNodo(id);
+    if (doble) expandir(id);
+  }
+  function expandir(id) {
+    ego = ego || new Set();
+    ego.add(id); (vecinos[id] || []).forEach(v => ego.add(v));
+    refrescar();
+    if (vista === "2d") setTimeout(() => grafo2d.zoomToFit(600, 60), 700);
+  }
+  function enfocar(id) {
+    const n = NODO[id]; if (!n) return;
+    if (ocultasEtiq.has(n.etiqueta)) { ocultasEtiq.delete(n.etiqueta); [...chipsN.children].forEach(c => { if (c.textContent.startsWith(n.etiqueta)) c.classList.remove("off"); }); }
+    if (ego && !ego.has(id)) expandir(id); else refrescar();
+    seleccion = { nodo: id }; calcularFoco(); mostrarNodo(id);
+    setTimeout(() => {
+      if (vista === "2d") { const nd = grafo2d.graphData().nodes.find(x => x.id === id); if (nd && nd.x != null) { grafo2d.centerAt(nd.x, nd.y, 600); grafo2d.zoom(2.4, 600); } }
+      else if (grafo3d) { const nd = grafo3d.graphData().nodes.find(x => x.id === id); if (nd) acercar3d(nd); }
+    }, 300);
+  }
+  document.getElementById("b-vecindario").addEventListener("click", () => {
+    if (!seleccion || !seleccion.nodo) { insp.insertAdjacentHTML("afterbegin", '<p class="nota">Primero selecciona un nodo.</p>'); return; }
+    ego = null; expandir(seleccion.nodo);
+  });
+  document.getElementById("b-todo").addEventListener("click", () => { ego = null; refrescar(); setTimeout(() => encuadrar(), 500); });
+  const encuadrar = () => vista === "2d" ? grafo2d.zoomToFit(600, 40) : grafo3d && grafo3d.zoomToFit(600, 40);
+  document.getElementById("b-encuadrar").addEventListener("click", encuadrar);
+
+  const indice = [];
+  G.nodos.forEach(n => {
+    indice.push([sinTildes(n.nombre), n.id]); indice.push([sinTildes(n.id), n.id]);
+    (n.menciones || []).forEach(m => indice.push([sinTildes(m.texto), n.id]));
+  });
+  document.getElementById("sugerencias").innerHTML = G.nodos.filter(n => n.etiqueta !== "Mención")
+    .map(n => `<option value="${esc(n.nombre)}"></option>`).join("");
+  document.getElementById("buscar").addEventListener("keydown", ev => {
+    if (ev.key !== "Enter") return;
+    const crudo = ev.target.value.trim(), q = sinTildes(crudo); if (!q) return;
+    if (AF[crudo]) { const a = AF[crudo]; enfocar(a.sujetoNodo || a.afirmanteNodo);
+      setTimeout(() => insp.innerHTML = `<span class="id">afirmación</span><div class="insp-titulo">${esc(a.aid)}</div>` + tarjeta(a.aid), 350); return; }
+    const hit = indice.find(([t]) => t === q) || indice.find(([t]) => t.includes(q));
+    if (hit) enfocar(hit[1]);
+    else insp.innerHTML = `<p class="vacio">Nada coincide con «${esc(crudo)}». El texto conserva las grafías de la época: prueba Guancachoque, Casorla, Chuquitapa.</p>`;
+  });
+
+  // ── 2D / 3D ──
+  const b2 = document.getElementById("v2d"), b3 = document.getElementById("v3d");
+  b2.addEventListener("click", () => {
+    if (vista === "2d") return; vista = "2d";
+    b2.setAttribute("aria-pressed", "true"); b3.setAttribute("aria-pressed", "false");
+    cont3d.hidden = true; document.getElementById("aviso3d").hidden = true; cont2d.hidden = false;
+    grafo3d && grafo3d.pauseAnimation(); grafo2d.resumeAnimation(); refrescar();
+  });
+  b3.addEventListener("click", async () => {
+    if (vista === "3d") return;
+    try { await cargar3d(); } catch { estado.textContent = "No se pudo cargar la biblioteca 3D (¿sin conexión?)"; return; }
+    vista = "3d";
+    b3.setAttribute("aria-pressed", "true"); b2.setAttribute("aria-pressed", "false");
+    cont2d.hidden = true; cont3d.hidden = false; document.getElementById("aviso3d").hidden = false;
+    grafo2d.pauseAnimation();                       // no deja el 2D consumiendo CPU
+    if (!grafo3d) crear3d(); else grafo3d.resumeAnimation();
+    grafo3d.width(cont3d.clientWidth).height(cont3d.clientHeight);
+    hover = null; refrescar(); calcularFoco3d();
+  });
+
+  // ── tamaño y tema ──
+  const ajustar = () => {
+    const c = document.getElementById("lienzo");
+    grafo2d.width(c.clientWidth).height(c.clientHeight);
+    grafo3d && grafo3d.width(c.clientWidth).height(c.clientHeight);
+  };
+  new ResizeObserver(ajustar).observe(document.getElementById("lienzo"));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    leerTokens(); grafo2d.backgroundColor(T["--lienzo"]); grafo3d && grafo3d.backgroundColor(T["--lienzo"]);
+  });
+
+  // ── estado inicial: el cacique, centro de la disputa ──
+  ajustar();
+  refrescar();
+  const inicio = NODO["R-chuquitapa"] ? "R-chuquitapa" : G.nodos[0].id;
+  seleccion = { nodo: inicio }; mostrarNodo(inicio);
+  setTimeout(() => { calcularFoco(); grafo2d.zoomToFit(800, 40); }, 2500);
+})();
+</script>
+</body>
+</html>

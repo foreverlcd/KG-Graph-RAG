@@ -5,3 +5,4 @@ pyoxigraph==0.5.13
 pytest
 pydantic==2.14.3
 jsonschema
+google-genai==2.28.0

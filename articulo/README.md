@@ -12,9 +12,9 @@ Compilar: `latexmk -pdf main.tex` (BibTeX con `splncs04`). Limpiar: `latexmk -C`
 3. Registro del espacio de nombres `https://w3id.org/laad/` (pull request a perma-id/w3id.org).
 4. Declaración de uso de IA generativa, redactada por los autores.
 
-## Revisión independiente (2026-11-12)
+## Revisión independiente por una instancia del modelo (2026-11-12)
 
-Un revisor sin acceso a `docs/` contrastó el borrador con el repositorio. Se atendió todo lo que no depende de los
+Un revisor (otra instancia del modelo de lenguaje, no una persona) sin acceso a `docs/` contrastó el borrador con el repositorio. Se atendió todo lo que no depende de los
 autores: formas de respuesta calculadas (ADR-027), SHACL de relaciones de discurso (ADR-028), catálogo de
 importaciones (ADR-029), D6 matizado y D7 nuevo (ADR-026), cifras corregidas (58 grafos, 23 tramos, 34 mutaciones,
 95 conceptos sin definición), autoría de la capa 4 declarada, tabla comparativa, convención J4 → grafo nombrado y
