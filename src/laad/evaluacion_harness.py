@@ -208,3 +208,27 @@ def cobertura(referencia: Respuesta, ej: Ejecucion) -> dict[str, float | None]:
     return {"afirmaciones": _fraccion(len(ref_a & obtenidas), len(ref_a)),
             "reconstrucciones": _fraccion(len(ref_r & etiquetas), len(ref_r)),
             "citas": _fraccion(len(set(citas) - fallan), len(set(citas)))}
+
+
+def evaluar_respuesta(pc: str, llamadas: list[dict], respuesta: str) -> dict:
+    """Evalúa una respuesta redactada fuera del bucle del agente (p. ej. por un modelo que hace de intermediario y
+    consulta con scripts/preguntar.py): vuelve a ejecutar sus llamadas declaradas ([{herramienta, parametros}]),
+    verifica la respuesta contra esas filas y la mide con comprobar() y cobertura(), como el banco del agente.
+    Una llamada con error es un aviso, no un fallo (el intermediario la corrigió)."""
+    from .agente import _sin_forma, forma_declarada
+    ej, avisos = Ejecucion(), []
+    for ll in llamadas:
+        try:
+            ej.resultados.append(H.usar(ll["herramienta"], **(ll.get("parametros") or {})))
+        except (H.ErrorHerramienta, TypeError) as e:
+            avisos.append(f"{ll['herramienta']}: {e}")
+    forma = forma_declarada(respuesta) or "?"
+    v = H.verificar(respuesta, ej.filas)
+    referencia = PREGUNTAS[pc]()
+    fallos = comprobar(referencia, ej, forma)
+    if v["citas"] or v["ids"]:
+        fallos.append(f"respuesta no verificada: {v}")
+    return {"pc": pc, "alcanzada": not fallos, "forma": forma, "forma_referencia": referencia.forma,
+            "verificada": not (v["citas"] or v["ids"]), "verificacion": v, "fallos": fallos,
+            "cobertura": cobertura(referencia, ej), "avisos": avisos, "llamadas": len(llamadas),
+            "respuesta": _sin_forma(respuesta)}
