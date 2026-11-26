@@ -22,9 +22,9 @@ expediente.
 consulta hace eso sobre el grafo, así que el nombre del repositorio no es falso. Pero describe solo la tercera pieza (el
 uso), no la principal (la ontología y el grafo). Para la charla, mejor no usarlo.
 
-**Pendiente de decidir:** la sigla OHAC no está desarrollada en ningún documento del repositorio. Si alguien pregunta
-qué significa, hay que tener la respuesta decidida. Si no está decidida, decir: «es el nombre del perfil; su sigla la
-estamos fijando».
+**La sigla.** OHAC = *Ontología Histórica Andino-Colonial*. Viene del primer intento (`../Grafo-Conocimiento-Cusco`,
+README), donde era un vocabulario propio junto a cuatro estándares (RiC-O, CIDOC CRM, PROV-O y SKOS). Hoy el nombre se
+conserva, pero OHAC ya no define términos propios: es el perfil que combina los estándares, y lo andino va en el tesauro.
 
 ## 1. Guion por diapositiva
 
@@ -135,7 +135,7 @@ estamos fijando».
   probamos con un pleito civil de prueba, que no necesitó términos nuevos. Falta la transcripción del segundo expediente
   real.
 - **¿Qué es OHAC?** La ontología del proyecto. Técnicamente es un perfil: combina estándares, un tesauro y reglas, sin
-  vocabulario propio. Sobre la sigla, ver la sección 0.
+  vocabulario propio. Sigla: Ontología Histórica Andino-Colonial (sección 0).
 - **¿Qué pasa con el folio?** Sin imágenes no podemos saber folio ni lado de cada pasaje: consta como «no consta». Citamos
   por tramo de la transcripción.
 - **¿Cuánto acierta el agente?** No inventa citas en 18,5 de 20 respuestas, y es completo en lo esencial en 11 de 20. Con
